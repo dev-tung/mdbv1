@@ -15,16 +15,18 @@ class InventoryTransactionModel
                 quantity,
                 reference_type,
                 reference_id,
-                note
+                note,
+                warehouse_id
             )
-            VALUES (?,?,?,?,?,?)
+            VALUES (?,?,?,?,?,?,?)
         ", [
             $data['product_id'],
             $data['type'],
             $data['quantity'],
             $data['reference_type'] ?? null,
             $data['reference_id'] ?? null,
-            $data['note'] ?? null
+            $data['note'] ?? null,
+            $data['warehouse_id'] ?? null
         ]);
 
         (new InventoryModel())->updateStock($data['product_id']);

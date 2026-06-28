@@ -84,7 +84,7 @@ class InventoryModel
      */
     public function updateStock(int $productId)
     {
-        $row = Database::getOne("
+        $row = Database::first("
             SELECT
                 COALESCE(SUM(CASE WHEN type='in' THEN quantity END),0) AS stock_in,
                 COALESCE(SUM(CASE WHEN type='out' THEN quantity END),0) AS stock_out
@@ -96,7 +96,7 @@ class InventoryModel
         $stockOut = (int)$row['stock_out'];
         $stock    = $stockIn - $stockOut;
 
-        $exists = Database::getOne("
+        $exists = Database::first("
             SELECT id
             FROM inventories
             WHERE product_id = ?

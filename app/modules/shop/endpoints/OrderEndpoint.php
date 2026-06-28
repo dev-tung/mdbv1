@@ -4,11 +4,13 @@ class OrderEndpoint
 {
     protected OrderModel $orderModel;
     protected OrderItemModel $orderItemModel;
+    protected InventoryTransactionModel $inventoryTransactionModel;
 
     public function __construct()
     {
         $this->orderModel = new OrderModel();
         $this->orderItemModel = new OrderItemModel();
+        $this->inventoryTransactionModel = new InventoryTransactionModel();
     }
 
     // =========================
@@ -196,6 +198,9 @@ class OrderEndpoint
         $items       = $input['products'] ?? [];
         $description = $input['description'] ?? '';
 
+        // =========================
+        // VALIDATE
+        // =========================
         if ($orderId <= 0) {
             return Response::json([
                 'success' => false,
@@ -229,22 +234,31 @@ class OrderEndpoint
         ]);
 
         // =========================
-        // DELETE OLD ITEMS
+        // DELETE OLD DATA
         // =========================
+
+        // Xóa chi tiết đơn hàng cũ
         $this->orderItemModel->deleteByOrderId($orderId);
 
+        // Xóa lịch sử xuất kho cũ
+        $this->inventoryTransactionModel->deleteByReference(
+            'order',
+            $orderId
+        );
+
         // =========================
-        // RE-INSERT ITEMS
+        // INSERT NEW ITEMS
         // =========================
         $total = 0;
 
         foreach ($items as $item) {
 
-            $product_id = (int)($item['product_id'] ?? $item['id'] ?? 0);
-            $qty        = (int)($item['quantity'] ?? 1);
-            $price      = (float)($item['price'] ?? 0);
-            $discount   = (float)($item['discount'] ?? 0);
+            $product_id       = (int)($item['product_id'] ?? $item['id'] ?? 0);
+            $qty              = (int)($item['quantity'] ?? 1);
+            $price            = (float)($item['price'] ?? 0);
+            $discount         = (float)($item['discount'] ?? 0);
             $purchase_item_id = (int)($item['purchase_item_id'] ?? 0);
+            $warehouse_id     = (int)($item['warehouse_id'] ?? 0);
 
             if ($product_id <= 0 || $qty <= 0) {
                 continue;
@@ -253,13 +267,25 @@ class OrderEndpoint
             $lineTotal = ($qty * $price) - $discount;
             $total += $lineTotal;
 
+            // Tạo lại order item
             $this->orderItemModel->create([
-                'order_id' => $orderId,
-                'product_id' => $product_id,
+                'order_id'         => $orderId,
+                'product_id'       => $product_id,
                 'purchase_item_id' => $purchase_item_id,
-                'quantity' => $qty,
-                'price' => $price,
-                'discount' => $discount
+                'quantity'         => $qty,
+                'price'            => $price,
+                'discount'         => $discount
+            ]);
+
+            // Tạo lại lịch sử xuất kho
+            $this->inventoryTransactionModel->create([
+                'product_id'     => $product_id,
+                'warehouse_id'   => $warehouse_id,
+                'type'           => 'out',
+                'quantity'       => $qty,
+                'reference_type' => 'order',
+                'reference_id'   => $orderId,
+                'note'           => 'Xuất kho bán hàng'
             ]);
         }
 
@@ -273,7 +299,7 @@ class OrderEndpoint
         return Response::json([
             'success' => true,
             'message' => 'Cập nhật đơn hàng thành công',
-            'id' => $orderId
+            'id'      => $orderId
         ]);
     }
 
@@ -352,12 +378,23 @@ class OrderEndpoint
             ]);
         }
 
+        // Xóa lịch sử xuất kho
+        $this->inventoryTransactionModel->deleteByReference(
+            'order',
+            $id
+        );
+
+        // Xóa chi tiết đơn hàng
         $this->orderItemModel->deleteByOrderId($id);
+
+        // Xóa đơn hàng
         $deleted = $this->orderModel->deleteById($id);
 
         return Response::json([
             'success' => $deleted > 0,
-            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy đơn hàng'
+            'message' => $deleted > 0
+                ? 'Xóa thành công'
+                : 'Không tìm thấy đơn hàng'
         ]);
     }
 }

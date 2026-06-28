@@ -1,51 +1,89 @@
 import { Api } from '../../../helpers/api.js';
 
-
 export const CustomerSearch = {
 
-    init(){
+    init() {
 
-        const input=document.getElementById("customer_search");
-        const id=document.getElementById("customer_id");
-        const box=document.getElementById("customer_suggestions");
+        const input = document.getElementById("customer_search");
+        const customerId = document.getElementById("customer_id");
+        const box = document.getElementById("customer_suggestions");
 
+        if (!input || !customerId || !box) return;
 
-        input.addEventListener("input",async()=>{
+        input.addEventListener("input", async () => {
 
-            const keyword=input.value.trim();
+            const keyword = input.value.trim();
 
-            if(!keyword)return;
+            // Không có keyword
+            if (!keyword) {
+                customerId.value = "";
+                box.innerHTML = "";
+                box.classList.add("d-none");
+                return;
+            }
 
+            try {
 
-            const json=await Api.get(
-                `/api/customers?keyword=${keyword}`
-            );
+                const json = await Api.get(
+                    `/api/customers?keyword=${encodeURIComponent(keyword)}`
+                );
 
+                const customers = json.data || [];
 
-            box.innerHTML="";
+                box.innerHTML = "";
 
+                // Không có kết quả
+                if (!customers.length) {
+                    box.classList.add("d-none");
+                    return;
+                }
 
-            (json.data||[]).forEach(c=>{
+                customers.forEach(customer => {
 
-                const btn=document.createElement("button");
+                    const btn = document.createElement("button");
 
-                btn.textContent=c.name;
+                    btn.type = "button";
+                    btn.className =
+                        "list-group-item list-group-item-action";
 
+                    btn.textContent = customer.name;
 
-                btn.onclick=()=>{
+                    btn.addEventListener("click", () => {
 
-                    input.value=c.name;
-                    id.value=c.id;
+                        input.value = customer.name;
+                        customerId.value = customer.id;
 
-                    box.innerHTML="";
+                        box.innerHTML = "";
+                        box.classList.add("d-none");
 
-                };
+                    });
 
+                    box.appendChild(btn);
 
-                box.appendChild(btn);
+                });
 
-            });
+                box.classList.remove("d-none");
 
+            } catch (error) {
+
+                console.error(error);
+
+                box.innerHTML = "";
+                box.classList.add("d-none");
+
+            }
+
+        });
+
+        // Click ra ngoài thì ẩn dropdown
+        document.addEventListener("click", (e) => {
+
+            if (
+                !input.contains(e.target) &&
+                !box.contains(e.target)
+            ) {
+                box.classList.add("d-none");
+            }
 
         });
 
