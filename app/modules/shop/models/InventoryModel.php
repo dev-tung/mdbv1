@@ -38,7 +38,7 @@ class InventoryModel
 
         $sql .= " ORDER BY p.id DESC";
 
-        return DB::select($sql, $params);
+        return Database::get($sql, $params);
     }
 
     /**
@@ -76,7 +76,7 @@ class InventoryModel
 
         $sql .= " ORDER BY p.name ASC";
 
-        return DB::select($sql, $params);
+        return Database::get($sql, $params);
     }
 
     /**
@@ -84,7 +84,7 @@ class InventoryModel
      */
     public function updateStock(int $productId)
     {
-        $row = DB::selectOne("
+        $row = Database::getOne("
             SELECT
                 COALESCE(SUM(CASE WHEN type='in' THEN quantity END),0) AS stock_in,
                 COALESCE(SUM(CASE WHEN type='out' THEN quantity END),0) AS stock_out
@@ -96,14 +96,14 @@ class InventoryModel
         $stockOut = (int)$row['stock_out'];
         $stock    = $stockIn - $stockOut;
 
-        $exists = DB::selectOne("
+        $exists = Database::getOne("
             SELECT id
             FROM inventories
             WHERE product_id = ?
         ", [$productId]);
 
         if ($exists) {
-            DB::update("
+            Database::update("
                 UPDATE inventories
                 SET
                     stock_in = ?,
@@ -118,7 +118,7 @@ class InventoryModel
                 $productId
             ]);
         } else {
-            DB::insert("
+            Database::insert("
                 INSERT INTO inventories
                 (
                     product_id,

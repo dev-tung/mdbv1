@@ -31,6 +31,7 @@ Router::post('/api/brands/delete', 'BrandEndpoint@apiDelete', ['auth' => 'admin'
 // INVENTORY
 // =========================
 Router::get('/api/inventories', 'InventoryEndpoint@apiList', ['auth' => 'admin']);
+Router::get('/api/inventories/stock', 'InventoryEndpoint@apiStock', ['auth' => 'admin']);
 Router::post('/api/inventories', 'InventoryEndpoint@apiCreate', ['auth' => 'admin']);
 Router::get('/api/inventories/show/{id}', 'InventoryEndpoint@apiShow', ['auth' => 'admin']);
 Router::post('/api/inventories/update', 'InventoryEndpoint@apiUpdate', ['auth' => 'admin']);

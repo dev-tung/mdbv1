@@ -7,7 +7,7 @@ class InventoryTransactionModel
      */
     public function create(array $data)
     {
-        $id = DB::insert("
+        $id = Database::insert("
             INSERT INTO inventory_transactions
             (
                 product_id,
@@ -39,7 +39,7 @@ class InventoryTransactionModel
     {
         $rows = $this->getByReference($type, $id);
 
-        DB::delete("
+        Database::delete("
             DELETE FROM inventory_transactions
             WHERE reference_type = ?
             AND reference_id = ?
@@ -57,7 +57,7 @@ class InventoryTransactionModel
      */
     public function getByReference(string $type, int $id)
     {
-        return DB::select("
+        return Database::get("
             SELECT *
             FROM inventory_transactions
             WHERE reference_type = ?

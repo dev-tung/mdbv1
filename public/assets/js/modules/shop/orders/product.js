@@ -1,4 +1,4 @@
-import {Api} from "../helper/api.js";
+import { Api } from '../../../helpers/api.js';
 import {OrderState} from "./state.js";
 import {Cart} from "./cart.js";
 
@@ -17,7 +17,7 @@ export const ProductSearch = {
 
 
             const json=await Api.get(
-                `/api/products/available?keyword=${keyword}`
+                `/api/inventories/stock?keyword=${keyword}`
             );
 
 

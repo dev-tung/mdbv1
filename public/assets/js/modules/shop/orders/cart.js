@@ -1,6 +1,5 @@
-import {OrderState} from "./state.js";
-import {Formatter} from "../formatter.js";
-
+import { OrderState } from "./state.js";
+import { Formatter } from '../../../helpers/formatter.js';
 
 export const Cart = {
 

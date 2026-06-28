@@ -23,7 +23,22 @@ class InventoryEndpoint
 
         return Response::json([
             'success'=>true,
-            'data'=>$this->inventoryModel->apiList($filters)
+            'data'=>$this->inventoryModel->getList($filters)
+        ]);
+    }
+
+    // STOCK
+    public function apiStock()
+    {
+        $filters = request_filters([
+            'keyword',
+            'category_id',
+            'status'
+        ]);
+
+        return Response::json([
+            'success'=>true,
+            'data'=>$this->inventoryModel->getStock($filters)
         ]);
     }
 
