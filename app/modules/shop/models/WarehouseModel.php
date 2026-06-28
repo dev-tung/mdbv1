@@ -2,35 +2,60 @@
 
 class WarehouseModel
 {
-    protected string $table = 'warehouses';
-
     /**
-     * Lấy danh sách kho
+     * BUILD WHERE
      */
-    public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
+    private function buildWhere(array $conditions, array &$params): string
     {
-        $sql = "SELECT * FROM {$this->table} WHERE 1=1";
-        $params = [];
+        $sql = " WHERE 1=1";
 
-        // SEARCH KEYWORD
+        // KEYWORD
         if (!empty($conditions['keyword'])) {
-            $sql .= " AND (
-                name LIKE :keyword
-                OR address LIKE :keyword
-            )";
 
-            $params['keyword'] = '%' . $conditions['keyword'] . '%';
+            $sql .= "
+                AND (
+                    name LIKE :keyword
+                    OR address LIKE :keyword
+                )
+            ";
+
+            $params['keyword'] = '%' . trim($conditions['keyword']) . '%';
         }
 
-        // STATUS FILTER
-        if (!empty($conditions['status'])) {
+        // STATUS
+        if (isset($conditions['status']) && $conditions['status'] !== '') {
+
             $sql .= " AND status = :status";
             $params['status'] = $conditions['status'];
         }
 
+        return $sql;
+    }
+
+    /**
+     * GET LIST
+     */
+    public function getList(
+        array $conditions = [],
+        int $limit = 0,
+        int $offset = 0
+    ): array {
+        $params = [];
+
+        $sql = "
+            SELECT *
+            FROM warehouses
+        ";
+
+        $sql .= $this->buildWhere($conditions, $params);
+
         $sql .= " ORDER BY id DESC";
 
         if ($limit > 0) {
+
+            $limit = (int) $limit;
+            $offset = (int) $offset;
+
             $sql .= " LIMIT {$limit} OFFSET {$offset}";
         }
 
@@ -38,37 +63,69 @@ class WarehouseModel
     }
 
     /**
-     * Lấy 1 warehouse theo ID
+     * COUNT
+     */
+    public function count(array $conditions = []): int
+    {
+        $params = [];
+
+        $sql = "
+            SELECT COUNT(*) AS total
+            FROM warehouses
+        ";
+
+        $sql .= $this->buildWhere($conditions, $params);
+
+        $row = Database::first($sql, $params);
+
+        return (int) ($row['total'] ?? 0);
+    }
+
+    /**
+     * FIND BY ID
      */
     public function findById(int $id): ?array
     {
         return Database::first(
-            "SELECT * FROM {$this->table} WHERE id = :id LIMIT 1",
-            ['id' => $id]
+            "
+                SELECT *
+                FROM warehouses
+                WHERE id = :id
+                LIMIT 1
+            ",
+            [
+                'id' => $id
+            ]
         );
     }
 
     /**
-     * Thêm warehouse
+     * CREATE
      */
     public function create(array $data): int
     {
         $fields = array_keys($data);
 
-        $columns = implode(',', $fields);
+        $columns = implode(', ', $fields);
         $placeholders = ':' . implode(', :', $fields);
 
-        $sql = "INSERT INTO {$this->table} ({$columns})
-                VALUES ({$placeholders})";
+        $sql = "
+            INSERT INTO warehouses ({$columns})
+            VALUES ({$placeholders})
+        ";
 
         return Database::insert($sql, $data);
     }
 
     /**
-     * Cập nhật warehouse
+     * UPDATE
      */
     public function updateById(int $id, array $data): int
     {
+        if (empty($data)) {
+            return 0;
+        }
+
         $set = [];
 
         foreach ($data as $key => $value) {
@@ -77,48 +134,28 @@ class WarehouseModel
 
         $data['id'] = $id;
 
-        $sql = "UPDATE {$this->table}
-                SET " . implode(', ', $set) . "
-                WHERE id = :id";
+        $sql = "
+            UPDATE warehouses
+            SET " . implode(', ', $set) . "
+            WHERE id = :id
+        ";
 
         return Database::update($sql, $data);
     }
 
     /**
-     * Xoá warehouse
+     * DELETE
      */
     public function deleteById(int $id): int
     {
         return Database::delete(
-            "DELETE FROM {$this->table} WHERE id = :id",
-            ['id' => $id]
+            "
+                DELETE FROM warehouses
+                WHERE id = :id
+            ",
+            [
+                'id' => $id
+            ]
         );
-    }
-
-    /**
-     * Đếm warehouse (pagination)
-     */
-    public function count(array $conditions = []): int
-    {
-        $sql = "SELECT COUNT(*) as total FROM {$this->table} WHERE 1=1";
-        $params = [];
-
-        if (!empty($conditions['keyword'])) {
-            $sql .= " AND (
-                name LIKE :keyword
-                OR address LIKE :keyword
-            )";
-
-            $params['keyword'] = '%' . $conditions['keyword'] . '%';
-        }
-
-        if (!empty($conditions['status'])) {
-            $sql .= " AND status = :status";
-            $params['status'] = $conditions['status'];
-        }
-
-        $row = Database::first($sql, $params);
-
-        return (int) ($row['total'] ?? 0);
     }
 }

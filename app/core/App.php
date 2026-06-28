@@ -4,7 +4,6 @@ class App
 {
     public function run(): void
     {
-        $this->initEnv(); 
         $this->loadHelpers();
         $this->loadRoutes();
 
@@ -12,11 +11,6 @@ class App
             Request::method(),
             Request::path()
         );
-    }
-
-    protected function initEnv(): void
-    {
-        Env::init();
     }
 
     protected function loadHelpers(): void

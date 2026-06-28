@@ -2,9 +2,6 @@
 
 class BrandModel
 {
-    protected string $table = 'brands';
-    protected string $alias = 'b';
-
     /**
      * BUILD WHERE
      */
@@ -14,13 +11,13 @@ class BrandModel
 
         // STATUS
         if (isset($conditions['status']) && $conditions['status'] !== '') {
-            $sql .= " AND {$this->alias}.status = :status";
+            $sql .= " AND status = :status";
             $params['status'] = $conditions['status'];
         }
 
-        // KEYWORD (search name)
+        // KEYWORD
         if (!empty($conditions['keyword'])) {
-            $sql .= " AND {$this->alias}.name LIKE :keyword";
+            $sql .= " AND name LIKE :keyword";
             $params['keyword'] = '%' . $conditions['keyword'] . '%';
         }
 
@@ -35,16 +32,18 @@ class BrandModel
         $params = [];
 
         $sql = "
-            SELECT 
-                {$this->alias}.*
-            FROM {$this->table} {$this->alias}
+            SELECT *
+            FROM brands
         ";
 
         $sql .= $this->buildWhere($conditions, $params);
 
-        $sql .= " ORDER BY {$this->alias}.id DESC";
+        $sql .= " ORDER BY id DESC";
 
         if ($limit > 0) {
+            $limit = (int) $limit;
+            $offset = (int) $offset;
+
             $sql .= " LIMIT {$limit} OFFSET {$offset}";
         }
 
@@ -59,8 +58,8 @@ class BrandModel
         $params = [];
 
         $sql = "
-            SELECT COUNT(*) as total
-            FROM {$this->table} {$this->alias}
+            SELECT COUNT(*) AS total
+            FROM brands
         ";
 
         $sql .= $this->buildWhere($conditions, $params);
@@ -76,7 +75,12 @@ class BrandModel
     public function findById(int $id): ?array
     {
         return Database::first(
-            "SELECT * FROM {$this->table} WHERE id = :id LIMIT 1",
+            "
+                SELECT *
+                FROM brands
+                WHERE id = :id
+                LIMIT 1
+            ",
             ['id' => $id]
         );
     }
@@ -88,10 +92,13 @@ class BrandModel
     {
         $fields = array_keys($data);
 
-        $columns = implode(',', $fields);
+        $columns = implode(', ', $fields);
         $placeholders = ':' . implode(', :', $fields);
 
-        $sql = "INSERT INTO {$this->table} ({$columns}) VALUES ({$placeholders})";
+        $sql = "
+            INSERT INTO brands ({$columns})
+            VALUES ({$placeholders})
+        ";
 
         return Database::insert($sql, $data);
     }
@@ -101,6 +108,10 @@ class BrandModel
      */
     public function updateById(int $id, array $data): int
     {
+        if (empty($data)) {
+            return 0;
+        }
+
         $set = [];
 
         foreach ($data as $key => $value) {
@@ -109,7 +120,11 @@ class BrandModel
 
         $data['id'] = $id;
 
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $set) . " WHERE id = :id";
+        $sql = "
+            UPDATE brands
+            SET " . implode(', ', $set) . "
+            WHERE id = :id
+        ";
 
         return Database::update($sql, $data);
     }
@@ -120,7 +135,10 @@ class BrandModel
     public function deleteById(int $id): int
     {
         return Database::delete(
-            "DELETE FROM {$this->table} WHERE id = :id",
+            "
+                DELETE FROM brands
+                WHERE id = :id
+            ",
             ['id' => $id]
         );
     }
