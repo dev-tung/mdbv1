@@ -104,88 +104,93 @@ class PurchaseEndpoint
     // =========================
     public function apiCreate()
     {
-        $input = json_decode(file_get_contents("php://input"), true);
+        $input = Request::all();
 
-        $supplier_id  = (int)($input['supplier_id'] ?? 0);
-        $warehouse_id = (int)($input['warehouse_id'] ?? 0);
-        $status       = $input['status'] ?? 'draft';
-        $items        = $input['products'] ?? [];
-        $description  = $input['description'] ?? '';
-        $payment      = $input['payment'] ?? '';
+        $error = PurchaseValidator::validate($input);
 
-        if ($supplier_id <= 0) {
+        if ($error) {
             return Response::json([
                 'success' => false,
-                'message' => 'Nhà cung cấp không hợp lệ'
+                'message' => $error
             ]);
         }
 
-        if ($warehouse_id <= 0) {
-            return Response::json([
-                'success' => false,
-                'message' => 'Kho không hợp lệ'
+        try {
+
+            Database::beginTransaction();
+
+            // tạo phiếu nhập
+            $purchaseId = $this->purchaseModel->create([
+                'supplier_id'  => (int)$input['supplier_id'],
+                'warehouse_id' => (int)$input['warehouse_id'],
+                'status'       => $input['status'] ?? 'draft',
+                'total_cost'   => 0,
+                'description'  => trim($input['description'] ?? ''),
+                'payment'      => $input['payment'] ?? ''
             ]);
-        }
 
-        if (empty($items)) {
-            return Response::json([
-                'success' => false,
-                'message' => 'Chưa có sản phẩm'
-            ]);
-        }
+            $total = 0;
 
-        $purchaseId = $this->purchaseModel->create([
-            'supplier_id'  => $supplier_id,
-            'warehouse_id' => $warehouse_id,
-            'status'       => $status,
-            'total_cost'   => 0,
-            'description'  => $description,
-            'payment'      => $payment
-        ]);
+            $purchaseItems = [];
+            $inventoryLogs = [];
 
-        $total = 0;
+            foreach ($input['products'] as $item) {
 
-        foreach ($items as $item) {
+                $product_id = (int)($item['product_id'] ?? $item['id'] ?? 0);
+                $qty        = (int)($item['quantity'] ?? 1);
+                $price      = (float)($item['price'] ?? 0);
 
-            $product_id = (int)($item['product_id'] ?? $item['id'] ?? 0);
-            $qty        = (int)($item['quantity'] ?? 1);
-            $price      = (float)($item['price'] ?? 0);
+                $total += $qty * $price;
 
-            if ($product_id <= 0 || $qty <= 0) {
-                continue;
+                $purchaseItems[] = [
+                    'purchase_id' => $purchaseId,
+                    'product_id'  => $product_id,
+                    'quantity'    => $qty,
+                    'unit_price'  => $price
+                ];
+
+                $inventoryLogs[] = [
+                    'product_id'     => $product_id,
+                    'warehouse_id'   => (int)$input['warehouse_id'],
+                    'type'           => 'in',
+                    'quantity'       => $qty,
+                    'reference_type' => 'purchase',
+                    'reference_id'   => $purchaseId,
+                    'note'           => 'Nhập kho từ phiếu nhập'
+                ];
             }
 
-            $total += $qty * $price;
+            // insert batch
+            $this->purchaseItemModel->insertBatch(
+                $purchaseItems
+            );
 
-            // purchase item
-            $this->purchaseItemModel->create([
-                'purchase_id' => $purchaseId,
-                'product_id'  => $product_id,
-                'quantity'    => $qty,
-                'unit_price'  => $price
+            $this->inventoryTransactionModel->insertBatch(
+                $inventoryLogs
+            );
+
+            // update total
+            $this->purchaseModel->updateById($purchaseId, [
+                'total_cost' => $total
             ]);
 
-            // nhập kho
-            $this->inventoryTransactionModel->create([
-                'product_id'     => $product_id,
-                'warehouse_id'   => $warehouse_id,
-                'type'           => 'in',
-                'quantity'       => $qty,
-                'reference_type' => 'purchase',
-                'reference_id'   => $purchaseId,
-                'note'           => 'Nhập kho từ phiếu nhập'
+            Database::commit();
+
+            return Response::json([
+                'success' => true,
+                'message' => 'Tạo phiếu nhập thành công',
+                'id'      => $purchaseId
+            ]);
+
+        } catch (Throwable $e) {
+
+            Database::rollback();
+
+            return Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
             ]);
         }
-
-        $this->purchaseModel->updateById($purchaseId, [
-            'total_cost' => $total
-        ]);
-
-        return Response::json([
-            'success' => true,
-            'message' => 'Tạo phiếu nhập thành công',
-            'id'      => $purchaseId
-        ]);
     }
 
     // =========================
@@ -193,7 +198,7 @@ class PurchaseEndpoint
     // =========================
     public function apiUpdate()
     {
-        $input = json_decode(file_get_contents("php://input"), true);
+        $input = Request::all();
 
         $id = (int)($input['id'] ?? 0);
 
@@ -204,45 +209,47 @@ class PurchaseEndpoint
             ]);
         }
 
-        $supplier_id  = (int)($input['supplier_id'] ?? 0);
-        $warehouse_id = (int)($input['warehouse_id'] ?? 0);
-        $status       = $input['status'] ?? '';
-        $items        = $input['products'] ?? [];
-        $description  = $input['description'] ?? '';
-        $payment      = $input['payment'] ?? '';
+        $error = PurchaseValidator::validate($input);
 
-        if (empty($items)) {
+        if ($error) {
             return Response::json([
                 'success' => false,
-                'message' => 'Chưa có sản phẩm'
+                'message' => $error
             ]);
         }
 
-        // =========================
-        // LẤY DỮ LIỆU CŨ
-        // =========================
-        $oldItems = $this->purchaseItemModel->getByPurchaseId($id);
         $oldPurchase = $this->purchaseModel->findById($id);
 
-        // =========================
-        // UPDATE HEADER
-        // =========================
-        $this->purchaseModel->updateById($id, [
-            'supplier_id'  => $supplier_id,
-            'warehouse_id' => $warehouse_id,
-            'status'       => $status,
-            'payment'      => $payment,
-            'description'  => $description
-        ]);
+        if (!$oldPurchase) {
+            return Response::json([
+                'success' => false,
+                'message' => 'Không tìm thấy phiếu nhập'
+            ]);
+        }
 
-        // =========================
-        // ROLLBACK KHO (TRỪ CŨ)
-        // =========================
-        if ($oldItems && $oldPurchase) {
+        try {
+
+            Database::beginTransaction();
+
+            // lấy dữ liệu cũ để rollback kho
+            $oldItems = $this->purchaseItemModel
+                ->getByPurchaseId($id);
+
+            // update header
+            $this->purchaseModel->updateById($id, [
+                'supplier_id'  => (int)$input['supplier_id'],
+                'warehouse_id' => (int)$input['warehouse_id'],
+                'status'       => $input['status'] ?? '',
+                'payment'      => $input['payment'] ?? '',
+                'description'  => trim($input['description'] ?? '')
+            ]);
+
+            // rollback tồn kho cũ
+            $rollbackLogs = [];
 
             foreach ($oldItems as $item) {
 
-                $this->inventoryTransactionModel->create([
+                $rollbackLogs[] = [
                     'product_id'     => $item['product_id'],
                     'warehouse_id'   => $oldPurchase['warehouse_id'],
                     'type'           => 'out',
@@ -250,69 +257,86 @@ class PurchaseEndpoint
                     'reference_type' => 'purchase_update_old',
                     'reference_id'   => $id,
                     'note'           => 'Rollback phiếu nhập cũ'
-                ]);
-            }
-        }
-
-        // =========================
-        // XÓA DETAIL CŨ
-        // =========================
-        $this->purchaseItemModel->deleteByPurchaseId($id);
-
-        // =========================
-        // APPLY DỮ LIỆU MỚI
-        // =========================
-        $total = 0;
-
-        foreach ($items as $item) {
-
-            $product_id = (int)($item['product_id'] ?? $item['id'] ?? 0);
-            $qty        = (int)($item['quantity'] ?? 1);
-            $price      = (float)($item['price'] ?? 0);
-
-            if ($product_id <= 0 || $qty <= 0) {
-                continue;
+                ];
             }
 
-            $total += $qty * $price;
+            if (!empty($rollbackLogs)) {
+                $this->inventoryTransactionModel
+                    ->insertBatch($rollbackLogs);
+            }
 
-            // insert purchase item mới
-            $this->purchaseItemModel->create([
-                'purchase_id' => $id,
-                'product_id'  => $product_id,
-                'quantity'    => $qty,
-                'unit_price'  => $price
+            // xóa item cũ
+            $this->purchaseItemModel
+                ->deleteByPurchaseId($id);
+
+            $purchaseItems = [];
+            $inventoryLogs = [];
+            $total = 0;
+
+            // tạo item mới
+            foreach ($input['products'] as $item) {
+
+                $product_id = (int)($item['product_id'] ?? $item['id'] ?? 0);
+                $qty        = (int)($item['quantity'] ?? 1);
+                $price      = (float)($item['price'] ?? 0);
+
+                $total += $qty * $price;
+
+                $purchaseItems[] = [
+                    'purchase_id' => $id,
+                    'product_id'  => $product_id,
+                    'quantity'    => $qty,
+                    'unit_price'  => $price
+                ];
+
+                $inventoryLogs[] = [
+                    'product_id'     => $product_id,
+                    'warehouse_id'   => (int)$input['warehouse_id'],
+                    'type'           => 'in',
+                    'quantity'       => $qty,
+                    'reference_type' => 'purchase_update_new',
+                    'reference_id'   => $id,
+                    'note'           => 'Cập nhật phiếu nhập'
+                ];
+            }
+
+            // batch insert
+            $this->purchaseItemModel
+                ->insertBatch($purchaseItems);
+
+            $this->inventoryTransactionModel
+                ->insertBatch($inventoryLogs);
+
+            // update total
+            $this->purchaseModel->updateById($id, [
+                'total_cost' => $total
             ]);
 
-            // nhập kho mới
-            $this->inventoryTransactionModel->create([
-                'product_id'     => $product_id,
-                'warehouse_id'   => $warehouse_id,
-                'type'           => 'in',
-                'quantity'       => $qty,
-                'reference_type' => 'purchase_update_new',
-                'reference_id'   => $id,
-                'note'           => 'Cập nhật phiếu nhập'
+            Database::commit();
+
+            return Response::json([
+                'success' => true,
+                'message' => 'Cập nhật thành công',
+                'id'      => $id
+            ]);
+
+        } catch (Throwable $e) {
+
+            Database::rollback();
+
+            return Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
             ]);
         }
-
-        // =========================
-        // UPDATE TOTAL
-        // =========================
-        $this->purchaseModel->updateById($id, [
-            'total_cost' => $total
-        ]);
-
-        return Response::json([
-            'success' => true,
-            'message' => 'Cập nhật thành công',
-            'id'      => $id
-        ]);
     }
 
+    // =========================
+    // DELETE
+    // =========================
     public function apiDelete()
     {
-        $id = (int)($_POST['id'] ?? 0);
+        $id = (int) Request::input('id', 0);
 
         if ($id <= 0) {
             return Response::json([
@@ -321,39 +345,72 @@ class PurchaseEndpoint
             ]);
         }
 
-        // lấy items để rollback kho (QUAN TRỌNG)
-        $items = $this->purchaseItemModel->getByPurchaseId($id);
-
         $purchase = $this->purchaseModel->findById($id);
 
-        if ($purchase && $items) {
+        if (!$purchase) {
+            return Response::json([
+                'success' => false,
+                'message' => 'Không tìm thấy phiếu nhập'
+            ]);
+        }
+
+        try {
+
+            Database::beginTransaction();
+
+            // lấy items để rollback kho
+            $items = $this->purchaseItemModel
+                ->getByPurchaseId($id);
+
+            // chuẩn bị lịch sử xuất kho
+            $inventoryLogs = [];
 
             foreach ($items as $item) {
 
-                $this->inventoryTransactionModel->create([
+                $inventoryLogs[] = [
                     'product_id'     => $item['product_id'],
                     'warehouse_id'   => $purchase['warehouse_id'],
-                    'type'           => 'out', // rollback nhập kho
+                    'type'           => 'out',
                     'quantity'       => $item['quantity'],
                     'reference_type' => 'purchase_delete',
                     'reference_id'   => $id,
                     'note'           => 'Hủy phiếu nhập - hoàn kho'
-                ]);
+                ];
             }
+
+            // ghi lịch sử kho
+            if (!empty($inventoryLogs)) {
+
+                $this->inventoryTransactionModel
+                    ->insertBatch($inventoryLogs);
+            }
+
+            // xóa chi tiết
+            $this->purchaseItemModel
+                ->deleteByPurchaseId($id);
+
+            // xóa phiếu nhập
+            $deleted = $this->purchaseModel
+                ->deleteById($id);
+
+            Database::commit();
+
+            return Response::json([
+                'success' => $deleted > 0,
+                'message' => $deleted > 0
+                    ? 'Xóa thành công'
+                    : 'Không tìm thấy phiếu nhập'
+            ]);
+
+        } catch (Throwable $e) {
+
+            Database::rollback();
+
+            return Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
         }
-
-        // xóa detail (OK)
-        $this->purchaseItemModel->deleteByPurchaseId($id);
-
-        // xóa purchase
-        $deleted = $this->purchaseModel->deleteById($id);
-
-        return Response::json([
-            'success' => $deleted > 0,
-            'message' => $deleted > 0
-                ? 'Xóa thành công'
-                : 'Không tìm thấy phiếu nhập'
-        ]);
     }
 
     // =========================

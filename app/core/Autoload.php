@@ -9,6 +9,7 @@ class Autoload
             $paths = [
                 BASE_PATH . '/app/core/' . $class . '.php',
                 BASE_PATH . '/app/config/' . $class . '.php',
+                BASE_PATH . '/app/modules/*/validators/' . $class . '.php',
                 BASE_PATH . '/app/modules/*/models/' . $class . '.php',
                 BASE_PATH . '/app/modules/*/controllers/' . $class . '.php',
                 BASE_PATH . '/app/modules/*/endpoints/' . $class . '.php',

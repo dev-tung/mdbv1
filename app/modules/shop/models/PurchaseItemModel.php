@@ -53,6 +53,54 @@ class PurchaseItemModel
     }
 
     // =========================
+    // INSERT BATCH
+    // =========================
+    public function insertBatch(array $rows): bool
+    {
+        if (empty($rows)) {
+            return false;
+        }
+
+        // tránh query quá lớn
+        $chunks = array_chunk($rows, 500);
+
+        foreach ($chunks as $chunk) {
+
+            $columns = array_keys($chunk[0]);
+
+            $values = [];
+            $params = [];
+
+            foreach ($chunk as $index => $row) {
+
+                $placeholders = [];
+
+                foreach ($columns as $column) {
+
+                    $key = "{$column}_{$index}";
+
+                    $placeholders[] = ":{$key}";
+                    $params[$key] = $row[$column] ?? null;
+                }
+
+                $values[] = '(' . implode(',', $placeholders) . ')';
+            }
+
+            $sql = sprintf(
+                "INSERT INTO %s (%s) VALUES %s",
+                $this->table,
+                implode(',', $columns),
+                implode(',', $values)
+            );
+
+            Database::query($sql, $params);
+        }
+
+        return true;
+    }
+    
+
+    // =========================
     // DELETE BY PURCHASE ID
     // =========================
     public function deleteByPurchaseId(int $purchaseId): int
