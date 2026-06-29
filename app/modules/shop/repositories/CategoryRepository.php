@@ -1,6 +1,6 @@
 <?php
 
-class WarehouseModel
+class CategoryRepository
 {
     /**
      * BUILD WHERE
@@ -11,22 +11,8 @@ class WarehouseModel
 
         // KEYWORD
         if (!empty($conditions['keyword'])) {
-
-            $sql .= "
-                AND (
-                    name LIKE :keyword
-                    OR address LIKE :keyword
-                )
-            ";
-
+            $sql .= " AND name LIKE :keyword";
             $params['keyword'] = '%' . trim($conditions['keyword']) . '%';
-        }
-
-        // STATUS
-        if (isset($conditions['status']) && $conditions['status'] !== '') {
-
-            $sql .= " AND status = :status";
-            $params['status'] = $conditions['status'];
         }
 
         return $sql;
@@ -35,16 +21,13 @@ class WarehouseModel
     /**
      * GET LIST
      */
-    public function getList(
-        array $conditions = [],
-        int $limit = 0,
-        int $offset = 0
-    ): array {
+    public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
+    {
         $params = [];
 
         $sql = "
             SELECT *
-            FROM warehouses
+            FROM categories
         ";
 
         $sql .= $this->buildWhere($conditions, $params);
@@ -52,7 +35,6 @@ class WarehouseModel
         $sql .= " ORDER BY id DESC";
 
         if ($limit > 0) {
-
             $limit = (int) $limit;
             $offset = (int) $offset;
 
@@ -71,7 +53,7 @@ class WarehouseModel
 
         $sql = "
             SELECT COUNT(*) AS total
-            FROM warehouses
+            FROM categories
         ";
 
         $sql .= $this->buildWhere($conditions, $params);
@@ -89,13 +71,11 @@ class WarehouseModel
         return Database::first(
             "
                 SELECT *
-                FROM warehouses
+                FROM categories
                 WHERE id = :id
                 LIMIT 1
             ",
-            [
-                'id' => $id
-            ]
+            ['id' => $id]
         );
     }
 
@@ -110,7 +90,7 @@ class WarehouseModel
         $placeholders = ':' . implode(', :', $fields);
 
         $sql = "
-            INSERT INTO warehouses ({$columns})
+            INSERT INTO categories ({$columns})
             VALUES ({$placeholders})
         ";
 
@@ -135,7 +115,7 @@ class WarehouseModel
         $data['id'] = $id;
 
         $sql = "
-            UPDATE warehouses
+            UPDATE categories
             SET " . implode(', ', $set) . "
             WHERE id = :id
         ";
@@ -150,12 +130,10 @@ class WarehouseModel
     {
         return Database::delete(
             "
-                DELETE FROM warehouses
+                DELETE FROM categories
                 WHERE id = :id
             ",
-            [
-                'id' => $id
-            ]
+            ['id' => $id]
         );
     }
 }

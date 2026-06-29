@@ -2,15 +2,15 @@
 
 class OrderEndpoint
 {
-    protected OrderModel $orderModel;
-    protected OrderItemModel $orderItemModel;
-    protected InventoryTransactionModel $inventoryTransactionModel;
+    protected OrderRepository $orderRepository;
+    protected OrderItemRepository $orderItemRepository;
+    protected InventoryTransactionRepository $inventoryTransactionRepository;
 
     public function __construct()
     {
-        $this->orderModel = new OrderModel();
-        $this->orderItemModel = new OrderItemModel();
-        $this->inventoryTransactionModel = new InventoryTransactionModel();
+        $this->orderRepository = new OrderRepository();
+        $this->orderItemRepository = new OrderItemRepository();
+        $this->inventoryTransactionRepository = new InventoryTransactionRepository();
     }
 
     // =========================
@@ -23,13 +23,13 @@ class OrderEndpoint
 
         $filters = request_filters(['keyword', 'customer_id', 'status', 'payment']);
 
-        $data = $this->orderModel->getList(
+        $data = $this->orderRepository->getList(
             $filters,
             $limit,
             ($page - 1) * $limit
         );
 
-        $total = $this->orderModel->count($filters);
+        $total = $this->orderRepository->count($filters);
 
         return Response::json([
             'success' => true,
@@ -57,7 +57,7 @@ class OrderEndpoint
             ]);
         }
 
-        $order = $this->orderModel->findById($id);
+        $order = $this->orderRepository->findById($id);
 
         if (!$order) {
             return Response::json([
@@ -66,7 +66,7 @@ class OrderEndpoint
             ]);
         }
 
-        $items = $this->orderItemModel->getByOrderId($id);
+        $items = $this->orderItemRepository->getByOrderId($id);
 
         $products = [];
 
@@ -125,7 +125,7 @@ class OrderEndpoint
         }
 
         // TẠO ĐƠN HÀNG
-        $orderId = $this->orderModel->create([
+        $orderId = $this->orderRepository->create([
             'customer_id' => $customer_id,
             'status'      => $status,
             'payment'     => $payment,
@@ -150,7 +150,7 @@ class OrderEndpoint
             $lineTotal = ($qty * $price) - $discount;
             $total += $lineTotal;
 
-            $this->orderItemModel->create([
+            $this->orderItemRepository->create([
                 'order_id'         => $orderId,
                 'product_id'       => $product_id,
                 'purchase_item_id' => $purchase_item_id,
@@ -160,7 +160,7 @@ class OrderEndpoint
             ]);
 
             // Tạo lịch sử xuất kho
-            $this->inventoryTransactionModel->create([
+            $this->inventoryTransactionRepository->create([
                 'product_id'     => $product_id,
                 'type'           => 'out',
                 'quantity'       => $qty,
@@ -171,7 +171,7 @@ class OrderEndpoint
         }
 
         // CẬP NHẬT TỔNG TIỀN
-        $this->orderModel->updateById($orderId, [
+        $this->orderRepository->updateById($orderId, [
             'total_amount' => $total
         ]);
 
@@ -225,7 +225,7 @@ class OrderEndpoint
         // =========================
         // UPDATE ORDER HEADER
         // =========================
-        $this->orderModel->updateById($orderId, [
+        $this->orderRepository->updateById($orderId, [
             'customer_id' => $customer_id,
             'status'      => $status,
             'payment'     => $payment,
@@ -238,10 +238,10 @@ class OrderEndpoint
         // =========================
 
         // Xóa chi tiết đơn hàng cũ
-        $this->orderItemModel->deleteByOrderId($orderId);
+        $this->orderItemRepository->deleteByOrderId($orderId);
 
         // Xóa lịch sử xuất kho cũ
-        $this->inventoryTransactionModel->deleteByReference(
+        $this->inventoryTransactionRepository->deleteByReference(
             'order',
             $orderId
         );
@@ -268,7 +268,7 @@ class OrderEndpoint
             $total += $lineTotal;
 
             // Tạo lại order item
-            $this->orderItemModel->create([
+            $this->orderItemRepository->create([
                 'order_id'         => $orderId,
                 'product_id'       => $product_id,
                 'purchase_item_id' => $purchase_item_id,
@@ -278,7 +278,7 @@ class OrderEndpoint
             ]);
 
             // Tạo lại lịch sử xuất kho
-            $this->inventoryTransactionModel->create([
+            $this->inventoryTransactionRepository->create([
                 'product_id'     => $product_id,
                 'warehouse_id'   => $warehouse_id,
                 'type'           => 'out',
@@ -292,7 +292,7 @@ class OrderEndpoint
         // =========================
         // UPDATE TOTAL
         // =========================
-        $this->orderModel->updateById($orderId, [
+        $this->orderRepository->updateById($orderId, [
             'total_amount' => $total
         ]);
 
@@ -318,7 +318,7 @@ class OrderEndpoint
             ]);
         }
 
-        $updated = $this->orderModel->updateById($id, [
+        $updated = $this->orderRepository->updateById($id, [
             'status' => $status,
             'updated_at' => date('Y-m-d H:i:s')
         ]);
@@ -353,7 +353,7 @@ class OrderEndpoint
             ]);
         }
 
-        $updated = $this->orderModel->updateById($id, [
+        $updated = $this->orderRepository->updateById($id, [
             'payment' => $payment,
             'updated_at' => date('Y-m-d H:i:s')
         ]);
@@ -379,16 +379,16 @@ class OrderEndpoint
         }
 
         // Xóa lịch sử xuất kho
-        $this->inventoryTransactionModel->deleteByReference(
+        $this->inventoryTransactionRepository->deleteByReference(
             'order',
             $id
         );
 
         // Xóa chi tiết đơn hàng
-        $this->orderItemModel->deleteByOrderId($id);
+        $this->orderItemRepository->deleteByOrderId($id);
 
         // Xóa đơn hàng
-        $deleted = $this->orderModel->deleteById($id);
+        $deleted = $this->orderRepository->deleteById($id);
 
         return Response::json([
             'success' => $deleted > 0,

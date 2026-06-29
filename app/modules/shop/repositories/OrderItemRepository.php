@@ -1,6 +1,6 @@
 <?php
 
-class OrderItemModel
+class OrderItemRepository
 {
     protected string $table = 'order_items';
 

@@ -1,24 +1,32 @@
 <?php
 
-class BrandModel
+class WarehouseRepository
 {
     /**
      * BUILD WHERE
      */
     private function buildWhere(array $conditions, array &$params): string
     {
-        $sql = " WHERE 1=1 ";
-
-        // STATUS
-        if (isset($conditions['status']) && $conditions['status'] !== '') {
-            $sql .= " AND status = :status";
-            $params['status'] = $conditions['status'];
-        }
+        $sql = " WHERE 1=1";
 
         // KEYWORD
         if (!empty($conditions['keyword'])) {
-            $sql .= " AND name LIKE :keyword";
-            $params['keyword'] = '%' . $conditions['keyword'] . '%';
+
+            $sql .= "
+                AND (
+                    name LIKE :keyword
+                    OR address LIKE :keyword
+                )
+            ";
+
+            $params['keyword'] = '%' . trim($conditions['keyword']) . '%';
+        }
+
+        // STATUS
+        if (isset($conditions['status']) && $conditions['status'] !== '') {
+
+            $sql .= " AND status = :status";
+            $params['status'] = $conditions['status'];
         }
 
         return $sql;
@@ -27,13 +35,16 @@ class BrandModel
     /**
      * GET LIST
      */
-    public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
-    {
+    public function getList(
+        array $conditions = [],
+        int $limit = 0,
+        int $offset = 0
+    ): array {
         $params = [];
 
         $sql = "
             SELECT *
-            FROM brands
+            FROM warehouses
         ";
 
         $sql .= $this->buildWhere($conditions, $params);
@@ -41,6 +52,7 @@ class BrandModel
         $sql .= " ORDER BY id DESC";
 
         if ($limit > 0) {
+
             $limit = (int) $limit;
             $offset = (int) $offset;
 
@@ -59,7 +71,7 @@ class BrandModel
 
         $sql = "
             SELECT COUNT(*) AS total
-            FROM brands
+            FROM warehouses
         ";
 
         $sql .= $this->buildWhere($conditions, $params);
@@ -77,11 +89,13 @@ class BrandModel
         return Database::first(
             "
                 SELECT *
-                FROM brands
+                FROM warehouses
                 WHERE id = :id
                 LIMIT 1
             ",
-            ['id' => $id]
+            [
+                'id' => $id
+            ]
         );
     }
 
@@ -96,7 +110,7 @@ class BrandModel
         $placeholders = ':' . implode(', :', $fields);
 
         $sql = "
-            INSERT INTO brands ({$columns})
+            INSERT INTO warehouses ({$columns})
             VALUES ({$placeholders})
         ";
 
@@ -121,7 +135,7 @@ class BrandModel
         $data['id'] = $id;
 
         $sql = "
-            UPDATE brands
+            UPDATE warehouses
             SET " . implode(', ', $set) . "
             WHERE id = :id
         ";
@@ -136,10 +150,12 @@ class BrandModel
     {
         return Database::delete(
             "
-                DELETE FROM brands
+                DELETE FROM warehouses
                 WHERE id = :id
             ",
-            ['id' => $id]
+            [
+                'id' => $id
+            ]
         );
     }
 }

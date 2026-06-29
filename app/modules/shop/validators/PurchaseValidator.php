@@ -5,7 +5,7 @@ class PurchaseValidator
     /**
      * Validate khi CREATE
      */
-    public static function validateCreate(array $data): ?string
+    public static function create(array $data): ?string
     {
         // supplier_id
         if (empty($data['supplier_id']) || (int)$data['supplier_id'] <= 0) {
@@ -57,7 +57,7 @@ class PurchaseValidator
     /**
      * Validate khi UPDATE
      */
-    public static function validateUpdate(array $data): ?string
+    public static function update(array $data): ?string
     {
         // reuse logic create (trừ items có thể optional tuỳ bạn)
         if (!empty($data['supplier_id']) && (int)$data['supplier_id'] <= 0) {

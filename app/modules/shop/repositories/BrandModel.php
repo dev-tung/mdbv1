@@ -1,18 +1,24 @@
 <?php
 
-class CategoryModel
+class BrandRepository
 {
     /**
      * BUILD WHERE
      */
     private function buildWhere(array $conditions, array &$params): string
     {
-        $sql = " WHERE 1=1";
+        $sql = " WHERE 1=1 ";
+
+        // STATUS
+        if (isset($conditions['status']) && $conditions['status'] !== '') {
+            $sql .= " AND status = :status";
+            $params['status'] = $conditions['status'];
+        }
 
         // KEYWORD
         if (!empty($conditions['keyword'])) {
             $sql .= " AND name LIKE :keyword";
-            $params['keyword'] = '%' . trim($conditions['keyword']) . '%';
+            $params['keyword'] = '%' . $conditions['keyword'] . '%';
         }
 
         return $sql;
@@ -27,7 +33,7 @@ class CategoryModel
 
         $sql = "
             SELECT *
-            FROM categories
+            FROM brands
         ";
 
         $sql .= $this->buildWhere($conditions, $params);
@@ -53,7 +59,7 @@ class CategoryModel
 
         $sql = "
             SELECT COUNT(*) AS total
-            FROM categories
+            FROM brands
         ";
 
         $sql .= $this->buildWhere($conditions, $params);
@@ -71,7 +77,7 @@ class CategoryModel
         return Database::first(
             "
                 SELECT *
-                FROM categories
+                FROM brands
                 WHERE id = :id
                 LIMIT 1
             ",
@@ -90,7 +96,7 @@ class CategoryModel
         $placeholders = ':' . implode(', :', $fields);
 
         $sql = "
-            INSERT INTO categories ({$columns})
+            INSERT INTO brands ({$columns})
             VALUES ({$placeholders})
         ";
 
@@ -115,7 +121,7 @@ class CategoryModel
         $data['id'] = $id;
 
         $sql = "
-            UPDATE categories
+            UPDATE brands
             SET " . implode(', ', $set) . "
             WHERE id = :id
         ";
@@ -130,7 +136,7 @@ class CategoryModel
     {
         return Database::delete(
             "
-                DELETE FROM categories
+                DELETE FROM brands
                 WHERE id = :id
             ",
             ['id' => $id]

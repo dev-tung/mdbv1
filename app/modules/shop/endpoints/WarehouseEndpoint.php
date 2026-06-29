@@ -2,11 +2,11 @@
 
 class WarehouseEndpoint
 {
-    protected WarehouseModel $warehouseModel;
+    protected WarehouseRepository $warehouseRepository;
 
     public function __construct()
     {
-        $this->warehouseModel = new WarehouseModel();
+        $this->warehouseRepository = new WarehouseRepository();
     }
 
     // =========================
@@ -24,7 +24,7 @@ class WarehouseEndpoint
             $filters['keyword'] = $keyword;
         }
 
-        $warehouses = $this->warehouseModel->getList($filters);
+        $warehouses = $this->warehouseRepository->getList($filters);
 
         echo json_encode([
             'data' => $warehouses
@@ -46,7 +46,7 @@ class WarehouseEndpoint
             return;
         }
 
-        $warehouse = $this->warehouseModel->findById($id);
+        $warehouse = $this->warehouseRepository->findById($id);
 
         if (!$warehouse) {
             echo json_encode([
@@ -85,7 +85,7 @@ class WarehouseEndpoint
             return;
         }
 
-        $id = $this->warehouseModel->create($data);
+        $id = $this->warehouseRepository->create($data);
 
         echo json_encode([
             'success' => $id > 0,
@@ -118,7 +118,7 @@ class WarehouseEndpoint
             'updated_at' => date('Y-m-d H:i:s'),
         ];
 
-        $updated = $this->warehouseModel->updateById($id, $data);
+        $updated = $this->warehouseRepository->updateById($id, $data);
 
         echo json_encode([
             'success' => $updated > 0,
@@ -143,7 +143,7 @@ class WarehouseEndpoint
             return;
         }
 
-        $deleted = $this->warehouseModel->deleteById($id);
+        $deleted = $this->warehouseRepository->deleteById($id);
 
         echo json_encode([
             'success' => $deleted > 0,

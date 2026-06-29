@@ -2,11 +2,11 @@
 
 class CategoryEndpoint
 {
-    protected CategoryModel $categoryModel;
+    protected CategoryRepository $categoryRepository;
 
     public function __construct()
     {
-        $this->categoryModel = new CategoryModel();
+        $this->categoryRepository = new CategoryRepository();
     }
 
     public function apiList()
@@ -14,7 +14,7 @@ class CategoryEndpoint
         header('Content-Type: application/json');
 
         // Lấy tất cả category (thường dùng cho dropdown filter)
-        $categories = $this->categoryModel->getList();
+        $categories = $this->categoryRepository->getList();
 
         echo json_encode([
             'data' => $categories

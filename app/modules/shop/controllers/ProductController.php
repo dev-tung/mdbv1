@@ -2,13 +2,13 @@
 
 class ProductController
 {
-    protected ProductModel $productModel;
-    protected CategoryModel $categoryModel;
+    protected ProductRepository $productRepository;
+    protected CategoryRepository $categoryRepository;
 
     public function __construct()
     {
-        $this->productModel   = new ProductModel();
-        $this->categoryModel  = new CategoryModel();
+        $this->productRepository   = new ProductRepository();
+        $this->categoryRepository  = new CategoryRepository();
     }
 
     /**
@@ -16,7 +16,7 @@ class ProductController
      */
     public function index(): void
     {
-        $categories = $this->categoryModel->getList();
+        $categories = $this->categoryRepository->getList();
 
         View::render('product/index', [
             'categories' => $categories
@@ -30,7 +30,7 @@ class ProductController
 
     public function edit($id): void
     {
-        $product = $this->productModel->findById((int)$id)
+        $product = $this->productRepository->findById((int)$id)
             or die('Product not found');
 
         View::render('product/edit', compact('id', 'product'));

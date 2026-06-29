@@ -2,20 +2,23 @@
 
 class PurchaseEndpoint
 {
-    private PurchaseModel $purchaseModel;
+    private PurchaseService $purchaseService;
+    private PurchaseRepository $purchaseRepository;
 
     public function __construct()
     {
-        $this->purchaseModel = new PurchaseModel();
+        $this->purchaseService     = new PurchaseService();
+        $this->purchaseRepository  = new PurchaseRepository();
     }
 
     // =========================
-    // LIST
+    // LIST (DIRECT REPOSITORY)
     // =========================
     public function apiList()
     {
         $page  = request_input('page', 1);
         $limit = Config::get('pagination', 'default_per_page');
+        $offset = ($page - 1) * $limit;
 
         $filters = request_filters([
             'keyword',
@@ -24,36 +27,34 @@ class PurchaseEndpoint
             'payment'
         ]);
 
-        $offset = ($page - 1) * $limit;
-
-        $data = $this->purchaseModel->getList($filters, $limit, $offset);
-        $total = $this->purchaseModel->count($filters);
+        $data  = $this->purchaseRepository->getList($filters, $limit, $offset);
+        $total = $this->purchaseRepository->count($filters);
 
         return Response::json([
             'success' => true,
             'data' => $data,
             'meta' => [
-                'page' => $page,
+                'page' => (int)$page,
+                'perPage' => (int)$limit,
                 'total' => $total,
-                'totalPages' => $limit > 0 ? ceil($total / $limit) : 0,
-                'perPage' => $limit
+                'totalPages' => $limit > 0 ? (int)ceil($total / $limit) : 0
             ]
         ]);
     }
 
     // =========================
-    // SHOW
+    // SHOW (DIRECT REPOSITORY)
     // =========================
     public function apiShow()
     {
         $id = request_id();
 
-        $data = $this->purchaseModel->findDetail($id);
+        $data = $this->purchaseRepository->findDetail($id);
 
         if (!$data) {
             return Response::json([
                 'success' => false,
-                'message' => 'Không tìm thấy phiếu nhập'
+                'message' => 'Purchase not found'
             ]);
         }
 
@@ -64,13 +65,13 @@ class PurchaseEndpoint
     }
 
     // =========================
-    // CREATE
+    // CREATE (SERVICE)
     // =========================
     public function apiCreate()
     {
         $input = request_all();
 
-        $error = PurchaseValidator::validateCreate($input);
+        $error = PurchaseValidator::create($input);
 
         if ($error) {
             return Response::json([
@@ -79,25 +80,26 @@ class PurchaseEndpoint
             ]);
         }
 
-        $id = $this->purchaseModel->createPurchase($input);
+        $id = $this->purchaseService->create($input);
 
         return Response::json([
             'success' => true,
-            'message' => 'Tạo phiếu nhập thành công',
+            'message' => 'Create success',
             'id' => $id
         ]);
     }
 
     // =========================
-    // UPDATE
+    // UPDATE (SERVICE)
     // =========================
     public function apiUpdate()
     {
         $id = request_id();
-
         $input = request_all();
 
-        $error = PurchaseValidator::validateUpdate($input);
+        $input['id'] = $id;
+
+        $error = PurchaseValidator::update($input);
 
         if ($error) {
             return Response::json([
@@ -106,26 +108,26 @@ class PurchaseEndpoint
             ]);
         }
 
-        $this->purchaseModel->updatePurchase($id, $input);
+        $this->purchaseService->update($input);
 
         return Response::json([
             'success' => true,
-            'message' => 'Cập nhật thành công'
+            'message' => 'Update success'
         ]);
     }
 
     // =========================
-    // DELETE
+    // DELETE (SERVICE)
     // =========================
     public function apiDelete()
     {
         $id = request_id();
 
-        $this->purchaseModel->deletePurchase($id);
+        $this->purchaseService->delete($id);
 
         return Response::json([
             'success' => true,
-            'message' => 'Xóa thành công'
+            'message' => 'Delete success'
         ]);
     }
 }

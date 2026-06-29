@@ -1,6 +1,6 @@
 <?php
 
-class ProductModel
+class ProductRepository
 {
     /**
      * BUILD WHERE

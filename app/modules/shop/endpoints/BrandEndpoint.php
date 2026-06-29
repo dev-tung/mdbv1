@@ -2,11 +2,11 @@
 
 class BrandEndpoint
 {
-    protected BrandModel $brandModel;
+    protected BrandRepository $brandRepository;
 
     public function __construct()
     {
-        $this->brandModel = new BrandModel();
+        $this->brandRepository = new BrandRepository();
     }
 
     // =========================
@@ -19,13 +19,13 @@ class BrandEndpoint
 
         $filters = request_filters(['keyword', 'status']);
 
-        $brands = $this->brandModel->getList(
+        $brands = $this->brandRepository->getList(
             $filters,
             $limit,
             ($page - 1) * $limit
         );
 
-        $total = $this->brandModel->count($filters);
+        $total = $this->brandRepository->count($filters);
 
         return Response::json([
             'data' => $brands,
@@ -50,7 +50,7 @@ class BrandEndpoint
             ]);
         }
 
-        $brand = $this->brandModel->findById($id);
+        $brand = $this->brandRepository->findById($id);
 
         if (!$brand) {
             return Response::json([
@@ -112,7 +112,7 @@ class BrandEndpoint
             }
         }
 
-        $id = $this->brandModel->create($data);
+        $id = $this->brandRepository->create($data);
 
         return Response::json([
             'success' => $id > 0,
@@ -176,7 +176,7 @@ class BrandEndpoint
             }
         }
 
-        $updated = $this->brandModel->updateById($id, $data);
+        $updated = $this->brandRepository->updateById($id, $data);
 
         return Response::json([
             'success' => $updated > 0,
@@ -198,7 +198,7 @@ class BrandEndpoint
             ]);
         }
 
-        $deleted = $this->brandModel->deleteById($id);
+        $deleted = $this->brandRepository->deleteById($id);
 
         return Response::json([
             'success' => $deleted > 0,

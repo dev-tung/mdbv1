@@ -3,12 +3,12 @@
 class InventoryEndpoint
 {
 
-    protected InventoryModel $inventoryModel;
+    protected InventoryRepository $inventoryRepository;
 
 
     public function __construct()
     {
-        $this->inventoryModel = new InventoryModel();
+        $this->inventoryRepository = new InventoryRepository();
     }
 
 
@@ -23,7 +23,7 @@ class InventoryEndpoint
 
         return Response::json([
             'success'=>true,
-            'data'=>$this->inventoryModel->getList($filters)
+            'data'=>$this->inventoryRepository->getList($filters)
         ]);
     }
 
@@ -38,7 +38,7 @@ class InventoryEndpoint
 
         return Response::json([
             'success'=>true,
-            'data'=>$this->inventoryModel->getStock($filters)
+            'data'=>$this->inventoryRepository->getStock($filters)
         ]);
     }
 
@@ -46,7 +46,7 @@ class InventoryEndpoint
     // SHOW
     public function apiShow($id)
     {
-        $data = $this->inventoryModel->apiShow($id);
+        $data = $this->inventoryRepository->apiShow($id);
 
         if(!$data){
 
@@ -69,7 +69,7 @@ class InventoryEndpoint
     {
         $data = request()->all();
 
-        $id = $this->inventoryModel->create([
+        $id = $this->inventoryRepository->create([
             'product_id'     => $data['product_id'],
             'warehouse_id'   => $data['warehouse_id'] ?? null,
             'type'           => $data['type'],
@@ -91,7 +91,7 @@ class InventoryEndpoint
     {
         $data = request()->all();
 
-        $this->inventoryModel->update($data['id'], [
+        $this->inventoryRepository->update($data['id'], [
             'product_id'   => $data['product_id'],
             'warehouse_id' => $data['warehouse_id'] ?? null,
             'type'         => $data['type'],
@@ -111,7 +111,7 @@ class InventoryEndpoint
     {
         $data = request()->all();
 
-        $this->inventoryModel->delete($data['id']);
+        $this->inventoryRepository->delete($data['id']);
 
         return Response::json([
             'success'=>true,

@@ -2,11 +2,11 @@
 
 class CustomerEndpoint
 {
-    protected CustomerModel $customerModel;
+    protected CustomerRepository $customerRepository;
 
     public function __construct()
     {
-        $this->customerModel = new CustomerModel();
+        $this->customerRepository = new CustomerRepository();
     }
 
     // =========================
@@ -19,13 +19,13 @@ class CustomerEndpoint
 
         $filters = request_filters(['keyword', 'group_id']);
 
-        $data = $this->customerModel->getList(
+        $data = $this->customerRepository->getList(
             $filters,
             $limit,
             ($page - 1) * $limit
         );
 
-        $total = $this->customerModel->count($filters);
+        $total = $this->customerRepository->count($filters);
 
         return Response::json([
             'success' => true,
@@ -53,7 +53,7 @@ class CustomerEndpoint
             ]);
         }
 
-        $customer = $this->customerModel->findById($id);
+        $customer = $this->customerRepository->findById($id);
 
         if (!$customer) {
             return Response::json([
@@ -89,7 +89,7 @@ class CustomerEndpoint
             ]);
         }
 
-        $id = $this->customerModel->create([
+        $id = $this->customerRepository->create([
             'name'        => $name,
             'phone'       => $phone,
             'email'       => $email,
@@ -131,7 +131,7 @@ class CustomerEndpoint
             'updated_at'  => date('Y-m-d H:i:s')
         ];
 
-        $updated = $this->customerModel->updateById($id, $data);
+        $updated = $this->customerRepository->updateById($id, $data);
 
         return Response::json([
             'success' => $updated > 0,
@@ -153,7 +153,7 @@ class CustomerEndpoint
             ]);
         }
 
-        $deleted = $this->customerModel->deleteById($id);
+        $deleted = $this->customerRepository->deleteById($id);
 
         return Response::json([
             'success' => $deleted > 0,

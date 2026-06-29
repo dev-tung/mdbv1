@@ -2,11 +2,11 @@
 
 class SupplierEndpoint
 {
-    protected SupplierModel $supplierModel;
+    protected SupplierRepository $supplierRepository;
 
     public function __construct()
     {
-        $this->supplierModel = new SupplierModel();
+        $this->supplierRepository = new SupplierRepository();
     }
 
     // =========================
@@ -24,7 +24,7 @@ class SupplierEndpoint
             $filters['keyword'] = $keyword;
         }
 
-        $suppliers = $this->supplierModel->getList($filters);
+        $suppliers = $this->supplierRepository->getList($filters);
 
         echo json_encode([
             'data' => $suppliers
@@ -46,7 +46,7 @@ class SupplierEndpoint
             return;
         }
 
-        $supplier = $this->supplierModel->findById($id);
+        $supplier = $this->supplierRepository->findById($id);
 
         if (!$supplier) {
             echo json_encode([
@@ -87,7 +87,7 @@ class SupplierEndpoint
             return;
         }
 
-        $id = $this->supplierModel->create($data);
+        $id = $this->supplierRepository->create($data);
 
         echo json_encode([
             'success' => $id > 0,
@@ -122,7 +122,7 @@ class SupplierEndpoint
             'updated_at'  => date('Y-m-d H:i:s'),
         ];
 
-        $updated = $this->supplierModel->updateById($id, $data);
+        $updated = $this->supplierRepository->updateById($id, $data);
 
         echo json_encode([
             'success' => $updated > 0,
@@ -147,7 +147,7 @@ class SupplierEndpoint
             return;
         }
 
-        $deleted = $this->supplierModel->deleteById($id);
+        $deleted = $this->supplierRepository->deleteById($id);
 
         echo json_encode([
             'success' => $deleted > 0,

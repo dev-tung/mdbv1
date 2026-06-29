@@ -1,6 +1,6 @@
 <?php
 
-class InventoryModel
+class InventoryRepository
 {
     /**
      * Lấy toàn bộ sản phẩm kèm tồn kho

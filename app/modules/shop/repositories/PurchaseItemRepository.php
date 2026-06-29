@@ -1,6 +1,6 @@
 <?php
 
-class PurchaseItemModel
+class PurchaseItemRepository
 {
     protected string $table = 'purchase_items';
 

@@ -1,6 +1,6 @@
 <?php
 
-class OrderModel
+class OrderRepository
 {
     /**
      * BUILD WHERE

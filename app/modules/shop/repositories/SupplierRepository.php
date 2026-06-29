@@ -1,6 +1,6 @@
 <?php
 
-class SupplierModel
+class SupplierRepository
 {
     protected string $table = 'suppliers';
 

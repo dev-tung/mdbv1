@@ -2,11 +2,11 @@
 
 class ReportEndpoint
 {
-    protected $orderModel;
+    protected $orderRepository;
 
     public function __construct()
     {
-        $this->orderModel = new OrderModel();
+        $this->orderRepository = new OrderRepository();
     }
 
     /**
@@ -27,7 +27,7 @@ class ReportEndpoint
             $offset  = ($page - 1) * $perPage;
 
             // DATA
-            $data = $this->orderModel->getRevenueReport(
+            $data = $this->orderRepository->getRevenueReport(
                 $dateFrom,
                 $dateTo,
                 $perPage,
@@ -35,12 +35,12 @@ class ReportEndpoint
             );
 
             // TOTAL (for pagination)
-            $total = $this->orderModel->countRevenueReport(
+            $total = $this->orderRepository->countRevenueReport(
                 $dateFrom,
                 $dateTo
             );
 
-            $monthProfit = $this->orderModel->sumRevenueReport(
+            $monthProfit = $this->orderRepository->sumRevenueReport(
                 date('Y-m-01'),
                 date('Y-m-t')
             );

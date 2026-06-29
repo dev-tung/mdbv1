@@ -1,6 +1,6 @@
 <?php
 
-class CustomerModel
+class CustomerRepository
 {
     protected string $table = 'customers';
 

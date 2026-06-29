@@ -1,6 +1,6 @@
 <?php
 
-class InventoryTransactionModel
+class InventoryTransactionRepository
 {
     /**
      * Tạo lịch sử biến động kho
@@ -29,7 +29,7 @@ class InventoryTransactionModel
             $data['warehouse_id'] ?? null
         ]);
 
-        (new InventoryModel())->updateStock($data['product_id']);
+        (new InventoryRepository())->updateStock($data['product_id']);
 
         return $id;
     }
@@ -47,7 +47,7 @@ class InventoryTransactionModel
             AND reference_id = ?
         ", [$type, $id]);
 
-        $inventory = new InventoryModel();
+        $inventory = new InventoryRepository();
 
         foreach ($rows as $row) {
             $inventory->updateStock($row['product_id']);

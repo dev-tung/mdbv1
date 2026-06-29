@@ -2,11 +2,11 @@
 
 class ProductEndpoint
 {
-    protected ProductModel $productModel;
+    protected ProductRepository $productRepository;
 
     public function __construct()
     {
-        $this->productModel = new ProductModel();
+        $this->productRepository = new ProductRepository();
     }
 
     // =========================
@@ -26,13 +26,13 @@ class ProductEndpoint
 
         $filters['brands'] = $_GET['brand'] ?? [];
 
-        $products = $this->productModel->getList(
+        $products = $this->productRepository->getList(
             $filters,
             $limit,
             ($page - 1) * $limit
         );
 
-        $total = $this->productModel->count($filters);
+        $total = $this->productRepository->count($filters);
 
         return Response::json([
             'data' => $products,
@@ -57,7 +57,7 @@ class ProductEndpoint
             ]);
         }
 
-        $product = $this->productModel->findById($id);
+        $product = $this->productRepository->findById($id);
 
         if (!$product) {
             return Response::json([
@@ -127,7 +127,7 @@ public function apiCreate()
         }
     }
 
-    $id = $this->productModel->create($data);
+    $id = $this->productRepository->create($data);
 
     return Response::json([
         'success' => $id > 0,
@@ -202,7 +202,7 @@ public function apiUpdate()
         }
     }
 
-    $updated = $this->productModel->updateById($id, $data);
+    $updated = $this->productRepository->updateById($id, $data);
 
     return Response::json([
         'success' => $updated > 0,
@@ -225,7 +225,7 @@ public function apiUpdate()
             ]);
         }
 
-        $deleted = $this->productModel->deleteById($id);
+        $deleted = $this->productRepository->deleteById($id);
 
         return Response::json([
             'success' => $deleted > 0,

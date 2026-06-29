@@ -2,21 +2,21 @@
 
 class ShopController
 {
-    protected ProductModel $productModel;
-    protected BrandModel $brandModel;
-    protected CategoryModel $categoryModel;
+    protected ProductRepository $productRepository;
+    protected BrandRepository $brandRepository;
+    protected CategoryRepository $categoryRepository;
 
     public function __construct()
     {
-        $this->productModel   = new ProductModel();
-        $this->brandModel   = new BrandModel();
-        $this->categoryModel  = new CategoryModel();
+        $this->productRepository   = new ProductRepository();
+        $this->brandRepository   = new BrandRepository();
+        $this->categoryRepository  = new CategoryRepository();
     }
 
     public function index(): void
     {
-        $categories = $this->categoryModel->getList();
-        $brands = $this->brandModel->getList();
+        $categories = $this->categoryRepository->getList();
+        $brands = $this->brandRepository->getList();
 
         View::render('shop/index', [
             'categories' => $categories,
@@ -30,7 +30,7 @@ class ShopController
         $slug = trim(parse_url($slug, PHP_URL_PATH), '/');
         $slug = str_replace('product/', '', $slug);
 
-        $product = $this->productModel->findBySlugStock($slug);
+        $product = $this->productRepository->findBySlugStock($slug);
 
         if (!$product) {
             http_response_code(404);
@@ -38,7 +38,7 @@ class ShopController
         }
 
         $category = $product['category_id']
-            ? $this->categoryModel->findById($product['category_id'])
+            ? $this->categoryRepository->findById($product['category_id'])
             : null;
 
         View::render('shop/show', compact('product', 'category'));

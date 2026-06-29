@@ -2,19 +2,19 @@
 
 class HomeController
 {
-    protected ProductModel $productModel;
-    protected CategoryModel $categoryModel;
+    protected ProductRepository $productRepository;
+    protected CategoryRepository $categoryRepository;
 
     public function __construct()
     {
-        $this->productModel  = new ProductModel();
-        $this->categoryModel = new CategoryModel();
+        $this->productRepository  = new ProductRepository();
+        $this->categoryRepository = new CategoryRepository();
     }
 
     public function index(): void
     {
         // Danh mục sản phẩm
-        $categories = $this->categoryModel->getList();
+        $categories = $this->categoryRepository->getList();
 
         View::render('home/index', [
             'categories'       => $categories,

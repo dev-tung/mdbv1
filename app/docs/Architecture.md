@@ -8,7 +8,7 @@ app/
 │   │   ├── routes/
 │   │   ├── controllers/
 │   │   ├── endpoints/
-│   │   ├── models/
+│   │   ├── repositorys/
 │   │   ├── validators/
 │   │   └── views/
 
