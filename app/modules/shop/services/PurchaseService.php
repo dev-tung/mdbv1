@@ -3,14 +3,14 @@
 class PurchaseService
 {
     private PurchaseRepository $purchaseRepository;
-    private PurchaseItemRepository $itemRepository;
+    private PurchaseItemRepository $purchaseItemRepository;
     private InventoryTransactionRepository $inventoryRepository;
 
     public function __construct()
     {
-        $this->purchaseRepository  = new PurchaseRepository();
-        $this->itemRepository      = new PurchaseItemRepository();
-        $this->inventoryRepository = new InventoryTransactionRepository();
+        $this->purchaseRepository       = new PurchaseRepository();
+        $this->purchaseItemRepository   = new PurchaseItemRepository();
+        $this->inventoryRepository      = new InventoryTransactionRepository();
     }
 
 
@@ -97,7 +97,7 @@ class PurchaseService
             }
 
             if (!empty($items)) {
-                $this->itemRepository->insertBatch($items);
+                $this->purchaseItemRepository->insertBatch($items);
             }
 
             if (!empty($logs)) {
@@ -133,7 +133,7 @@ class PurchaseService
             // 2. Rollback old stock (based on current DB items)
             $rollbackLogs = [];
 
-            foreach ($this->itemRepository->getByPurchaseId($id) as $item) {
+            foreach ($this->purchaseItemRepository->getByPurchaseId($id) as $item) {
 
                 $rollbackLogs[] = [
                     'product_id'     => $item['product_id'],
@@ -151,7 +151,7 @@ class PurchaseService
             }
 
             // 3. Delete old items
-            $this->itemRepository->deleteByPurchaseId($id);
+            $this->purchaseItemRepository->deleteByPurchaseId($id);
 
             // 4. Rebuild items
             $items = [];
@@ -189,7 +189,7 @@ class PurchaseService
             }
 
             if (!empty($items)) {
-                $this->itemRepository->insertBatch($items);
+                $this->purchaseItemRepository->insertBatch($items);
             }
 
             if (!empty($logs)) {
@@ -220,7 +220,7 @@ class PurchaseService
             }
 
             // 2. Get items
-            $items = $this->itemRepository->getByPurchaseId($id);
+            $items = $this->purchaseItemRepository->getByPurchaseId($id);
 
             // 3. Rollback stock (OUT)
             $rollbackLogs = [];
@@ -243,7 +243,7 @@ class PurchaseService
             }
 
             // 4. Delete items first
-            $this->itemRepository->deleteByPurchaseId($id);
+            $this->purchaseItemRepository->deleteByPurchaseId($id);
 
             // 5. Delete purchase header
             return $this->purchaseRepository->deleteById($id);

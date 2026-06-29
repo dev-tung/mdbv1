@@ -34,17 +34,15 @@ class Database
     }
 
     // =========================
-    // QUERY (WITH DEBUG)
+    // QUERY
     // =========================
     public static function query(string $sql, array $params = []): PDOStatement
     {
-        if (!is_array($params)) {
-            $params = [];
-        }
-
         try {
+
             $stmt = self::connect()->prepare($sql);
             $stmt->execute($params);
+
             return $stmt;
 
         } catch (PDOException $e) {
@@ -74,64 +72,8 @@ class Database
     public static function first(string $sql, array $params = []): ?array
     {
         $row = self::query($sql, $params)->fetch();
+
         return $row ?: null;
-    }
-
-    // =========================
-    // CREATE
-    // =========================
-    public static function create(string $table, array $data): int
-    {
-        if (empty($data)) {
-            throw new InvalidArgumentException("Data cannot be empty");
-        }
-
-        $fields = array_keys($data);
-
-        $columns = implode(', ', $fields);
-        $placeholders = ':' . implode(', :', $fields);
-
-        $sql = "INSERT INTO {$table} ({$columns})
-                VALUES ({$placeholders})";
-
-        self::query($sql, $data);
-
-        return (int) self::connect()->lastInsertId();
-    }
-
-    // =========================
-    // UPDATE BY ID
-    // =========================
-    public static function updateById(string $table, int $id, array $data): int
-    {
-        if (empty($data)) {
-            return 0;
-        }
-
-        $set = [];
-
-        foreach ($data as $field => $value) {
-            $set[] = "{$field} = :{$field}";
-        }
-
-        $data['id'] = $id;
-
-        $sql = "UPDATE {$table}
-                SET " . implode(', ', $set) . "
-                WHERE id = :id";
-
-        return self::query($sql, $data)->rowCount();
-    }
-
-    // =========================
-    // DELETE BY ID
-    // =========================
-    public static function deleteById(string $table, int $id): int
-    {
-        return self::query(
-            "DELETE FROM {$table} WHERE id = :id",
-            ['id' => $id]
-        )->rowCount();
     }
 
     // =========================
@@ -145,17 +87,22 @@ class Database
     // =========================
     // TRANSACTION
     // =========================
-    public static function transaction(callable $fn)
+    public static function transaction(callable $callback)
     {
         self::connect()->beginTransaction();
 
         try {
-            $result = $fn();
+
+            $result = $callback();
+
             self::connect()->commit();
+
             return $result;
 
         } catch (Throwable $e) {
+
             self::connect()->rollBack();
+
             throw $e;
         }
     }

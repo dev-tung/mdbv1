@@ -1,7 +1,12 @@
 <?php
 
-class PurchaseRepository
+class PurchaseRepository extends Repository
 {
+    protected string $table = 'purchases';
+
+    // =========================
+    // BASE SELECT
+    // =========================
     private function baseSelect(): string
     {
         return "
@@ -16,13 +21,10 @@ class PurchaseRepository
     }
 
     // =========================
-    // LIST
+    // APPLY FILTERS (REUSE)
     // =========================
-    public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
+    private function applyFilters(string &$sql, array &$params, array $conditions): void
     {
-        $sql = $this->baseSelect();
-        $params = [];
-
         if (!empty($conditions['keyword'])) {
             $sql .= " AND p.code LIKE :keyword";
             $params['keyword'] = '%' . $conditions['keyword'] . '%';
@@ -42,6 +44,17 @@ class PurchaseRepository
             $sql .= " AND p.payment = :payment";
             $params['payment'] = $conditions['payment'];
         }
+    }
+
+    // =========================
+    // LIST
+    // =========================
+    public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
+    {
+        $sql = $this->baseSelect();
+        $params = [];
+
+        $this->applyFilters($sql, $params, $conditions);
 
         $sql .= " ORDER BY p.id DESC";
 
@@ -65,62 +78,10 @@ class PurchaseRepository
 
         $params = [];
 
-        if (!empty($conditions['keyword'])) {
-            $sql .= " AND p.code LIKE :keyword";
-            $params['keyword'] = '%' . $conditions['keyword'] . '%';
-        }
-
-        if (!empty($conditions['supplier_id'])) {
-            $sql .= " AND p.supplier_id = :supplier_id";
-            $params['supplier_id'] = $conditions['supplier_id'];
-        }
-
-        if (!empty($conditions['status'])) {
-            $sql .= " AND p.status = :status";
-            $params['status'] = $conditions['status'];
-        }
-
-        if (!empty($conditions['payment'])) {
-            $sql .= " AND p.payment = :payment";
-            $params['payment'] = $conditions['payment'];
-        }
+        $this->applyFilters($sql, $params, $conditions);
 
         $row = Database::first($sql, $params);
 
-        return (int)($row['total'] ?? 0);
-    }
-
-    // =========================
-    // FIND BY ID
-    // =========================
-    public function findById(int $id): ?array
-    {
-        $sql = $this->baseSelect() . " AND p.id = :id LIMIT 1";
-
-        return Database::first($sql, ['id' => $id]);
-    }
-
-    // =========================
-    // CREATE
-    // =========================
-    public function create(array $data): int
-    {
-        return Database::create('purchases', $data);
-    }
-
-    // =========================
-    // UPDATE BY ID
-    // =========================
-    public function updateById(int $id, array $data): void
-    {
-        Database::updateById('purchases', $id, $data);
-    }
-
-    // =========================
-    // DELETE BY ID
-    // =========================
-    public function deleteById(int $id): int
-    {
-        return Database::deleteById('purchases', $id);
+        return (int) ($row['total'] ?? 0);
     }
 }
