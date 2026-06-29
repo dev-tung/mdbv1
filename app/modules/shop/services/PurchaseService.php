@@ -4,13 +4,13 @@ class PurchaseService
 {
     private PurchaseRepository $purchaseRepository;
     private PurchaseItemRepository $purchaseItemRepository;
-    private InventoryTransactionRepository $inventoryRepository;
+    private InventoryTransactionRepository $inventoryTransactionRepository;
 
     public function __construct()
     {
-        $this->purchaseRepository       = new PurchaseRepository();
-        $this->purchaseItemRepository   = new PurchaseItemRepository();
-        $this->inventoryRepository      = new InventoryTransactionRepository();
+        $this->purchaseRepository             = new PurchaseRepository();
+        $this->purchaseItemRepository         = new PurchaseItemRepository();
+        $this->inventoryTransactionRepository = new InventoryTransactionRepository();
     }
 
 
@@ -97,11 +97,11 @@ class PurchaseService
             }
 
             if (!empty($items)) {
-                $this->purchaseItemRepository->insertBatch($items);
+                $this->purchaseItemRepository->createBatch($items);
             }
 
             if (!empty($logs)) {
-                $this->inventoryRepository->insertBatch($logs);
+                $this->inventoryTransactionRepository->createBatch($logs);
             }
 
             $this->purchaseRepository->updateById($purchaseId, [
@@ -147,7 +147,7 @@ class PurchaseService
             }
 
             if (!empty($rollbackLogs)) {
-                $this->inventoryRepository->insertBatch($rollbackLogs);
+                $this->inventoryTransactionRepository->createBatch($rollbackLogs);
             }
 
             // 3. Delete old items
@@ -189,11 +189,11 @@ class PurchaseService
             }
 
             if (!empty($items)) {
-                $this->purchaseItemRepository->insertBatch($items);
+                $this->purchaseItemRepository->createBatch($items);
             }
 
             if (!empty($logs)) {
-                $this->inventoryRepository->insertBatch($logs);
+                $this->inventoryTransactionRepository->createBatch($logs);
             }
 
             // 5. Update total
@@ -239,7 +239,7 @@ class PurchaseService
             }
 
             if (!empty($rollbackLogs)) {
-                $this->inventoryRepository->insertBatch($rollbackLogs);
+                $this->inventoryTransactionRepository->createBatch($rollbackLogs);
             }
 
             // 4. Delete items first

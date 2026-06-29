@@ -5,15 +5,22 @@
  */
 function request_input(string $key, mixed $default = null): mixed
 {
-    return $_REQUEST[$key] ?? $default;
+    return $_POST[$key] ?? $_GET[$key] ?? $default;
 }
 
 /**
  * Lấy toàn bộ request data (GET + POST)
+ * KHÔNG dùng $_REQUEST để tránh COOKIE
  */
 function request_all(): array
 {
-    return $_REQUEST;
+    $json = json_decode(file_get_contents("php://input"), true);
+
+    if (is_array($json)) {
+        return $json;
+    }
+
+    return $_POST + $_GET;
 }
 
 /**
@@ -21,10 +28,11 @@ function request_all(): array
  */
 function request_filters(array $keys): array
 {
+    $data = request_all();
     $filters = [];
 
     foreach ($keys as $key) {
-        $value = $_REQUEST[$key] ?? null;
+        $value = $data[$key] ?? null;
 
         if ($value !== null && $value !== '') {
             $filters[$key] = $value;
@@ -39,7 +47,9 @@ function request_filters(array $keys): array
  */
 function request_id(string $key = 'id'): int
 {
-    $id = (int) ($_REQUEST[$key] ?? 0);
+    $data = request_all();
+
+    $id = (int) ($data[$key] ?? 0);
 
     if ($id <= 0) {
         throw new InvalidArgumentException('ID không hợp lệ');

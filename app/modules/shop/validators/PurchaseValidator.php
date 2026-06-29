@@ -17,36 +17,37 @@ class PurchaseValidator
             return 'Kho không hợp lệ';
         }
 
-        // items
-        if (empty($data['items']) || !is_array($data['items'])) {
+        // products (FIX từ items → products)
+        if (empty($data['products']) || !is_array($data['products'])) {
             return 'Danh sách sản phẩm không hợp lệ';
         }
 
-        if (count($data['items']) === 0) {
+        if (count($data['products']) === 0) {
             return 'Phải có ít nhất 1 sản phẩm';
         }
 
-        foreach ($data['items'] as $item) {
+        foreach ($data['products'] as $product) {
 
-            if (empty($item['product_id']) || (int)$item['product_id'] <= 0) {
+            // FIX: id thay vì product_id
+            if (empty($product['id']) || (int)$product['id'] <= 0) {
                 return 'Sản phẩm không hợp lệ';
             }
 
-            if (!isset($item['quantity']) || (int)$item['quantity'] <= 0) {
+            if (!isset($product['quantity']) || (int)$product['quantity'] <= 0) {
                 return 'Số lượng sản phẩm không hợp lệ';
             }
 
-            if (!isset($item['price']) || (float)$item['price'] < 0) {
+            if (!isset($product['price']) || (float)$product['price'] < 0) {
                 return 'Giá sản phẩm không hợp lệ';
             }
         }
 
-        // payment
-        if (isset($data['payment']) && !in_array($data['payment'], ['cash', 'debt', 'transfer'])) {
+        // payment (FIX theo frontend: unpaid)
+        if (isset($data['payment']) && !in_array($data['payment'], ['unpaid', 'cash', 'debt', 'transfer'])) {
             return 'Phương thức thanh toán không hợp lệ';
         }
 
-        // status (optional)
+        // status
         if (isset($data['status']) && !in_array($data['status'], ['draft', 'confirmed', 'done'])) {
             return 'Trạng thái không hợp lệ';
         }
@@ -59,7 +60,7 @@ class PurchaseValidator
      */
     public static function update(array $data): ?string
     {
-        // check ID
+        // ID
         if (!isset($data['id']) || (int)$data['id'] <= 0) {
             return 'ID không hợp lệ';
         }
@@ -72,7 +73,8 @@ class PurchaseValidator
             return 'Kho không hợp lệ';
         }
 
-        if (isset($data['payment']) && !in_array($data['payment'], ['cash', 'debt', 'transfer'])) {
+        // payment (FIX)
+        if (isset($data['payment']) && !in_array($data['payment'], ['unpaid', 'cash', 'debt', 'transfer'])) {
             return 'Phương thức thanh toán không hợp lệ';
         }
 

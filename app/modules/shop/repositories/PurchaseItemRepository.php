@@ -1,6 +1,6 @@
 <?php
 
-class PurchaseItemRepository
+class PurchaseItemRepository extends Repository
 {
     protected string $table = 'purchase_items';
 
@@ -9,138 +9,30 @@ class PurchaseItemRepository
     // =========================
     public function getByPurchaseId(int $purchaseId): array
     {
-        return Database::get(
-            "SELECT
+        return Database::get("
+            SELECT
                 pi.*,
                 p.name AS product_name
             FROM {$this->table} pi
             LEFT JOIN products p
                 ON p.id = pi.product_id
             WHERE pi.purchase_id = :purchase_id
-            ORDER BY pi.id ASC",
-            ['purchase_id' => $purchaseId]
-        );
+            ORDER BY pi.id ASC
+        ", [
+            'purchase_id' => $purchaseId
+        ]);
     }
-
-    // =========================
-    // FIND ONE
-    // =========================
-    public function findById(int $id): ?array
-    {
-        return Database::first(
-            "SELECT *
-             FROM {$this->table}
-             WHERE id = :id
-             LIMIT 1",
-            ['id' => $id]
-        );
-    }
-
-    // =========================
-    // CREATE
-    // =========================
-    public function create(array $data): int
-    {
-        $fields = array_keys($data);
-
-        $columns = implode(',', $fields);
-        $placeholders = ':' . implode(', :', $fields);
-
-        $sql = "INSERT INTO {$this->table} ({$columns})
-                VALUES ({$placeholders})";
-
-        return Database::insert($sql, $data);
-    }
-
-    // =========================
-    // INSERT BATCH
-    // =========================
-    public function insertBatch(array $rows): bool
-    {
-        if (empty($rows)) {
-            return false;
-        }
-
-        // tránh query quá lớn
-        $chunks = array_chunk($rows, 500);
-
-        foreach ($chunks as $chunk) {
-
-            $columns = array_keys($chunk[0]);
-
-            $values = [];
-            $params = [];
-
-            foreach ($chunk as $index => $row) {
-
-                $placeholders = [];
-
-                foreach ($columns as $column) {
-
-                    $key = "{$column}_{$index}";
-
-                    $placeholders[] = ":{$key}";
-                    $params[$key] = $row[$column] ?? null;
-                }
-
-                $values[] = '(' . implode(',', $placeholders) . ')';
-            }
-
-            $sql = sprintf(
-                "INSERT INTO %s (%s) VALUES %s",
-                $this->table,
-                implode(',', $columns),
-                implode(',', $values)
-            );
-
-            Database::query($sql, $params);
-        }
-
-        return true;
-    }
-    
 
     // =========================
     // DELETE BY PURCHASE ID
     // =========================
-    public function deleteByPurchaseId(int $purchaseId): int
+    public function deleteByPurchaseId(int $purchaseId)
     {
-        return Database::delete(
-            "DELETE FROM {$this->table}
-             WHERE purchase_id = :purchase_id",
-            ['purchase_id' => $purchaseId]
-        );
-    }
-
-    // =========================
-    // DELETE ONE
-    // =========================
-    public function deleteById(int $id): int
-    {
-        return Database::delete(
-            "DELETE FROM {$this->table}
-             WHERE id = :id",
-            ['id' => $id]
-        );
-    }
-
-    // =========================
-    // UPDATE (optional dùng sau)
-    // =========================
-    public function updateById(int $id, array $data): int
-    {
-        $set = [];
-
-        foreach ($data as $key => $value) {
-            $set[] = "{$key} = :{$key}";
-        }
-
-        $data['id'] = $id;
-
-        $sql = "UPDATE {$this->table}
-                SET " . implode(', ', $set) . "
-                WHERE id = :id";
-
-        return Database::update($sql, $data);
+        return Database::query("
+            DELETE FROM {$this->table}
+            WHERE purchase_id = :purchase_id
+        ", [
+            'purchase_id' => $purchaseId
+        ]);
     }
 }

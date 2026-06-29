@@ -1,72 +1,76 @@
 <?php
 
-class InventoryTransactionRepository
+class InventoryTransactionRepository extends Repository
 {
-    /**
-     * Tạo lịch sử biến động kho
-     */
-    public function create(array $data)
-    {
-        $id = Database::insert("
-            INSERT INTO inventory_transactions
-            (
-                product_id,
-                type,
-                quantity,
-                reference_type,
-                reference_id,
-                note,
-                warehouse_id
-            )
-            VALUES (?,?,?,?,?,?,?)
-        ", [
-            $data['product_id'],
-            $data['type'],
-            $data['quantity'],
-            $data['reference_type'] ?? null,
-            $data['reference_id'] ?? null,
-            $data['note'] ?? null,
-            $data['warehouse_id'] ?? null
-        ]);
+    protected string $table = 'inventory_transactions';
 
-        (new InventoryRepository())->updateStock($data['product_id']);
+    private InventoryRepository $inventoryRepository;
+
+    public function __construct()
+    {
+        $this->inventoryRepository = new InventoryRepository();
+    }
+
+    // =========================
+    // CREATE (override nhẹ + giữ logic stock)
+    // =========================
+    public function create(array $data): int
+    {
+        $id = parent::create($data);
+
+        // side-effect giữ nguyên
+        $this->inventoryRepository->updateStock($data['product_id']);
 
         return $id;
     }
 
-    /**
-     * Xóa theo chứng từ
-     */
-    public function deleteByReference(string $type, int $id)
+    // =========================
+    // BASE SELECT
+    // =========================
+    private function baseSelect(): string
+    {
+        return "
+            SELECT *
+            FROM {$this->table}
+            WHERE 1=1
+        ";
+    }
+
+    // =========================
+    // GET BY REFERENCE
+    // =========================
+    public function getByReference(string $type, int $id): array
+    {
+        return Database::get(
+            $this->baseSelect() . "
+                AND reference_type = :type
+                AND reference_id = :id
+            ",
+            [
+                'type' => $type,
+                'id'   => $id
+            ]
+        );
+    }
+
+    // =========================
+    // DELETE BY REFERENCE
+    // =========================
+    public function deleteByReference(string $type, int $id): void
     {
         $rows = $this->getByReference($type, $id);
 
         Database::delete("
-            DELETE FROM inventory_transactions
-            WHERE reference_type = ?
-            AND reference_id = ?
-        ", [$type, $id]);
-
-        $inventory = new InventoryRepository();
+            DELETE FROM {$this->table}
+            WHERE reference_type = :type
+            AND reference_id = :id
+        ", [
+            'type' => $type,
+            'id'   => $id
+        ]);
 
         foreach ($rows as $row) {
-            $inventory->updateStock($row['product_id']);
+            $this->inventoryRepository->updateStock($row['product_id']);
         }
-    }
-
-    /**
-     * Lấy giao dịch theo chứng từ
-     */
-    public function getByReference(string $type, int $id)
-    {
-        return Database::get("
-            SELECT *
-            FROM inventory_transactions
-            WHERE reference_type = ?
-            AND reference_id = ?
-        ", [
-            $type,
-            $id
-        ]);
     }
 }
