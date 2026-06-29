@@ -13,6 +13,37 @@ class PurchaseService
         $this->inventoryRepository = new InventoryTransactionRepository();
     }
 
+
+    // =========================
+    // LIST PURCHASE
+    // =========================
+  public function getList(array $input): array
+  {
+      $page  = $input['page'] ?? 1;
+      $limit = Config::get('pagination', 'default_per_page');
+      $offset = ($page - 1) * $limit;
+
+      $filters = [
+          'keyword'     => $input['keyword'] ?? null,
+          'supplier_id' => $input['supplier_id'] ?? null,
+          'status'      => $input['status'] ?? null,
+          'payment'     => $input['payment'] ?? null,
+      ];
+
+      $data  = $this->purchaseRepository->getList($filters, $limit, $offset);
+      $total = $this->purchaseRepository->count($filters);
+
+      return [
+          'data' => $data,
+          'meta' => [
+              'page'       => (int)$page,
+              'perPage'    => (int)$limit,
+              'total'      => $total,
+              'totalPages' => $limit > 0 ? (int)ceil($total / $limit) : 0,
+          ]
+      ];
+  }
+
     // =========================
     // CREATE PURCHASE
     // =========================

@@ -12,33 +12,18 @@ class PurchaseEndpoint
     }
 
     // =========================
-    // LIST (DIRECT REPOSITORY)
+    // LIST (SERVICE)
     // =========================
     public function apiList()
     {
-        $page  = request_input('page', 1);
-        $limit = Config::get('pagination', 'default_per_page');
-        $offset = ($page - 1) * $limit;
+        $input = request_all();
 
-        $filters = request_filters([
-            'keyword',
-            'supplier_id',
-            'status',
-            'payment'
-        ]);
-
-        $data  = $this->purchaseRepository->getList($filters, $limit, $offset);
-        $total = $this->purchaseRepository->count($filters);
+        $result = $this->purchaseService->getList($input);
 
         return Response::json([
             'success' => true,
-            'data' => $data,
-            'meta' => [
-                'page' => (int)$page,
-                'perPage' => (int)$limit,
-                'total' => $total,
-                'totalPages' => $limit > 0 ? (int)ceil($total / $limit) : 0
-            ]
+            'data' => $result['data'],
+            'meta' => $result['meta'],
         ]);
     }
 
