@@ -7,8 +7,8 @@ class PurchaseEndpoint
 
     public function __construct()
     {
-        $this->purchaseService     = new PurchaseService();
-        $this->purchaseRepository  = new PurchaseRepository();
+        $this->purchaseService    = new PurchaseService();
+        $this->purchaseRepository = new PurchaseRepository();
     }
 
     // =========================
@@ -22,8 +22,8 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'data' => $result['data'],
-            'meta' => $result['meta'],
+            'data'    => $result['data'],
+            'meta'    => $result['meta'],
         ]);
     }
 
@@ -45,7 +45,7 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'data' => $data
+            'data'    => $data
         ]);
     }
 
@@ -70,7 +70,7 @@ class PurchaseEndpoint
         return Response::json([
             'success' => true,
             'message' => 'Create success',
-            'id' => $id
+            'id'      => $id
         ]);
     }
 
@@ -110,6 +110,58 @@ class PurchaseEndpoint
         return Response::json([
             'success' => true,
             'message' => 'Delete success'
+        ]);
+    }
+
+    // =========================
+    // UPDATE STATUS
+    // =========================
+    public function apiStatus()
+    {
+        $input = request_all();
+
+        if (empty($input['id']) || !isset($input['status'])) {
+            return Response::json([
+                'success' => false,
+                'message' => 'Invalid input'
+            ]);
+        }
+
+        $updated = $this->purchaseRepository->updateById(
+            (int)$input['id'],
+            ['status' => $input['status']]
+        );
+
+        return Response::json([
+            'success' => true,
+            'message' => 'Status updated successfully',
+            'affected_rows' => $updated
+        ]);
+    }
+
+    // =========================
+    // UPDATE PAYMENT
+    // =========================
+    public function apiPayment()
+    {
+        $input = request_all();
+
+        if (empty($input['id']) || !isset($input['payment'])) {
+            return Response::json([
+                'success' => false,
+                'message' => 'Invalid input'
+            ]);
+        }
+
+        $updated = $this->purchaseRepository->updateById(
+            (int)$input['id'],
+            ['payment' => $input['payment']]
+        );
+
+        return Response::json([
+            'success' => true,
+            'message' => 'Payment updated successfully',
+            'affected_rows' => $updated
         ]);
     }
 }
