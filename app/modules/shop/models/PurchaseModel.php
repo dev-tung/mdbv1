@@ -12,7 +12,7 @@ class PurchaseModel
     }
 
     // =========================
-    // GET LIST
+    // LIST
     // =========================
     public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
     {
@@ -91,18 +91,27 @@ class PurchaseModel
     }
 
     // =========================
-    // FIND BY ID
+    // FIND BY ID (SAFE)
     // =========================
     public function findById(int $id): ?array
     {
         return Database::first(
-            "SELECT * FROM purchases WHERE id = :id",
+            "
+            SELECT p.*,
+                   s.name AS supplier_name,
+                   w.name AS warehouse_name
+            FROM purchases p
+            LEFT JOIN suppliers s ON s.id = p.supplier_id
+            LEFT JOIN warehouses w ON w.id = p.warehouse_id
+            WHERE p.id = :id
+            LIMIT 1
+            ",
             ['id' => $id]
         );
     }
 
     // =========================
-    // CREATE PURCHASE
+    // CREATE
     // =========================
     public function createPurchase(array $input): int
     {
@@ -121,11 +130,13 @@ class PurchaseModel
             $items = [];
             $logs  = [];
 
-            foreach ($input['products'] as $p) {
+            foreach ($input['products'] ?? [] as $p) {
 
                 $productId = (int)($p['product_id'] ?? $p['id'] ?? 0);
                 $qty       = (int)($p['quantity'] ?? 1);
                 $price     = (float)($p['price'] ?? 0);
+
+                if ($productId <= 0) continue;
 
                 $total += $qty * $price;
 
@@ -147,8 +158,13 @@ class PurchaseModel
                 ];
             }
 
-            $this->itemModel->insertBatch($items);
-            $this->inventoryModel->insertBatch($logs);
+            if ($items) {
+                $this->itemModel->insertBatch($items);
+            }
+
+            if ($logs) {
+                $this->inventoryModel->insertBatch($logs);
+            }
 
             Database::updateById('purchases', $purchaseId, [
                 'total_cost' => $total
@@ -159,16 +175,15 @@ class PurchaseModel
     }
 
     // =========================
-    // UPDATE PURCHASE
+    // UPDATE
     // =========================
     public function updatePurchase(array $input): int
     {
         return Database::transaction(function () use ($input) {
 
-            $id = (int)$input['id'];
+            $id = (int)($input['id'] ?? 0);
 
             $old = $this->findById($id);
-
             if (!$old) {
                 throw new Exception('Purchase not found');
             }
@@ -197,7 +212,9 @@ class PurchaseModel
                 ];
             }
 
-            $this->inventoryModel->insertBatch($rollback);
+            if ($rollback) {
+                $this->inventoryModel->insertBatch($rollback);
+            }
 
             $this->itemModel->deleteByPurchaseId($id);
 
@@ -205,11 +222,13 @@ class PurchaseModel
             $logs  = [];
             $total = 0;
 
-            foreach ($input['products'] as $p) {
+            foreach ($input['products'] ?? [] as $p) {
 
-                $productId = (int)($p['product_id'] ?? $p['id']);
-                $qty       = (int)$p['quantity'];
-                $price     = (float)$p['price'];
+                $productId = (int)($p['product_id'] ?? $p['id'] ?? 0);
+                if ($productId <= 0) continue;
+
+                $qty   = (int)($p['quantity'] ?? 1);
+                $price = (float)($p['price'] ?? 0);
 
                 $total += $qty * $price;
 
@@ -231,8 +250,13 @@ class PurchaseModel
                 ];
             }
 
-            $this->itemModel->insertBatch($items);
-            $this->inventoryModel->insertBatch($logs);
+            if ($items) {
+                $this->itemModel->insertBatch($items);
+            }
+
+            if ($logs) {
+                $this->inventoryModel->insertBatch($logs);
+            }
 
             Database::updateById('purchases', $id, [
                 'total_cost' => $total
@@ -243,14 +267,13 @@ class PurchaseModel
     }
 
     // =========================
-    // DELETE PURCHASE
+    // DELETE
     // =========================
     public function deletePurchase(int $id): int
     {
         return Database::transaction(function () use ($id) {
 
             $purchase = $this->findById($id);
-
             if (!$purchase) {
                 throw new Exception('Purchase not found');
             }
@@ -271,7 +294,9 @@ class PurchaseModel
                 ];
             }
 
-            $this->inventoryModel->insertBatch($logs);
+            if ($logs) {
+                $this->inventoryModel->insertBatch($logs);
+            }
 
             $this->itemModel->deleteByPurchaseId($id);
 

@@ -2,36 +2,78 @@
 
 class PurchaseValidator
 {
-    public static function validate(array $data): ?string
+    /**
+     * Validate khi CREATE
+     */
+    public static function validateCreate(array $data): ?string
     {
-        $supplier_id  = (int)($data['supplier_id'] ?? 0);
-        $warehouse_id = (int)($data['warehouse_id'] ?? 0);
-        $items        = $data['products'] ?? [];
-
-        if ($supplier_id <= 0) {
+        // supplier_id
+        if (empty($data['supplier_id']) || (int)$data['supplier_id'] <= 0) {
             return 'Nhà cung cấp không hợp lệ';
         }
 
-        if ($warehouse_id <= 0) {
+        // warehouse_id
+        if (empty($data['warehouse_id']) || (int)$data['warehouse_id'] <= 0) {
             return 'Kho không hợp lệ';
         }
 
-        if (empty($items)) {
-            return 'Chưa có sản phẩm';
+        // items
+        if (empty($data['items']) || !is_array($data['items'])) {
+            return 'Danh sách sản phẩm không hợp lệ';
         }
 
-        foreach ($items as $index => $item) {
+        if (count($data['items']) === 0) {
+            return 'Phải có ít nhất 1 sản phẩm';
+        }
 
-            $product_id = (int)($item['product_id'] ?? $item['id'] ?? 0);
-            $quantity   = (int)($item['quantity'] ?? 0);
+        foreach ($data['items'] as $item) {
 
-            if ($product_id <= 0) {
-                return 'Sản phẩm ở dòng ' . ($index + 1) . ' không hợp lệ';
+            if (empty($item['product_id']) || (int)$item['product_id'] <= 0) {
+                return 'Sản phẩm không hợp lệ';
             }
 
-            if ($quantity <= 0) {
-                return 'Số lượng ở dòng ' . ($index + 1) . ' không hợp lệ';
+            if (!isset($item['quantity']) || (int)$item['quantity'] <= 0) {
+                return 'Số lượng sản phẩm không hợp lệ';
             }
+
+            if (!isset($item['price']) || (float)$item['price'] < 0) {
+                return 'Giá sản phẩm không hợp lệ';
+            }
+        }
+
+        // payment
+        if (isset($data['payment']) && !in_array($data['payment'], ['cash', 'debt', 'transfer'])) {
+            return 'Phương thức thanh toán không hợp lệ';
+        }
+
+        // status (optional)
+        if (isset($data['status']) && !in_array($data['status'], ['draft', 'confirmed', 'done'])) {
+            return 'Trạng thái không hợp lệ';
+        }
+
+        return null;
+    }
+
+    /**
+     * Validate khi UPDATE
+     */
+    public static function validateUpdate(array $data): ?string
+    {
+        // reuse logic create (trừ items có thể optional tuỳ bạn)
+        if (!empty($data['supplier_id']) && (int)$data['supplier_id'] <= 0) {
+            return 'Nhà cung cấp không hợp lệ';
+        }
+
+        if (!empty($data['warehouse_id']) && (int)$data['warehouse_id'] <= 0) {
+            return 'Kho không hợp lệ';
+        }
+
+        if (isset($data['payment']) && !in_array($data['payment'], ['cash', 'debt', 'transfer'])) {
+            return 'Phương thức thanh toán không hợp lệ';
+        }
+
+        if (isset($data['status']) && !in_array($data['status'], ['draft', 'confirmed', 'done'])) {
+            return 'Trạng thái không hợp lệ';
         }
 
         return null;

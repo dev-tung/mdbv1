@@ -4,6 +4,7 @@ class App
 {
     public function run(): void
     {
+        $this->registerErrorHandler();
         $this->loadHelpers();
         $this->loadRoutes();
 
@@ -31,5 +32,17 @@ class App
         foreach (glob(BASE_PATH . '/app/modules/*/routes/api.php') as $file) {
             require_once $file;
         }
+    }
+
+    protected function registerErrorHandler(): void
+    {
+        set_exception_handler(function ($e) {
+            http_response_code(500);
+
+            echo Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        });
     }
 }
