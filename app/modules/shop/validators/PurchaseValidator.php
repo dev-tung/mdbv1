@@ -59,7 +59,11 @@ class PurchaseValidator
      */
     public static function update(array $data): ?string
     {
-        // reuse logic create (trừ items có thể optional tuỳ bạn)
+        // check ID
+        if (!isset($data['id']) || (int)$data['id'] <= 0) {
+            return 'ID không hợp lệ';
+        }
+
         if (!empty($data['supplier_id']) && (int)$data['supplier_id'] <= 0) {
             return 'Nhà cung cấp không hợp lệ';
         }

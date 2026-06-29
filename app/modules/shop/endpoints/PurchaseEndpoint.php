@@ -79,10 +79,7 @@ class PurchaseEndpoint
     // =========================
     public function apiUpdate()
     {
-        $id = request_id();
         $input = request_all();
-
-        $input['id'] = $id;
 
         $error = PurchaseValidator::update($input);
 
