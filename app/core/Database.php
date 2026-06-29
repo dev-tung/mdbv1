@@ -4,6 +4,9 @@ class Database
 {
     private static ?PDO $pdo = null;
 
+    // =========================
+    // CONNECT
+    // =========================
     private static function connect(): PDO
     {
         if (self::$pdo === null) {
@@ -30,6 +33,9 @@ class Database
         return self::$pdo;
     }
 
+    // =========================
+    // QUERY (WITH DEBUG)
+    // =========================
     public static function query(string $sql, array $params = []): PDOStatement
     {
         if (!is_array($params)) {
@@ -43,92 +49,114 @@ class Database
 
         } catch (PDOException $e) {
 
-            echo "SQL ERROR:\n";
+            echo "================ SQL ERROR ================\n";
             echo $sql . "\n\n";
 
-            echo "PARAMS:\n";
+            echo "================ PARAMS ================\n";
             var_dump($params);
 
+            echo "================ ERROR ================\n";
             die($e->getMessage());
         }
     }
 
-    public static function first(
-        string $sql,
-        array $params = []
-    ): ?array
+    // =========================
+    // GET MANY
+    // =========================
+    public static function get(string $sql, array $params = []): array
     {
-        $result = self::query(
-            $sql,
-            $params
-        )->fetch();
-
-        return $result ?: null;
+        return self::query($sql, $params)->fetchAll();
     }
 
-    public static function get(
-        string $sql,
-        array $params = []
-    ): array
+    // =========================
+    // GET ONE
+    // =========================
+    public static function first(string $sql, array $params = []): ?array
     {
-        return self::query(
-            $sql,
-            $params
-        )->fetchAll();
+        $row = self::query($sql, $params)->fetch();
+        return $row ?: null;
     }
 
-    public static function insert(
-        string $sql,
-        array $params = []
-    ): int
+    // =========================
+    // CREATE
+    // =========================
+    public static function create(string $table, array $data): int
     {
-        self::query(
-            $sql,
-            $params
-        );
+        if (empty($data)) {
+            throw new InvalidArgumentException("Data cannot be empty");
+        }
+
+        $fields = array_keys($data);
+
+        $columns = implode(', ', $fields);
+        $placeholders = ':' . implode(', :', $fields);
+
+        $sql = "INSERT INTO {$table} ({$columns})
+                VALUES ({$placeholders})";
+
+        self::query($sql, $data);
 
         return (int) self::connect()->lastInsertId();
     }
 
-    public static function update(
-        string $sql,
-        array $params = []
-    ): int
+    // =========================
+    // UPDATE BY ID
+    // =========================
+    public static function updateById(string $table, int $id, array $data): int
+    {
+        if (empty($data)) {
+            return 0;
+        }
+
+        $set = [];
+
+        foreach ($data as $field => $value) {
+            $set[] = "{$field} = :{$field}";
+        }
+
+        $data['id'] = $id;
+
+        $sql = "UPDATE {$table}
+                SET " . implode(', ', $set) . "
+                WHERE id = :id";
+
+        return self::query($sql, $data)->rowCount();
+    }
+
+    // =========================
+    // DELETE BY ID
+    // =========================
+    public static function deleteById(string $table, int $id): int
     {
         return self::query(
-            $sql,
-            $params
+            "DELETE FROM {$table} WHERE id = :id",
+            ['id' => $id]
         )->rowCount();
     }
 
-    public static function delete(
-        string $sql,
-        array $params = []
-    ): int
-    {
-        return self::query(
-            $sql,
-            $params
-        )->rowCount();
-    }
-
-    public static function beginTransaction(): void
-    {
-        self::connect()->beginTransaction();
-    }
-
-    public static function commit(): void
-    {
-        self::connect()->commit();
-    }
-
-    public static function rollback(): void
-    {
-        self::connect()->rollBack();
-    }
-
+    // =========================
+    // PDO
+    // =========================
     public static function pdo(): PDO
     {
         return self::connect();
+    }
+
+    // =========================
+    // TRANSACTION
+    // =========================
+    public static function transaction(callable $fn)
+    {
+        self::connect()->beginTransaction();
+
+        try {
+            $result = $fn();
+            self::connect()->commit();
+            return $result;
+
+        } catch (Throwable $e) {
+            self::connect()->rollBack();
+            throw $e;
+        }
     }
 }
