@@ -2,13 +2,13 @@
 
 class PurchaseService
 {
-    private PurchaseRepository $PurchaseRepository;
+    private PurchaseRepository $purchaseRepository;
     private PurchaseItemRepository $itemRepository;
     private InventoryTransactionRepository $inventoryRepository;
 
     public function __construct()
     {
-        $this->PurchaseRepository  = new PurchaseRepository();
+        $this->purchaseRepository  = new PurchaseRepository();
         $this->itemRepository      = new PurchaseItemRepository();
         $this->inventoryRepository = new InventoryTransactionRepository();
     }
@@ -21,7 +21,7 @@ class PurchaseService
         return Database::transaction(function () use ($input) {
 
             // 1. Create purchase
-            $purchaseId = $this->PurchaseRepository->create([
+            $purchaseId = $this->purchaseRepository->create([
                 'supplier_id'  => $input['supplier_id'] ?? null,
                 'warehouse_id' => $input['warehouse_id'] ?? null,
                 'status'       => $input['status'] ?? 'draft',
@@ -73,7 +73,7 @@ class PurchaseService
                 $this->inventoryRepository->insertBatch($logs);
             }
 
-            $this->PurchaseRepository->updateById($purchaseId, [
+            $this->purchaseRepository->updateById($purchaseId, [
                 'total_cost' => $total
             ]);
 
@@ -91,7 +91,7 @@ class PurchaseService
             $id = $input['id'];
 
             // 1. Update purchase header
-            $this->PurchaseRepository->updateById($id, [
+            $this->purchaseRepository->updateById($id, [
                 'supplier_id'  => $input['supplier_id'] ?? null,
                 'warehouse_id' => $input['warehouse_id'] ?? null,
                 'status'       => $input['status'] ?? '',
@@ -166,7 +166,7 @@ class PurchaseService
             }
 
             // 5. Update total
-            $this->PurchaseRepository->updateById($id, [
+            $this->purchaseRepository->updateById($id, [
                 'total_cost' => $total
             ]);
 
@@ -182,7 +182,7 @@ class PurchaseService
         return Database::transaction(function () use ($id) {
 
             // 1. Get purchase (to ensure warehouse context)
-            $purchase = $this->PurchaseRepository->findById($id);
+            $purchase = $this->purchaseRepository->findById($id);
 
             if (!$purchase) {
                 throw new Exception('Purchase not found');
@@ -215,7 +215,7 @@ class PurchaseService
             $this->itemRepository->deleteByPurchaseId($id);
 
             // 5. Delete purchase header
-            return $this->PurchaseRepository->deleteById($id);
+            return $this->purchaseRepository->deleteById($id);
         });
     }
 }
