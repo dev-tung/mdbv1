@@ -1,71 +1,75 @@
 <?php
 
-class CategoryRepository
+class CategoryRepository extends Repository
 {
-    /**
-     * BUILD WHERE
-     */
-    private function buildWhere(array $conditions, array &$params): string
+    protected string $table = 'categories';
+
+    // =========================
+    // BASE SELECT
+    // =========================
+    private function baseSelect(): string
     {
-        $sql = " WHERE 1=1";
-
-        // KEYWORD
-        if (!empty($conditions['keyword'])) {
-            $sql .= " AND name LIKE :keyword";
-            $params['keyword'] = '%' . trim($conditions['keyword']) . '%';
-        }
-
-        return $sql;
+        return "
+            SELECT *
+            FROM categories c
+            WHERE 1=1
+        ";
     }
 
-    /**
-     * GET LIST
-     */
+    // =========================
+    // APPLY FILTERS
+    // =========================
+    private function applyFilters(string &$sql, array &$params, array $conditions): void
+    {
+        // keyword
+        if (!empty($conditions['keyword'])) {
+            $sql .= " AND c.name LIKE :keyword";
+            $params['keyword'] = '%' . trim($conditions['keyword']) . '%';
+        }
+    }
+
+    // =========================
+    // LIST
+    // =========================
     public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
     {
+        $sql = $this->baseSelect();
         $params = [];
 
-        $sql = "
-            SELECT *
-            FROM categories
-        ";
+        $this->applyFilters($sql, $params, $conditions);
 
-        $sql .= $this->buildWhere($conditions, $params);
-
-        $sql .= " ORDER BY id DESC";
+        $sql .= " ORDER BY c.id DESC";
 
         if ($limit > 0) {
-            $limit = (int) $limit;
-            $offset = (int) $offset;
-
             $sql .= " LIMIT {$limit} OFFSET {$offset}";
         }
 
         return Database::get($sql, $params);
     }
 
-    /**
-     * COUNT
-     */
+    // =========================
+    // COUNT
+    // =========================
     public function count(array $conditions = []): int
     {
-        $params = [];
-
         $sql = "
             SELECT COUNT(*) AS total
-            FROM categories
+            FROM categories c
+            WHERE 1=1
         ";
 
-        $sql .= $this->buildWhere($conditions, $params);
+        $params = [];
+
+        $this->applyFilters($sql, $params, $conditions);
 
         $row = Database::first($sql, $params);
 
         return (int) ($row['total'] ?? 0);
     }
 
-    /**
-     * FIND BY ID
-     */
+    // =========================
+    // FIND BY ID
+    // =========================
     public function findById(int $id): ?array
     {
         return Database::first(
@@ -79,9 +83,9 @@ class CategoryRepository
         );
     }
 
-    /**
-     * CREATE
-     */
+    // =========================
+    // CREATE
+    // =========================
     public function create(array $data): int
     {
         $fields = array_keys($data);
@@ -97,9 +101,9 @@ class CategoryRepository
         return Database::insert($sql, $data);
     }
 
-    /**
-     * UPDATE
-     */
+    // =========================
+    // UPDATE
+    // =========================
     public function updateById(int $id, array $data): int
     {
         if (empty($data)) {
@@ -123,9 +127,9 @@ class CategoryRepository
         return Database::update($sql, $data);
     }
 
-    /**
-     * DELETE
-     */
+    // =========================
+    // DELETE
+    // =========================
     public function deleteById(int $id): int
     {
         return Database::delete(

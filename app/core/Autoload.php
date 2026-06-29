@@ -10,7 +10,8 @@ class Autoload
                 BASE_PATH . '/app/core/' . $class . '.php',
                 BASE_PATH . '/app/config/' . $class . '.php',
                 BASE_PATH . '/app/modules/*/validators/' . $class . '.php',
-                BASE_PATH . '/app/modules/*/repositorys/' . $class . '.php',
+                BASE_PATH . '/app/modules/*/repositories/' . $class . '.php',
+                BASE_PATH . '/app/modules/*/services/' . $class . '.php',
                 BASE_PATH . '/app/modules/*/controllers/' . $class . '.php',
                 BASE_PATH . '/app/modules/*/endpoints/' . $class . '.php',
             ];
