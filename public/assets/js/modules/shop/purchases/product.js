@@ -55,11 +55,12 @@ export const Product = {
             });
 
             box.classList.remove("d-none");
-
         });
-
     },
 
+    // =========================
+    // ADD PRODUCT
+    // =========================
     add(product) {
 
         const existed = products.find(p => p.id == product.id);
@@ -70,18 +71,22 @@ export const Product = {
             products.push(product);
         }
 
-        this.render();
-        this.emitUpdate();
+        this.updateState();
     },
 
+    // =========================
+    // REMOVE
+    // =========================
     remove(id) {
 
         products = products.filter(p => p.id != id);
 
-        this.render();
-        this.emitUpdate();
+        this.updateState();
     },
 
+    // =========================
+    // UPDATE QUANTITY
+    // =========================
     updateQuantity(id, quantity) {
 
         const product = products.find(p => p.id == id);
@@ -89,9 +94,12 @@ export const Product = {
 
         product.quantity = Math.max(1, parseInt(quantity) || 1);
 
-        this.updateState();
+        this.updateRow(id);
     },
 
+    // =========================
+    // UPDATE PRICE
+    // =========================
     updatePrice(id, price) {
 
         const product = products.find(p => p.id == id);
@@ -99,22 +107,38 @@ export const Product = {
 
         product.price = Math.max(0, parseFloat(price) || 0);
 
-        this.updateState();
+        this.updateRow(id);
     },
 
     // =========================
-    // SAFE UPDATE (NO REBUILD LOOP)
+    // UPDATE SINGLE ROW (FIX TOTAL LINE)
     // =========================
-    updateState() {
+    updateRow(id) {
+
+        const product = products.find(p => String(p.id) === String(id));
+        if (!product) return;
+
+        const row = document.querySelector(`[data-id="${id}"]`)?.closest("tr");
+        if (!row) return;
+
+        const totalCell = row.querySelector(".item-total");
+
+        const qty = Number(product.quantity) || 0;
+        const price = Number(product.price) || 0;
+
+        const total = qty * price;
+
+        if (totalCell) {
+            totalCell.textContent = total.toLocaleString();
+        }
 
         this.renderTotal();
         this.emitUpdate();
     },
 
-    emitUpdate() {
-        window.dispatchEvent(new Event("purchase:update"));
-    },
-
+    // =========================
+    // RENDER TABLE
+    // =========================
     render() {
 
         const tbody = document.getElementById("selected_products");
@@ -159,6 +183,7 @@ export const Product = {
             `);
         });
 
+        // events
         document.querySelectorAll(".remove-btn").forEach(btn => {
             btn.onclick = () => this.remove(btn.dataset.id);
         });
@@ -178,6 +203,9 @@ export const Product = {
         this.renderTotal();
     },
 
+    // =========================
+    // TOTAL
+    // =========================
     renderTotal() {
 
         const total = this.getTotal();
@@ -191,6 +219,19 @@ export const Product = {
         return products.reduce((sum, item) => {
             return sum + (item.quantity * item.price);
         }, 0);
+    },
+
+    // =========================
+    // STATE
+    // =========================
+    updateState() {
+        this.render();
+        this.renderTotal();
+        this.emitUpdate();
+    },
+
+    emitUpdate() {
+        window.dispatchEvent(new Event("purchase:update"));
     },
 
     getItems() {
