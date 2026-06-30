@@ -174,7 +174,7 @@ export const Product = {
 
                     <td width="100">
                         <button type="button"
-                            class="btn btn-sm btn-danger remove-btn"
+                            class="btn btn-sm btn-outline-danger remove-btn"
                             data-id="${product.id}">
                             Xóa
                         </button>

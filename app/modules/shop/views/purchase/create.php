@@ -114,24 +114,24 @@
                     </div>
 
                     <div class="mt-3">
-                        <h5 class="mb-0 d-flex flex-wrap gap-5">
+                        <div class="mb-0 d-flex flex-wrap gap-5">
 
-                            <span>
-                                Tổng tiền:
+                            <span class="fs-5">
+                                Tổng tiền
                                 <b id="total_amount">0</b> ₫
                             </span>
 
-                            <span>
-                                Đã trả:
+                            <span class="fs-5">
+                                Đã trả
                                 <b id="paid_amount_view">0</b> ₫
                             </span>
 
-                            <span>
-                                Còn nợ:
+                            <span class="fs-5">
+                                Còn nợ
                                 <b id="debt_amount_view">0</b> ₫
                             </span>
 
-                        </h5>
+                        </div>
                     </div>
 
                 </div>
