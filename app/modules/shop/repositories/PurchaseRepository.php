@@ -64,7 +64,6 @@ class PurchaseRepository extends Repository
 
         return Database::get($sql, $params);
     }
-
     // =========================
     // COUNT
     // =========================
@@ -83,5 +82,12 @@ class PurchaseRepository extends Repository
         $row = Database::first($sql, $params);
 
         return (int) ($row['total'] ?? 0);
+    }
+
+    public function findById(int $id): ?array
+    {
+        $sql = $this->baseSelect() . " AND p.id = :id LIMIT 1";
+
+        return Database::first($sql, ['id' => $id]);
     }
 }

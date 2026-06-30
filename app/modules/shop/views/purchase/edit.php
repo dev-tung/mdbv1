@@ -4,7 +4,7 @@
         Cập nhật nhập hàng
     </h3>
 
-    <form id="purchase-create-form" novalidate>
+    <form id="purchase-update-form" novalidate>
 
         <div class="row g-3">
 
@@ -74,8 +74,7 @@
 
                 <label class="form-label">Kho nhập</label>
 
-                <select id="warehouse_id" class="form-select">
-                </select>
+                <select id="warehouse_id" class="form-select"></select>
 
             </div>
 
@@ -147,73 +146,94 @@
     </form>
 
 </div>
+
 <script type="module">
 
-    import { Supplier } from '/assets/js/modules/purchases/supplier.js';
-    import { Product } from '/assets/js/modules/purchases/product.js';
-    import { Submit } from '/assets/js/modules/purchases/submit.js';
-    import { Api } from '/assets/js/helpers/api.js';
+import { Supplier } from '/assets/js/modules/shop/purchases/supplier.js';
+import { Product } from '/assets/js/modules/shop/purchases/product.js';
+import { Warehouse } from '/assets/js/modules/shop/purchases/warehouse.js';
+import { Submit } from '/assets/js/modules/shop/purchases/submit.js';
+import { Api } from '/assets/js/common/api.js';
 
-    document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-        const pathParts = window.location.pathname.split("/");
+    const purchaseId = window.location.pathname
+        .split('/')
+        .filter(Boolean)
+        .pop();
 
-        const purchaseId = pathParts[pathParts.length - 1];
+    // =========================
+    // INIT MODULES
+    // =========================
+    await Promise.all([
+        Supplier.init('/api/suppliers'),
+        Product.init('/api/products'),
+        Warehouse.init('/api/warehouses')
+    ]);
 
-        // load chi tiết phiếu nhập
-        const json = await Api.get(
-            `/api/purchases/show?id=${purchaseId}`
-        );
+    // =========================
+    // FETCH DATA
+    // =========================
+    const json = await Api.get(`/api/purchases/show/${purchaseId}`);
+    if (!json?.success) return;
 
-        if (json.success) {
+    const p = json.data;
 
-            const purchase = json.data;
+    // =========================
+    // SUPPLIER
+    // =========================
+    document.getElementById('supplier_id').value = p.supplier_id ?? '';
+    document.getElementById('supplier_search').value = p.supplier?.name ?? '';
 
-            // supplier
-            document.getElementById('supplier_id').value =
-                purchase.supplier_id ?? '';
+    // =========================
+    // BASIC INFO
+    // =========================
+    document.getElementById('description').value = p.description ?? '';
+    document.getElementById('status').value = p.status ?? 'draft';
+    document.getElementById('payment').value = p.payment ?? 'unpaid';
 
-            document.getElementById('supplier_search').value =
-                purchase.supplier_name ?? '';
+    // =========================
+    // WAREHOUSE
+    // =========================
+    const warehouseEl = document.getElementById('warehouse_id');
+    warehouseEl.value = p.warehouse_id ?? '';
+    warehouseEl.dispatchEvent(new Event('change'));
 
-            // description
-            document.getElementById('description').value =
-                purchase.description ?? '';
+    // =========================
+    // PRODUCTS
+    // =========================
+    const products = (p.products ?? []).map(item => ({
+        product_id: item.product_id,
+        name: item.name,
+        price: Number(item.price) || 0,
+        quantity: Number(item.quantity) || 1,
+        subtotal: Number(item.subtotal) || (Number(item.price) * Number(item.quantity))
+    }));
 
-            // status
-            document.getElementById('status').value =
-                purchase.status ?? '';
+    Product.setItems(products);
 
-            // payment
-            document.getElementById('payment').value =
-                purchase.payment ?? '';
+    // =========================
+    // TOTAL COST (optional but recommended)
+    // =========================
+    const totalEl = document.getElementById('total_amount');
+    if (totalEl) {
+        totalEl.innerText = p.total_cost ?? 0;
+    }
 
-            // warehouse
-            document.getElementById('warehouse_id').value =
-                purchase.warehouse_id ?? '';
+    // =========================
+    // SUBMIT
+    // =========================
+    document
+        .getElementById('purchase-update-form')
+        .addEventListener('submit', async (e) => {
 
-            // products
-            Product.setItems(purchase.items || []);
-        }
+            e.preventDefault();
 
-        // khởi tạo search
-        Supplier.init('/api/suppliers/search');
-
-        Product.init('/api/products/search');
-
-        // submit update
-        document
-            .getElementById('purchase-create-form')
-            .addEventListener('submit', async e => {
-
-                e.preventDefault();
-
-                await Submit.update(
-                    `/api/purchases/update?id=${purchaseId}`
-                );
-
+            await Submit.update(`/api/purchases/update/${purchaseId}`, {
+                id: p.id
             });
+        });
 
-    });
+});
 
 </script>

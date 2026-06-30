@@ -9,18 +9,43 @@ function request_input(string $key, mixed $default = null): mixed
 }
 
 /**
- * Lấy toàn bộ request data (GET + POST)
- * KHÔNG dùng $_REQUEST để tránh COOKIE
+ * Lấy toàn bộ request data (GET + POST + JSON BODY)
+ * + AUTO MERGE ID từ URL
  */
 function request_all(): array
 {
+    // =========================
+    // 1. JSON BODY
+    // =========================
     $json = json_decode(file_get_contents("php://input"), true);
 
+    $data = [];
+
     if (is_array($json)) {
-        return $json;
+        $data = $json;
+    } else {
+        // =========================
+        // 2. FORM / QUERY
+        // =========================
+        $data = $_POST + $_GET;
     }
 
-    return $_POST + $_GET;
+    // =========================
+    // 3. AUTO GET ID FROM URL
+    // =========================
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    $uri = parse_url($uri, PHP_URL_PATH);
+
+    $segments = explode('/', trim($uri, '/'));
+    $lastSegment = end($segments);
+
+    if (is_numeric($lastSegment)) {
+        if (!isset($data['id'])) {
+            $data['id'] = (int) $lastSegment;
+        }
+    }
+
+    return $data;
 }
 
 /**
@@ -49,13 +74,11 @@ function request_id(string $key = 'id'): int
 {
     $data = request_all();
 
-    $id = (int) ($data[$key] ?? 0);
-
-    if ($id <= 0) {
-        throw new InvalidArgumentException('ID không hợp lệ');
+    if (!empty($data[$key]) && (int)$data[$key] > 0) {
+        return (int) $data[$key];
     }
 
-    return $id;
+    throw new InvalidArgumentException('ID không hợp lệ');
 }
 
 /**

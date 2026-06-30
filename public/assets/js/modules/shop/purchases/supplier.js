@@ -19,9 +19,6 @@ export const Supplier = {
     async load(apiUrl) {
         try {
             const res = await Api.get(apiUrl);
-
-            console.log("SUPPLIER API:", res);
-
             // API của bạn: { data: [...] }
             this.suppliers = res?.data ?? [];
 

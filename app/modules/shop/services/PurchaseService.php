@@ -17,32 +17,78 @@ class PurchaseService
     // =========================
     // LIST PURCHASE
     // =========================
-  public function getList(array $input): array
-  {
-      $page  = $input['page'] ?? 1;
-      $limit = Config::get('pagination', 'default_per_page');
-      $offset = ($page - 1) * $limit;
+    public function getList(array $input): array
+    {
+        $page  = $input['page'] ?? 1;
+        $limit = Config::get('pagination', 'default_per_page');
+        $offset = ($page - 1) * $limit;
 
-      $filters = [
-          'keyword'     => $input['keyword'] ?? null,
-          'supplier_id' => $input['supplier_id'] ?? null,
-          'status'      => $input['status'] ?? null,
-          'payment'     => $input['payment'] ?? null,
-      ];
+        $filters = [
+            'keyword'     => $input['keyword'] ?? null,
+            'supplier_id' => $input['supplier_id'] ?? null,
+            'status'      => $input['status'] ?? null,
+            'payment'     => $input['payment'] ?? null,
+        ];
 
-      $data  = $this->purchaseRepository->getList($filters, $limit, $offset);
-      $total = $this->purchaseRepository->count($filters);
+        $data  = $this->purchaseRepository->getList($filters, $limit, $offset);
+        $total = $this->purchaseRepository->count($filters);
 
-      return [
-          'data' => $data,
-          'meta' => [
-              'page'       => (int)$page,
-              'perPage'    => (int)$limit,
-              'total'      => $total,
-              'totalPages' => $limit > 0 ? (int)ceil($total / $limit) : 0,
-          ]
-      ];
-  }
+        return [
+            'data' => $data,
+            'meta' => [
+                'page'       => (int)$page,
+                'perPage'    => (int)$limit,
+                'total'      => $total,
+                'totalPages' => $limit > 0 ? (int)ceil($total / $limit) : 0,
+            ]
+        ];
+    }
+
+
+    // =========================
+    // SHOW PURCHASE
+    // =========================
+    public function show(int $id): ?array
+    {
+        if ($id <= 0) {
+            return null;
+        }
+
+        $purchase = $this->purchaseRepository->findById($id);
+
+        if (!$purchase) {
+            return null;
+        }
+
+        $items = $this->purchaseItemRepository->getByPurchaseId($id);
+
+        $products = [];
+
+        foreach ($items as $item) {
+            $products[] = [
+                'product_id' => (int) $item['product_id'],
+                'name'       => $item['product_name'] ?? '',
+                'price'      => (float) $item['unit_price'],
+                'quantity'   => (int) $item['quantity'],
+                'subtotal'   => (float) $item['unit_price'] * (int) $item['quantity'],
+            ];
+        }
+
+        return [
+            'id'           => (int) $purchase['id'],
+            'supplier_id'  => (int) $purchase['supplier_id'],
+            'warehouse_id' => (int) $purchase['warehouse_id'],
+            'status'       => $purchase['status'],
+            'payment'      => $purchase['payment'],
+            'description'  => $purchase['description'] ?? '',
+            'supplier' => [
+                'name' => $purchase['supplier_name'] ?? ''
+            ],
+            'total_cost' => (float) ($purchase['total_cost'] ?? 0),
+
+            'products' => $products
+        ];
+    }
 
     // =========================
     // CREATE PURCHASE

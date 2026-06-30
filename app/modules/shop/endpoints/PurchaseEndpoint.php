@@ -22,6 +22,7 @@ class PurchaseEndpoint
         return Response::json([
             'success' => true,
             'code'    => 'PURCHASE_LIST_SUCCESS',
+            'message' => 'Lấy danh sách phiếu nhập thành công',
             'data'    => $result['data'],
             'meta'    => $result['meta'],
         ]);
@@ -34,12 +35,13 @@ class PurchaseEndpoint
     {
         $id = request_id();
 
-        $data = $this->purchaseRepository->findDetail($id);
+        $data = $this->purchaseService->show($id);
 
         if (!$data) {
             return Response::json([
                 'success' => false,
                 'code'    => 'PURCHASE_NOT_FOUND',
+                'message' => 'Không tìm thấy phiếu nhập',
                 'data'    => null
             ]);
         }
@@ -47,6 +49,7 @@ class PurchaseEndpoint
         return Response::json([
             'success' => true,
             'code'    => 'PURCHASE_SHOW_SUCCESS',
+            'message' => 'Lấy chi tiết phiếu nhập thành công',
             'data'    => $data
         ]);
     }
@@ -63,7 +66,8 @@ class PurchaseEndpoint
         if ($error) {
             return Response::json([
                 'success' => false,
-                'code'    => 'PURCHASE_CREATE_VALIDATE_ERROR'
+                'code'    => 'PURCHASE_CREATE_VALIDATE_ERROR',
+                'message' => $error
             ]);
         }
 
@@ -72,6 +76,7 @@ class PurchaseEndpoint
         return Response::json([
             'success' => true,
             'code'    => 'PURCHASE_CREATED',
+            'message' => 'Tạo phiếu nhập thành công',
             'data'    => [
                 'id' => $id
             ],
@@ -91,7 +96,8 @@ class PurchaseEndpoint
         if ($error) {
             return Response::json([
                 'success' => false,
-                'code'    => 'PURCHASE_UPDATE_VALIDATE_ERROR'
+                'code'    => 'PURCHASE_UPDATE_VALIDATE_ERROR',
+                'message' => $error 
             ]);
         }
 
@@ -100,6 +106,7 @@ class PurchaseEndpoint
         return Response::json([
             'success' => true,
             'code'    => 'PURCHASE_UPDATED',
+            'message' => 'Cập nhật phiếu nhập thành công',
             'redirect' => "/admin/purchases"
         ]);
     }
@@ -115,7 +122,8 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'code'    => 'PURCHASE_DELETED'
+            'code'    => 'PURCHASE_DELETED',
+            'message' => 'Xoá phiếu nhập thành công'
         ]);
     }
 
@@ -129,7 +137,8 @@ class PurchaseEndpoint
         if (empty($input['id']) || !isset($input['status'])) {
             return Response::json([
                 'success' => false,
-                'code'    => 'INVALID_INPUT'
+                'code'    => 'INVALID_INPUT',
+                'message' => 'Thiếu dữ liệu trạng thái'
             ]);
         }
 
@@ -141,6 +150,7 @@ class PurchaseEndpoint
         return Response::json([
             'success' => true,
             'code'    => 'PURCHASE_STATUS_UPDATED',
+            'message' => 'Cập nhật trạng thái thành công',
             'data'    => [
                 'affected_rows' => $updated
             ]
@@ -157,7 +167,8 @@ class PurchaseEndpoint
         if (empty($input['id']) || !isset($input['payment'])) {
             return Response::json([
                 'success' => false,
-                'code'    => 'INVALID_INPUT'
+                'code'    => 'INVALID_INPUT',
+                'message' => 'Thiếu dữ liệu thanh toán'
             ]);
         }
 
@@ -169,6 +180,7 @@ class PurchaseEndpoint
         return Response::json([
             'success' => true,
             'code'    => 'PURCHASE_PAYMENT_UPDATED',
+            'message' => 'Cập nhật thanh toán thành công',
             'data'    => [
                 'affected_rows' => $updated
             ]

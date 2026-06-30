@@ -42,16 +42,6 @@ class PurchaseValidator
             }
         }
 
-        // payment (FIX theo frontend: unpaid)
-        if (isset($data['payment']) && !in_array($data['payment'], ['unpaid', 'cash', 'debt', 'transfer'])) {
-            return 'Phương thức thanh toán không hợp lệ';
-        }
-
-        // status
-        if (isset($data['status']) && !in_array($data['status'], ['draft', 'confirmed', 'done'])) {
-            return 'Trạng thái không hợp lệ';
-        }
-
         return null;
     }
 
@@ -71,15 +61,6 @@ class PurchaseValidator
 
         if (!empty($data['warehouse_id']) && (int)$data['warehouse_id'] <= 0) {
             return 'Kho không hợp lệ';
-        }
-
-        // payment (FIX)
-        if (isset($data['payment']) && !in_array($data['payment'], ['unpaid', 'cash', 'debt', 'transfer'])) {
-            return 'Phương thức thanh toán không hợp lệ';
-        }
-
-        if (isset($data['status']) && !in_array($data['status'], ['draft', 'confirmed', 'done'])) {
-            return 'Trạng thái không hợp lệ';
         }
 
         return null;
