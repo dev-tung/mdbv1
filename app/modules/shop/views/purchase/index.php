@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     <td>${p.supplier_name ?? '---'}</td>
                     <td>${p.warehouse_name ?? '---'}</td>
-                    <td>${Number(p.total_cost).toLocaleString()} ₫</td>
+                    <td>${Number(p.total_amount).toLocaleString()} ₫</td>
 
                     <td>
                         <select class="form-select form-select-sm text-${STATUS_CONFIG[p.status]?.color || 'secondary'}"

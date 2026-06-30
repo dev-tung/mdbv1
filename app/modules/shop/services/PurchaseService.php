@@ -84,7 +84,7 @@ class PurchaseService
             'supplier' => [
                 'name' => $purchase['supplier_name'] ?? ''
             ],
-            'total_cost' => (float) ($purchase['total_cost'] ?? 0),
+            'total_amount' => (float) ($purchase['total_amount'] ?? 0),
 
             'products' => $products
         ];
@@ -97,22 +97,22 @@ class PurchaseService
     {
         return Database::transaction(function () use ($input) {
 
-            // 1. Create purchase
             $purchaseId = $this->purchaseRepository->create([
                 'supplier_id'  => $input['supplier_id'] ?? null,
                 'warehouse_id' => $input['warehouse_id'] ?? null,
                 'status'       => $input['status'] ?? 'draft',
                 'payment'      => $input['payment'] ?? '',
                 'description'  => $input['description'] ?? '',
-                'total_cost'   => 0
+                'total_amount' => 0,
+                'paid_amount'  => $input['paid_amount'] ?? 0,
+                'debt_amount'  => 0
             ]);
 
             $total = 0;
             $items = [];
             $logs  = [];
 
-            // 2. Build items + inventory logs
-            foreach ($input['products'] ?? [] as $p) {
+            foreach ($input['items'] ?? $input['products'] ?? [] as $p) {
 
                 $productId = $p['product_id'] ?? $p['id'] ?? 0;
                 $qty       = $p['quantity'] ?? 1;
@@ -122,7 +122,8 @@ class PurchaseService
                     continue;
                 }
 
-                $total += $qty * $price;
+                $lineTotal = $qty * $price;
+                $total += $lineTotal;
 
                 $items[] = [
                     'purchase_id' => $purchaseId,
@@ -150,8 +151,11 @@ class PurchaseService
                 $this->inventoryTransactionRepository->createBatch($logs);
             }
 
+            $debt = max($total - ($input['paid_amount'] ?? 0), 0);
+
             $this->purchaseRepository->updateById($purchaseId, [
-                'total_cost' => $total
+                'total_amount'=> $total,
+                'debt_amount' => $debt
             ]);
 
             return $purchaseId;
@@ -167,16 +171,17 @@ class PurchaseService
 
             $id = $input['id'];
 
-            // 1. Update purchase header
+            // 1. update header + payment
             $this->purchaseRepository->updateById($id, [
                 'supplier_id'  => $input['supplier_id'] ?? null,
                 'warehouse_id' => $input['warehouse_id'] ?? null,
                 'status'       => $input['status'] ?? '',
                 'payment'      => $input['payment'] ?? '',
-                'description'  => $input['description'] ?? ''
+                'description'  => $input['description'] ?? '',
+                'paid_amount'  => $input['paid_amount'] ?? 0
             ]);
 
-            // 2. Rollback old stock (based on current DB items)
+            // 2. rollback old stock
             $rollbackLogs = [];
 
             foreach ($this->purchaseItemRepository->getByPurchaseId($id) as $item) {
@@ -196,15 +201,15 @@ class PurchaseService
                 $this->inventoryTransactionRepository->createBatch($rollbackLogs);
             }
 
-            // 3. Delete old items
+            // 3. delete old items
             $this->purchaseItemRepository->deleteByPurchaseId($id);
 
-            // 4. Rebuild items
+            // 4. rebuild items
             $items = [];
             $logs  = [];
             $total = 0;
 
-            foreach ($input['products'] ?? [] as $p) {
+            foreach ($input['items'] ?? $input['products'] ?? [] as $p) {
 
                 $productId = $p['product_id'] ?? $p['id'] ?? 0;
                 $qty       = $p['quantity'] ?? 1;
@@ -214,7 +219,8 @@ class PurchaseService
                     continue;
                 }
 
-                $total += $qty * $price;
+                $lineTotal = $qty * $price;
+                $total += $lineTotal;
 
                 $items[] = [
                     'purchase_id' => $id,
@@ -242,9 +248,14 @@ class PurchaseService
                 $this->inventoryTransactionRepository->createBatch($logs);
             }
 
-            // 5. Update total
+            // 5. recompute debt
+            $paid = $input['paid_amount'] ?? 0;
+            $debt = max($total - $paid, 0);
+
             $this->purchaseRepository->updateById($id, [
-                'total_cost' => $total
+                'total_amount' => $total,
+                'debt_amount'  => $debt,
+                'paid_amount'  => $paid
             ]);
 
             return $id;

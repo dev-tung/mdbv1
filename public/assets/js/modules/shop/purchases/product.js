@@ -1,7 +1,4 @@
-// /public/assets/js/modules/purchases/product.js
-
 import { Api } from "../../../common/api.js";
-import { Notify } from "../../../common/notify.js";
 
 let products = [];
 
@@ -38,7 +35,7 @@ export const Product = {
 
                 item.type = "button";
                 item.className = "list-group-item list-group-item-action";
-                item.textContent = `${product.name}`;
+                item.textContent = product.name;
 
                 item.onclick = () => {
 
@@ -46,7 +43,7 @@ export const Product = {
                         id: product.id,
                         name: product.name,
                         quantity: 1,
-                        price: product.price || 0
+                        price: Number(product.price || 0)
                     });
 
                     input.value = "";
@@ -68,12 +65,13 @@ export const Product = {
         const existed = products.find(p => p.id == product.id);
 
         if (existed) {
-            existed.quantity++;
+            existed.quantity += 1;
         } else {
             products.push(product);
         }
 
         this.render();
+        this.emitUpdate();
     },
 
     remove(id) {
@@ -81,6 +79,7 @@ export const Product = {
         products = products.filter(p => p.id != id);
 
         this.render();
+        this.emitUpdate();
     },
 
     updateQuantity(id, quantity) {
@@ -90,8 +89,7 @@ export const Product = {
 
         product.quantity = Math.max(1, parseInt(quantity) || 1);
 
-        this.updateRowTotal(id);
-        this.renderTotal();
+        this.updateState();
     },
 
     updatePrice(id, price) {
@@ -101,68 +99,57 @@ export const Product = {
 
         product.price = Math.max(0, parseFloat(price) || 0);
 
-        this.updateRowTotal(id);
-        this.renderTotal();
+        this.updateState();
     },
 
-    updateRowTotal(id) {
+    // =========================
+    // SAFE UPDATE (NO REBUILD LOOP)
+    // =========================
+    updateState() {
 
-        const product = products.find(p => p.id == id);
-        if (!product) return;
+        this.renderTotal();
+        this.emitUpdate();
+    },
 
-        const row = document
-            .querySelector(`.remove-btn[data-id="${id}"]`)
-            ?.closest("tr");
-
-        if (!row) return;
-
-        const totalCell = row.querySelector(".item-total");
-
-        if (totalCell) {
-            totalCell.textContent =
-                (product.quantity * product.price).toLocaleString();
-        }
+    emitUpdate() {
+        window.dispatchEvent(new Event("purchase:update"));
     },
 
     render() {
 
         const tbody = document.getElementById("selected_products");
-
         if (!tbody) return;
 
         tbody.innerHTML = "";
 
         products.forEach(product => {
 
+            const total = product.quantity * product.price;
+
             tbody.insertAdjacentHTML("beforeend", `
                 <tr>
                     <td>${product.name}</td>
 
                     <td width="150">
-                        <input
-                            type="number"
-                            min="1"
+                        <input type="number" min="1"
                             class="form-control quantity-input"
                             data-id="${product.id}"
                             value="${product.quantity}">
                     </td>
 
                     <td width="180">
-                        <input
-                            type="number"
-                            min="0"
+                        <input type="number" min="0"
                             class="form-control price-input"
                             data-id="${product.id}"
                             value="${product.price}">
                     </td>
 
                     <td class="item-total">
-                        ${(product.quantity * product.price).toLocaleString()}
+                        ${total.toLocaleString()}
                     </td>
 
                     <td width="100">
-                        <button
-                            type="button"
+                        <button type="button"
                             class="btn btn-sm btn-danger remove-btn"
                             data-id="${product.id}">
                             Xóa
@@ -170,42 +157,40 @@ export const Product = {
                     </td>
                 </tr>
             `);
-
         });
 
-        document.querySelectorAll(".remove-btn")
-            .forEach(btn => {
-                btn.onclick = () => this.remove(btn.dataset.id);
-            });
+        document.querySelectorAll(".remove-btn").forEach(btn => {
+            btn.onclick = () => this.remove(btn.dataset.id);
+        });
 
-        document.querySelectorAll(".quantity-input")
-            .forEach(input => {
-                input.oninput = () => {
-                    this.updateQuantity(input.dataset.id, input.value);
-                };
-            });
+        document.querySelectorAll(".quantity-input").forEach(input => {
+            input.oninput = () => {
+                this.updateQuantity(input.dataset.id, input.value);
+            };
+        });
 
-        document.querySelectorAll(".price-input")
-            .forEach(input => {
-                input.oninput = () => {
-                    this.updatePrice(input.dataset.id, input.value);
-                };
-            });
+        document.querySelectorAll(".price-input").forEach(input => {
+            input.oninput = () => {
+                this.updatePrice(input.dataset.id, input.value);
+            };
+        });
 
         this.renderTotal();
     },
 
     renderTotal() {
 
-        const total = products.reduce((sum, item) => {
-            return sum + item.quantity * item.price;
-        }, 0);
+        const total = this.getTotal();
 
         const el = document.getElementById("total_amount");
+        if (el) el.textContent = total.toLocaleString();
+    },
 
-        if (el) {
-            el.textContent = total.toLocaleString();
-        }
+    getTotal() {
+
+        return products.reduce((sum, item) => {
+            return sum + (item.quantity * item.price);
+        }, 0);
     },
 
     getItems() {
@@ -217,11 +202,17 @@ export const Product = {
         products = items.map(item => ({
             id: item.product_id || item.id,
             name: item.product_name || item.name,
-            quantity: item.quantity,
-            price: item.price
+            quantity: Number(item.quantity || 1),
+            price: Number(item.price || 0)
         }));
 
         this.render();
-    }
+        this.emitUpdate();
+    },
 
+    clear() {
+        products = [];
+        this.render();
+        this.emitUpdate();
+    }
 };

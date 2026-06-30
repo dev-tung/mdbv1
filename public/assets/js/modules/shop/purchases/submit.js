@@ -1,5 +1,3 @@
-// /public/assets/js/modules/purchases/submit.js
-
 import { Api } from "../../../common/api.js";
 import { Notify } from "../../../common/notify.js";
 import { Messages } from "../../../common/messages.js";
@@ -21,7 +19,7 @@ export const Submit = {
 
         const validate = this.validate(data);
         if (!validate.valid) {
-            Notify.error(validate.message);
+            Notify.error(`Chưa được bạn! ${validate.message}`);
             return;
         }
 
@@ -41,11 +39,16 @@ export const Submit = {
         }
 
         Notify.error(
-            json.message || Messages.COMMON.UNKNOWN_ERROR
+            `${json.message || Messages.COMMON.UNKNOWN_ERROR}`
         );
     },
 
+    // =========================
+    // COLLECT FULL DATA
+    // =========================
     collect() {
+
+        const paidInput = document.getElementById("paid_amount");
 
         return {
 
@@ -55,12 +58,22 @@ export const Submit = {
             status: document.getElementById("status")?.value || "",
             payment: document.getElementById("payment")?.value || "",
 
-            products: Product.getItems()
+            // IMPORTANT: payment detail
+            paid_amount: Number(paidInput?.value || 0),
 
+            // Convert products → items chuẩn backend
+            products: Product.getItems().map(p => ({
+                id: p.id,
+                quantity: Number(p.quantity),
+                price: Number(p.price),
+                total: Number(p.quantity) * Number(p.price)
+            }))
         };
-
     },
 
+    // =========================
+    // VALIDATION
+    // =========================
     validate(data) {
 
         if (!data.supplier_id) {
@@ -84,7 +97,22 @@ export const Submit = {
             };
         }
 
+        // Validate partial payment
+        if (data.payment === "partial") {
+
+            const total = data.products.reduce(
+                (sum, i) => sum + i.total,
+                0
+            );
+
+            if (data.paid_amount > total) {
+                return {
+                    valid: false,
+                    message: "Số tiền đã trả không được lớn hơn tổng tiền"
+                };
+            }
+        }
+
         return { valid: true };
     }
-
 };
