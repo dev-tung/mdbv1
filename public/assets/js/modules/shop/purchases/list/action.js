@@ -5,58 +5,105 @@ export const Action = {
     init({ api }) {
         this.api = api;
 
-        this.bindStatus();
-        this.bindPayment();
-        this.bindDelete();
+        this.update_status();
+        this.update_payment();
+        this.delete();
     },
 
-    bindStatus() {
+    // =========================
+    // UPDATE STATUS
+    // =========================
+    update_status() {
+
         document.addEventListener('change', async (e) => {
 
-            const el = e.target.closest('.status-select');
-            if (!el) return;
+            const select = e.target.closest('.purchase-status');
+            if (!select) return;
 
-            await fetch(`${this.api.status}/${el.dataset.id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    status: el.value
-                })
-            });
+            try {
+
+                await fetch(this.api.status, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: select.dataset.id,
+                        status: select.value
+                    })
+                });
+
+            } catch (error) {
+
+                console.error('Update status error:', error);
+
+            }
+
         });
+
     },
 
-    bindPayment() {
+    // =========================
+    // UPDATE PAYMENT
+    // =========================
+    update_payment() {
+
         document.addEventListener('change', async (e) => {
 
-            const el = e.target.closest('.payment-select');
-            if (!el) return;
+            const select = e.target.closest('.purchase-payment');
+            if (!select) return;
 
-            await fetch(`${this.api.payment}/${el.dataset.id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    payment: el.value
-                })
-            });
+            try {
+
+                await fetch(this.api.payment, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: select.dataset.id,
+                        payment: select.value
+                    })
+                });
+
+            } catch (error) {
+
+                console.error('Update payment error:', error);
+
+            }
+
         });
+
     },
 
-    bindDelete() {
+    // =========================
+    // DELETE
+    // =========================
+    delete() {
+
         document.addEventListener('click', async (e) => {
 
             const btn = e.target.closest('.btn-delete');
             if (!btn) return;
 
-            if (!confirm('Delete item?')) return;
+            if (!confirm('Bạn có chắc muốn xóa?')) return;
 
-            await fetch(`${this.api.delete}/${btn.dataset.id}`, {
-                method: 'DELETE'
-            });
+            try {
+
+                await fetch(`${this.api.delete}/${btn.dataset.id}`, {
+                    method: 'DELETE'
+                });
+
+                btn.closest('tr')?.remove();
+
+            } catch (error) {
+
+                console.error('Delete error:', error);
+
+            }
+
         });
+
     }
+
 };
