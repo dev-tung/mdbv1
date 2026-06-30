@@ -71,7 +71,35 @@ export const Binding = {
             `).join('')}
         `;
     },
+    // =========================
+    // SUMMARY
+    // =========================
+    sum(items = []) {
 
+        const totalAmount = items.reduce(
+            (sum, item) => sum + Number(item.total_amount || 0),
+            0
+        );
+
+        const paidAmount = items.reduce(
+            (sum, item) => sum + Number(item.paid_amount || 0),
+            0
+        );
+
+        const debtAmount = items.reduce(
+            (sum, item) => sum + Number(item.debt_amount || 0),
+            0
+        );
+
+        document.getElementById('sum-total-amount').textContent =
+            totalAmount.toLocaleString('vi-VN');
+
+        document.getElementById('sum-paid-amount').textContent =
+            paidAmount.toLocaleString('vi-VN');
+
+        document.getElementById('sum-debt-amount').textContent =
+            debtAmount.toLocaleString('vi-VN');
+    },
     // =========================
     // TABLE INIT
     // =========================
@@ -135,6 +163,8 @@ export const Binding = {
             ? data
             : (data.items || data.data || []);
 
+        this.sum(items);
+
         const tbody = document.getElementById('purchase-table-body');
 
         if (!tbody) return;
@@ -166,6 +196,10 @@ export const Binding = {
                 <td>${item.warehouse_name ?? ''}</td>
 
                 <td>${Number(item.total_amount ?? 0).toLocaleString()}</td>
+
+                <td>${Number(item.paid_amount ?? 0).toLocaleString()}</td>
+
+                <td>${Number(item.debt_amount ?? 0).toLocaleString()}</td>
 
                 <td>
                     <select

@@ -32,10 +32,22 @@
 
   </div>
 
-  <div class="mb-3">
-    <strong>Tổng phiếu nhập:</strong>
-    <span id="total-amount">0</span>
-  </div>
+<div class="d-flex gap-3 mb-3">
+    <div>
+        <strong>Tổng tiền:</strong>
+        <span id="sum-total-amount">0</span>
+    </div>
+
+    <div>
+        <strong>Tổng trả:</strong>
+        <span id="sum-paid-amount">0</span>
+    </div>
+
+    <div>
+        <strong>Tổng nợ:</strong>
+        <span id="sum-debt-amount">0</span>
+    </div>
+</div>
 
   <div class="table-responsive">
     <table class="table table-sm align-middle">
@@ -46,6 +58,8 @@
           <th>Nhà cung cấp</th>
           <th>Kho</th>
           <th>Tổng tiền</th>
+          <th>Đã trả</th>
+          <th>Còn nợ</th>
           <th>Trạng thái</th>
           <th>Thanh toán</th>
           <th>Ngày tạo</th>

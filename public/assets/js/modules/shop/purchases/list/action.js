@@ -1,3 +1,5 @@
+import { Binding } from './binding.js';
+
 export const Action = {
 
     api: null,
@@ -33,6 +35,8 @@ export const Action = {
                     })
                 });
 
+                Binding.bindSelectColors();
+
             } catch (error) {
 
                 console.error('Update status error:', error);
@@ -65,6 +69,8 @@ export const Action = {
                         payment: select.value
                     })
                 });
+
+                Binding.bindSelectColors();
 
             } catch (error) {
 
