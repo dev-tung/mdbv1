@@ -74,7 +74,8 @@ class PurchaseEndpoint
             'code'    => 'PURCHASE_CREATED',
             'data'    => [
                 'id' => $id
-            ]
+            ],
+            'redirect' => "/admin/purchases"
         ]);
     }
 
@@ -98,7 +99,8 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'code'    => 'PURCHASE_UPDATED'
+            'code'    => 'PURCHASE_UPDATED',
+            'redirect' => "/admin/purchases"
         ]);
     }
 
