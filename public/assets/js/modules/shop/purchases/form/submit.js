@@ -1,6 +1,6 @@
-import { Api } from "../../../common/api.js";
-import { Notify } from "../../../common/notify.js";
-import { Messages } from "../../../common/messages.js";
+import { Api } from "../../../../common/api.js";
+import { Notify } from "../../../../common/notify.js";
+import { Messages } from "../../../../common/messages.js";
 import { Product } from "./product.js";
 
 export const Submit = {

@@ -1,4 +1,4 @@
-import { Api } from "../../../common/api.js";
+import { Api } from "../../../../common/api.js";
 
 export const Warehouse = {
 

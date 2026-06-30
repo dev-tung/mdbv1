@@ -153,11 +153,11 @@
 
 <script type="module">
 
-    import { Supplier } from '/assets/js/modules/shop/purchases/supplier.js';
-    import { Product } from '/assets/js/modules/shop/purchases/product.js';
-    import { Warehouse } from '/assets/js/modules/shop/purchases/warehouse.js';
-    import { Payment } from '/assets/js/modules/shop/purchases/payment.js';
-    import { Submit } from '/assets/js/modules/shop/purchases/submit.js';
+    import { Supplier } from '/assets/js/modules/shop/purchases/form/supplier.js';
+    import { Product } from '/assets/js/modules/shop/purchases/form/product.js';
+    import { Warehouse } from '/assets/js/modules/shop/purchases/form/warehouse.js';
+    import { Payment } from '/assets/js/modules/shop/purchases/form/payment.js';
+    import { Submit } from '/assets/js/modules/shop/purchases/form/submit.js';
 
     document.addEventListener('DOMContentLoaded', () => {
 
