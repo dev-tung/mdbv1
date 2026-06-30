@@ -5,14 +5,15 @@ class PurchaseService
     private PurchaseRepository $purchaseRepository;
     private PurchaseItemRepository $purchaseItemRepository;
     private InventoryTransactionRepository $inventoryTransactionRepository;
+    private InventoryRepository $inventoryRepository;
 
     public function __construct()
     {
         $this->purchaseRepository             = new PurchaseRepository();
         $this->purchaseItemRepository         = new PurchaseItemRepository();
         $this->inventoryTransactionRepository = new InventoryTransactionRepository();
+        $this->inventoryRepository            = new InventoryRepository();
     }
-
 
     // =========================
     // LIST PURCHASE
@@ -149,6 +150,9 @@ class PurchaseService
 
             if (!empty($logs)) {
                 $this->inventoryTransactionRepository->createBatch($logs);
+
+                $productIds = array_column($items, 'product_id');
+                $this->inventoryRepository->update($productIds);
             }
 
             $debt = max($total - ($input['paid_amount'] ?? 0), 0);
@@ -171,20 +175,22 @@ class PurchaseService
 
             $id = $input['id'];
 
-            // 1. update header + payment
+            // 1. Update header + payment
             $this->purchaseRepository->updateById($id, [
                 'supplier_id'  => $input['supplier_id'] ?? null,
                 'warehouse_id' => $input['warehouse_id'] ?? null,
-                'status'       => $input['status'] ?? '',
+                'status'       => $input['status'] ?? 'draft',
                 'payment'      => $input['payment'] ?? '',
                 'description'  => $input['description'] ?? '',
                 'paid_amount'  => $input['paid_amount'] ?? 0
             ]);
 
-            // 2. rollback old stock
+            // 2. Lấy item cũ để rollback kho
+            $oldItems = $this->purchaseItemRepository->getByPurchaseId($id);
+
             $rollbackLogs = [];
 
-            foreach ($this->purchaseItemRepository->getByPurchaseId($id) as $item) {
+            foreach ($oldItems as $item) {
 
                 $rollbackLogs[] = [
                     'product_id'     => $item['product_id'],
@@ -201,19 +207,23 @@ class PurchaseService
                 $this->inventoryTransactionRepository->createBatch($rollbackLogs);
             }
 
-            // 3. delete old items
+            // 3. Xóa item cũ
             $this->purchaseItemRepository->deleteByPurchaseId($id);
 
-            // 4. rebuild items
+            // 4. Build item mới
             $items = [];
             $logs  = [];
             $total = 0;
 
-            foreach ($input['items'] ?? $input['products'] ?? [] as $p) {
+            $products = $input['items']
+                ?? $input['products']
+                ?? [];
 
-                $productId = $p['product_id'] ?? $p['id'] ?? 0;
-                $qty       = $p['quantity'] ?? 1;
-                $price     = $p['price'] ?? 0;
+            foreach ($products as $p) {
+
+                $productId = (int) ($p['product_id'] ?? $p['id'] ?? 0);
+                $qty       = (float) ($p['quantity'] ?? 0);
+                $price     = (float) ($p['price'] ?? 0);
 
                 if ($productId <= 0 || $qty <= 0) {
                     continue;
@@ -240,22 +250,36 @@ class PurchaseService
                 ];
             }
 
-            if (!empty($items)) {
-                $this->purchaseItemRepository->createBatch($items);
+            if (empty($items)) {
+                throw new Exception('Phiếu nhập phải có ít nhất 1 sản phẩm');
             }
 
+            // 5. Insert item mới
+            $this->purchaseItemRepository->createBatch($items);
+
+            // 6. Ghi transaction nhập mới
             if (!empty($logs)) {
                 $this->inventoryTransactionRepository->createBatch($logs);
             }
 
-            // 5. recompute debt
-            $paid = $input['paid_amount'] ?? 0;
+            // 7. Rebuild tồn kho cho cả sản phẩm cũ và mới
+            $oldProductIds = array_column($oldItems, 'product_id');
+            $newProductIds = array_column($items, 'product_id');
+
+            $productIds = array_unique(
+                array_merge($oldProductIds, $newProductIds)
+            );
+
+            $this->inventoryRepository->update($productIds);
+
+            // 8. Tính lại công nợ
+            $paid = (float) ($input['paid_amount'] ?? 0);
             $debt = max($total - $paid, 0);
 
             $this->purchaseRepository->updateById($id, [
                 'total_amount' => $total,
-                'debt_amount'  => $debt,
-                'paid_amount'  => $paid
+                'paid_amount'  => $paid,
+                'debt_amount'  => $debt
             ]);
 
             return $id;
@@ -297,6 +321,9 @@ class PurchaseService
 
             if (!empty($rollbackLogs)) {
                 $this->inventoryTransactionRepository->createBatch($rollbackLogs);
+                
+                $productIds = array_column($items, 'product_id');
+                $this->inventoryRepository->update($productIds);
             }
 
             // 4. Delete items first

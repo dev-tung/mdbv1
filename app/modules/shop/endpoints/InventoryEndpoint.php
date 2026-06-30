@@ -18,27 +18,13 @@ class InventoryEndpoint
         $filters = request_filters([
             'keyword',
             'category_id',
-            'status'
+            'status',
+            'stock'
         ]);
 
         return Response::json([
             'success'=>true,
             'data'=>$this->inventoryRepository->getList($filters)
-        ]);
-    }
-
-    // STOCK
-    public function apiStock()
-    {
-        $filters = request_filters([
-            'keyword',
-            'category_id',
-            'status'
-        ]);
-
-        return Response::json([
-            'success'=>true,
-            'data'=>$this->inventoryRepository->getStock($filters)
         ]);
     }
 

@@ -12,19 +12,6 @@ class InventoryTransactionRepository extends Repository
     }
 
     // =========================
-    // CREATE (override nhẹ + giữ logic stock)
-    // =========================
-    public function create(array $data): int
-    {
-        $id = parent::create($data);
-
-        // side-effect giữ nguyên
-        $this->inventoryRepository->updateStock($data['product_id']);
-
-        return $id;
-    }
-
-    // =========================
     // BASE SELECT
     // =========================
     private function baseSelect(): string
@@ -68,9 +55,5 @@ class InventoryTransactionRepository extends Repository
             'type' => $type,
             'id'   => $id
         ]);
-
-        foreach ($rows as $row) {
-            $this->inventoryRepository->updateStock($row['product_id']);
-        }
     }
 }

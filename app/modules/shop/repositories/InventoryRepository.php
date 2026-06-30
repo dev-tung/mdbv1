@@ -36,46 +36,12 @@ class InventoryRepository extends Repository
             $params['status'] = $filters['status'];
         }
 
+        // chỉ lấy sản phẩm còn tồn kho
+        if (!empty($filters['stock'])) {
+            $sql .= " AND COALESCE(i.stock, 0) > 0";
+        }
+
         $sql .= " ORDER BY p.id DESC";
-
-        return Database::get($sql, $params);
-    }
-
-    // =========================
-    // STOCK
-    // =========================
-    public function getStock(array $filters = []): array
-    {
-        $sql = "
-            SELECT
-                p.*,
-                i.stock_in,
-                i.stock_out,
-                i.stock
-            FROM inventories i
-            INNER JOIN products p
-                ON p.id = i.product_id
-            WHERE i.stock > 0
-        ";
-
-        $params = [];
-
-        if (!empty($filters['keyword'])) {
-            $sql .= " AND p.name LIKE :keyword";
-            $params['keyword'] = '%' . $filters['keyword'] . '%';
-        }
-
-        if (!empty($filters['category_id'])) {
-            $sql .= " AND p.category_id = :category_id";
-            $params['category_id'] = $filters['category_id'];
-        }
-
-        if (!empty($filters['status'])) {
-            $sql .= " AND p.status = :status";
-            $params['status'] = $filters['status'];
-        }
-
-        $sql .= " ORDER BY p.name ASC";
 
         return Database::get($sql, $params);
     }
@@ -83,82 +49,54 @@ class InventoryRepository extends Repository
     // =========================
     // UPDATE STOCK
     // =========================
-    public function updateStock(int $productId): void
+    public function update(array $productIds): void
     {
-        $stock = Database::first(
-            "
-            SELECT
-                COALESCE(SUM(CASE WHEN type = 'in' THEN quantity END), 0)  AS stock_in,
-                COALESCE(SUM(CASE WHEN type = 'out' THEN quantity END), 0) AS stock_out
-            FROM inventory_transactions
-            WHERE product_id = :product_id
-            ",
-            [
-                'product_id' => $productId
-            ]
-        );
+        $productIds = array_unique(array_map('intval', $productIds));
 
-        $stockIn  = (int) $stock['stock_in'];
-        $stockOut = (int) $stock['stock_out'];
-        $current  = $stockIn - $stockOut;
-
-        $exists = Database::first(
-            "
-            SELECT id
-            FROM inventories
-            WHERE product_id = :product_id
-            ",
-            [
-                'product_id' => $productId
-            ]
-        );
-
-        if ($exists) {
-
-            Database::query(
-                "
-                UPDATE inventories
-                SET
-                    stock_in = :stock_in,
-                    stock_out = :stock_out,
-                    stock = :stock,
-                    updated_at = NOW()
-                WHERE product_id = :product_id
-                ",
-                [
-                    'stock_in'   => $stockIn,
-                    'stock_out'  => $stockOut,
-                    'stock'      => $current,
-                    'product_id' => $productId,
-                ]
-            );
-
+        if (empty($productIds)) {
             return;
         }
 
-        Database::query(
-            "
-            INSERT INTO inventories
-            (
+        $placeholders = implode(',', array_fill(0, count($productIds), '?'));
+
+        Database::query("
+            INSERT INTO inventories (
                 product_id,
                 stock_in,
                 stock_out,
-                stock
+                stock,
+                updated_at
             )
-            VALUES
-            (
-                :product_id,
-                :stock_in,
-                :stock_out,
-                :stock
-            )
-            ",
-            [
-                'product_id' => $productId,
-                'stock_in'   => $stockIn,
-                'stock_out'  => $stockOut,
-                'stock'      => $current,
-            ]
-        );
+            SELECT
+                t.product_id,
+                t.stock_in,
+                t.stock_out,
+                t.stock_in - t.stock_out,
+                NOW()
+            FROM (
+                SELECT
+                    product_id,
+
+                    COALESCE(
+                        SUM(CASE WHEN type = 'in' THEN quantity END),
+                        0
+                    ) AS stock_in,
+
+                    COALESCE(
+                        SUM(CASE WHEN type = 'out' THEN quantity END),
+                        0
+                    ) AS stock_out
+
+                FROM inventory_transactions
+                WHERE product_id IN ($placeholders)
+                GROUP BY product_id
+            ) t
+
+            ON DUPLICATE KEY UPDATE
+                stock_in  = VALUES(stock_in),
+                stock_out = VALUES(stock_out),
+                stock     = VALUES(stock),
+                updated_at = NOW()
+        ", $productIds);
     }
 }
