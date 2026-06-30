@@ -11,9 +11,11 @@ export const Binding = {
         this.api = api || {};
         this.options = options || {};
 
-        this.filter_suppliers();
-        this.filter_payment();
-        this.table();
+        requestAnimationFrame(() => {
+            this.filter_suppliers();
+            this.filter_payment();
+            this.table();
+        });
     },
 
     // =========================
@@ -35,7 +37,6 @@ export const Binding = {
 
             el.innerHTML = `
                 <option value="">Nhà cung cấp</option>
-
                 ${items.map(item => `
                     <option value="${item.id}">
                         ${item.name}
@@ -44,11 +45,8 @@ export const Binding = {
             `;
 
         } catch (e) {
-
             console.error('Load suppliers error:', e);
-
         }
-
     },
 
     // =========================
@@ -63,7 +61,6 @@ export const Binding = {
 
         el.innerHTML = `
             <option value="">Thanh toán</option>
-
             ${Object.entries(payments).map(([key, payment]) => `
                 <option value="${key}">
                     ${payment.label}
@@ -71,6 +68,7 @@ export const Binding = {
             `).join('')}
         `;
     },
+
     // =========================
     // SUMMARY
     // =========================
@@ -91,15 +89,16 @@ export const Binding = {
             0
         );
 
-        document.getElementById('sum-total-amount').textContent =
-            totalAmount.toLocaleString('vi-VN');
+        const set = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        };
 
-        document.getElementById('sum-paid-amount').textContent =
-            paidAmount.toLocaleString('vi-VN');
-
-        document.getElementById('sum-debt-amount').textContent =
-            debtAmount.toLocaleString('vi-VN');
+        set('sum-total-amount', totalAmount.toLocaleString('vi-VN'));
+        set('sum-paid-amount', paidAmount.toLocaleString('vi-VN'));
+        set('sum-debt-amount', debtAmount.toLocaleString('vi-VN'));
     },
+
     // =========================
     // TABLE INIT
     // =========================
@@ -115,15 +114,12 @@ export const Binding = {
         ].forEach(id => {
 
             const el = document.getElementById(id);
-
             if (!el) return;
 
             el.addEventListener('change', () => {
                 this.load(1);
             });
-
         });
-
     },
 
     // =========================
@@ -147,11 +143,8 @@ export const Binding = {
             this.render(data);
 
         } catch (e) {
-
             console.error('Load purchases error:', e);
-
         }
-
     },
 
     // =========================
@@ -166,19 +159,17 @@ export const Binding = {
         this.sum(items);
 
         const tbody = document.getElementById('purchase-table-body');
-
         if (!tbody) return;
 
         if (!items.length) {
 
             tbody.innerHTML = `
                 <tr>
-                    <td colspan="8" class="text-center text-muted">
+                    <td colspan="10" class="text-center text-muted">
                         Không có dữ liệu
                     </td>
                 </tr>
             `;
-
             return;
         }
 
@@ -190,25 +181,19 @@ export const Binding = {
             <tr>
 
                 <td>${item.id}</td>
-
                 <td>${item.supplier_name ?? ''}</td>
-
                 <td>${item.warehouse_name ?? ''}</td>
 
                 <td>${Number(item.total_amount ?? 0).toLocaleString()}</td>
-
                 <td>${Number(item.paid_amount ?? 0).toLocaleString()}</td>
-
                 <td>${Number(item.debt_amount ?? 0).toLocaleString()}</td>
 
                 <td>
-                    <select
-                        class="form-select form-select-sm purchase-status"
+                    <select class="form-select form-select-sm purchase-status"
                         data-id="${item.id}">
 
                         ${Object.entries(statuses).map(([value, status]) => `
-                            <option
-                                value="${value}"
+                            <option value="${value}"
                                 ${item.status === value ? 'selected' : ''}>
                                 ${status.label}
                             </option>
@@ -218,13 +203,11 @@ export const Binding = {
                 </td>
 
                 <td>
-                    <select
-                        class="form-select form-select-sm purchase-payment"
+                    <select class="form-select form-select-sm purchase-payment"
                         data-id="${item.id}">
 
                         ${Object.entries(payments).map(([value, payment]) => `
-                            <option
-                                value="${value}"
+                            <option value="${value}"
                                 ${item.payment === value ? 'selected' : ''}>
                                 ${payment.label}
                             </option>
@@ -236,33 +219,27 @@ export const Binding = {
                 <td>${item.created_at ?? ''}</td>
 
                 <td>
-
-                    <a
-                        href="/admin/purchases/edit/${item.id}"
+                    <a href="/admin/purchases/edit/${item.id}"
                         class="btn btn-sm btn-outline-secondary">
                         Sửa
                     </a>
 
-                    <button
-                        class="btn btn-sm btn-outline-secondary btn-delete"
+                    <button class="btn btn-sm btn-outline-secondary btn-delete"
                         data-id="${item.id}">
                         Xóa
                     </button>
-
                 </td>
 
             </tr>
 
         `).join('');
 
-        // Tổng tiền
-        document.getElementById('total-amount').textContent =
-            Number(data.total_amount ?? 0).toLocaleString();
+        const totalEl = document.getElementById('total-amount');
+        if (totalEl) {
+            totalEl.textContent = Number(data.total_amount ?? 0).toLocaleString();
+        }
 
-        // Màu select
         this.bindSelectColors();
-
-        // Pagination (nếu API có)
         this.renderPagination(data);
     },
 
@@ -280,7 +257,6 @@ export const Binding = {
             'text-info'
         ];
 
-        // STATUS
         document.querySelectorAll('.purchase-status').forEach(select => {
 
             const update = () => {
@@ -288,22 +264,17 @@ export const Binding = {
                 select.classList.remove(...classes);
 
                 const status = this.options.statuses?.[select.value];
-
                 let color = status?.color || 'secondary';
 
-                if (color === 'default') {
-                    color = 'secondary';
-                }
+                if (color === 'default') color = 'secondary';
 
                 select.classList.add(`text-${color}`);
             };
 
             update();
-
             select.addEventListener('change', update);
         });
 
-        // PAYMENT
         document.querySelectorAll('.purchase-payment').forEach(select => {
 
             const update = () => {
@@ -311,18 +282,14 @@ export const Binding = {
                 select.classList.remove(...classes);
 
                 const payment = this.options.payments?.[select.value];
-
                 let color = payment?.color || 'secondary';
 
-                if (color === 'default') {
-                    color = 'secondary';
-                }
+                if (color === 'default') color = 'secondary';
 
                 select.classList.add(`text-${color}`);
             };
 
             update();
-
             select.addEventListener('change', update);
         });
     },
@@ -333,7 +300,6 @@ export const Binding = {
     renderPagination(data) {
 
         const container = document.getElementById('pagination-pages');
-
         if (!container) return;
 
         const current = Number(data.current_page || 1);
@@ -345,8 +311,7 @@ export const Binding = {
 
             html += `
                 <li class="page-item ${i === current ? 'active' : ''}">
-                    <a
-                        href="javascript:void(0)"
+                    <a href="javascript:void(0)"
                         class="page-link text-secondary ${i === current ? 'bg-light border-secondary' : ''}"
                         data-page="${i}">
                         ${i}
@@ -358,11 +323,9 @@ export const Binding = {
         container.innerHTML = html;
 
         container.querySelectorAll('[data-page]').forEach(link => {
-
             link.addEventListener('click', () => {
                 this.load(link.dataset.page);
             });
-
         });
     }
 };

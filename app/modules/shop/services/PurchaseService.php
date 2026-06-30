@@ -334,4 +334,30 @@ class PurchaseService
             return $this->purchaseRepository->deleteById($id);
         });
     }
+
+    // =========================
+    // UPDATE PAYMENT
+    // =========================
+    public function updatePayment(int $id, array $input): int
+    {
+        $purchase = $this->purchaseRepository->findById($id);
+
+        if (!$purchase) {
+            throw new Exception('Đơn hàng không tồn tại');
+        }
+
+        $payment = $input['payment'] ?? null;
+
+        $dataUpdate = [
+            'payment' => $payment,
+        ];
+
+        // Nếu đã thanh toán hết
+        if ($payment === 'paid') {
+            $dataUpdate['paid_amount'] = (float) $purchase['total_amount'];
+            $dataUpdate['debt_amount'] = 0;
+        }
+
+        return $this->purchaseRepository->updateById($id, $dataUpdate);
+    }
 }

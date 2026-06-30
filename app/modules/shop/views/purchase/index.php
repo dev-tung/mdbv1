@@ -34,17 +34,17 @@
 
 <div class="d-flex gap-3 mb-3">
     <div>
-        <strong>Tổng tiền:</strong>
+        <strong>Tổng tiền</strong>
         <span id="sum-total-amount">0</span>
     </div>
 
     <div>
-        <strong>Tổng trả:</strong>
+        <strong>Tổng trả</strong>
         <span id="sum-paid-amount">0</span>
     </div>
 
     <div>
-        <strong>Tổng nợ:</strong>
+        <strong>Tổng nợ</strong>
         <span id="sum-debt-amount">0</span>
     </div>
 </div>

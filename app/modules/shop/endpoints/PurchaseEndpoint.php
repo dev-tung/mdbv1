@@ -172,7 +172,7 @@ class PurchaseEndpoint
             ]);
         }
 
-        $updated = $this->purchaseRepository->updateById(
+        $updated = $this->purchaseService->updatePayment(
             (int)$input['id'],
             ['payment' => $input['payment']]
         );

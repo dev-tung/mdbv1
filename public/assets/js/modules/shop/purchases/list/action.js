@@ -6,86 +6,64 @@ export const Action = {
 
     init({ api }) {
         this.api = api;
-
-        this.update_status();
-        this.update_payment();
-        this.delete();
+        this.bindEvents();
     },
 
-    // =========================
-    // UPDATE STATUS
-    // =========================
-    update_status() {
+    bindEvents() {
 
         document.addEventListener('change', async (e) => {
 
-            const select = e.target.closest('.purchase-status');
-            if (!select) return;
+            const statusSelect = e.target.closest('.purchase-status');
+            const paymentSelect = e.target.closest('.purchase-payment');
 
-            try {
+            // =========================
+            // STATUS
+            // =========================
+            if (statusSelect) {
 
-                await fetch(this.api.status, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: select.dataset.id,
-                        status: select.value
-                    })
-                });
+                try {
 
-                Binding.bindSelectColors();
+                    await fetch(this.api.status, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            id: statusSelect.dataset.id,
+                            status: statusSelect.value
+                        })
+                    });
 
-            } catch (error) {
+                    Binding.bindSelectColors();
 
-                console.error('Update status error:', error);
+                } catch (err) {
+                    console.error('Update status error:', err);
+                }
+            }
 
+            // =========================
+            // PAYMENT
+            // =========================
+            if (paymentSelect) {
+
+                try {
+
+                    await fetch(this.api.payment, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            id: paymentSelect.dataset.id,
+                            payment: paymentSelect.value
+                        })
+                    });
+
+                    //không reload page nữa
+                    Binding.load();
+
+                } catch (err) {
+                    console.error('Update payment error:', err);
+                }
             }
 
         });
-
-    },
-
-    // =========================
-    // UPDATE PAYMENT
-    // =========================
-    update_payment() {
-
-        document.addEventListener('change', async (e) => {
-
-            const select = e.target.closest('.purchase-payment');
-            if (!select) return;
-
-            try {
-
-                await fetch(this.api.payment, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        id: select.dataset.id,
-                        payment: select.value
-                    })
-                });
-
-                Binding.bindSelectColors();
-
-            } catch (error) {
-
-                console.error('Update payment error:', error);
-
-            }
-
-        });
-
-    },
-
-    // =========================
-    // DELETE
-    // =========================
-    delete() {
 
         document.addEventListener('click', async (e) => {
 
@@ -102,14 +80,10 @@ export const Action = {
 
                 btn.closest('tr')?.remove();
 
-            } catch (error) {
-
-                console.error('Delete error:', error);
-
+            } catch (err) {
+                console.error('Delete error:', err);
             }
 
         });
-
     }
-
 };
