@@ -75,7 +75,7 @@ export const Action = {
             try {
 
                 await fetch(`${this.api.delete}/${btn.dataset.id}`, {
-                    method: 'DELETE'
+                    method: 'POST'
                 });
 
                 btn.closest('tr')?.remove();

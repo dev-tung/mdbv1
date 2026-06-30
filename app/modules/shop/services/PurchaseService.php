@@ -152,7 +152,7 @@ class PurchaseService
             if (!empty($logs)) {
                 $this->inventoryTransactionRepository->createBatch($logs);
 
-                $productIds = array_column($items, 'product_id');
+                $productIds = array_values(array_unique(array_column($items, 'product_id')));
                 $this->inventoryRepository->update($productIds);
             }
 
@@ -264,12 +264,13 @@ class PurchaseService
             }
 
             // 7. Rebuild tồn kho cho cả sản phẩm cũ và mới
-            $oldProductIds = array_column($oldItems, 'product_id');
-            $newProductIds = array_column($items, 'product_id');
+            $oldProductIds = array_values(array_column($oldItems, 'product_id'));
+            $newProductIds = array_values(array_column($items, 'product_id'));
 
-            $productIds = array_unique(
-                array_merge($oldProductIds, $newProductIds)
-            );
+            $productIds = array_values(array_unique(array_merge(
+                $oldProductIds,
+                $newProductIds
+            )));
 
             $this->inventoryRepository->update($productIds);
 
