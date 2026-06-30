@@ -1,29 +1,42 @@
-import { Api } from "../../../helpers/api.js";
+import { Api } from "../../../common/api.js";
 
 export const Warehouse = {
 
-    async load() {
+    async init(apiUrl) {
+        this.selectEl = document.getElementById("warehouse_id");
+        if (!this.selectEl) return;
 
-        const select =
-            document.getElementById("warehouse_id");
+        await this.load(apiUrl);
+    },
 
-        const json =
-            await Api.get("/api/warehouses");
+    async load(apiUrl) {
+        try {
+            const res = await Api.get(apiUrl);
 
-        const data = json.data || [];
+            const warehouses = res?.data ?? [];
 
-        select.innerHTML = "";
+            this.render(warehouses);
 
-        data.forEach(item => {
+        } catch (error) {
+            console.error("Lỗi load warehouse:", error);
+        }
+    },
 
-            const option =
-                document.createElement("option");
+    render(warehouses) {
+        this.selectEl.innerHTML = "";
 
-            option.value = item.id;
+        // option mặc định
+        const defaultOption = document.createElement("option");
+        defaultOption.value = "";
+        defaultOption.textContent = "-- Chọn kho nhập --";
+        this.selectEl.appendChild(defaultOption);
 
-            option.textContent = item.name;
+        warehouses.forEach(wh => {
+            const option = document.createElement("option");
+            option.value = wh.id;
+            option.textContent = `${wh.name} - ${wh.address ?? ""}`;
 
-            select.appendChild(option);
+            this.selectEl.appendChild(option);
         });
     }
 };

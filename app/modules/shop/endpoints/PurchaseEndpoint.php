@@ -12,23 +12,23 @@ class PurchaseEndpoint
     }
 
     // =========================
-    // LIST (SERVICE)
+    // LIST
     // =========================
     public function apiList()
     {
         $input = request_all();
-
         $result = $this->purchaseService->getList($input);
 
         return Response::json([
             'success' => true,
+            'code'    => 'PURCHASE_LIST_SUCCESS',
             'data'    => $result['data'],
             'meta'    => $result['meta'],
         ]);
     }
 
     // =========================
-    // SHOW (DIRECT REPOSITORY)
+    // SHOW
     // =========================
     public function apiShow()
     {
@@ -39,18 +39,20 @@ class PurchaseEndpoint
         if (!$data) {
             return Response::json([
                 'success' => false,
-                'message' => 'Purchase not found'
+                'code'    => 'PURCHASE_NOT_FOUND',
+                'data'    => null
             ]);
         }
 
         return Response::json([
             'success' => true,
+            'code'    => 'PURCHASE_SHOW_SUCCESS',
             'data'    => $data
         ]);
     }
 
     // =========================
-    // CREATE (SERVICE)
+    // CREATE
     // =========================
     public function apiCreate()
     {
@@ -61,7 +63,7 @@ class PurchaseEndpoint
         if ($error) {
             return Response::json([
                 'success' => false,
-                'message' => $error
+                'code'    => 'PURCHASE_CREATE_VALIDATE_ERROR'
             ]);
         }
 
@@ -69,13 +71,15 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'message' => 'Create success',
-            'id'      => $id
+            'code'    => 'PURCHASE_CREATED',
+            'data'    => [
+                'id' => $id
+            ]
         ]);
     }
 
     // =========================
-    // UPDATE (SERVICE)
+    // UPDATE
     // =========================
     public function apiUpdate()
     {
@@ -86,7 +90,7 @@ class PurchaseEndpoint
         if ($error) {
             return Response::json([
                 'success' => false,
-                'message' => $error
+                'code'    => 'PURCHASE_UPDATE_VALIDATE_ERROR'
             ]);
         }
 
@@ -94,12 +98,12 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'message' => 'Update success'
+            'code'    => 'PURCHASE_UPDATED'
         ]);
     }
 
     // =========================
-    // DELETE (SERVICE)
+    // DELETE
     // =========================
     public function apiDelete()
     {
@@ -109,12 +113,12 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'message' => 'Delete success'
+            'code'    => 'PURCHASE_DELETED'
         ]);
     }
 
     // =========================
-    // UPDATE STATUS
+    // STATUS
     // =========================
     public function apiStatus()
     {
@@ -123,7 +127,7 @@ class PurchaseEndpoint
         if (empty($input['id']) || !isset($input['status'])) {
             return Response::json([
                 'success' => false,
-                'message' => 'Invalid input'
+                'code'    => 'INVALID_INPUT'
             ]);
         }
 
@@ -134,13 +138,15 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'message' => 'Status updated successfully',
-            'affected_rows' => $updated
+            'code'    => 'PURCHASE_STATUS_UPDATED',
+            'data'    => [
+                'affected_rows' => $updated
+            ]
         ]);
     }
 
     // =========================
-    // UPDATE PAYMENT
+    // PAYMENT
     // =========================
     public function apiPayment()
     {
@@ -149,7 +155,7 @@ class PurchaseEndpoint
         if (empty($input['id']) || !isset($input['payment'])) {
             return Response::json([
                 'success' => false,
-                'message' => 'Invalid input'
+                'code'    => 'INVALID_INPUT'
             ]);
         }
 
@@ -160,8 +166,10 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'message' => 'Payment updated successfully',
-            'affected_rows' => $updated
+            'code'    => 'PURCHASE_PAYMENT_UPDATED',
+            'data'    => [
+                'affected_rows' => $updated
+            ]
         ]);
     }
 }

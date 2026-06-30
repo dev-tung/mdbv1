@@ -1,77 +1,90 @@
-import { Api } from "../../../helpers/api.js";
-import { PurchaseState } from "./state.js";
+// /public/assets/js/modules/purchases/submit.js
+
+import { Api } from "../../../common/api.js";
+import { Notify } from "../../../common/notify.js";
+import { Messages } from "../../../common/messages.js";
+import { Product } from "./product.js";
 
 export const Submit = {
 
-    init() {
+    async create(url) {
+        return this.send(url, "CREATE_SUCCESS");
+    },
 
-        document
-        .getElementById("purchase-create-form")
-        .addEventListener(
-            "submit",
-            this.store
+    async update(url) {
+        return this.send(url, "UPDATE_SUCCESS");
+    },
+
+    async send(url, successKey) {
+
+        const data = this.collect();
+
+        const validate = this.validate(data);
+        if (!validate.valid) {
+            Notify.error(validate.message);
+            return;
+        }
+
+        const json = await Api.post(url, data);
+
+        if (json.success) {
+
+            Notify.success(
+                json.message || Messages.PURCHASE[successKey]
+            );
+
+            if (json.redirect) {
+                location.href = json.redirect;
+            }
+
+            return;
+        }
+
+        Notify.error(
+            json.message || Messages.COMMON.UNKNOWN_ERROR
         );
     },
 
-    async store(event) {
+    collect() {
 
-        event.preventDefault();
+        return {
 
-        const products =
-            PurchaseState.get();
+            supplier_id: document.getElementById("supplier_id")?.value || "",
+            warehouse_id: document.getElementById("warehouse_id")?.value || "",
+            description: document.getElementById("description")?.value || "",
+            status: document.getElementById("status")?.value || "",
+            payment: document.getElementById("payment")?.value || "",
 
-        if (!products.length) {
+            products: Product.getItems()
 
-            alert("Vui lòng thêm sản phẩm");
-
-            return;
-        }
-
-        const supplierId =
-            document.getElementById("supplier_id");
-
-        if (!supplierId.value) {
-
-            alert("Vui lòng chọn nhà cung cấp");
-
-            return;
-        }
-
-        const payload = {
-
-            supplier_id: supplierId.value,
-
-            warehouse_id:
-                document.getElementById("warehouse_id").value,
-
-            description:
-                document.getElementById("description").value,
-
-            status:
-                document.getElementById("status").value,
-
-            payment:
-                document.getElementById("payment").value,
-
-            products
         };
 
-        const response =
-            await Api.post(
-                "/api/purchases",
-                payload
-            );
+    },
 
-        if (!response.success) {
+    validate(data) {
 
-            alert(response.data.message || "Lỗi");
-
-            return;
+        if (!data.supplier_id) {
+            return {
+                valid: false,
+                message: Messages.PURCHASE.SUPPLIER_REQUIRED
+            };
         }
 
-        alert("Tạo phiếu nhập thành công");
+        if (!data.warehouse_id) {
+            return {
+                valid: false,
+                message: Messages.PURCHASE.WAREHOUSE_REQUIRED
+            };
+        }
 
-        window.location.href =
-            "/admin/purchases";
+        if (!data.products.length) {
+            return {
+                valid: false,
+                message: Messages.PURCHASE.PRODUCT_REQUIRED
+            };
+        }
+
+        return { valid: true };
     }
+
 };

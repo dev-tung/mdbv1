@@ -1,9 +1,3 @@
-<?php
-$statuses = config('shop.option.purchase_status');
-$payments = config('shop.option.payment');
-?>
-
-
 <div class="container-fluid py-4 mt-5">
 
     <h3 class="mb-4">
@@ -45,29 +39,34 @@ $payments = config('shop.option.payment');
 
             </div>
 
+            <!-- STATUS -->
             <div class="col-md-3">
+
                 <label class="form-label">Trạng thái</label>
 
                 <select id="status" class="form-select">
-                    <?php foreach ($statuses as $key => $status): ?>
+                    <?php foreach (config('shop.option.purchase_status') as $key => $status): ?>
                         <option value="<?= $key ?>">
                             <?= $status['label'] ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
+
             </div>
 
-            <!-- PAYMENT STATUS -->
+            <!-- PAYMENT -->
             <div class="col-md-3">
+
                 <label class="form-label">Thanh toán</label>
 
                 <select id="payment" class="form-select">
-                    <?php foreach ($payments as $key => $payment): ?>
+                    <?php foreach (config('shop.option.payment') as $key => $payment): ?>
                         <option value="<?= $key ?>">
                             <?= $payment['label'] ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
+
             </div>
 
             <!-- WAREHOUSE -->
@@ -97,7 +96,7 @@ $payments = config('shop.option.payment');
 
             </div>
 
-            <!-- TABLE -->
+            <!-- PRODUCT TABLE -->
             <div class="col-12">
 
                 <div class="border rounded p-3">
@@ -146,6 +145,39 @@ $payments = config('shop.option.payment');
         </div>
 
     </form>
+
 </div>
 
-<script type="module" src="<?= asset('/js/modules/shop/purchases/create.js') ?>"></script>
+<script type="module">
+
+    import { Supplier } from '/assets/js/modules/shop/purchases/supplier.js';
+    import { Product } from '/assets/js/modules/shop/purchases/product.js';
+    import { Warehouse } from '/assets/js/modules/shop/purchases/warehouse.js';
+    import { Submit } from '/assets/js/modules/shop/purchases/submit.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // tìm nhà cung cấp
+        Supplier.init('/api/suppliers');
+
+        // tìm sản phẩm + render cart
+        Product.init('/api/products');
+
+        Warehouse.init('/api/warehouses');
+
+        // submit form
+        document
+            .getElementById('purchase-create-form')
+            .addEventListener('submit', async e => {
+
+                e.preventDefault();
+
+                await Submit.create(
+                    '/api/purchases'
+                );
+
+            });
+
+    });
+
+</script>

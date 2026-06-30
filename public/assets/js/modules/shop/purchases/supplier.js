@@ -1,66 +1,87 @@
-import { Api } from "../../../helpers/api.js";
+import { Api } from "../../../common/api.js";
 
 export const Supplier = {
 
-    init() {
+    async init(apiUrl) {
+        this.input = document.getElementById("supplier_search");
+        this.hidden = document.getElementById("supplier_id");
+        this.box = document.getElementById("supplier_suggestions");
 
-        const input =
-            document.getElementById("supplier_search");
+        if (!this.input || !this.hidden || !this.box) {
+            console.error("Supplier DOM not found");
+            return;
+        }
 
-        const hidden =
-            document.getElementById("supplier_id");
+        await this.load(apiUrl);
+        this.bind();
+    },
 
-        const box =
-            document.getElementById("supplier_suggestions");
+    async load(apiUrl) {
+        try {
+            const res = await Api.get(apiUrl);
 
-        input.addEventListener("input", async () => {
+            console.log("SUPPLIER API:", res);
 
-            const keyword = input.value.trim();
+            // API của bạn: { data: [...] }
+            this.suppliers = res?.data ?? [];
 
-            box.innerHTML = "";
-            hidden.value = "";
+        } catch (error) {
+            console.error("Load supplier error:", error);
+            this.suppliers = [];
+        }
+    },
+
+    bind() {
+        this.input.addEventListener("input", () => {
+
+            const keyword = this.input.value.trim().toLowerCase();
 
             if (!keyword) {
-
-                box.classList.add("d-none");
-
+                this.box.classList.add("d-none");
+                this.box.innerHTML = "";
                 return;
             }
 
-            const json = await Api.get(
-                `/api/suppliers?keyword=${encodeURIComponent(keyword)}`
+            const filtered = this.suppliers.filter(s =>
+                (s.name || "").toLowerCase().includes(keyword)
             );
 
-            const data = json.data || [];
-
-            data.forEach(item => {
-
-                const button =
-                    document.createElement("button");
-
-                button.type = "button";
-
-                button.className =
-                    "list-group-item list-group-item-action";
-
-                button.textContent = item.name;
-
-                button.onclick = () => {
-
-                    input.value = item.name;
-
-                    hidden.value = item.id;
-
-                    box.classList.add("d-none");
-                };
-
-                box.appendChild(button);
-            });
-
-            box.classList.toggle(
-                "d-none",
-                !data.length
-            );
+            this.render(filtered);
         });
+
+        // click outside để đóng dropdown
+        document.addEventListener("click", (e) => {
+            if (!this.box.contains(e.target) && e.target !== this.input) {
+                this.box.classList.add("d-none");
+            }
+        });
+    },
+
+    render(list) {
+
+        this.box.innerHTML = "";
+
+        if (!list.length) {
+            this.box.classList.add("d-none");
+            return;
+        }
+
+        list.forEach(s => {
+            const item = document.createElement("button");
+            item.type = "button";
+            item.className = "list-group-item list-group-item-action";
+            item.textContent = s.name;
+
+            item.onclick = () => {
+                this.input.value = s.name;
+                this.hidden.value = s.id;
+
+                this.box.classList.add("d-none");
+            };
+
+            this.box.appendChild(item);
+        });
+
+        this.box.classList.remove("d-none");
     }
 };

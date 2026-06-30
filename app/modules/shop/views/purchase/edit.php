@@ -1,8 +1,3 @@
-<?php
-$statuses = config('shop.option.purchase_status') ?? [];
-$payments = config('shop.option.payment') ?? [];
-?>
-
 <div class="container-fluid py-4 mt-5">
 
     <h3 class="mb-4">
@@ -50,7 +45,7 @@ $payments = config('shop.option.payment') ?? [];
                 <label class="form-label">Trạng thái</label>
 
                 <select id="status" class="form-select">
-                    <?php foreach ($statuses as $key => $status): ?>
+                    <?php foreach ((config('shop.option.purchase_status') ?? []) as $key => $status): ?>
                         <option value="<?= $key ?>">
                             <?= $status['label'] ?>
                         </option>
@@ -65,7 +60,7 @@ $payments = config('shop.option.payment') ?? [];
                 <label class="form-label">Thanh toán</label>
 
                 <select id="payment" class="form-select">
-                    <?php foreach ($payments as $key => $payment): ?>
+                    <?php foreach ((config('shop.option.payment') ?? []) as $key => $payment): ?>
                         <option value="<?= $key ?>">
                             <?= $payment['label'] ?>
                         </option>
@@ -150,364 +145,75 @@ $payments = config('shop.option.payment') ?? [];
         </div>
 
     </form>
+
 </div>
+<script type="module">
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
+    import { Supplier } from '/assets/js/modules/purchases/supplier.js';
+    import { Product } from '/assets/js/modules/purchases/product.js';
+    import { Submit } from '/assets/js/modules/purchases/submit.js';
+    import { Api } from '/assets/js/helpers/api.js';
 
-    // =========================
-    // CONFIG
-    // =========================
-    const PURCHASE_ID = "<?= $id ?? '' ?>";
+    document.addEventListener('DOMContentLoaded', async () => {
 
-    if (!PURCHASE_ID) {
-        alert("Thiếu PURCHASE_ID");
-        return;
-    }
+        const pathParts = window.location.pathname.split("/");
 
-    const API = {
-        suppliers: "/api/suppliers",
-        products: "/api/products",
-        warehouses: "/api/warehouses",
+        const purchaseId = pathParts[pathParts.length - 1];
 
-        purchaseShow: "/api/purchases/show/" + PURCHASE_ID,
-        purchaseUpdate: "/api/purchases/update"
-    };
+        // load chi tiết phiếu nhập
+        const json = await Api.get(
+            `/api/purchases/show?id=${purchaseId}`
+        );
 
-    let selectedProducts = {};
+        if (json.success) {
 
-    const supplierInput = document.getElementById("supplier_search");
-    const supplierId = document.getElementById("supplier_id");
-    const supplierBox = document.getElementById("supplier_suggestions");
+            const purchase = json.data;
 
-    const productInput = document.getElementById("product_search");
-    const productBox = document.getElementById("product_suggestions");
+            // supplier
+            document.getElementById('supplier_id').value =
+                purchase.supplier_id ?? '';
 
-    const warehouseSelect = document.getElementById("warehouse_id");
+            document.getElementById('supplier_search').value =
+                purchase.supplier_name ?? '';
 
-    const tbody = document.getElementById("selected_products");
-    const totalEl = document.getElementById("total_amount");
+            // description
+            document.getElementById('description').value =
+                purchase.description ?? '';
 
-    function money(v) {
-        return Number(v).toLocaleString("vi-VN");
-    }
+            // status
+            document.getElementById('status').value =
+                purchase.status ?? '';
 
-    // =========================
-    // LOAD WAREHOUSES
-    // =========================
-    async function loadWarehouses() {
+            // payment
+            document.getElementById('payment').value =
+                purchase.payment ?? '';
 
-        const res = await fetch(API.warehouses);
-        const json = await res.json();
+            // warehouse
+            document.getElementById('warehouse_id').value =
+                purchase.warehouse_id ?? '';
 
-        const data = json.data || [];
-
-        warehouseSelect.innerHTML = "";
-
-        data.forEach(w => {
-            const opt = document.createElement("option");
-            opt.value = w.id;
-            opt.textContent = w.name;
-            warehouseSelect.appendChild(opt);
-        });
-    }
-
-    // =========================
-    // LOAD PURCHASE
-    // =========================
-    async function loadPurchase() {
-
-        const res = await fetch(API.purchaseShow);
-        const json = await res.json();
-
-        const data = json.data;
-
-        supplierInput.value = data.supplier?.name || "";
-        supplierId.value = data.supplier_id || "";
-
-        document.getElementById("description").value = data.description || "";
-        document.getElementById("status").value = data.status || "";
-        document.getElementById("payment").value = data.payment || "";
-        warehouseSelect.value = data.warehouse_id || "";
-
-        selectedProducts = {};
-
-        (data.products || []).forEach(p => {
-            selectedProducts[p.product_id] = {
-                id: p.product_id,
-                name: p.name,
-                price: Number(p.price),
-                quantity: Number(p.quantity)
-            };
-        });
-
-        render();
-    }
-
-    // =========================
-    // SUPPLIER SEARCH
-    // =========================
-    supplierInput.addEventListener("input", async function () {
-
-        const keyword = this.value.trim();
-
-        supplierBox.innerHTML = "";
-        supplierId.value = "";
-
-        if (!keyword) {
-            supplierBox.classList.add("d-none");
-            return;
+            // products
+            Product.setItems(purchase.items || []);
         }
 
-        const res = await fetch(`${API.suppliers}?keyword=${encodeURIComponent(keyword)}`);
-        const json = await res.json();
+        // khởi tạo search
+        Supplier.init('/api/suppliers/search');
 
-        const data = json.data || [];
+        Product.init('/api/products/search');
 
-        if (!data.length) {
-            supplierBox.classList.add("d-none");
-            return;
-        }
+        // submit update
+        document
+            .getElementById('purchase-create-form')
+            .addEventListener('submit', async e => {
 
-        data.forEach(s => {
+                e.preventDefault();
 
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "list-group-item list-group-item-action";
-            btn.textContent = s.name;
+                await Submit.update(
+                    `/api/purchases/update?id=${purchaseId}`
+                );
 
-            btn.onclick = () => {
-                supplierInput.value = s.name;
-                supplierId.value = s.id;
-                supplierBox.classList.add("d-none");
-            };
-
-            supplierBox.appendChild(btn);
-        });
-
-        supplierBox.classList.remove("d-none");
-    });
-
-    // =========================
-    // PRODUCT SEARCH
-    // =========================
-    productInput.addEventListener("input", async function () {
-
-        const keyword = this.value.trim();
-
-        productBox.innerHTML = "";
-
-        if (!keyword) {
-            productBox.classList.add("d-none");
-            return;
-        }
-
-        const res = await fetch(`${API.products}?keyword=${encodeURIComponent(keyword)}`);
-        const json = await res.json();
-
-        const data = json.data || [];
-
-        if (!data.length) {
-            productBox.classList.add("d-none");
-            return;
-        }
-
-        data.forEach(p => {
-
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "list-group-item list-group-item-action";
-            btn.textContent = p.name;
-
-            btn.onclick = () => {
-                addProduct(p);
-                productInput.value = "";
-                productBox.classList.add("d-none");
-            };
-
-            productBox.appendChild(btn);
-        });
-
-        productBox.classList.remove("d-none");
-    });
-
-    // =========================
-    // ADD PRODUCT
-    // =========================
-    function addProduct(p) {
-
-        if (selectedProducts[p.id]) return;
-
-        selectedProducts[p.id] = {
-            id: p.id,
-            name: p.name,
-            price: 0,
-            quantity: 1
-        };
-
-        render();
-    }
-
-    // =========================
-    // RENDER TABLE
-    // =========================
-    function render() {
-
-        tbody.innerHTML = "";
-
-        Object.values(selectedProducts).forEach(p => {
-
-            const tr = document.createElement("tr");
-
-            tr.setAttribute("data-id", p.id);
-
-            tr.innerHTML = `
-                <td>${p.name}</td>
-
-                <td>
-                    <input type="number"
-                           min="1"
-                           value="${p.quantity}"
-                           data-id="${p.id}"
-                           class="form-control form-control-sm qty">
-                </td>
-
-                <td>
-                    <input type="number"
-                           min="0"
-                           value="${p.price}"
-                           data-id="${p.id}"
-                           class="form-control form-control-sm price">
-                </td>
-
-                <td class="item-total" data-id="${p.id}"></td>
-
-                <td>
-                    <button type="button"
-                            class="btn btn-sm btn-outline-danger remove"
-                            data-id="${p.id}">
-                        Xóa
-                    </button>
-                </td>
-            `;
-
-            tbody.appendChild(tr);
-        });
-
-        bind();
-        calc();
-    }
-
-    // =========================
-    // BIND EVENTS
-    // =========================
-    function bind() {
-
-        document.querySelectorAll(".qty").forEach(i => {
-            i.oninput = () => {
-                selectedProducts[i.dataset.id].quantity = +i.value || 1;
-                calc();
-            };
-        });
-
-        document.querySelectorAll(".price").forEach(i => {
-            i.oninput = () => {
-                selectedProducts[i.dataset.id].price = +i.value || 0;
-                calc();
-            };
-        });
-
-        document.querySelectorAll(".remove").forEach(b => {
-            b.onclick = () => {
-                delete selectedProducts[b.dataset.id];
-                render();
-            };
-        });
-    }
-
-    // =========================
-    // CALC TOTAL
-    // =========================
-    function calc() {
-
-        let total = 0;
-
-        Object.values(selectedProducts).forEach(p => {
-
-            const sum = p.price * p.quantity;
-
-            const el = document.querySelector(`.item-total[data-id="${p.id}"]`);
-            if (el) el.textContent = money(sum);
-
-            total += sum;
-        });
-
-        totalEl.textContent = money(total);
-    }
-
-    // =========================
-    // SUBMIT UPDATE
-    // =========================
-    document.getElementById("purchase-create-form")
-        .addEventListener("submit", async function (e) {
-
-            e.preventDefault();
-
-            const supplier = supplierId.value.trim();
-            const products = Object.values(selectedProducts);
-
-            // =========================
-            // VALIDATE
-            // =========================
-            if (!supplier) {
-                alert("Vui lòng chọn nhà cung cấp");
-                return;
-            }
-
-            if (!products.length) {
-                alert("Vui lòng thêm ít nhất 1 sản phẩm");
-                return;
-            }
-
-            const payload = {
-                id: PURCHASE_ID,
-                supplier_id: supplierId.value,
-                warehouse_id: warehouseSelect.value,
-                description: document.getElementById("description").value,
-                status: document.getElementById("status").value,
-                payment: document.getElementById("payment").value,
-                products: Object.values(selectedProducts).map(p => ({
-                    product_id: p.id,
-                    quantity: p.quantity,
-                    price: p.price
-                }))
-            };
-
-            const res = await fetch(API.purchaseUpdate, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
             });
 
-            const json = await res.json();
+    });
 
-            if (!res.ok) {
-                alert(json.message || "Lỗi cập nhật phiếu nhập");
-                return;
-            }
-
-            alert("Cập nhật phiếu nhập thành công");
-
-            window.location.href = "/admin/purchases";
-        });
-
-    // =========================
-    // INIT
-    // =========================
-    loadWarehouses();
-    loadPurchase();
-
-});
 </script>
