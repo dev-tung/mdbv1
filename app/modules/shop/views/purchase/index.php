@@ -88,25 +88,31 @@
 </div>
 
 <script type="module">
-    import { Table } from "/assets/js/modules/shop/purchases/list/table.js";
-    import { Filters } from "/assets/js/modules/shop/purchases/list/filters.js";
-    import { Status } from "/assets/js/modules/shop/purchases/list/status.js";
-    import { Payment } from "/assets/js/modules/shop/purchases/list/payment.js";
-    import { Delete } from "/assets/js/modules/shop/purchases/list/delete.js";
+    import { Binding } from "/assets/js/modules/shop/purchases/list/binding.js";
+    import { Action } from "/assets/js/modules/shop/purchases/list/action.js";
 
     document.addEventListener('DOMContentLoaded', async () => {
 
-        window.APP_CONFIG = {
+        const options = {
             statuses: <?= json_encode(config('shop.option.purchase_status')) ?>,
             payments: <?= json_encode(config('shop.option.payment')) ?>
         };
 
-        Table.init('/api/purchases', window.APP_CONFIG);
-        Filters.init('/api/suppliers', window.APP_CONFIG);
-        Status.init('/api/purchases/status');
-        Payment.init('/api/purchases/payment');
-        Delete.init('/api/purchases/delete');
+        Binding.init({
+            api: {
+                list: '/api/purchases',
+                suppliers: '/api/suppliers'
+            },
+            options
+        });
 
-        await Table.load(1);
+        Action.init({
+            api: {
+                status: '/api/purchases/status',
+                payment: '/api/purchases/payment',
+                delete: '/api/purchases/delete'
+            }
+        });
+
     });
 </script>
