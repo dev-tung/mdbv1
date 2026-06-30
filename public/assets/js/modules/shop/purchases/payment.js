@@ -76,7 +76,7 @@ export const Payment = {
             this.totalView.textContent = total.toLocaleString();
         }
 
-        // 👉 CHỈ HIỆN KHI THANH TOÁN 1 PHẦN
+        //  CHỈ HIỆN KHI THANH TOÁN 1 PHẦN
         if (this.isPartial()) {
 
             if (this.paidView) {

@@ -54,28 +54,37 @@
 
             </div>
 
-            <!-- PAYMENT STATUS -->
-            <div class="col-md-3">
-
-                <label class="form-label">Thanh toán</label>
-
-                <select id="payment" class="form-select">
-                    <?php foreach ((config('shop.option.payment') ?? []) as $key => $payment): ?>
-                        <option value="<?= $key ?>">
-                            <?= $payment['label'] ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-
-            </div>
-
             <!-- WAREHOUSE -->
-            <div class="col-md-6">
+            <div class="col-md-3">
 
                 <label class="form-label">Kho nhập</label>
 
                 <select id="warehouse_id" class="form-select"></select>
 
+            </div>
+
+            <!-- PAYMENT -->
+            <div class="col-md-3">
+                <label class="form-label">Thanh toán</label>
+
+                <select id="payment" class="form-select">
+                    <?php foreach (config('shop.option.payment') as $key => $payment): ?>
+                        <option value="<?= $key ?>">
+                            <?= $payment['label'] ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- PAID AMOUNT (NEW) -->
+            <div class="col-md-3 d-none" id="paid_amount_wrapper">
+                <label class="form-label">Đã thanh toán</label>
+
+                <input type="number"
+                       id="paid_amount"
+                       class="form-control"
+                       min="0"
+                       value="0">
             </div>
 
             <!-- PRODUCT SEARCH -->
@@ -121,9 +130,23 @@
                     </div>
 
                     <div class="mt-3">
-                        <h5>
-                            Tổng tiền:
-                            <span id="total_amount">0</span> ₫
+                        <h5 class="mb-0 d-flex flex-wrap gap-5">
+
+                            <span>
+                                Tổng tiền:
+                                <b id="total_amount">0</b> ₫
+                            </span>
+
+                            <span>
+                                Đã trả:
+                                <b id="paid_amount_view">0</b> ₫
+                            </span>
+
+                            <span>
+                                Còn nợ:
+                                <b id="debt_amount_view">0</b> ₫
+                            </span>
+
                         </h5>
                     </div>
 
@@ -148,92 +171,39 @@
 </div>
 
 <script type="module">
+    import { Supplier } from '/assets/js/modules/shop/purchases/supplier.js';
+    import { Product } from '/assets/js/modules/shop/purchases/product.js';
+    import { Warehouse } from '/assets/js/modules/shop/purchases/warehouse.js';
+    import { Submit } from '/assets/js/modules/shop/purchases/submit.js';
+    import { Payment } from '/assets/js/modules/shop/purchases/payment.js';
+    import { Show } from '/assets/js/modules/shop/purchases/show.js';
 
-import { Supplier } from '/assets/js/modules/shop/purchases/supplier.js';
-import { Product } from '/assets/js/modules/shop/purchases/product.js';
-import { Warehouse } from '/assets/js/modules/shop/purchases/warehouse.js';
-import { Submit } from '/assets/js/modules/shop/purchases/submit.js';
-import { Api } from '/assets/js/common/api.js';
+    document.addEventListener('DOMContentLoaded', async () => {
 
-document.addEventListener('DOMContentLoaded', async () => {
+        const purchaseId = window.location.pathname
+            .split('/')
+            .filter(Boolean)
+            .pop();
 
-    const purchaseId = window.location.pathname
-        .split('/')
-        .filter(Boolean)
-        .pop();
+        await Promise.all([
+            Supplier.init('/api/suppliers'),
+            Product.init('/api/products'),
+            Warehouse.init('/api/warehouses'),
+            Payment.init(`/api/purchases/payment`, purchaseId),
+            Show.init(`/api/purchases/show/${purchaseId}`)
+        ]);
 
-    // =========================
-    // INIT MODULES
-    // =========================
-    await Promise.all([
-        Supplier.init('/api/suppliers'),
-        Product.init('/api/products'),
-        Warehouse.init('/api/warehouses')
-    ]);
 
-    // =========================
-    // FETCH DATA
-    // =========================
-    const json = await Api.get(`/api/purchases/show/${purchaseId}`);
-    if (!json?.success) return;
+        document
+            .getElementById('purchase-update-form')
+            .addEventListener('submit', async (e) => {
 
-    const p = json.data;
+                e.preventDefault();
 
-    // =========================
-    // SUPPLIER
-    // =========================
-    document.getElementById('supplier_id').value = p.supplier_id ?? '';
-    document.getElementById('supplier_search').value = p.supplier?.name ?? '';
-
-    // =========================
-    // BASIC INFO
-    // =========================
-    document.getElementById('description').value = p.description ?? '';
-    document.getElementById('status').value = p.status ?? 'draft';
-    document.getElementById('payment').value = p.payment ?? 'unpaid';
-
-    // =========================
-    // WAREHOUSE
-    // =========================
-    const warehouseEl = document.getElementById('warehouse_id');
-    warehouseEl.value = p.warehouse_id ?? '';
-    warehouseEl.dispatchEvent(new Event('change'));
-
-    // =========================
-    // PRODUCTS
-    // =========================
-    const products = (p.products ?? []).map(item => ({
-        product_id: item.product_id,
-        name: item.name,
-        price: Number(item.price) || 0,
-        quantity: Number(item.quantity) || 1,
-        subtotal: Number(item.subtotal) || (Number(item.price) * Number(item.quantity))
-    }));
-
-    Product.setItems(products);
-
-    // =========================
-    // TOTAL COST (optional but recommended)
-    // =========================
-    const totalEl = document.getElementById('total_amount');
-    if (totalEl) {
-        totalEl.innerText = p.total_cost ?? 0;
-    }
-
-    // =========================
-    // SUBMIT
-    // =========================
-    document
-        .getElementById('purchase-update-form')
-        .addEventListener('submit', async (e) => {
-
-            e.preventDefault();
-
-            await Submit.update(`/api/purchases/update/${purchaseId}`, {
-                id: p.id
+                await Submit.update(`/api/purchases/update/${purchaseId}`, {
+                    id: purchaseId
+                });
             });
-        });
 
-});
-
+    });
 </script>

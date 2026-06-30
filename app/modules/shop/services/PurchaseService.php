@@ -86,7 +86,8 @@ class PurchaseService
                 'name' => $purchase['supplier_name'] ?? ''
             ],
             'total_amount' => (float) ($purchase['total_amount'] ?? 0),
-
+            'paid_amount' => (float) ($purchase['paid_amount'] ?? 0),
+            'debt_amount' => (float) ($purchase['debt_amount'] ?? 0),
             'products' => $products
         ];
     }
