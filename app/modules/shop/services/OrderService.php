@@ -118,6 +118,8 @@ class OrderService
                 $qty       = $p['quantity'] ?? 1;
                 $price     = $p['price'] ?? 0;
 
+                $purchaseItemId = $p['purchase_item_id'] ?? null;
+
                 if ($productId <= 0 || $qty <= 0) {
                     continue;
                 }
@@ -125,20 +127,28 @@ class OrderService
                 $lineTotal = $qty * $price;
                 $total += $lineTotal;
 
+                // =========================
+                // ORDER ITEMS (ADD FIELD)
+                // =========================
                 $items[] = [
-                    'order_id' => $orderId,
-                    'product_id'  => $productId,
-                    'quantity'    => $qty,
-                    'unit_price'  => $price
+                    'order_id'          => $orderId,
+                    'product_id'        => $productId,
+                    'quantity'          => $qty,
+                    'unit_price'        => $price,
+                    'purchase_item_id'  => $purchaseItemId
                 ];
 
+                // =========================
+                // INVENTORY LOG (ADD FIELD)
+                // =========================
                 $logs[] = [
-                    'product_id'     => $productId,
-                    'type'           => 'in',
-                    'quantity'       => $qty,
-                    'reference_type' => 'order',
-                    'reference_id'   => $orderId,
-                    'note'           => 'import order'
+                    'product_id'        => $productId,
+                    'type'              => 'out',
+                    'quantity'          => $qty,
+                    'reference_type'    => 'order',
+                    'reference_id'      => $orderId,
+                    'purchase_item_id'  => $purchaseItemId,
+                    'note'              => 'import order'
                 ];
             }
 
@@ -195,6 +205,7 @@ class OrderService
                     'quantity'       => $item['quantity'],
                     'reference_type' => 'order_update_rollback',
                     'reference_id'   => $id,
+                    'purchase_item_id' => $item['purchase_item_id'] ?? null,
                     'note'           => 'rollback old items'
                 ];
             }
@@ -221,6 +232,8 @@ class OrderService
                 $qty       = (float) ($p['quantity'] ?? 0);
                 $price     = (float) ($p['price'] ?? 0);
 
+                $purchaseItemId = $p['purchase_item_id'] ?? null;
+
                 if ($productId <= 0 || $qty <= 0) {
                     continue;
                 }
@@ -228,20 +241,28 @@ class OrderService
                 $lineTotal = $qty * $price;
                 $total += $lineTotal;
 
+                // =========================
+                // ORDER ITEMS
+                // =========================
                 $items[] = [
-                    'order_id' => $id,
-                    'product_id'  => $productId,
-                    'quantity'    => $qty,
-                    'unit_price'  => $price
+                    'order_id'          => $id,
+                    'product_id'        => $productId,
+                    'quantity'          => $qty,
+                    'unit_price'        => $price,
+                    'purchase_item_id'  => $purchaseItemId
                 ];
 
+                // =========================
+                // INVENTORY LOG
+                // =========================
                 $logs[] = [
-                    'product_id'     => $productId,
-                    'type'           => 'in',
-                    'quantity'       => $qty,
-                    'reference_type' => 'order_update',
-                    'reference_id'   => $id,
-                    'note'           => 're-import order'
+                    'product_id'        => $productId,
+                    'type'              => 'in',
+                    'quantity'          => $qty,
+                    'reference_type'    => 'order_update',
+                    'reference_id'      => $id,
+                    'purchase_item_id'  => $purchaseItemId,
+                    'note'              => 're-import order'
                 ];
             }
 
@@ -257,7 +278,7 @@ class OrderService
                 $this->inventoryTransactionRepository->createBatch($logs);
             }
 
-            // 7. Rebuild tồn kho cho cả sản phẩm cũ và mới
+            // 7. Rebuild tồn kho
             $oldProductIds = array_values(array_column($oldItems, 'product_id'));
             $newProductIds = array_values(array_column($items, 'product_id'));
 
@@ -289,7 +310,7 @@ class OrderService
     {
         return Database::transaction(function () use ($id) {
 
-            // 1. Get order (to ensure warehouse context)
+            // 1. Get order
             $order = $this->orderRepository->findById($id);
 
             if (!$order) {
@@ -299,25 +320,26 @@ class OrderService
             // 2. Get items
             $items = $this->orderItemRepository->getByOrderId($id);
 
-            // 3. Rollback stock (OUT)
+            // 3. Rollback stock
             $rollbackLogs = [];
 
             foreach ($items as $item) {
 
                 $rollbackLogs[] = [
-                    'product_id'     => $item['product_id'],
-                    'type'           => 'out',
-                    'quantity'       => $item['quantity'],
-                    'reference_type' => 'order_delete',
-                    'reference_id'   => $id,
-                    'note'           => 'delete order rollback'
+                    'product_id'        => $item['product_id'],
+                    'type'              => 'out',
+                    'quantity'          => $item['quantity'],
+                    'reference_type'    => 'order_delete',
+                    'reference_id'      => $id,
+                    'purchase_item_id'  => $item['purchase_item_id'] ?? null,
+                    'note'              => 'delete order rollback'
                 ];
             }
 
             if (!empty($rollbackLogs)) {
                 $this->inventoryTransactionRepository->createBatch($rollbackLogs);
-                
-                $productIds = array_column($items, 'product_id');
+
+                $productIds = array_values(array_unique(array_column($items, 'product_id')));
                 $this->inventoryRepository->update($productIds);
             }
 

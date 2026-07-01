@@ -110,15 +110,15 @@ class PurchaseService
                 'debt_amount'  => 0
             ]);
 
-            $total = 0;
-            $items = [];
-            $logs  = [];
+            $total      = 0;
+            $logs       = [];
+            $productIds = [];
 
             foreach ($input['items'] ?? $input['products'] ?? [] as $p) {
 
-                $productId = $p['product_id'] ?? $p['id'] ?? 0;
-                $qty       = $p['quantity'] ?? 1;
-                $price     = $p['price'] ?? 0;
+                $productId = (int)($p['product_id'] ?? $p['id'] ?? 0);
+                $qty       = (float)($p['quantity'] ?? 1);
+                $price     = (float)($p['price'] ?? 0);
 
                 if ($productId <= 0 || $qty <= 0) {
                     continue;
@@ -127,40 +127,42 @@ class PurchaseService
                 $lineTotal = $qty * $price;
                 $total += $lineTotal;
 
-                $items[] = [
+                // Tạo purchase item (lot)
+                $purchaseItemId = $this->purchaseItemRepository->create([
                     'purchase_id' => $purchaseId,
                     'product_id'  => $productId,
                     'quantity'    => $qty,
                     'unit_price'  => $price
-                ];
+                ]);
 
+                // Ghi nhận nhập kho
                 $logs[] = [
-                    'product_id'     => $productId,
-                    'warehouse_id'   => $input['warehouse_id'] ?? null,
-                    'type'           => 'in',
-                    'quantity'       => $qty,
-                    'reference_type' => 'purchase',
-                    'reference_id'   => $purchaseId,
-                    'note'           => 'import purchase'
+                    'purchase_item_id' => $purchaseItemId,
+                    'product_id'       => $productId,
+                    'type'             => 'in',
+                    'quantity'         => $qty,
+                    'reference_type'   => 'purchase',
+                    'reference_id'     => $purchaseId,
+                    'note'             => 'Import purchase'
                 ];
-            }
 
-            if (!empty($items)) {
-                $this->purchaseItemRepository->createBatch($items);
+                $productIds[] = $productId;
             }
 
             if (!empty($logs)) {
                 $this->inventoryTransactionRepository->createBatch($logs);
 
-                $productIds = array_values(array_unique(array_column($items, 'product_id')));
-                $this->inventoryRepository->update($productIds);
+                $this->inventoryRepository->update(
+                    array_values(array_unique($productIds))
+                );
             }
 
-            $debt = max($total - ($input['paid_amount'] ?? 0), 0);
+            $paid = (float)($input['paid_amount'] ?? 0);
+            $debt = max($total - $paid, 0);
 
             $this->purchaseRepository->updateById($purchaseId, [
-                'total_amount'=> $total,
-                'debt_amount' => $debt
+                'total_amount' => $total,
+                'debt_amount'  => $debt
             ]);
 
             return $purchaseId;
@@ -174,9 +176,9 @@ class PurchaseService
     {
         return Database::transaction(function () use ($input) {
 
-            $id = $input['id'];
+            $id = (int)$input['id'];
 
-            // 1. Update header + payment
+            // 1. Update header
             $this->purchaseRepository->updateById($id, [
                 'supplier_id'  => $input['supplier_id'] ?? null,
                 'warehouse_id' => $input['warehouse_id'] ?? null,
@@ -186,96 +188,76 @@ class PurchaseService
                 'paid_amount'  => $input['paid_amount'] ?? 0
             ]);
 
-            // 2. Lấy item cũ để rollback kho
+            // 2. Lấy item cũ
             $oldItems = $this->purchaseItemRepository->getByPurchaseId($id);
 
-            $rollbackLogs = [];
+            $productIds = [];
 
+            // 3. Rollback tồn kho theo từng lot
             foreach ($oldItems as $item) {
 
-                $rollbackLogs[] = [
-                    'product_id'     => $item['product_id'],
-                    'warehouse_id'   => $input['warehouse_id'] ?? null,
-                    'type'           => 'out',
-                    'quantity'       => $item['quantity'],
-                    'reference_type' => 'purchase_update_rollback',
-                    'reference_id'   => $id,
-                    'note'           => 'rollback old items'
-                ];
+                $this->inventoryTransactionRepository->create([
+                    'purchase_item_id' => $item['id'],
+                    'product_id'       => $item['product_id'],
+                    'type'             => 'out',
+                    'quantity'         => $item['quantity'],
+                    'reference_type'   => 'purchase_update',
+                    'reference_id'     => $id,
+                    'note'             => 'Rollback purchase'
+                ]);
+
+                $productIds[] = $item['product_id'];
             }
 
-            if (!empty($rollbackLogs)) {
-                $this->inventoryTransactionRepository->createBatch($rollbackLogs);
-            }
-
-            // 3. Xóa item cũ
+            // 4. Xóa purchase item cũ
             $this->purchaseItemRepository->deleteByPurchaseId($id);
 
-            // 4. Build item mới
-            $items = [];
-            $logs  = [];
+            // 5. Insert purchase item mới
             $total = 0;
 
-            $products = $input['items']
-                ?? $input['products']
-                ?? [];
+            foreach (($input['items'] ?? $input['products'] ?? []) as $p) {
 
-            foreach ($products as $p) {
-
-                $productId = (int) ($p['product_id'] ?? $p['id'] ?? 0);
-                $qty       = (float) ($p['quantity'] ?? 0);
-                $price     = (float) ($p['price'] ?? 0);
+                $productId = (int)($p['product_id'] ?? $p['id'] ?? 0);
+                $qty       = (float)($p['quantity'] ?? 0);
+                $price     = (float)($p['price'] ?? 0);
 
                 if ($productId <= 0 || $qty <= 0) {
                     continue;
                 }
 
-                $lineTotal = $qty * $price;
-                $total += $lineTotal;
+                $total += $qty * $price;
 
-                $items[] = [
+                $purchaseItemId = $this->purchaseItemRepository->create([
                     'purchase_id' => $id,
                     'product_id'  => $productId,
                     'quantity'    => $qty,
                     'unit_price'  => $price
-                ];
+                ]);
 
-                $logs[] = [
-                    'product_id'     => $productId,
-                    'warehouse_id'   => $input['warehouse_id'] ?? null,
-                    'type'           => 'in',
-                    'quantity'       => $qty,
-                    'reference_type' => 'purchase_update',
-                    'reference_id'   => $id,
-                    'note'           => 're-import purchase'
-                ];
+                $this->inventoryTransactionRepository->create([
+                    'purchase_item_id' => $purchaseItemId,
+                    'product_id'       => $productId,
+                    'type'             => 'in',
+                    'quantity'         => $qty,
+                    'reference_type'   => 'purchase_update',
+                    'reference_id'     => $id,
+                    'note'             => 'Import purchase'
+                ]);
+
+                $productIds[] = $productId;
             }
 
-            if (empty($items)) {
+            if (empty($productIds)) {
                 throw new Exception('Phiếu nhập phải có ít nhất 1 sản phẩm');
             }
 
-            // 5. Insert item mới
-            $this->purchaseItemRepository->createBatch($items);
+            // 6. Rebuild tồn kho
+            $this->inventoryRepository->update(
+                array_values(array_unique($productIds))
+            );
 
-            // 6. Ghi transaction nhập mới
-            if (!empty($logs)) {
-                $this->inventoryTransactionRepository->createBatch($logs);
-            }
-
-            // 7. Rebuild tồn kho cho cả sản phẩm cũ và mới
-            $oldProductIds = array_values(array_column($oldItems, 'product_id'));
-            $newProductIds = array_values(array_column($items, 'product_id'));
-
-            $productIds = array_values(array_unique(array_merge(
-                $oldProductIds,
-                $newProductIds
-            )));
-
-            $this->inventoryRepository->update($productIds);
-
-            // 8. Tính lại công nợ
-            $paid = (float) ($input['paid_amount'] ?? 0);
+            // 7. Update tiền
+            $paid = (float)($input['paid_amount'] ?? 0);
             $debt = max($total - $paid, 0);
 
             $this->purchaseRepository->updateById($id, [
@@ -295,43 +277,48 @@ class PurchaseService
     {
         return Database::transaction(function () use ($id) {
 
-            // 1. Get purchase (to ensure warehouse context)
+            // 1. Get purchase
             $purchase = $this->purchaseRepository->findById($id);
 
             if (!$purchase) {
                 throw new Exception('Purchase not found');
             }
 
-            // 2. Get items
+            // 2. Get purchase items
             $items = $this->purchaseItemRepository->getByPurchaseId($id);
 
-            // 3. Rollback stock (OUT)
-            $rollbackLogs = [];
+            $logs = [];
+            $productIds = [];
 
             foreach ($items as $item) {
 
-                $rollbackLogs[] = [
-                    'product_id'     => $item['product_id'],
-                    'warehouse_id'   => $purchase['warehouse_id'],
-                    'type'           => 'out',
-                    'quantity'       => $item['quantity'],
-                    'reference_type' => 'purchase_delete',
-                    'reference_id'   => $id,
-                    'note'           => 'delete purchase rollback'
+                $logs[] = [
+                    'purchase_item_id' => $item['id'],
+                    'product_id'       => $item['product_id'],
+                    'type'             => 'out',
+                    'quantity'         => $item['quantity'],
+                    'reference_type'   => 'purchase_delete',
+                    'reference_id'     => $id,
+                    'note'             => 'Delete purchase rollback'
                 ];
+
+                $productIds[] = $item['product_id'];
             }
 
-            if (!empty($rollbackLogs)) {
-                $this->inventoryTransactionRepository->createBatch($rollbackLogs);
-                
-                $productIds = array_column($items, 'product_id');
-                $this->inventoryRepository->update($productIds);
+            // 3. Rollback stock
+            if (!empty($logs)) {
+
+                $this->inventoryTransactionRepository->createBatch($logs);
+
+                $this->inventoryRepository->update(
+                    array_values(array_unique($productIds))
+                );
             }
 
-            // 4. Delete items first
+            // 4. Delete purchase items
             $this->purchaseItemRepository->deleteByPurchaseId($id);
 
-            // 5. Delete purchase header
+            // 5. Delete purchase
             return $this->purchaseRepository->deleteById($id);
         });
     }

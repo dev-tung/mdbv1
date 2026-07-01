@@ -3,58 +3,105 @@
 
         <div class="collapse navbar-collapse d-flex align-items-center" id="navbarNav">
 
-        <ul class="navbar-nav">
+            <ul class="navbar-nav">
 
-            <!-- SẢN PHẨM -->
-            <li class="nav-item">
-            <a class="nav-link <?= active_menu('/admin/products') ?>" href="<?= route('/admin/products') ?>">
-                Sản phẩm
-            </a>
-            </li>
+                <!-- ========================= -->
+                <!-- SẢN PHẨM -->
+                <!-- ========================= -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/products') ?: active_menu('/admin/products/create') ?>"
+                        href="#"
+                        data-bs-toggle="dropdown">
 
-            <!-- THÊM SẢN PHẨM -->
-            <li class="nav-item">
-            <a class="nav-link <?= active_menu('/admin/products/create') ?>" href="<?= route('/admin/products/create') ?>">
-                Thêm sản phẩm
-            </a>
-            </li>
+                        Sản phẩm
+                    </a>
 
-            <!-- MUA HÀNG -->
-            <li class="nav-item">
-            <a class="nav-link <?= active_menu('/admin/purchases') ?>" href="<?= route('/admin/purchases') ?>">
-                Mua hàng
-            </a>
-            </li>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="<?= route('/admin/products') ?>">Danh sách sản phẩm</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/products/create') ?>">Thêm sản phẩm</a></li>
+                    </ul>
+                </li>
 
-            <!-- THÊM PHIẾU MUA -->
-            <li class="nav-item">
-            <a class="nav-link <?= active_menu('/admin/purchases/create') ?>" href="<?= route('/admin/purchases/create') ?>">
-                Thêm phiếu mua
-            </a>
-            </li>
+                <!-- ========================= -->
+                <!-- NHÀ CUNG CẤP -->
+                <!-- ========================= -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/suppliers') ?: active_menu('/admin/suppliers/create') ?>"
+                        href="#"
+                        data-bs-toggle="dropdown">
 
-            <!-- ĐƠN HÀNG -->
-            <li class="nav-item">
-            <a class="nav-link <?= active_menu('/admin/orders') ?>" href="<?= route('/admin/orders') ?>">
-                Đơn hàng
-            </a>
-            </li>
+                        Nhà cung cấp
+                    </a>
 
-            <!-- THÊM ĐƠN HÀNG -->
-            <li class="nav-item">
-            <a class="nav-link <?= active_menu('/admin/orders/create') ?>" href="<?= route('/admin/orders/create') ?>">
-                Thêm đơn hàng
-            </a>
-            </li>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="<?= route('/admin/suppliers') ?>">Danh sách nhà cung cấp</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/suppliers/create') ?>">Thêm nhà cung cấp</a></li>
+                    </ul>
+                </li>
 
-            <!-- BÁO CÁO DOANH THU -->
-            <li class="nav-item">
-            <a class="nav-link <?= active_menu('/admin/reports/revenue') ?>" href="<?= route('/admin/reports/revenue') ?>">
-                Báo cáo doanh thu
-            </a>
-            </li>
+                <!-- ========================= -->
+                <!-- MUA HÀNG -->
+                <!-- ========================= -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/purchases') ?: active_menu('/admin/purchases/create') ?>"
+                        href="#"
+                        data-bs-toggle="dropdown">
 
-        </ul>
+                        Mua hàng
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="<?= route('/admin/purchases') ?>">Danh sách phiếu mua</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/purchases/create') ?>">Thêm phiếu mua</a></li>
+                    </ul>
+                </li>
+
+                <!-- ========================= -->
+                <!-- KHÁCH HÀNG -->
+                <!-- ========================= -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/customers') ?: active_menu('/admin/customers/create') ?>"
+                        href="#"
+                        data-bs-toggle="dropdown">
+
+                        Khách hàng
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="<?= route('/admin/customers') ?>">Danh sách khách hàng</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/customers/create') ?>">Thêm khách hàng</a></li>
+                    </ul>
+                </li>
+
+                <!-- ========================= -->
+                <!-- ĐƠN HÀNG -->
+                <!-- ========================= -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/orders') ?: active_menu('/admin/orders/create') ?>"
+                        href="#"
+                        data-bs-toggle="dropdown">
+
+                        Đơn hàng
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="<?= route('/admin/orders') ?>">Danh sách đơn hàng</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/orders/create') ?>">Thêm đơn hàng</a></li>
+                    </ul>
+                </li>
+
+                <!-- ========================= -->
+                <!-- BÁO CÁO -->
+                <!-- ========================= -->
+                <li class="nav-item">
+                    <a class="nav-link <?= active_menu('/admin/reports/revenue') ?>"
+                        href="<?= route('/admin/reports/revenue') ?>">
+
+                        Báo cáo doanh thu
+                    </a>
+                </li>
+
+            </ul>
 
         <!-- RIGHT SIDE -->
         <ul class="navbar-nav ms-auto align-items-center">

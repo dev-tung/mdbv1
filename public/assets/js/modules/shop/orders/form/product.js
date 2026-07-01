@@ -40,10 +40,11 @@ export const Product = {
                 item.onclick = () => {
 
                     this.add({
-                        id: product.id,
+                        product_id: product.product_id || product.id,
                         name: product.name,
                         quantity: 1,
-                        price: Number(product.price || 0)
+                        price: Number(product.price || 0),
+                        purchase_item_id: product.purchase_item_id
                     });
 
                     input.value = "";
@@ -63,12 +64,18 @@ export const Product = {
     // =========================
     add(product) {
 
-        const existed = products.find(p => p.id == product.id);
+        const existed = products.find(p => p.product_id == product.product_id);
 
         if (existed) {
             existed.quantity += 1;
         } else {
-            products.push(product);
+            products.push({
+                product_id: product.product_id,
+                name: product.name,
+                quantity: product.quantity,
+                price: product.price,
+                purchase_item_id: product.purchase_item_id
+            });
         }
 
         this.updateState();
@@ -77,9 +84,11 @@ export const Product = {
     // =========================
     // REMOVE
     // =========================
-    remove(id) {
+    remove(product_id) {
 
-        products = products.filter(p => p.id != id);
+        products = products.filter(
+            p => String(p.product_id) !== String(product_id)
+        );
 
         this.updateState();
     },
@@ -87,46 +96,56 @@ export const Product = {
     // =========================
     // UPDATE QUANTITY
     // =========================
-    updateQuantity(id, quantity) {
+    updateQuantity(product_id, quantity) {
 
-        const product = products.find(p => p.id == id);
+        const product = products.find(
+            p => String(p.product_id) === String(product_id)
+        );
+
         if (!product) return;
 
         product.quantity = Math.max(1, parseInt(quantity) || 1);
 
-        this.updateRow(id);
+        this.updateRow(product_id);
     },
 
     // =========================
     // UPDATE PRICE
     // =========================
-    updatePrice(id, price) {
+    updatePrice(product_id, price) {
 
-        const product = products.find(p => p.id == id);
+        const product = products.find(
+            p => String(p.product_id) === String(product_id)
+        );
+
         if (!product) return;
 
         product.price = Math.max(0, parseFloat(price) || 0);
 
-        this.updateRow(id);
+        this.updateRow(product_id);
     },
 
     // =========================
-    // UPDATE SINGLE ROW (FIX TOTAL LINE)
+    // UPDATE ROW
     // =========================
-    updateRow(id) {
+    updateRow(product_id) {
 
-        const product = products.find(p => String(p.id) === String(id));
+        const product = products.find(
+            p => String(p.product_id) === String(product_id)
+        );
+
         if (!product) return;
 
-        const row = document.querySelector(`[data-id="${id}"]`)?.closest("tr");
+        const row = document
+            .querySelector(`[data-id="${product_id}"]`)
+            ?.closest("tr");
+
         if (!row) return;
 
         const totalCell = row.querySelector(".item-total");
 
-        const qty = Number(product.quantity) || 0;
-        const price = Number(product.price) || 0;
-
-        const total = qty * price;
+        const total =
+            (product.quantity || 0) * (product.price || 0);
 
         if (totalCell) {
             totalCell.textContent = total.toLocaleString();
@@ -152,19 +171,26 @@ export const Product = {
 
             tbody.insertAdjacentHTML("beforeend", `
                 <tr>
-                    <td>${product.name}</td>
+                    <td>
+                        ${product.name}
+
+                        <input type="hidden"
+                               class="purchase-item-id"
+                               data-id="${product.product_id}"
+                               value="${product.purchase_item_id || ''}">
+                    </td>
 
                     <td width="150">
                         <input type="number" min="1"
                             class="form-control quantity-input"
-                            data-id="${product.id}"
+                            data-id="${product.product_id}"
                             value="${product.quantity}">
                     </td>
 
                     <td width="180">
                         <input type="number" min="0"
                             class="form-control price-input"
-                            data-id="${product.id}"
+                            data-id="${product.product_id}"
                             value="${product.price}">
                     </td>
 
@@ -175,7 +201,7 @@ export const Product = {
                     <td width="100">
                         <button type="button"
                             class="btn btn-sm btn-outline-danger remove-btn"
-                            data-id="${product.id}">
+                            data-id="${product.product_id}">
                             Xóa
                         </button>
                     </td>
@@ -208,10 +234,10 @@ export const Product = {
     // =========================
     renderTotal() {
 
-        const total = this.getTotal();
-
         const el = document.getElementById("total_amount");
-        if (el) el.textContent = total.toLocaleString();
+        if (el) {
+            el.textContent = this.getTotal().toLocaleString();
+        }
     },
 
     getTotal() {
@@ -234,17 +260,27 @@ export const Product = {
         window.dispatchEvent(new Event("order:update"));
     },
 
+    // =========================
+    // OUTPUT FOR BACKEND
+    // =========================
     getItems() {
-        return products;
+
+        return products.map(item => ({
+            product_id: item.product_id,
+            quantity: Number(item.quantity),
+            price: Number(item.price),
+            purchase_item_id: item.purchase_item_id
+        }));
     },
 
     setItems(items = []) {
 
         products = items.map(item => ({
-            id: item.product_id || item.id,
+            product_id: item.product_id,
             name: item.product_name || item.name,
             quantity: Number(item.quantity || 1),
-            price: Number(item.price || 0)
+            price: Number(item.unit_price ?? item.price ?? 0),
+            purchase_item_id: item.purchase_item_id
         }));
 
         this.render();

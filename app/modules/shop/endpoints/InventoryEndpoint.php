@@ -28,6 +28,19 @@ class InventoryEndpoint
         ]);
     }
 
+    // LIST
+    public function apiStock()
+    {
+        $filters = request_filters([
+            'keyword'
+        ]);
+
+        return Response::json([
+            'success'=>true,
+            'data'=>$this->inventoryRepository->getStock($filters)
+        ]);
+    }
+
 
     // SHOW
     public function apiShow($id)

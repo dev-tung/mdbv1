@@ -24,7 +24,7 @@ class OrderValidator
         foreach ($data['products'] as $product) {
 
             // FIX: id thay vì product_id
-            if (empty($product['id']) || (int)$product['id'] <= 0) {
+            if (empty($product['product_id']) || (int)$product['product_id'] <= 0) {
                 return 'Sản phẩm không hợp lệ';
             }
 

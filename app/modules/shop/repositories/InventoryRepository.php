@@ -2,19 +2,20 @@
 
 class InventoryRepository extends Repository
 {
+
     // =========================
-    // LIST
+    // PRODUCTS WITH STOCK
     // =========================
     public function getList(array $filters = []): array
     {
         $sql = "
             SELECT
-                p.*,
+                p.`name`,
                 COALESCE(i.stock_in, 0)  AS stock_in,
                 COALESCE(i.stock_out, 0) AS stock_out,
                 COALESCE(i.stock, 0)     AS stock
             FROM products p
-            LEFT JOIN inventories i
+            JOIN inventories i
                 ON i.product_id = p.id
             WHERE 1 = 1
         ";
@@ -26,19 +27,41 @@ class InventoryRepository extends Repository
             $params['keyword'] = '%' . $filters['keyword'] . '%';
         }
 
-        if (!empty($filters['category_id'])) {
-            $sql .= " AND p.category_id = :category_id";
-            $params['category_id'] = $filters['category_id'];
-        }
+        $sql .= " ORDER BY p.id DESC";
 
-        if (!empty($filters['status'])) {
-            $sql .= " AND p.status = :status";
-            $params['status'] = $filters['status'];
-        }
+        return Database::get($sql, $params);
+    }
 
-        // chỉ lấy sản phẩm còn tồn kho
-        if (!empty($filters['stock'])) {
-            $sql .= " AND COALESCE(i.stock, 0) > 0";
+
+    // =========================
+    // PRODUCTS FOR SALES
+    // =========================
+    public function getStock(array $filters = []): array
+    {
+        $sql = "
+            SELECT
+                p.*,
+                COALESCE(i.stock_in, 0)  AS stock_in,
+                COALESCE(i.stock_out, 0) AS stock_out,
+                COALESCE(i.stock, 0)     AS stock,
+                    i.purchase_item_id
+            FROM products p
+            JOIN inventories i
+                ON i.product_id = p.id
+            JOIN purchase_items pi
+                    ON pi.id = i.purchase_item_id
+            JOIN purchases pu 
+                    ON pu.id = pi.purchase_id
+            WHERE COALESCE(i.stock, 0) > 0
+			AND pu.status = 'received'
+        ";
+
+        $params = [];
+
+        // keyword filter (product level)
+        if (!empty($filters['keyword'])) {
+            $sql .= " AND p.name LIKE :keyword";
+            $params['keyword'] = '%' . $filters['keyword'] . '%';
         }
 
         $sql .= " ORDER BY p.id DESC";
@@ -51,7 +74,7 @@ class InventoryRepository extends Repository
     // =========================
     public function update(array $productIds): void
     {
-        $productIds = array_unique(array_map('intval', $productIds));
+        $productIds = array_values(array_unique(array_map('intval', $productIds)));
 
         if (empty($productIds)) {
             return;
@@ -61,41 +84,40 @@ class InventoryRepository extends Repository
 
         Database::query("
             INSERT INTO inventories (
+                purchase_item_id,
                 product_id,
                 stock_in,
                 stock_out,
                 stock,
+                created_at,
                 updated_at
             )
             SELECT
+                t.purchase_item_id,
                 t.product_id,
                 t.stock_in,
                 t.stock_out,
                 t.stock_in - t.stock_out,
+                NOW(),
                 NOW()
             FROM (
                 SELECT
+                    purchase_item_id,
                     product_id,
 
-                    COALESCE(
-                        SUM(CASE WHEN type = 'in' THEN quantity END),
-                        0
-                    ) AS stock_in,
-
-                    COALESCE(
-                        SUM(CASE WHEN type = 'out' THEN quantity END),
-                        0
-                    ) AS stock_out
+                    SUM(CASE WHEN type = 'in' THEN quantity ELSE 0 END) AS stock_in,
+                    SUM(CASE WHEN type = 'out' THEN quantity ELSE 0 END) AS stock_out
 
                 FROM inventory_transactions
                 WHERE product_id IN ($placeholders)
-                GROUP BY product_id
+
+                GROUP BY purchase_item_id, product_id
             ) t
 
             ON DUPLICATE KEY UPDATE
-                stock_in  = VALUES(stock_in),
-                stock_out = VALUES(stock_out),
-                stock     = VALUES(stock),
+                stock_in   = VALUES(stock_in),
+                stock_out  = VALUES(stock_out),
+                stock      = VALUES(stock),
                 updated_at = NOW()
         ", $productIds);
     }

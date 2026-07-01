@@ -59,10 +59,6 @@ class PurchaseValidator
             return 'Nhà cung cấp không hợp lệ';
         }
 
-        if (!empty($data['warehouse_id']) && (int)$data['warehouse_id'] <= 0) {
-            return 'Kho không hợp lệ';
-        }
-
         return null;
     }
 }

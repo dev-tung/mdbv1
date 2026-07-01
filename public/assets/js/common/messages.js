@@ -27,6 +27,20 @@ export const Messages = {
     },
 
     // ======================
+    // ORDER MODULE
+    // ======================
+    ORDER: {
+        CUSTOMER_REQUIRED: "Vui lòng chọn khách hàng",
+        PRODUCT_REQUIRED: "Vui lòng chọn sản phẩm",
+
+        CREATE_SUCCESS: "Tạo phiếu nhập hàng thành công",
+        UPDATE_SUCCESS: "Cập nhật phiếu nhập hàng thành công",
+
+        CREATE_FAILED: "Tạo phiếu nhập hàng thất bại",
+        UPDATE_FAILED: "Cập nhật phiếu nhập hàng thất bại"
+    },
+
+    // ======================
     // PRODUCT MODULE
     // ======================
     PRODUCT: {

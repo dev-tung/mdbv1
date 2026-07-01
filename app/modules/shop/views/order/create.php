@@ -153,7 +153,7 @@
     document.addEventListener('DOMContentLoaded', () => {
 
         Customer.init('/api/customers');
-        Product.init('/api/inventories?stock=1');
+        Product.init('/api/inventories/stock');
 
         // payment module
         Payment.init();

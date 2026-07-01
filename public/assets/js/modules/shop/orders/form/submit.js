@@ -44,7 +44,7 @@ export const Submit = {
     },
 
     // =========================
-    // COLLECT FULL DATA
+    // COLLECT DATA
     // =========================
     collect() {
 
@@ -57,15 +57,16 @@ export const Submit = {
             status: document.getElementById("status")?.value || "",
             payment: document.getElementById("payment")?.value || "",
 
-            // IMPORTANT: payment detail
             paid_amount: Number(paidInput?.value || 0),
 
-            // Convert products → items chuẩn backend
+            // ✅ FIXED: backend format chuẩn FIFO
             products: Product.getItems().map(p => ({
-                id: p.id,
+                product_id: p.product_id,
                 quantity: Number(p.quantity),
                 price: Number(p.price),
-                total: Number(p.quantity) * Number(p.price)
+
+                // optional trace FIFO
+                purchase_item_id: p.purchase_item_id || null
             }))
         };
     },
@@ -89,11 +90,10 @@ export const Submit = {
             };
         }
 
-        // Validate partial payment
         if (data.payment === "partial") {
 
             const total = data.products.reduce(
-                (sum, i) => sum + i.total,
+                (sum, i) => sum + (i.quantity * i.price),
                 0
             );
 
