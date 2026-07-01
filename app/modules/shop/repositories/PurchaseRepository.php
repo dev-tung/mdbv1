@@ -25,10 +25,6 @@ class PurchaseRepository extends Repository
     // =========================
     private function applyFilters(string &$sql, array &$params, array $conditions): void
     {
-        if (!empty($conditions['keyword'])) {
-            $sql .= " AND p.code LIKE :keyword";
-            $params['keyword'] = '%' . $conditions['keyword'] . '%';
-        }
 
         if (!empty($conditions['supplier_id'])) {
             $sql .= " AND p.supplier_id = :supplier_id";

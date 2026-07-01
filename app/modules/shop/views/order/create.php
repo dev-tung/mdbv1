@@ -1,21 +1,13 @@
-<?php
-$statuses = config('shop.option.order_status');
-$payments = config('shop.option.payment');
-?>
-
 <div class="container-fluid py-4 mt-5">
 
-    <h3 class="mb-4">
-        Tạo đơn hàng
-    </h3>
+    <h3 class="mb-4">Đơn hàng</h3>
 
     <form id="order-create-form" novalidate>
 
         <div class="row g-3">
 
             <!-- CUSTOMER -->
-            <div class="col-md-4 position-relative">
-
+            <div class="col-md-6 position-relative">
                 <label class="form-label">Khách hàng</label>
 
                 <input type="text"
@@ -27,9 +19,17 @@ $payments = config('shop.option.payment');
                 <input type="hidden" id="customer_id">
 
                 <div id="customer_suggestions"
-                     class="list-group position-absolute w-100 d-none z-1">
-                </div>
+                     class="list-group position-absolute w-100 d-none z-1"></div>
+            </div>
 
+            <!-- DESCRIPTION -->
+            <div class="col-md-6">
+                <label class="form-label">Mô tả</label>
+
+                <input type="text"
+                       id="description"
+                       class="form-control"
+                       placeholder="Nhập mô tả đơn hàng">
             </div>
 
             <!-- STATUS -->
@@ -37,7 +37,7 @@ $payments = config('shop.option.payment');
                 <label class="form-label">Trạng thái</label>
 
                 <select id="status" class="form-select">
-                    <?php foreach ($statuses as $key => $status): ?>
+                    <?php foreach (config('shop.option.order_status') as $key => $status): ?>
                         <option value="<?= $key ?>">
                             <?= $status['label'] ?>
                         </option>
@@ -45,12 +45,12 @@ $payments = config('shop.option.payment');
                 </select>
             </div>
 
-            <!-- PAYMENT STATUS -->
+            <!-- PAYMENT -->
             <div class="col-md-4">
                 <label class="form-label">Thanh toán</label>
 
                 <select id="payment" class="form-select">
-                    <?php foreach ($payments as $key => $payment): ?>
+                    <?php foreach (config('shop.option.payment') as $key => $payment): ?>
                         <option value="<?= $key ?>">
                             <?= $payment['label'] ?>
                         </option>
@@ -58,21 +58,19 @@ $payments = config('shop.option.payment');
                 </select>
             </div>
 
-            <!-- DESCRIPTION -->
-            <div class="col-md-12">
+            <!-- PAID AMOUNT (NEW) -->
+            <div class="col-md-4 d-none" id="paid_amount_wrapper">
+                <label class="form-label">Đã thanh toán</label>
 
-                <label class="form-label">Mô tả</label>
-
-                <input type="text"
-                       id="description"
+                <input type="number"
+                       id="paid_amount"
                        class="form-control"
-                       placeholder="Nhập mô tả đơn hàng">
-
+                       min="0"
+                       value="0">
             </div>
 
             <!-- PRODUCT SEARCH -->
             <div class="col-12 position-relative mt-4">
-
                 <label class="form-label">Sản phẩm</label>
 
                 <input type="text"
@@ -82,26 +80,21 @@ $payments = config('shop.option.payment');
                        autocomplete="off">
 
                 <div id="product_suggestions"
-                     class="list-group position-absolute w-100 d-none">
-                </div>
-
+                     class="list-group position-absolute w-100 d-none"></div>
             </div>
 
-            <!-- TABLE -->
+            <!-- PRODUCT TABLE -->
             <div class="col-12">
-
                 <div class="border rounded p-3">
 
                     <div class="table-responsive">
-
                         <table class="table table-sm align-middle mb-0">
 
                             <thead>
                                 <tr>
                                     <th>Tên</th>
-                                    <th>SL</th>
-                                    <th>Giá</th>
-                                    <th>Giảm giá</th>
+                                    <th>SL nhập</th>
+                                    <th>Giá nhập</th>
                                     <th>Thành tiền</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -110,33 +103,72 @@ $payments = config('shop.option.payment');
                             <tbody id="selected_products"></tbody>
 
                         </table>
-
                     </div>
 
                     <div class="mt-3">
-                        <h5>
-                            Tổng tiền:
-                            <span id="total_amount">0</span> ₫
-                        </h5>
+                        <div class="mb-0 d-flex flex-wrap gap-5">
+
+                            <span class="fs-5">
+                                Tổng tiền
+                                <b id="total_amount">0</b> ₫
+                            </span>
+
+                            <span class="fs-5">
+                                Đã trả
+                                <b id="paid_amount_view">0</b> ₫
+                            </span>
+
+                            <span class="fs-5">
+                                Còn nợ
+                                <b id="debt_amount_view">0</b> ₫
+                            </span>
+
+                        </div>
                     </div>
 
                 </div>
-
             </div>
 
             <!-- SUBMIT -->
             <div class="col-12">
-
                 <button type="submit"
                         class="btn btn-outline-secondary mt-3">
                     Tạo đơn hàng
                 </button>
-
             </div>
 
         </div>
 
     </form>
+
 </div>
 
-<script type="module" src="<?= asset('/js/modules/shop/orders/create.js') ?>"></script>
+<script type="module">
+
+    import { Customer } from '/assets/js/modules/shop/orders/form/customer.js';
+    import { Product } from '/assets/js/modules/shop/orders/form/product.js';
+    import { Payment } from '/assets/js/modules/shop/orders/form/payment.js';
+    import { Submit } from '/assets/js/modules/shop/orders/form/submit.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        Customer.init('/api/customers');
+        Product.init('/api/inventories?stock=1');
+
+        // payment module
+        Payment.init();
+
+        // submit
+        document
+            .getElementById('order-create-form')
+            .addEventListener('submit', async (e) => {
+
+                e.preventDefault();
+
+                await Submit.create('/api/orders');
+
+            });
+
+    });
+
+</script>
