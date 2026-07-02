@@ -2,12 +2,10 @@
 
 class ProductEndpoint
 {
-    private ProductService $productService;
     private ProductRepository $productRepository;
 
     public function __construct()
     {
-        $this->productService    = new ProductService();
         $this->productRepository = new ProductRepository();
     }
 
@@ -18,7 +16,7 @@ class ProductEndpoint
     {
         $input = request_all();
 
-        $result = $this->productService->getList($input);
+        $result = $this->productRepository->getList($input);
 
         return Response::json([
             'success' => true,
@@ -65,7 +63,7 @@ class ProductEndpoint
             ]);
         }
 
-        $id = $this->productService->create($input, $_FILES['thumbnail'] ?? []);
+        $id = $this->productRepository->create($input, $_FILES['thumbnail'] ?? []);
 
         return Response::json([
             'success' => true,
@@ -90,7 +88,7 @@ class ProductEndpoint
             ]);
         }
 
-        $this->productService->update(
+        $this->productRepository->update(
             (int)($input['id'] ?? 0),
             $input,
             $_FILES['thumbnail'] ?? []
@@ -109,7 +107,7 @@ class ProductEndpoint
     {
         $id = request_id();
 
-        $this->productService->delete($id);
+        $this->productRepository->delete($id);
 
         return Response::json([
             'success' => true,

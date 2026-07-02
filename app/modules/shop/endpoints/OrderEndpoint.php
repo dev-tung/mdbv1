@@ -2,12 +2,10 @@
 
 class OrderEndpoint
 {
-    private OrderService $orderService;
     private OrderRepository $orderRepository;
 
     public function __construct()
     {
-        $this->orderService    = new OrderService();
         $this->orderRepository = new OrderRepository();
     }
 
@@ -17,7 +15,7 @@ class OrderEndpoint
     public function apiList()
     {
         $input = request_all();
-        $result = $this->orderService->getList($input);
+        $result = $this->orderRepository->getList($input);
 
         return Response::json([
             'success' => true,
@@ -35,7 +33,7 @@ class OrderEndpoint
     {
         $id = request_id();
 
-        $data = $this->orderService->show($id);
+        $data = $this->orderRepository->show($id);
 
         if (!$data) {
             return Response::json([
@@ -71,7 +69,7 @@ class OrderEndpoint
             ]);
         }
 
-        $id = $this->orderService->create($input);
+        $id = $this->orderRepository->create($input);
 
         return Response::json([
             'success' => true,
@@ -101,7 +99,7 @@ class OrderEndpoint
             ]);
         }
 
-        $this->orderService->update($input);
+        $this->orderRepository->update($input);
 
         return Response::json([
             'success' => true,
@@ -118,7 +116,7 @@ class OrderEndpoint
     {
         $id = request_id();
 
-        $this->orderService->delete($id);
+        $this->orderRepository->delete($id);
 
         return Response::json([
             'success' => true,
@@ -172,7 +170,7 @@ class OrderEndpoint
             ]);
         }
 
-        $updated = $this->orderService->updatePayment(
+        $updated = $this->orderRepository->updatePayment(
             (int)$input['id'],
             ['payment' => $input['payment']]
         );

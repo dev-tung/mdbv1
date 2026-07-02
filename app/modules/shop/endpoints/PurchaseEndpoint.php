@@ -2,12 +2,10 @@
 
 class PurchaseEndpoint
 {
-    private PurchaseService $purchaseService;
     private PurchaseRepository $purchaseRepository;
 
     public function __construct()
     {
-        $this->purchaseService    = new PurchaseService();
         $this->purchaseRepository = new PurchaseRepository();
     }
 
@@ -17,11 +15,10 @@ class PurchaseEndpoint
     public function apiList()
     {
         $input = request_all();
-        $result = $this->purchaseService->getList($input);
+        $result = $this->purchaseRepository->getList($input);
 
         return Response::json([
             'success' => true,
-            'code'    => 'PURCHASE_LIST_SUCCESS',
             'message' => 'Lấy danh sách phiếu nhập thành công',
             'data'    => $result['data'],
             'meta'    => $result['meta'],
@@ -35,12 +32,12 @@ class PurchaseEndpoint
     {
         $id = request_id();
 
-        $data = $this->purchaseService->show($id);
+        $data = $this->purchaseRepository->show($id);
 
         if (!$data) {
             return Response::json([
                 'success' => false,
-                'code'    => 'PURCHASE_NOT_FOUND',
+
                 'message' => 'Không tìm thấy phiếu nhập',
                 'data'    => null
             ]);
@@ -48,7 +45,6 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'code'    => 'PURCHASE_SHOW_SUCCESS',
             'message' => 'Lấy chi tiết phiếu nhập thành công',
             'data'    => $data
         ]);
@@ -66,16 +62,14 @@ class PurchaseEndpoint
         if ($error) {
             return Response::json([
                 'success' => false,
-                'code'    => 'PURCHASE_CREATE_VALIDATE_ERROR',
                 'message' => $error
             ]);
         }
 
-        $id = $this->purchaseService->create($input);
+        $id = $this->purchaseRepository->create($input);
 
         return Response::json([
             'success' => true,
-            'code'    => 'PURCHASE_CREATED',
             'message' => 'Tạo phiếu nhập thành công',
             'data'    => [
                 'id' => $id
@@ -96,16 +90,14 @@ class PurchaseEndpoint
         if ($error) {
             return Response::json([
                 'success' => false,
-                'code'    => 'PURCHASE_UPDATE_VALIDATE_ERROR',
                 'message' => $error 
             ]);
         }
 
-        $this->purchaseService->update($input);
+        $this->purchaseRepository->update($input);
 
         return Response::json([
             'success' => true,
-            'code'    => 'PURCHASE_UPDATED',
             'message' => 'Cập nhật phiếu nhập thành công',
             'redirect' => "/admin/purchases"
         ]);
@@ -118,11 +110,10 @@ class PurchaseEndpoint
     {
         $id = request_id();
 
-        $this->purchaseService->delete($id);
+        $this->purchaseRepository->delete($id);
 
         return Response::json([
             'success' => true,
-            'code'    => 'PURCHASE_DELETED',
             'message' => 'Xoá phiếu nhập thành công'
         ]);
     }
@@ -137,7 +128,7 @@ class PurchaseEndpoint
         if (empty($input['id']) || !isset($input['status'])) {
             return Response::json([
                 'success' => false,
-                'code'    => 'INVALID_INPUT',
+
                 'message' => 'Thiếu dữ liệu trạng thái'
             ]);
         }
@@ -149,7 +140,6 @@ class PurchaseEndpoint
 
         return Response::json([
             'success' => true,
-            'code'    => 'PURCHASE_STATUS_UPDATED',
             'message' => 'Cập nhật trạng thái thành công',
             'data'    => [
                 'affected_rows' => $updated
@@ -167,19 +157,18 @@ class PurchaseEndpoint
         if (empty($input['id']) || !isset($input['payment'])) {
             return Response::json([
                 'success' => false,
-                'code'    => 'INVALID_INPUT',
+
                 'message' => 'Thiếu dữ liệu thanh toán'
             ]);
         }
 
-        $updated = $this->purchaseService->updatePayment(
+        $updated = $this->purchaseRepository->updatePayment(
             (int)$input['id'],
             ['payment' => $input['payment']]
         );
 
         return Response::json([
             'success' => true,
-            'code'    => 'PURCHASE_PAYMENT_UPDATED',
             'message' => 'Cập nhật thanh toán thành công',
             'data'    => [
                 'affected_rows' => $updated
