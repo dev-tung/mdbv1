@@ -143,32 +143,4 @@
 
 </div>
 
-<script type="module">
-
-    import { Customer } from '/assets/js/modules/shop/orders/form/customer.js';
-    import { Product } from '/assets/js/modules/shop/orders/form/product.js';
-    import { Payment } from '/assets/js/modules/shop/orders/form/payment.js';
-    import { Submit } from '/assets/js/modules/shop/orders/form/submit.js';
-
-    document.addEventListener('DOMContentLoaded', () => {
-
-        Customer.init('/api/customers');
-        Product.init('/api/inventories/stock');
-
-        // payment module
-        Payment.init();
-
-        // submit
-        document
-            .getElementById('order-create-form')
-            .addEventListener('submit', async (e) => {
-
-                e.preventDefault();
-
-                await Submit.create('/api/orders');
-
-            });
-
-    });
-
-</script>
+<script src="<?= asset('js/modules/shop/orders/create.js') ?>"></script>

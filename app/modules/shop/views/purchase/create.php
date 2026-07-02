@@ -151,34 +151,5 @@
 
 </div>
 
-<script type="module">
+<script type="module" src="<?= asset('js/modules/shop/page/purchase/create.js') ?>"></script>
 
-    import { Supplier } from '/assets/js/modules/shop/purchases/form/supplier.js';
-    import { Product } from '/assets/js/modules/shop/purchases/form/product.js';
-    import { Warehouse } from '/assets/js/modules/shop/purchases/form/warehouse.js';
-    import { Payment } from '/assets/js/modules/shop/purchases/form/payment.js';
-    import { Submit } from '/assets/js/modules/shop/purchases/form/submit.js';
-
-    document.addEventListener('DOMContentLoaded', () => {
-
-        Supplier.init('/api/suppliers');
-        Product.init('/api/products');
-        Warehouse.init('/api/warehouses');
-
-        // payment module
-        Payment.init();
-
-        // submit
-        document
-            .getElementById('purchase-create-form')
-            .addEventListener('submit', async (e) => {
-
-                e.preventDefault();
-
-                await Submit.create('/api/purchases');
-
-            });
-
-    });
-
-</script>
