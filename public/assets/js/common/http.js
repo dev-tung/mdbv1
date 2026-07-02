@@ -1,6 +1,6 @@
-// public/assets/js/helpers/api.js
+// public/assets/js/helpers/http.js
 
-export const Api = {
+export const Http = {
 
     async get(url) {
 
