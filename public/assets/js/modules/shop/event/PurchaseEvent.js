@@ -36,11 +36,28 @@ export const PurchaseEvent = {
 
         if (!input) return;
 
-        input.addEventListener("input", (e) => {
+        input.addEventListener("input", async (e) => {
 
-            PurchaseService.searchSupplier(
-                e.target.value
+            await PurchaseService.searchSupplier(
+                e.target.value.trim()
             );
+
+        });
+
+        // Chọn nhà cung cấp
+        document.addEventListener("click", (e) => {
+
+            const item = e.target.closest(".supplier-item");
+
+            if (!item) return;
+
+            PurchaseService.setSupplier({
+
+                id: Number(item.dataset.id),
+
+                name: item.dataset.name
+
+            });
 
         });
 
@@ -56,10 +73,10 @@ export const PurchaseEvent = {
 
         if (!input) return;
 
-        input.addEventListener("input", (e) => {
+        input.addEventListener("input", async (e) => {
 
-            PurchaseService.searchProduct(
-                e.target.value
+            await PurchaseService.searchProduct(
+                e.target.value.trim()
             );
 
         });
@@ -78,9 +95,13 @@ export const PurchaseEvent = {
 
         select.addEventListener("change", (e) => {
 
-            PurchaseService.changeWarehouse(
-                e.target.value
-            );
+            PurchaseService.setWarehouse({
+
+                id: Number(e.target.value),
+
+                name: e.target.options[e.target.selectedIndex].text
+
+            });
 
         });
 
@@ -98,11 +119,25 @@ export const PurchaseEvent = {
 
         payment.addEventListener("change", (e) => {
 
-            PurchaseService.changePayment(
+            PurchaseService.setPaymentStatus(
                 e.target.value
             );
 
         });
+
+        const paidAmount = document.getElementById("paid_amount");
+
+        if (paidAmount) {
+
+            paidAmount.addEventListener("input", (e) => {
+
+                PurchaseService.setPaidAmount(
+                    e.target.value
+                );
+
+            });
+
+        }
 
     },
 
@@ -114,13 +149,11 @@ export const PurchaseEvent = {
 
         document.addEventListener("input", (e) => {
 
-            if (!e.target.matches(".product-quantity")) {
-                return;
-            }
+            if (!e.target.matches(".quantity")) return;
 
-            PurchaseService.changeQuantity(
+            PurchaseService.updateQuantity(
 
-                e.target.dataset.id,
+                Number(e.target.dataset.id),
 
                 e.target.value
 
@@ -138,13 +171,11 @@ export const PurchaseEvent = {
 
         document.addEventListener("input", (e) => {
 
-            if (!e.target.matches(".product-price")) {
-                return;
-            }
+            if (!e.target.matches(".price")) return;
 
-            PurchaseService.changePrice(
+            PurchaseService.updatePrice(
 
-                e.target.dataset.id,
+                Number(e.target.dataset.id),
 
                 e.target.value
 
@@ -162,13 +193,13 @@ export const PurchaseEvent = {
 
         document.addEventListener("click", (e) => {
 
-            const button = e.target.closest(".btn-remove-product");
+            const button = e.target.closest(".remove-product");
 
             if (!button) return;
 
             PurchaseService.removeProduct(
 
-                button.dataset.id
+                Number(button.dataset.id)
 
             );
 

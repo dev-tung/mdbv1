@@ -2,7 +2,9 @@
 // modules/shop/service/PurchaseService.js
 // =========================================================
 
+import { PurchaseRenderer } from "../render/PurchaseRenderer.js";
 import { PurchaseDetailState } from "../state/PurchaseState.js";
+import { SupplierApi } from "../api/SupplierApi.js";
 
 export const PurchaseService = {
 
@@ -12,10 +14,31 @@ export const PurchaseService = {
 
     setSupplier(supplier) {
 
-        PurchaseDetailState.supplier = {
-            id: supplier.id,
-            name: supplier.name
-        };
+        PurchaseDetailState.supplier = supplier;
+
+        PurchaseDetailState.supplierSearch = [];
+
+        PurchaseRenderer.renderSupplier();
+
+        PurchaseRenderer.renderSupplierDropdown();
+
+    },
+
+    async searchSupplier(keyword = "") {
+
+        try {
+
+            const response = await SupplierApi.getList({keyword});
+            PurchaseDetailState.supplierSearch = response.data;
+            PurchaseRenderer.renderSupplierDropdown();
+
+        } catch (error) {
+
+            console.error(error);
+
+            return [];
+
+        }
 
     },
 

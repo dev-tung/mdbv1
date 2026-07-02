@@ -14,6 +14,8 @@ export const PurchaseRenderer = {
 
         this.renderSupplier();
 
+        this.renderSupplierDropdown();
+
         this.renderWarehouse();
 
         this.renderProducts();
@@ -35,6 +37,46 @@ export const PurchaseRenderer = {
 
         document.getElementById("supplier_search").value =
             PurchaseDetailState.supplier.name ?? "";
+
+    },
+
+    // =====================================================
+    // Supplier Dropdown
+    // =====================================================
+
+    renderSupplierDropdown() {
+
+        const container = document.getElementById("supplier_suggestions");
+
+        if (!container) return;
+
+        const suppliers = PurchaseDetailState.supplierSearch;
+
+        if (!suppliers || suppliers.length === 0) {
+
+            container.innerHTML = "";
+
+            container.classList.add("d-none");
+
+            return;
+
+        }
+
+        container.innerHTML = suppliers.map(item => `
+
+            <button
+                type="button"
+                class="list-group-item list-group-item-action supplier-item"
+                data-id="${item.id}"
+                data-name="${item.name}">
+
+                ${item.name}
+
+            </button>
+
+        `).join("");
+
+        container.classList.remove("d-none");
 
     },
 
