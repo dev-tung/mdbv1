@@ -1,8 +1,8 @@
 import Http from '/assets/js/common/http.js';
 
-const BASE_URL = '/api/purchases';
+const BASE_URL = '/api/warehouses';
 
-export const PurchaseApi = {
+export const WarehouseApi = {
 
     async getList(params = {}) {
         return await Http.get(BASE_URL, params);

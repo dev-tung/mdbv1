@@ -44,8 +44,18 @@ export const PurchaseRenderer = {
 
     renderWarehouse() {
 
-        document.getElementById("warehouse_id").value =
-            PurchaseDetailState.warehouse.id ?? "";
+    const select = document.getElementById("warehouse_id");
+
+    select.innerHTML = PurchaseDetailState.warehouses
+        .map(item => `
+            <option
+                value="${item.id}"
+                ${item.id == PurchaseDetailState.warehouse.id ? "selected" : ""}
+            >
+                ${item.name}
+            </option>
+        `)
+        .join("");
 
     },
 

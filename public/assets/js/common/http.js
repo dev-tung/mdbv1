@@ -1,104 +1,87 @@
-// public/assets/js/helpers/http.js
+// =========================================================
+// common/http.js
+// =========================================================
 
-export const Http = {
+const Http = {
 
-    async get(url) {
+    async get(url, params = {}) {
 
-        try {
+        const query = new URLSearchParams(params).toString();
 
-            const response = await fetch(url, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
+        const response = await fetch(
+            query ? `${url}?${query}` : url
+        );
 
-            return await response.json();
+        return await response.json();
 
-        } catch (e) {
-
-            console.error(e);
-
-            return {
-                success: false,
-                message: 'Có lỗi xảy ra.'
-            };
-        }
     },
 
     async post(url, data = {}) {
 
-        try {
+        const response = await fetch(url, {
 
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify(data)
-            });
+            method: "POST",
 
-            return await response.json();
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-        } catch (e) {
+            body: JSON.stringify(data)
 
-            console.error(e);
+        });
 
-            return {
-                success: false,
-                message: 'Có lỗi xảy ra.'
-            };
-        }
+        return await response.json();
+
     },
 
     async put(url, data = {}) {
 
-        try {
+        const response = await fetch(url, {
 
-            const response = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify(data)
-            });
+            method: "PUT",
 
-            return await response.json();
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-        } catch (e) {
+            body: JSON.stringify(data)
 
-            console.error(e);
+        });
 
-            return {
-                success: false,
-                message: 'Có lỗi xảy ra.'
-            };
-        }
+        return await response.json();
+
+    },
+
+    async patch(url, data = {}) {
+
+        const response = await fetch(url, {
+
+            method: "PATCH",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+
+        });
+
+        return await response.json();
+
     },
 
     async delete(url) {
 
-        try {
+        const response = await fetch(url, {
 
-            const response = await fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
+            method: "DELETE"
 
-            return await response.json();
+        });
 
-        } catch (e) {
+        return await response.json();
 
-            console.error(e);
-
-            return {
-                success: false,
-                message: 'Có lỗi xảy ra.'
-            };
-        }
     }
 
 };
+
+export default Http;

@@ -4,10 +4,7 @@
 
 import { PurchaseDetailState } from "../../state/PurchaseState.js";
 
-import { PurchaseApi } from "../../api/PurchaseApi.js";
-import { SupplierApi } from "../../api/SupplierApi.js";
 import { WarehouseApi } from "../../api/WarehouseApi.js";
-import { ProductApi } from "../../api/ProductApi.js";
 
 import { PurchaseService } from "../../service/PurchaseService.js";
 import { PurchaseRenderer } from "../../render/PurchaseRenderer.js";
@@ -24,48 +21,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         PurchaseDetailState.ui.loading = true;
 
         // ==========================================
+        // Init State
+        // ==========================================
+
+        PurchaseDetailState.suppliers = [];
+
+        PurchaseDetailState.products = [];
+
+        // ==========================================
         // Load Master Data
         // ==========================================
 
-        const [
+        const warehouses = await WarehouseApi.getList();
 
-            suppliers,
-
-            warehouses,
-
-            products
-
-        ] = await Promise.all([
-
-            SupplierApi.getList(),
-
-            WarehouseApi.getList(),
-
-            ProductApi.getList()
-
-        ]);
-
-        PurchaseDetailState.master.suppliers =
-            suppliers.data ?? [];
-
-        PurchaseDetailState.master.warehouses =
+        PurchaseDetailState.warehouses =
             warehouses.data ?? [];
-
-        PurchaseDetailState.master.products =
-            products.data ?? [];
 
         // ==========================================
         // Default Warehouse
         // ==========================================
 
-        if (PurchaseDetailState.master.warehouses.length > 0) {
+        if (PurchaseDetailState.warehouses.length > 0) {
 
-            const warehouse = PurchaseDetailState.master.warehouses[0];
+            const warehouse = PurchaseDetailState.warehouses[0];
 
             PurchaseDetailState.warehouse.id = warehouse.id;
 
             PurchaseDetailState.warehouse.name = warehouse.name;
-
         }
 
         // ==========================================
@@ -85,6 +67,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         // ==========================================
 
         PurchaseEvent.init();
+
+    }
+    catch (error) {
+
+        console.error(error);
 
     }
     finally {
