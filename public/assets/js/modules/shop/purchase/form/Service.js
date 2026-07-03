@@ -26,14 +26,10 @@ const Service = {
     },
 
     async loadEditData(purchaseId) {
+        
+        console.log(purchaseId);
 
-        const data = await Api.getPurchase(purchaseId);
-
-        State.purchase = data;
-
-        State.purchase.items = State.purchase.items || [];
-
-        this.recalc();
+        // Load purchase data into state
     },
 
     /* =================================================

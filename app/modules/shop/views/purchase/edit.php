@@ -170,40 +170,4 @@
 
 </div>
 
-<script type="module">
-    import { Supplier } from '/assets/js/modules/shop/purchases/form/supplier.js';
-    import { Product } from '/assets/js/modules/shop/purchases/form/product.js';
-    import { Warehouse } from '/assets/js/modules/shop/purchases/form/warehouse.js';
-    import { Submit } from '/assets/js/modules/shop/purchases/form/submit.js';
-    import { Payment } from '/assets/js/modules/shop/purchases/form/payment.js';
-    import { Show } from '/assets/js/modules/shop/purchases/form/show.js';
-
-    document.addEventListener('DOMContentLoaded', async () => {
-
-        const purchaseId = window.location.pathname
-            .split('/')
-            .filter(Boolean)
-            .pop();
-
-        await Promise.all([
-            Supplier.init('/api/suppliers'),
-            Product.init('/api/products'),
-            Warehouse.init('/api/warehouses'),
-            Payment.init(`/api/purchases/payment`, purchaseId),
-            Show.init(`/api/purchases/show/${purchaseId}`)
-        ]);
-
-
-        document
-            .getElementById('purchase-update-form')
-            .addEventListener('submit', async (e) => {
-
-                e.preventDefault();
-
-                await Submit.update(`/api/purchases/update/${purchaseId}`, {
-                    id: purchaseId
-                });
-            });
-
-    });
-</script>
+<script type="module" src="<?= asset('js/modules/shop/purchase/form/Init.js') ?>"></script>

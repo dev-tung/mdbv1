@@ -23,12 +23,8 @@ async function init() {
 ================================================= */
 
 async function bindMode() {
-    const form = document.querySelector('#purchase-create-form');
-    if (!form) return;
-
     const purchaseId = getPurchaseIdFromUrl();
     if (!purchaseId) return;
-
     await Service.loadEditData(purchaseId);
 }
 

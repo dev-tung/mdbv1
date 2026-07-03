@@ -6,12 +6,12 @@ const Api = {
         return await Http.get('/api/warehouses');
     },
 
-    async getPurchase(purchaseId) {
-        return await Http.get(`/purchase/${purchaseId}`);
+    async showPurchase(purchaseId) {
+        return await Http.get(`/api/purchases/show/${purchaseId}`);
     },
 
     async createPurchase(data) {
-        return await Http.post('/purchase', data);
+        return await Http.post('/api/purchases', data);
     },
 
     async updatePurchase(purchaseId, data) {
