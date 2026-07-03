@@ -87,7 +87,7 @@ const Service = {
 
     recalc() {
 
-        const { items, paidAmount } = State.purchase;
+        const { items, paid_amount } = State.purchase;
 
         // totalAmount
         let totalAmount = 0;
@@ -102,7 +102,7 @@ const Service = {
 
         // debtAmount
         State.purchase.debtAmount =
-            totalAmount - (Number(paidAmount) || 0);
+            totalAmount - (Number(paid_amount) || 0);
 
         Renderer.summary();
     },

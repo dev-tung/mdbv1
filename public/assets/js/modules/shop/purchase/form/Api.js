@@ -15,15 +15,15 @@ const Api = {
     },
 
     async updatePurchase(purchaseId, data) {
-        return await Http.put(`/purchase/${purchaseId}`, data);
+        return await Http.post(`/api/purchase/${purchaseId}`, data);
     },
 
     async deletePurchase(purchaseId) {
-        return await Http.delete(`/purchase/${purchaseId}`);
+        return await Http.post(`/api/purchase/${purchaseId}`);
     },
 
     async searchProducts(keyword = '') {
-        return await Http.get('/product/search', {
+        return await Http.post('/api/products', {
             keyword
         });
     }
