@@ -1,9 +1,5 @@
-// =========================================================
-// modules/shop/purchase/form/index.js
-// =========================================================
-
 import { state } from "./state.js";
-import { api } from "../api.js";
+import { api } from "../../api.js";
 import { service } from "./service.js";
 import { render } from "./render.js";
 import { event } from "./event.js";
@@ -19,20 +15,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         state.ui.loading = true;
 
         // ==========================================
-        // Init State
+        // Reset local state (nếu cần)
         // ==========================================
 
-        state.suppliers = [];
-
-        state.products = [];
+        state.supplier.search.results = [];
+        state.products.items = [];
 
         // ==========================================
-        // Load Master Data
+        // Load master data
         // ==========================================
 
-        const response = await api.purchase.getList();
-
-        state.warehouses = response.data ?? [];
+        const resWarehouse = await api.warehouse.getList();
+        state.warehouse.list = resWarehouse.data ?? [];
 
         // ==========================================
         // Detect Create / Edit
@@ -42,18 +36,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (purchaseId) {
 
-            // Edit
             await service.loadPurchase(purchaseId);
 
         } else {
 
-            // Create
-            if (state.warehouses.length) {
-
-                service.setWarehouse(
-                    state.warehouses[0]
-                );
-
+            if (state.warehouse.list.length) {
+                service.warehouseSelect(state.warehouse.list[0]);
             }
 
         }
@@ -68,21 +56,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Render
         // ==========================================
 
-        render.render();
+        render.init();
 
         // ==========================================
-        // Bind Events
+        // Events
         // ==========================================
 
         event.init();
 
-    }
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
 
-    }
-    finally {
+    } finally {
 
         state.ui.loading = false;
 

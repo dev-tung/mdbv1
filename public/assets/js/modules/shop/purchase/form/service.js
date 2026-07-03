@@ -2,7 +2,7 @@
 // modules/shop/purchase/form/service.js
 // =========================================================
 
-import { api } from "./api.js";
+import { api } from "../../api.js";
 import { render } from "./render.js";
 import { state } from "./state.js";
 

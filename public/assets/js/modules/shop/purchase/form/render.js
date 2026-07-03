@@ -7,7 +7,7 @@ import { state } from "./state.js";
 export const render = {
 
     // =====================================================
-    // Init
+    // INIT
     // =====================================================
 
     init() {
@@ -22,38 +22,30 @@ export const render = {
     },
 
     // =====================================================
-    // Supplier
+    // SUPPLIER
     // =====================================================
 
     supplier() {
 
-        document.getElementById("supplier_id").value =
-            state.supplier.selected.id ?? "";
+        const idEl = document.getElementById("supplier_id");
+        const searchEl = document.getElementById("supplier_search");
 
-        document.getElementById("supplier_search").value =
-            state.supplier.selected.name ?? "";
+        if (idEl) idEl.value = state.supplier.selected.id ?? "";
+        if (searchEl) searchEl.value = state.supplier.selected.name ?? "";
 
     },
-
-    // =====================================================
-    // Supplier Dropdown
-    // =====================================================
 
     supplierDropdown() {
 
         const container = document.getElementById("supplier_suggestions");
-
         if (!container) return;
 
         const suppliers = state.supplier.search.results;
 
-        if (!suppliers.length) {
-
+        if (!suppliers || suppliers.length === 0) {
             container.innerHTML = "";
             container.classList.add("d-none");
-
             return;
-
         }
 
         container.innerHTML = suppliers.map(item => `
@@ -71,12 +63,13 @@ export const render = {
     },
 
     // =====================================================
-    // Warehouse
+    // WAREHOUSE
     // =====================================================
 
     warehouse() {
 
         const select = document.getElementById("warehouse_id");
+        if (!select) return;
 
         select.innerHTML = state.warehouse.list.map(item => `
             <option
@@ -89,12 +82,13 @@ export const render = {
     },
 
     // =====================================================
-    // Products
+    // PRODUCTS
     // =====================================================
 
     products() {
 
         const tbody = document.getElementById("selected_products");
+        if (!tbody) return;
 
         tbody.innerHTML = "";
 
@@ -122,7 +116,7 @@ export const render = {
                             min="0">
                     </td>
 
-                    <td>${product.subtotal.toLocaleString()} ₫</td>
+                    <td>${Number(product.subtotal || 0).toLocaleString()} ₫</td>
 
                     <td>
                         <button
@@ -140,38 +134,56 @@ export const render = {
     },
 
     // =====================================================
-    // Payment
+    // PAYMENT
     // =====================================================
 
     payment() {
 
-        document.getElementById("payment").value =
-            state.payment.status;
+        const paymentEl = document.getElementById("payment");
+        const paidEl = document.getElementById("paid_amount");
+        const wrapper = document.getElementById("paid_amount_wrapper");
 
-        document.getElementById("paid_amount").value =
-            state.payment.paid_amount;
+        if (paymentEl) {
+            paymentEl.value = state.payment.status;
+        }
 
-        document.getElementById("paid_amount_wrapper").classList.toggle(
-            "d-none",
-            state.payment.status === "unpaid"
-        );
+        if (paidEl) {
+            paidEl.value = state.payment.paid_amount;
+        }
+
+        if (wrapper) {
+            wrapper.classList.toggle(
+                "d-none",
+                state.payment.status === "unpaid"
+            );
+        }
 
     },
 
     // =====================================================
-    // Summary
+    // SUMMARY (FIX NULL ERROR HERE)
     // =====================================================
 
     summary() {
 
-        document.getElementById("total_amount").textContent =
-            state.summary.total_amount.toLocaleString();
+        const totalEl = document.getElementById("total_amount");
+        const paidEl = document.getElementById("paid_amount");
+        const debtEl = document.getElementById("debt_amount");
 
-        document.getElementById("paid_amount").textContent =
-            state.payment.paid_amount.toLocaleString();
+        if (totalEl) {
+            totalEl.textContent =
+                Number(state.summary.total_amount || 0).toLocaleString();
+        }
 
-        document.getElementById("debt_amount").textContent =
-            state.summary.debt_amount.toLocaleString();
+        if (paidEl) {
+            paidEl.textContent =
+                Number(state.payment.paid_amount || 0).toLocaleString();
+        }
+
+        if (debtEl) {
+            debtEl.textContent =
+                Number(state.summary.debt_amount || 0).toLocaleString();
+        }
 
     }
 

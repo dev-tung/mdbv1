@@ -9,9 +9,9 @@ export const event = {
     init() {
 
         this.supplierSearch();
+        this.productSearch();
         this.warehouseChange();
         this.paymentChange();
-        this.productSearch();
         this.productQuantity();
         this.productPrice();
         this.productRemove();
@@ -26,24 +26,18 @@ export const event = {
     supplierSearch() {
 
         const input = document.getElementById("supplier_search");
-
         if (!input) return;
 
         input.addEventListener("input", e => {
-
-            service.searchSupplier(
-                e.target.value.trim()
-            );
-
+            service.supplierSearch(e.target.value.trim());
         });
 
         document.addEventListener("click", e => {
 
             const item = e.target.closest(".supplier-item");
-
             if (!item) return;
 
-            service.setSupplier({
+            service.supplierSelect({
                 id: Number(item.dataset.id),
                 name: item.dataset.name
             });
@@ -59,15 +53,10 @@ export const event = {
     productSearch() {
 
         const input = document.getElementById("product_search");
-
         if (!input) return;
 
         input.addEventListener("input", e => {
-
-            service.searchProduct(
-                e.target.value.trim()
-            );
-
+            service.productSearch?.(e.target.value.trim());
         });
 
     },
@@ -78,12 +67,9 @@ export const event = {
 
             if (!e.target.matches(".quantity")) return;
 
-            service.updateQuantity(
-
+            service.productQuantity(
                 Number(e.target.dataset.id),
-
                 e.target.value
-
             );
 
         });
@@ -96,12 +82,9 @@ export const event = {
 
             if (!e.target.matches(".price")) return;
 
-            service.updatePrice(
-
+            service.productPrice(
                 Number(e.target.dataset.id),
-
                 e.target.value
-
             );
 
         });
@@ -113,13 +96,10 @@ export const event = {
         document.addEventListener("click", e => {
 
             const button = e.target.closest(".remove-product");
-
             if (!button) return;
 
-            service.removeProduct(
-
+            service.productRemove(
                 Number(button.dataset.id)
-
             );
 
         });
@@ -133,17 +113,13 @@ export const event = {
     warehouseChange() {
 
         const select = document.getElementById("warehouse_id");
-
         if (!select) return;
 
         select.addEventListener("change", e => {
 
-            service.setWarehouse({
-
+            service.warehouseSelect({
                 id: Number(e.target.value),
-
                 name: e.target.options[e.target.selectedIndex].text
-
             });
 
         });
@@ -157,19 +133,11 @@ export const event = {
     paymentChange() {
 
         document.getElementById("payment")?.addEventListener("change", e => {
-
-            service.setPaymentStatus(
-                e.target.value
-            );
-
+            service.paymentStatus(e.target.value);
         });
 
         document.getElementById("paid_amount")?.addEventListener("input", e => {
-
-            service.setPaidAmount(
-                e.target.value
-            );
-
+            service.paymentAmount(e.target.value);
         });
 
     },
@@ -181,14 +149,13 @@ export const event = {
     formSubmit() {
 
         const form = document.getElementById("purchase-create-form");
-
         if (!form) return;
 
         form.addEventListener("submit", async e => {
 
             e.preventDefault();
 
-            await service.create();
+            await service.create?.();
 
         });
 
