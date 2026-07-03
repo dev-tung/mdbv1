@@ -1,5 +1,5 @@
 import { UIState } from "../state/UIState.js";
-import { UIRenderer } from "../render/UIRenderer.js";
+import { UIRenderer } from "./Renderer.js";
 
 export const UIService = {
 
