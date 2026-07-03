@@ -1,6 +1,14 @@
 import State from './State.js';
 
 const Renderer = {
+    init() {
+        this.warehouses();
+        this.products();
+        this.summary();
+        this.supplierSuggestions();
+        this.productSuggestions();
+        this.purchase();
+    },
 
     warehouses() {
 

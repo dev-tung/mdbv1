@@ -8,9 +8,28 @@ import Renderer from './Renderer.js';
 
 const Service = {
 
+    async init(){
+      const path = window.location.pathname;
+      const match = path.match(/\/admin\/purchases\/edit\/(\d+)/);
+
+      if (match) {
+        await this.loadEditData(match[1]);
+      }else{
+        await this.loadCreateData();
+      }
+    },
+
     /* =================================================
        LOAD DATA
     ================================================= */
+    async loadCreateData() {
+        this.loadWarehouses();
+    },
+
+    async loadEditData(purchaseId) {
+        this.loadWarehouses();
+        this.loadPurchase(purchaseId);
+    },
 
     async loadSuppliers() {
         State.suppliers = await Api.getSuppliers();
@@ -23,13 +42,6 @@ const Service = {
 
     async loadProducts() {
         State.products = await Api.getProducts();
-    },
-
-    async loadEditData(purchaseId) {
-        
-        console.log(purchaseId);
-
-        // Load purchase data into state
     },
 
     /* =================================================

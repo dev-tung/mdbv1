@@ -10,7 +10,6 @@ async function init() {
     if (initialized) return;
     initialized = true;
 
-    await bindMode();
     bindWarehouse();
     bindProducts();
     bindItems();
@@ -18,22 +17,6 @@ async function init() {
     bindForm();
 }
 
-/* =================================================
-   MODE (CREATE / EDIT)
-================================================= */
-
-async function bindMode() {
-    const purchaseId = getPurchaseIdFromUrl();
-    if (!purchaseId) return;
-    await Service.loadEditData(purchaseId);
-}
-
-function getPurchaseIdFromUrl() {
-    const path = window.location.pathname;
-    const match = path.match(/\/admin\/purchases\/edit\/(\d+)/);
-
-    return match ? Number(match[1]) : null;
-}
 
 /* =================================================
    WAREHOUSE
