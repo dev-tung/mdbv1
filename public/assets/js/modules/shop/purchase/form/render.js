@@ -1,23 +1,23 @@
 // =========================================================
-// modules/shop/render/PurchaseRenderer.js
+// modules/shop/purchase/form/render.js
 // =========================================================
 
-import { state } from "../state/PurchaseState.js";
+import { state } from "./state.js";
 
-export const PurchaseRenderer = {
+export const render = {
 
     // =====================================================
-    // Render All
+    // Init
     // =====================================================
 
-    render() {
+    init() {
 
-        this.renderSupplier();
-        this.renderSupplierDropdown();
-        this.renderWarehouse();
-        this.renderProducts();
-        this.renderPayment();
-        this.renderSummary();
+        this.supplier();
+        this.supplierDropdown();
+        this.warehouse();
+        this.products();
+        this.payment();
+        this.summary();
 
     },
 
@@ -25,7 +25,7 @@ export const PurchaseRenderer = {
     // Supplier
     // =====================================================
 
-    renderSupplier() {
+    supplier() {
 
         document.getElementById("supplier_id").value =
             state.supplier.selected.id ?? "";
@@ -39,7 +39,7 @@ export const PurchaseRenderer = {
     // Supplier Dropdown
     // =====================================================
 
-    renderSupplierDropdown() {
+    supplierDropdown() {
 
         const container = document.getElementById("supplier_suggestions");
 
@@ -74,7 +74,7 @@ export const PurchaseRenderer = {
     // Warehouse
     // =====================================================
 
-    renderWarehouse() {
+    warehouse() {
 
         const select = document.getElementById("warehouse_id");
 
@@ -92,7 +92,7 @@ export const PurchaseRenderer = {
     // Products
     // =====================================================
 
-    renderProducts() {
+    products() {
 
         const tbody = document.getElementById("selected_products");
 
@@ -143,7 +143,7 @@ export const PurchaseRenderer = {
     // Payment
     // =====================================================
 
-    renderPayment() {
+    payment() {
 
         document.getElementById("payment").value =
             state.payment.status;
@@ -162,7 +162,7 @@ export const PurchaseRenderer = {
     // Summary
     // =====================================================
 
-    renderSummary() {
+    summary() {
 
         document.getElementById("total_amount").textContent =
             state.summary.total_amount.toLocaleString();

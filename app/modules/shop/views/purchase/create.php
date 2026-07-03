@@ -151,5 +151,5 @@
 
 </div>
 
-<script type="module" src="<?= asset('js/modules/shop/page/purchase/create.js') ?>"></script>
+<script type="module" src="<?= asset('js/modules/shop/purchase/form/index.js') ?>"></script>
 

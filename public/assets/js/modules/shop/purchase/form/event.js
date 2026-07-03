@@ -1,21 +1,21 @@
 // =========================================================
-// modules/shop/event/PurchaseEvent.js
+// modules/shop/purchase/form/event.js
 // =========================================================
 
-import { PurchaseService } from "../service/PurchaseService.js";
+import { service } from "./service.js";
 
-export const PurchaseEvent = {
+export const event = {
 
     init() {
 
-        this.bindSupplierSearch();
-        this.bindProductSearch();
-        this.bindWarehouseChange();
-        this.bindPayment();
-        this.bindQuantity();
-        this.bindPrice();
-        this.bindRemoveProduct();
-        this.bindSubmit();
+        this.supplierSearch();
+        this.warehouseChange();
+        this.paymentChange();
+        this.productSearch();
+        this.productQuantity();
+        this.productPrice();
+        this.productRemove();
+        this.formSubmit();
 
     },
 
@@ -23,14 +23,18 @@ export const PurchaseEvent = {
     // SUPPLIER
     // =====================================================
 
-    bindSupplierSearch() {
+    supplierSearch() {
 
         const input = document.getElementById("supplier_search");
 
         if (!input) return;
 
         input.addEventListener("input", e => {
-            PurchaseService.searchSupplier(e.target.value.trim());
+
+            service.searchSupplier(
+                e.target.value.trim()
+            );
+
         });
 
         document.addEventListener("click", e => {
@@ -39,7 +43,7 @@ export const PurchaseEvent = {
 
             if (!item) return;
 
-            PurchaseService.setSupplier({
+            service.setSupplier({
                 id: Number(item.dataset.id),
                 name: item.dataset.name
             });
@@ -52,14 +56,72 @@ export const PurchaseEvent = {
     // PRODUCT
     // =====================================================
 
-    bindProductSearch() {
+    productSearch() {
 
         const input = document.getElementById("product_search");
 
         if (!input) return;
 
         input.addEventListener("input", e => {
-            PurchaseService.searchProduct(e.target.value.trim());
+
+            service.searchProduct(
+                e.target.value.trim()
+            );
+
+        });
+
+    },
+
+    productQuantity() {
+
+        document.addEventListener("input", e => {
+
+            if (!e.target.matches(".quantity")) return;
+
+            service.updateQuantity(
+
+                Number(e.target.dataset.id),
+
+                e.target.value
+
+            );
+
+        });
+
+    },
+
+    productPrice() {
+
+        document.addEventListener("input", e => {
+
+            if (!e.target.matches(".price")) return;
+
+            service.updatePrice(
+
+                Number(e.target.dataset.id),
+
+                e.target.value
+
+            );
+
+        });
+
+    },
+
+    productRemove() {
+
+        document.addEventListener("click", e => {
+
+            const button = e.target.closest(".remove-product");
+
+            if (!button) return;
+
+            service.removeProduct(
+
+                Number(button.dataset.id)
+
+            );
+
         });
 
     },
@@ -68,7 +130,7 @@ export const PurchaseEvent = {
     // WAREHOUSE
     // =====================================================
 
-    bindWarehouseChange() {
+    warehouseChange() {
 
         const select = document.getElementById("warehouse_id");
 
@@ -76,9 +138,12 @@ export const PurchaseEvent = {
 
         select.addEventListener("change", e => {
 
-            PurchaseService.setWarehouse({
+            service.setWarehouse({
+
                 id: Number(e.target.value),
+
                 name: e.target.options[e.target.selectedIndex].text
+
             });
 
         });
@@ -89,30 +154,19 @@ export const PurchaseEvent = {
     // PAYMENT
     // =====================================================
 
-    bindPayment() {
+    paymentChange() {
 
         document.getElementById("payment")?.addEventListener("change", e => {
-            PurchaseService.setPaymentStatus(e.target.value);
+
+            service.setPaymentStatus(
+                e.target.value
+            );
+
         });
 
         document.getElementById("paid_amount")?.addEventListener("input", e => {
-            PurchaseService.setPaidAmount(e.target.value);
-        });
 
-    },
-
-    // =====================================================
-    // PRODUCTS
-    // =====================================================
-
-    bindQuantity() {
-
-        document.addEventListener("input", e => {
-
-            if (!e.target.matches(".quantity")) return;
-
-            PurchaseService.updateQuantity(
-                Number(e.target.dataset.id),
+            service.setPaidAmount(
                 e.target.value
             );
 
@@ -120,42 +174,11 @@ export const PurchaseEvent = {
 
     },
 
-    bindPrice() {
-
-        document.addEventListener("input", e => {
-
-            if (!e.target.matches(".price")) return;
-
-            PurchaseService.updatePrice(
-                Number(e.target.dataset.id),
-                e.target.value
-            );
-
-        });
-
-    },
-
-    bindRemoveProduct() {
-
-        document.addEventListener("click", e => {
-
-            const button = e.target.closest(".remove-product");
-
-            if (!button) return;
-
-            PurchaseService.removeProduct(
-                Number(button.dataset.id)
-            );
-
-        });
-
-    },
-
     // =====================================================
-    // SUBMIT
+    // FORM
     // =====================================================
 
-    bindSubmit() {
+    formSubmit() {
 
         const form = document.getElementById("purchase-create-form");
 
@@ -165,7 +188,7 @@ export const PurchaseEvent = {
 
             e.preventDefault();
 
-            await PurchaseService.create();
+            await service.create();
 
         });
 

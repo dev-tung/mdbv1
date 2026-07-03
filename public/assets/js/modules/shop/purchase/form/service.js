@@ -1,40 +1,38 @@
 // =========================================================
-// modules/shop/service/PurchaseService.js
+// modules/shop/purchase/form/service.js
 // =========================================================
 
-import { PurchaseRenderer } from "../render/PurchaseRenderer.js";
-import { state } from "../state/PurchaseState.js";
-import { SupplierApi } from "../api/SupplierApi.js";
+import { api } from "./api.js";
+import { render } from "./render.js";
+import { state } from "./state.js";
 
-export const PurchaseService = {
+export const service = {
 
     // =====================================================
     // SUPPLIER
     // =====================================================
 
-    setSupplier(supplier) {
+    supplierSelect(item) {
 
         state.supplier.selected = {
-            id: supplier.id,
-            name: supplier.name
+            id: item.id,
+            name: item.name
         };
 
         state.supplier.search.results = [];
 
-        PurchaseRenderer.renderSupplier();
-        PurchaseRenderer.renderSupplierDropdown();
+        render.supplier();
+        render.supplierDropdown();
 
     },
 
-    async searchSupplier(keyword = "") {
+    async supplierSearch(keyword = "") {
 
         try {
 
-            const response = await SupplierApi.getList({ keyword });
+            const response = await api.supplier.getList({ keyword });
 
             state.supplier.search.results = response.data;
-
-            PurchaseRenderer.renderSupplierDropdown();
 
         } catch (error) {
 
@@ -44,58 +42,59 @@ export const PurchaseService = {
 
         }
 
+        render.supplierDropdown();
+
     },
 
     // =====================================================
     // WAREHOUSE
     // =====================================================
 
-    setWarehouse(warehouse) {
+    warehouseSelect(item) {
 
         state.warehouse.selected = {
-            id: warehouse.id,
-            name: warehouse.name
+            id: item.id,
+            name: item.name
         };
+
+        render.warehouse();
 
     },
 
     // =====================================================
-    // PRODUCTS
+    // PRODUCT
     // =====================================================
 
-    addProduct(product) {
+    productAdd(product) {
 
-        const exists = state.products.items.find(
-            item => item.product_id === product.id
+        const item = state.products.items.find(
+            p => p.product_id === product.id
         );
 
-        if (exists) {
+        if (item) {
 
-            exists.quantity++;
-            exists.subtotal = exists.quantity * exists.price;
+            item.quantity++;
 
-            this.calculateSummary();
+        } else {
 
-            return;
+            state.products.items.push({
+                product_id: product.id,
+                name: product.name,
+                quantity: 1,
+                price: product.price,
+                subtotal: product.price
+            });
 
         }
 
-        state.products.items.push({
-
-            product_id: product.id,
-            name: product.name,
-
-            quantity: 1,
-            price: product.price,
-            subtotal: product.price
-
-        });
-
         this.calculateSummary();
+
+        render.products();
+        render.summary();
 
     },
 
-    removeProduct(productId) {
+    productRemove(productId) {
 
         state.products.items = state.products.items.filter(
             item => item.product_id !== productId
@@ -103,9 +102,12 @@ export const PurchaseService = {
 
         this.calculateSummary();
 
+        render.products();
+        render.summary();
+
     },
 
-    updateQuantity(productId, quantity) {
+    productQuantity(productId, quantity) {
 
         const item = state.products.items.find(
             item => item.product_id === productId
@@ -114,13 +116,15 @@ export const PurchaseService = {
         if (!item) return;
 
         item.quantity = Number(quantity);
-        item.subtotal = item.quantity * item.price;
 
         this.calculateSummary();
 
+        render.products();
+        render.summary();
+
     },
 
-    updatePrice(productId, price) {
+    productPrice(productId, price) {
 
         const item = state.products.items.find(
             item => item.product_id === productId
@@ -129,9 +133,11 @@ export const PurchaseService = {
         if (!item) return;
 
         item.price = Number(price);
-        item.subtotal = item.quantity * item.price;
 
         this.calculateSummary();
+
+        render.products();
+        render.summary();
 
     },
 
@@ -139,17 +145,21 @@ export const PurchaseService = {
     // PAYMENT
     // =====================================================
 
-    setPaymentStatus(status) {
+    paymentStatus(status) {
 
         state.payment.status = status;
 
+        render.payment();
+
     },
 
-    setPaidAmount(amount) {
+    paymentAmount(amount) {
 
         state.payment.paid_amount = Number(amount);
 
         this.calculateSummary();
+
+        render.summary();
 
     },
 
