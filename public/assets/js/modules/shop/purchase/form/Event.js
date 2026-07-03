@@ -1,120 +1,146 @@
-import State from './State.js';
-import * as Render from './Render.js';
+import Service from './Service.js';
 
-let bound = false;
+let initialized = false;
 
-export function bind() {
+/* =================================================
+   INIT
+================================================= */
 
-    if (bound) return;
+async function init() {
+    if (initialized) return;
+    initialized = true;
 
-    bound = true;
-
-    warehouse();
-
-    product();
-
-    quantity();
-
-    price();
-
-    removeItem();
-
-    submit();
-
+    await bindMode();
+    bindWarehouse();
+    bindProducts();
+    bindItems();
+    bindActions();
+    bindForm();
 }
 
-function warehouse() {
+/* =================================================
+   MODE (CREATE / EDIT)
+================================================= */
 
-    document.addEventListener('change', (e) => {
+async function bindMode() {
+    const form = document.querySelector('#purchase-create-form');
+    if (!form) return;
 
-        if (!e.target.matches('#warehouse_id')) return;
+    const purchaseId = getPurchaseIdFromUrl();
+    if (!purchaseId) return;
 
-        State.purchase.warehouseId = Number(e.target.value) || null;
+    await Service.loadEditData(purchaseId);
+}
 
+function getPurchaseIdFromUrl() {
+    const path = window.location.pathname;
+    const match = path.match(/\/admin\/purchases\/edit\/(\d+)/);
+
+    return match ? Number(match[1]) : null;
+}
+
+/* =================================================
+   WAREHOUSE
+================================================= */
+
+function bindWarehouse() {
+    const el = document.querySelector('#warehouse_id');
+    if (!el) return;
+
+    el.addEventListener('change', () => {
+        Service.setWarehouse(parseInt(el.value, 10) || null);
+    });
+}
+
+/* =================================================
+   PRODUCTS
+================================================= */
+
+function bindProducts() {
+    const selects = document.querySelectorAll('.purchase-product');
+    if (!selects.length) return;
+
+    selects.forEach((el) => {
+        el.addEventListener('change', () => {
+            Service.setProduct(
+                parseInt(el.dataset.index, 10),
+                parseInt(el.value, 10) || null
+            );
+        });
+    });
+}
+
+/* =================================================
+   ITEMS (QUANTITY + PRICE)
+================================================= */
+
+function bindItems() {
+    const qtyInputs = document.querySelectorAll('.purchase-qty');
+    const priceInputs = document.querySelectorAll('.purchase-price');
+
+    qtyInputs.forEach((el) => {
+        el.addEventListener('input', () => {
+            Service.setQuantity(
+                parseInt(el.dataset.index, 10),
+                parseFloat(el.value) || 0
+            );
+        });
     });
 
+    priceInputs.forEach((el) => {
+        el.addEventListener('input', () => {
+            Service.setPrice(
+                parseInt(el.dataset.index, 10),
+                parseFloat(el.value) || 0
+            );
+        });
+    });
 }
 
-function product() {
+/* =================================================
+   ACTIONS
+================================================= */
 
-    document.addEventListener('change', (e) => {
+function bindActions() {
+    const removeBtns = document.querySelectorAll('.btn-remove-item');
 
-        if (!e.target.matches('.purchase-product')) return;
-
-        const index = Number(e.target.dataset.index);
-
-        State.purchase.items[index].productId =
-            Number(e.target.value) || null;
-
+    removeBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            Service.removeItem(parseInt(btn.dataset.index, 10));
+        });
     });
 
+    const addBtn = document.querySelector('.btn-add-item');
+    if (addBtn) {
+        addBtn.addEventListener('click', () => {
+            Service.addItem();
+        });
+    }
 }
 
-function quantity() {
+/* =================================================
+   FORM SUBMIT
+================================================= */
 
-    document.addEventListener('input', (e) => {
+function bindForm() {
+    const form = document.querySelector('#purchase-create-form');
+    if (!form) return;
 
-        if (!e.target.matches('.purchase-qty')) return;
-
-        const index = Number(e.target.dataset.index);
-
-        State.purchase.items[index].quantity =
-            Number(e.target.value) || 0;
-
-        Render.renderSummary();
-
-    });
-
-}
-
-function price() {
-
-    document.addEventListener('input', (e) => {
-
-        if (!e.target.matches('.purchase-price')) return;
-
-        const index = Number(e.target.dataset.index);
-
-        State.purchase.items[index].purchasePrice =
-            Number(e.target.value) || 0;
-
-        Render.renderSummary();
-
-    });
-
-}
-
-function removeItem() {
-
-    document.addEventListener('click', (e) => {
-
-        const button = e.target.closest('.btn-remove-item');
-
-        if (!button) return;
-
-        const index = Number(button.dataset.index);
-
-        State.purchase.items.splice(index, 1);
-
-        Render.renderProducts();
-
-        Render.renderSummary();
-
-    });
-
-}
-
-function submit() {
-
-    document.addEventListener('submit', async (e) => {
-
-        if (!e.target.matches('#purchase-create-form')) return;
-
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        console.log(State.purchase);
+        const result = await Service.save();
 
-        // Controller.save() sẽ gọi sau
+        if (!result?.success) {
+            console.log('Validation errors:', result?.errors || []);
+        }
     });
-
 }
+
+/* =================================================
+   EXPORT
+================================================= */
+
+export default {
+    init
+};

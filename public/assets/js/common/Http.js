@@ -1,8 +1,8 @@
 // =========================================================
-// common/Http.js
+// common/http.js
 // =========================================================
 
-const Http = {
+const http = {
 
     async get(url, params = {}) {
 
@@ -84,4 +84,4 @@ const Http = {
 
 };
 
-export default Http;
+export default http;

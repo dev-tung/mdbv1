@@ -4,7 +4,7 @@
         Cập nhật nhập hàng
     </h3>
 
-    <form id="purchase-update-form" novalidate>
+    <form id="purchase-form" novalidate>
 
         <div class="row g-3">
 

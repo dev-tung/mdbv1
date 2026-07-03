@@ -1,13 +1,13 @@
 import State from './State.js';
 
-const Render = {
+const Renderer = {
 
     warehouses() {
 
         const select = document.getElementById('warehouse_id');
 
         select.innerHTML = '';
-
+        
         State.warehouse.list.forEach(warehouse => {
 
             const option = document.createElement('option');
@@ -163,4 +163,4 @@ const Render = {
 
 };
 
-export default Render;
+export default Renderer;

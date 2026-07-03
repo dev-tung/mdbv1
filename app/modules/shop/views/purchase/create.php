@@ -2,7 +2,7 @@
 
     <h3 class="mb-4">Nhập hàng</h3>
 
-    <form id="purchase-create-form" novalidate>
+    <form id="purchase-form" novalidate>
 
         <div class="row g-3">
 
@@ -151,5 +151,5 @@
 
 </div>
 
-<script type="module" src="<?= asset('js/modules/shop/purchase/form/Controller.js') ?>"></script>
+<script type="module" src="<?= asset('js/modules/shop/purchase/form/Init.js') ?>"></script>
 

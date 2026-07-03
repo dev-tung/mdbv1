@@ -1,39 +1,33 @@
-import http from '/assets/js/common/http.js';
+import Http from '/assets/js/common/Http.js';
 
-export async function getWarehouses() {
+const Api = {
 
-    return await http.get('/warehouse/list');
+    async getWarehouses() {
+        return await Http.get('/api/warehouses');
+    },
 
-}
+    async getPurchase(purchaseId) {
+        return await Http.get(`/purchase/${purchaseId}`);
+    },
 
-export async function getPurchase(purchaseId) {
+    async createPurchase(data) {
+        return await Http.post('/purchase', data);
+    },
 
-    return await http.get(`/purchase/${purchaseId}`);
+    async updatePurchase(purchaseId, data) {
+        return await Http.put(`/purchase/${purchaseId}`, data);
+    },
 
-}
+    async deletePurchase(purchaseId) {
+        return await Http.delete(`/purchase/${purchaseId}`);
+    },
 
-export async function createPurchase(data) {
+    async searchProducts(keyword = '') {
+        return await Http.get('/product/search', {
+            keyword
+        });
+    }
 
-    return await http.post('/purchase', data);
+};
 
-}
-
-export async function updatePurchase(purchaseId, data) {
-
-    return await http.put(`/purchase/${purchaseId}`, data);
-
-}
-
-export async function deletePurchase(purchaseId) {
-
-    return await http.delete(`/purchase/${purchaseId}`);
-
-}
-
-export async function searchProducts(keyword = '') {
-
-    return await http.get('/product/search', {
-        keyword
-    });
-
-}
+export default Api;
