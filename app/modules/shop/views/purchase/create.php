@@ -107,7 +107,7 @@
                                     <th>Tổng tiền</th>
                                     <th>VAT(%)</th>
                                     <th>Tiền thuế</th>
-                                    <th>Sau thuế</th>
+                                    <th>Tổng sau thuế</th>
                                     <th></th>
                                 </tr>
                             </thead>
