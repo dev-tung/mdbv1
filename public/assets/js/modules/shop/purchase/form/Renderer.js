@@ -1,99 +1,78 @@
 import State from './State.js';
 
 const Renderer = {
+
     init() {
+
+        this.purchase();
         this.warehouses();
         this.products();
         this.summary();
+        this.payment();
         this.supplierSuggestions();
         this.productSuggestions();
-        this.purchase();
+
     },
+
+    /* =================================================
+       PURCHASE
+    ================================================= */
+
+    purchase() {
+
+        document.querySelector('#supplier_id').value =
+            State.purchase.supplier_id ?? '';
+
+        document.querySelector('#description').value =
+            State.purchase.description ?? '';
+
+        document.querySelector('#status').value =
+            State.purchase.status ?? '';
+
+        document.querySelector('#warehouse_id').value =
+            State.purchase.warehouse_id ?? '';
+
+        document.querySelector('#payment').value =
+            State.purchase.payment ?? '';
+
+        document.querySelector('#paid_amount').value =
+            State.purchase.paid_amount ?? 0;
+
+    },
+
+    /* =================================================
+       WAREHOUSE
+    ================================================= */
 
     warehouses() {
 
-        const select = document.getElementById('warehouse_id');
+        const select = document.querySelector('#warehouse_id');
 
         select.innerHTML = '';
-        
+
         State.warehouse.list.forEach(warehouse => {
 
-            const option = document.createElement('option');
+            select.insertAdjacentHTML('beforeend', `
 
-            option.value = warehouse.id;
-            option.textContent = warehouse.name;
-            option.selected = warehouse.id == State.warehouse.id;
+                <option
+                    value="${warehouse.id}"
+                    ${warehouse.id == State.purchase.warehouse_id ? 'selected' : ''}>
+                    ${warehouse.name}
+                </option>
 
-            select.appendChild(option);
-
-        });
-
-    },
-
-    products() {
-
-        const tbody = document.getElementById('selected_products');
-
-        tbody.innerHTML = '';
-
-        State.product.selected.forEach((product, index) => {
-
-            tbody.insertAdjacentHTML('beforeend', `
-                <tr data-index="${index}">
-
-                    <td>${product.name}</td>
-
-                    <td width="120">
-                        <input
-                            type="number"
-                            class="form-control quantity"
-                            value="${product.quantity}"
-                            min="1">
-                    </td>
-
-                    <td width="180">
-                        <input
-                            type="number"
-                            class="form-control purchase-price"
-                            value="${product.purchase_price}"
-                            min="0">
-                    </td>
-
-                    <td width="180">
-                        ${product.total_amount.toLocaleString()} ₫
-                    </td>
-
-                    <td width="80">
-                        <button
-                            type="button"
-                            class="btn btn-sm btn-danger remove-product">
-                            Xóa
-                        </button>
-                    </td>
-
-                </tr>
             `);
 
         });
 
     },
 
-    summary() {
-
-        document.getElementById('total_amount').textContent =
-            State.summary.total_amount.toLocaleString();
-
-        document.getElementById('paid_amount_view').textContent =
-            State.summary.paid_amount.toLocaleString();
-
-        document.getElementById('debt_amount_view').textContent =
-            State.summary.debt_amount.toLocaleString();
-
-    },
+    /* =================================================
+       SUPPLIER
+    ================================================= */
 
     supplierSuggestions() {
 
-        const box = document.getElementById('supplier_suggestions');
+        const box = document.querySelector('#supplier_suggestions');
 
         box.innerHTML = '';
 
@@ -108,12 +87,16 @@ const Renderer = {
         State.supplier.suggestions.forEach(item => {
 
             box.insertAdjacentHTML('beforeend', `
+
                 <button
                     type="button"
                     class="list-group-item list-group-item-action supplier-item"
                     data-id="${item.id}">
+
                     ${item.name}
+
                 </button>
+
             `);
 
         });
@@ -122,9 +105,13 @@ const Renderer = {
 
     },
 
+    /* =================================================
+       PRODUCT
+    ================================================= */
+
     productSuggestions() {
 
-        const box = document.getElementById('product_suggestions');
+        const box = document.querySelector('#product_suggestions');
 
         box.innerHTML = '';
 
@@ -139,12 +126,16 @@ const Renderer = {
         State.product.suggestions.forEach(item => {
 
             box.insertAdjacentHTML('beforeend', `
+
                 <button
                     type="button"
                     class="list-group-item list-group-item-action product-item"
                     data-id="${item.id}">
+
                     ${item.name}
+
                 </button>
+
             `);
 
         });
@@ -153,19 +144,103 @@ const Renderer = {
 
     },
 
-    purchase() {
+    products() {
 
-        document.getElementById('description').value =
-            State.purchase.description;
+        const tbody = document.querySelector('#selected_products');
 
-        document.getElementById('status').value =
-            State.purchase.status;
+        tbody.innerHTML = '';
 
-        document.getElementById('payment').value =
-            State.purchase.payment;
+        State.purchase.items.forEach((item, index) => {
 
-        document.getElementById('paid_amount').value =
-            State.purchase.paid_amount;
+            tbody.insertAdjacentHTML('beforeend', `
+
+                <tr data-index="${index}">
+
+                    <td>${item.name}</td>
+
+                    <td width="120">
+
+                        <input
+                            type="number"
+                            class="form-control quantity"
+                            value="${item.quantity}"
+                            min="1">
+
+                    </td>
+
+                    <td width="180">
+
+                        <input
+                            type="number"
+                            class="form-control purchase-price"
+                            value="${item.purchase_price}"
+                            min="0">
+
+                    </td>
+
+                    <td width="180">
+
+                        ${item.total_amount.toLocaleString()} ₫
+
+                    </td>
+
+                    <td width="80">
+
+                        <button
+                            type="button"
+                            class="btn btn-sm btn-danger btn-remove">
+
+                            Xóa
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `);
+
+        });
+
+    },
+
+    /* =================================================
+       SUMMARY
+    ================================================= */
+
+    summary() {
+
+        document.querySelector('#total_amount').textContent =
+            State.purchase.total_amount.toLocaleString();
+
+        document.querySelector('#paid_amount_view').textContent =
+            State.purchase.paid_amount.toLocaleString();
+
+        document.querySelector('#debt_amount_view').textContent =
+            State.purchase.debt_amount.toLocaleString();
+
+    },
+
+    /* =================================================
+       PAYMENT
+    ================================================= */
+
+    payment() {
+
+        const wrapper = document.querySelector('#paid_amount_wrapper');
+
+        if (
+            State.purchase.payment === 'partial'
+            || State.purchase.payment === 'credit'
+        ) {
+
+            wrapper.classList.remove('d-none');
+
+        } else {
+
+            wrapper.classList.add('d-none');
+
+        }
 
     }
 

@@ -1,125 +1,229 @@
+import State from './State.js';
 import Service from './Service.js';
+import Renderer from './Renderer.js';
 
-let initialized = false;
+const Event = {
 
-/* =================================================
-   INIT
-================================================= */
+    bind() {
 
-async function init() {
-    if (initialized) return;
-    initialized = true;
+        this.supplier();
+        this.product();
+        this.purchase();
+        this.items();
+        this.submit();
 
-    bindWarehouse();
-    bindProducts();
-    bindItems();
-    bindActions();
-    bindForm();
-}
+    },
 
+    /* =================================================
+       SUPPLIER
+    ================================================= */
 
-/* =================================================
-   WAREHOUSE
-================================================= */
+    supplier() {
 
-function bindWarehouse() {
-    const el = document.querySelector('#warehouse_id');
-    if (!el) return;
+        const input = document.querySelector('#supplier_search');
 
-    el.addEventListener('change', () => {
-        Service.setWarehouse(parseInt(el.value, 10) || null);
-    });
-}
+        const suggestions = document.querySelector('#supplier_suggestions');
 
-/* =================================================
-   PRODUCTS
-================================================= */
+        input?.addEventListener('input', async e => {
 
-function bindProducts() {
-    const selects = document.querySelectorAll('.purchase-product');
-    if (!selects.length) return;
+            State.supplier.keyword = e.target.value.trim();
 
-    selects.forEach((el) => {
-        el.addEventListener('change', () => {
-            Service.setProduct(
-                parseInt(el.dataset.index, 10),
-                parseInt(el.value, 10) || null
+            await Service.searchSuppliers();
+
+            Renderer.supplierSuggestions();
+
+        });
+
+        suggestions?.addEventListener('click', e => {
+
+            const button = e.target.closest('.supplier-item');
+
+            if (!button) return;
+
+            const supplier = State.supplier.suggestions.find(
+                item => item.id == button.dataset.id
             );
+
+            if (!supplier) return;
+
+            Service.setSupplier(supplier);
+
+            input.value = supplier.name;
+
+            State.supplier.suggestions = [];
+
+            Renderer.supplierSuggestions();
+
         });
-    });
-}
 
-/* =================================================
-   ITEMS (QUANTITY + PRICE)
-================================================= */
+    },
 
-function bindItems() {
-    const qtyInputs = document.querySelectorAll('.purchase-qty');
-    const priceInputs = document.querySelectorAll('.purchase-price');
+    /* =================================================
+       PRODUCT
+    ================================================= */
 
-    qtyInputs.forEach((el) => {
-        el.addEventListener('input', () => {
-            Service.setQuantity(
-                parseInt(el.dataset.index, 10),
-                parseFloat(el.value) || 0
+    product() {
+
+        const input = document.querySelector('#product_search');
+
+        const suggestions = document.querySelector('#product_suggestions');
+
+        input?.addEventListener('input', async e => {
+
+            State.product.keyword = e.target.value.trim();
+
+            await Service.searchProducts();
+
+            Renderer.productSuggestions();
+
+        });
+
+        suggestions?.addEventListener('click', e => {
+
+            const button = e.target.closest('.product-item');
+
+            if (!button) return;
+
+            const product = State.product.suggestions.find(
+                item => item.id == button.dataset.id
             );
+
+            if (!product) return;
+
+            Service.addProduct(product);
+
+            Renderer.products();
+
+            Renderer.summary();
+
+            input.value = '';
+
+            suggestions.classList.add('d-none');
+
         });
-    });
 
-    priceInputs.forEach((el) => {
-        el.addEventListener('input', () => {
-            Service.setPrice(
-                parseInt(el.dataset.index, 10),
-                parseFloat(el.value) || 0
-            );
+    },
+
+    /* =================================================
+       PURCHASE
+    ================================================= */
+
+    purchase() {
+
+        document.querySelector('#description')
+            ?.addEventListener('input', e => {
+
+                Service.setDescription(e.target.value);
+
+            });
+
+        document.querySelector('#status')
+            ?.addEventListener('change', e => {
+
+                Service.setStatus(e.target.value);
+
+            });
+
+        document.querySelector('#warehouse_id')
+            ?.addEventListener('change', e => {
+
+                Service.setWarehouse(e.target.value);
+
+            });
+
+        document.querySelector('#payment')
+            ?.addEventListener('change', e => {
+
+                Service.setPayment(e.target.value);
+
+                Renderer.payment();
+
+                Renderer.summary();
+
+            });
+
+        document.querySelector('#paid_amount')
+            ?.addEventListener('input', e => {
+
+                Service.setPaidAmount(e.target.value);
+
+                Renderer.summary();
+
+            });
+
+    },
+
+    /* =================================================
+       ITEMS
+    ================================================= */
+
+    items() {
+
+        const table = document.querySelector('#selected_products');
+
+        table?.addEventListener('input', e => {
+
+            const row = e.target.closest('tr');
+
+            if (!row) return;
+
+            const index = Number(row.dataset.index);
+
+            if (e.target.classList.contains('quantity')) {
+
+                Service.setQuantity(index, e.target.value);
+
+            }
+
+            if (e.target.classList.contains('purchase-price')) {
+
+                Service.setPurchasePrice(index, e.target.value);
+
+            }
+
+            Renderer.products();
+
+            Renderer.summary();
+
         });
-    });
-}
 
-/* =================================================
-   ACTIONS
-================================================= */
+        table?.addEventListener('click', e => {
 
-function bindActions() {
-    const removeBtns = document.querySelectorAll('.btn-remove-item');
+            const button = e.target.closest('.btn-remove');
 
-    removeBtns.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            Service.removeItem(parseInt(btn.dataset.index, 10));
+            if (!button) return;
+
+            const row = button.closest('tr');
+
+            const index = Number(row.dataset.index);
+
+            Service.removeProduct(index);
+
+            Renderer.products();
+
+            Renderer.summary();
+
         });
-    });
 
-    const addBtn = document.querySelector('.btn-add-item');
-    if (addBtn) {
-        addBtn.addEventListener('click', () => {
-            Service.addItem();
-        });
+    },
+
+    /* =================================================
+       SUBMIT
+    ================================================= */
+
+    submit() {
+
+        document.querySelector('#purchase-form')
+            ?.addEventListener('submit', async e => {
+
+                e.preventDefault();
+
+                await Service.save();
+
+            });
+
     }
-}
 
-/* =================================================
-   FORM SUBMIT
-================================================= */
-
-function bindForm() {
-    const form = document.querySelector('#purchase-create-form');
-    if (!form) return;
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const result = await Service.save();
-
-        if (!result?.success) {
-            console.log('Validation errors:', result?.errors || []);
-        }
-    });
-}
-
-/* =================================================
-   EXPORT
-================================================= */
-
-export default {
-    init
 };
+
+export default Event;

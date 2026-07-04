@@ -151,5 +151,5 @@
 
 </div>
 
-<script type="module" src="<?= asset('js/modules/shop/purchase/form/Index.js') ?>"></script>
+<script type="module" src="<?= asset('js/modules/shop/purchase/form/Controller.js') ?>"></script>
 

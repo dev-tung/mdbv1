@@ -1,82 +1,119 @@
 const State = {
 
+    /* =================================================
+       SUPPLIER SEARCH
+    ================================================= */
+
     supplier: {
-        id: null,
         keyword: '',
         suggestions: []
     },
 
-    warehouse: {
-        id: null,
-        list: []
-    },
-
-    purchase: {
-        id: null,
-        description: '',
-        status: '',
-        payment: '',
-        paid_amount: 0
-    },
+    /* =================================================
+       PRODUCT SEARCH
+    ================================================= */
 
     product: {
         keyword: '',
-        suggestions: [],
-        selected: []
-        /*
-        [
-            {
-                id: 1,
-                name: '',
-                quantity: 1,
-                purchase_price: 0,
-                total_amount: 0
-            }
-        ]
-        */
+        suggestions: []
     },
 
-    summary: {
-        total_amount: 0,
-        paid_amount: 0,
-        debt_amount: 0
+    /* =================================================
+       WAREHOUSE
+    ================================================= */
+
+    warehouse: {
+        list: []
     },
+
+    /* =================================================
+       PURCHASE
+    ================================================= */
+
+    purchase: {
+
+        id: null,
+
+        supplier_id: null,
+
+        supplier_name: '',
+
+        warehouse_id: null,
+
+        description: '',
+
+        status: '',
+
+        payment: '',
+
+        paid_amount: 0,
+
+        total_amount: 0,
+
+        debt_amount: 0,
+
+        items: [
+            /*
+            {
+                product_id: 1,
+                name: 'Yonex 88D Pro',
+                quantity: 2,
+                purchase_price: 1200000,
+                total_amount: 2400000
+            }
+            */
+        ]
+
+    },
+
+    /* =================================================
+       RESET
+    ================================================= */
 
     reset() {
 
         this.supplier = {
-            id: null,
+            keyword: '',
+            suggestions: []
+        };
+
+        this.product = {
             keyword: '',
             suggestions: []
         };
 
         this.warehouse = {
-            id: null,
             list: []
         };
 
         this.purchase = {
+
             id: null,
+
+            supplier_id: null,
+
+            warehouse_id: null,
+
             description: '',
+
             status: '',
+
             payment: '',
-            paid_amount: 0
-        };
 
-        this.product = {
-            keyword: '',
-            suggestions: [],
-            selected: []
-        };
-
-        this.summary = {
-            total_amount: 0,
             paid_amount: 0,
-            debt_amount: 0
+
+            total_amount: 0,
+
+            debt_amount: 0,
+
+            items: []
+
         };
 
     }
 
 };
+
+State.reset();
 
 export default State;
