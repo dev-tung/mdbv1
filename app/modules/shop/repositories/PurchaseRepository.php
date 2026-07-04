@@ -29,14 +29,6 @@ class PurchaseRepository extends Repository
         );
     }
 
-    // =========================
-    // DETAIL
-    // =========================
-    public function findById(int $id): ?array
-    {
-        return parent::findById($id);
-    }
-
     public function create(array $data): int
     {
         Database::query(
@@ -56,48 +48,16 @@ class PurchaseRepository extends Repository
         return Database::lastInsertId();
     }
 
-    // =========================
-    // UPDATE
-    // =========================
-    public function updateById(int $id, array $data): int
-    {
-        return parent::updateById($id, $data);
-    }
-
     public function updatePayment(int $id, string $payment): int
     {
-
-        return Database::query(
-            "UPDATE purchases
-            SET
-                payment = :payment,
-                paid_amount = CASE
-                    WHEN :payment_paid = 'paid' THEN total_amount
-                    WHEN :payment_unpaid = 'unpaid' THEN 0
-                    ELSE paid_amount
-                END,
-                debt_amount = CASE
-                    WHEN :payment_paid2 = 'paid' THEN 0
-                    WHEN :payment_unpaid2 = 'unpaid' THEN total_amount
-                    ELSE debt_amount
-                END
-            WHERE id = :id",
+        $result = Database::first(
+            "CALL sp_purchase_update_payment(:id, :payment)",
             [
                 'id' => $id,
                 'payment' => $payment,
-                'payment_paid' => $payment,
-                'payment_unpaid' => $payment,
-                'payment_paid2' => $payment,
-                'payment_unpaid2' => $payment,
             ]
-        )->rowCount();
-    }
+        );
 
-    // =========================
-    // DELETE
-    // =========================
-    public function deleteById(int $id): int
-    {
-        return parent::deleteById($id);
+        return (int) $result['affected_rows'];
     }
 }
