@@ -187,7 +187,7 @@ const Renderer = {
                     </td>
 
                     <!-- BASE AMOUNT -->
-                    <td width="130">
+                    <td width="130" class="total-amount">
                         ${item.total_amount}
                     </td>
 
@@ -202,12 +202,12 @@ const Renderer = {
                     </td>
 
                     <!-- VAT AMOUNT -->
-                    <td width="130">
+                    <td width="130" class="vat-amount-view">
                         ${item.vat_amount}
                     </td>
 
                     <!-- TOTAL AFTER VAT -->
-                    <td width="140">
+                    <td width="140" class="total-with-vat">
                         ${item.total_amount_with_vat}
                     </td>
 
@@ -228,6 +228,25 @@ const Renderer = {
 
     },
 
+    productsUpdate(index) {
+
+        const row = document.querySelector(`tr[data-index="${index}"]`);
+
+        if (!row) return;
+
+        const item = State.purchase.items[index];
+
+        row.querySelector('.total-amount').textContent =
+            item.total_amount.toLocaleString();
+
+        row.querySelector('.vat-amount-view').textContent =
+            item.vat_amount.toLocaleString();
+
+        row.querySelector('.total-with-vat').textContent =
+            item.total_amount_with_vat.toLocaleString();
+
+    },
+
     /* =================================================
        SUMMARY
     ================================================= */
@@ -237,11 +256,11 @@ const Renderer = {
         document.querySelector('#total_amount').textContent =
             State.purchase.total_amount.toLocaleString();
 
-        document.querySelector('#paid_amount_view').textContent =
-            State.purchase.paid_amount.toLocaleString();
-
-        document.querySelector('#debt_amount_view').textContent =
+        document.querySelector('#debt_amount_display').textContent =
             State.purchase.debt_amount.toLocaleString();
+
+        document.querySelector('#total_amount_with_vat').textContent =
+            State.purchase.total_amount_with_vat.toLocaleString();
 
     },
 

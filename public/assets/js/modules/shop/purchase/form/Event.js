@@ -144,7 +144,8 @@ const Event = {
             ?.addEventListener('input', e => {
 
                 Service.setPaidAmount(e.target.value);
-
+                
+                Service.recalc();
                 Renderer.summary();
 
             });
@@ -196,7 +197,8 @@ const Event = {
                 Service.setVatRate(index, value);
 
             }
-
+            
+            Renderer.productsUpdate(index); 
             Renderer.summary();
 
         });

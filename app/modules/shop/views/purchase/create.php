@@ -126,13 +126,13 @@
                             </span>
 
                             <span class="fs-5">
-                                Đã trả
-                                <b id="paid_amount_view">0</b> ₫
+                                Tổng sau thuế
+                                <b id="total_amount_with_vat">0</b> ₫
                             </span>
 
                             <span class="fs-5">
                                 Còn nợ
-                                <b id="debt_amount_view">0</b> ₫
+                                <b id="debt_amount_display">0</b> ₫
                             </span>
 
                         </div>

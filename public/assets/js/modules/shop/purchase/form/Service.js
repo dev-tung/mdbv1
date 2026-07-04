@@ -171,9 +171,8 @@ const Service = {
         this.recalc();
 
     },
-
     /* =================================================
-       CALC
+    CALC
     ================================================= */
 
     recalc() {
@@ -188,23 +187,28 @@ const Service = {
             const vatRate = Number(item.vat_rate) || 0;
 
             const base = quantity * price;
-            const vatAmount = base * vatRate / 100;
+            const vatAmount = Math.round(base * vatRate / 100);
             const totalWithVat = base + vatAmount;
 
-            item.total_amount = base;
+            item.total_amount = Math.round(base);
             item.vat_amount = vatAmount;
-            item.total_amount_with_vat = totalWithVat;
+            item.total_amount_with_vat = Math.round(totalWithVat);
 
-            total += base;
-            vatTotal += vatAmount;
+            total += item.total_amount;
+            vatTotal += item.vat_amount;
         }
 
-        State.purchase.total_amount = total;
-        State.purchase.vat_amount = vatTotal;
-        State.purchase.total_amount_with_vat = total + vatTotal;
+        State.purchase.total_amount = Math.round(total);
+        State.purchase.vat_amount = Math.round(vatTotal);
+        State.purchase.total_amount_with_vat =
+            Math.round(State.purchase.total_amount + State.purchase.vat_amount);
 
         const paid = Number(State.purchase.paid_amount) || 0;
-        State.purchase.debt_amount = Math.max(State.purchase.total_amount_with_vat - paid, 0);
+
+        State.purchase.debt_amount = Math.max(
+            Math.round(State.purchase.total_amount_with_vat - paid),
+            0
+        );
 
     },
 

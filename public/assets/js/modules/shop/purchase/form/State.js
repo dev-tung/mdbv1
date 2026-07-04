@@ -52,6 +52,8 @@ const State = {
 
         debt_amount: 0,
 
+        total_amount_with_vat: 0,
+
         items: [
             /*
             {
@@ -104,6 +106,8 @@ const State = {
             paid_amount: 0,
 
             total_amount: 0,
+
+            total_amount_with_vat: 0,
 
             debt_amount: 0,
 
