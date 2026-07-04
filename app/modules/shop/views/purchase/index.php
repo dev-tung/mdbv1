@@ -101,32 +101,13 @@
   </nav>
 </div>
 
-<script type="module">
-    import { Binding } from "/assets/js/modules/shop/purchases/list/binding.js";
-    import { Action } from "/assets/js/modules/shop/purchases/list/action.js";
-
-    document.addEventListener('DOMContentLoaded', async () => {
-
-        const options = {
+<script>
+    window.PurchaseConfig = {
+        options: {
             statuses: <?= json_encode(config('shop.option.purchase_status')) ?>,
             payments: <?= json_encode(config('shop.option.payment')) ?>
-        };
-
-        Binding.init({
-            api: {
-                list: '/api/purchases',
-                suppliers: '/api/suppliers'
-            },
-            options
-        });
-
-        Action.init({
-            api: {
-                status: '/api/purchases/status',
-                payment: '/api/purchases/payment',
-                delete: '/api/purchases/delete'
-            }
-        });
-
-    });
+        }
+    };
 </script>
+
+<script type="module" src="<?= asset('js/modules/shop/purchase/list/Controller.js') ?>"></script>

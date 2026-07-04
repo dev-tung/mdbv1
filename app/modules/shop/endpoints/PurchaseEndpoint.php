@@ -14,14 +14,14 @@ class PurchaseEndpoint
     // =========================
     public function apiList()
     {
-        $input = request_all();
-        $result = $this->purchaseRepository->getList($input);
+        $filters = request_all();
+
+        $result = $this->purchaseRepository->getList($filters);
 
         return Response::json([
             'success' => true,
             'message' => 'Lấy danh sách phiếu nhập thành công',
-            'data'    => $result['data'],
-            'meta'    => $result['meta'],
+            'data'    => $result
         ]);
     }
 
@@ -128,7 +128,6 @@ class PurchaseEndpoint
         if (empty($input['id']) || !isset($input['status'])) {
             return Response::json([
                 'success' => false,
-
                 'message' => 'Thiếu dữ liệu trạng thái'
             ]);
         }
@@ -163,8 +162,7 @@ class PurchaseEndpoint
         }
 
         $updated = $this->purchaseRepository->updatePayment(
-            (int)$input['id'],
-            ['payment' => $input['payment']]
+            (int)$input['id'], $input['payment']
         );
 
         return Response::json([

@@ -1,6 +1,6 @@
 import State from './State.js';
 import Api from './Api.js';
-import Calculator from './Calculator.js';
+import Calculator from '/assets/js/common/Calculator.js';
 
 const Service = {
 
@@ -242,7 +242,12 @@ const Service = {
 
         }
 
-        return await Api.createPurchase(State.purchase);
+        const response = await Api.createPurchase(State.purchase);
+
+        alert(response.message);
+        if (response.success) {
+            window.location.href = response.redirect;
+        }
 
     }
 
