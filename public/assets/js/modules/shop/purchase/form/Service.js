@@ -8,31 +8,14 @@ import Renderer from './Renderer.js';
 
 const Service = {
 
-    async init(){
-      const path = window.location.pathname;
-      const match = path.match(/\/admin\/purchases\/edit\/(\d+)/);
-
-      if (match) {
-        await this.loadEditData(match[1]);
-      }else{
-        await this.loadCreateData();
-      }
-    },
-
-    /* =================================================
-       LOAD DATA
-    ================================================= */
-    async loadCreateData() {
-        this.loadWarehouses();
-    },
-
-    async loadEditData(purchaseId) {
-        this.loadWarehouses();
-        this.loadPurchase(purchaseId);
+    async loadPurchase(id) {
+        const response = await Api.getPurchase(id);
+        State.purchase = response.data;
     },
 
     async loadSuppliers() {
-        State.suppliers = await Api.getSuppliers();
+        const response = await Api.getSuppliers();
+        State.suppliers = response.data || [];
     },
 
     async loadWarehouses() {
@@ -41,15 +24,8 @@ const Service = {
     },
 
     async loadProducts() {
-        State.products = await Api.getProducts();
-    },
-
-    /* =================================================
-       UPDATE HEADER
-    ================================================= */
-
-    setWarehouse(warehouseId) {
-        State.purchase.warehouseId = warehouseId;
+        const response = await Api.getProducts();
+        State.products = response.data || [];
     },
 
     /* =================================================
@@ -103,8 +79,6 @@ const Service = {
         // debtAmount
         State.purchase.debtAmount =
             totalAmount - (Number(paid_amount) || 0);
-
-        Renderer.summary();
     },
 
     /* =================================================
@@ -112,8 +86,6 @@ const Service = {
     ================================================= */
 
     async save() {
-
-        // tạm bỏ validate
         this.recalc();
 
         if (State.purchase.id) {
