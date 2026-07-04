@@ -104,10 +104,10 @@
                                     <th>SL</th>
                                     <th>Giá </th>
                                     <th>Giá bán</th>
-                                    <th>Tổng tiền</th>
+                                    <th>Thành tiền</th>
                                     <th>VAT(%)</th>
                                     <th>Tiền thuế</th>
-                                    <th>Tổng sau thuế</th>
+                                    <th>Sau thuế</th>
                                     <th></th>
                                 </tr>
                             </thead>
