@@ -215,7 +215,7 @@ const Renderer = {
                     <td width="60">
                         <button
                             type="button"
-                            class="btn btn-sm btn-danger btn-remove">
+                            class="btn btn-sm btn-outline-danger btn-remove">
                             Xóa
                         </button>
                     </td>
