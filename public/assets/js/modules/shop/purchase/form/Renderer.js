@@ -41,25 +41,25 @@ const Renderer = {
     },
 
     /* =================================================
-       WAREHOUSE
+    WAREHOUSE
     ================================================= */
 
     warehouses() {
 
         const select = document.querySelector('#warehouse_id');
 
-        select.innerHTML = '';
+        select.innerHTML = `
+            <option value="">-- Chọn kho --</option>
+        `;
 
         State.warehouse.list.forEach(warehouse => {
 
             select.insertAdjacentHTML('beforeend', `
-
                 <option
                     value="${warehouse.id}"
                     ${warehouse.id == State.purchase.warehouse_id ? 'selected' : ''}>
                     ${warehouse.name}
                 </option>
-
             `);
 
         });
@@ -158,7 +158,7 @@ const Renderer = {
 
                     <td>${item.name}</td>
 
-                    <td width="120">
+                    <td width="60">
 
                         <input
                             type="number"
@@ -168,7 +168,7 @@ const Renderer = {
 
                     </td>
 
-                    <td width="180">
+                    <td width="120">
 
                         <input
                             type="number"
@@ -178,20 +178,38 @@ const Renderer = {
 
                     </td>
 
-                    <td width="180">
+                    <td width="120">
 
-                        ${item.total_amount.toLocaleString()} ₫
+                        <input
+                            type="number"
+                            class="form-control order-price"
+                            value="${item.order_price}"
+                            min="0">
 
                     </td>
 
-                    <td width="80">
+                    <td width="120">${item.total_amount}</td>
+
+                    <td width="60">
+
+                        <input
+                            type="number"
+                            class="form-control vat-amount"
+                            value="${item.vat_rate}"
+                            min="0">
+
+                    </td>
+
+                    <td width="120">${item.vat_amount}</td>
+
+                    <td width="120">${item.total_amount_with_vat}</td>
+
+                    <td width="60">
 
                         <button
                             type="button"
                             class="btn btn-sm btn-danger btn-remove">
-
                             Xóa
-
                         </button>
 
                     </td>

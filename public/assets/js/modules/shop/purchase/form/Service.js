@@ -18,14 +18,14 @@ const Service = {
 
     async searchSuppliers() {
 
-        const response = await Api.getSuppliers(State.supplier.keyword);
+        const response = await Api.searchSuppliers(State.supplier.keyword);
 
         State.supplier.suggestions = response.data || [];
     },
 
     async searchProducts() {
 
-        const response = await Api.getProducts(State.product.keyword);
+        const response = await Api.searchProducts(State.product.keyword);
 
         State.product.suggestions = response.data || [];
     },
@@ -104,11 +104,19 @@ const Service = {
 
                 name: product.name,
 
-                quantity: 1,
+                quantity: product.quantity || 0,
 
                 purchase_price: product.purchase_price || 0,
 
-                total_amount: 0
+                order_price: product.order_price || 0,
+
+                total_amount: product.total_amount || 0,
+
+                vat_rate: product.vat_rate || 0,
+
+                vat_amount: product.vat_amount || 0,
+
+                total_amount_with_vat: product.total_amount_with_vat || 0
 
             });
 
@@ -147,6 +155,16 @@ const Service = {
         item.purchase_price = Number(price) || 0;
 
         this.recalc();
+
+    },
+
+    setOrderPrice(index, value) {
+
+        const item = State.purchase.items[index];
+
+        if (!item) return;
+
+        item.order_price = Number(value) || 0;
 
     },
 

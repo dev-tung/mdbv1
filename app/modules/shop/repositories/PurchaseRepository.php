@@ -27,19 +27,23 @@ class PurchaseRepository extends Repository
         return parent::findById($id);
     }
 
-    // =========================
-    // CREATE PURCHASE
-    // =========================
-    public function create(array $data): void
+    public function create(array $data): int
     {
         Database::query(
-            "CALL sp_purchase_create(?, ?, ?)",
+            "CALL sp_purchase_create(?, ?, ?, ?, ?, ?, ?, ?)",
             [
                 $data['supplier_id'],
                 $data['warehouse_id'],
+                $data['description'],
+                $data['status'],
+                $data['payment'],
+                $data['paid_amount'],
+                $data['debt_amount'],
                 json_encode($data['items'])
             ]
         );
+
+        return Database::lastInsertId();
     }
 
     // =========================

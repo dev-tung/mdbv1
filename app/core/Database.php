@@ -106,4 +106,12 @@ class Database
             throw $e;
         }
     }
+
+    // =========================
+    // LAST INSERT ID
+    // =========================
+    public static function lastInsertId(): int
+    {
+        return (int) self::connect()->lastInsertId();
+    }
 }

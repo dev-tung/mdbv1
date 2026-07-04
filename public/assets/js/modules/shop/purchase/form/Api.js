@@ -23,7 +23,13 @@ const Api = {
     },
 
     async searchProducts(keyword = '') {
-        return await Http.post('/api/products', {
+        return await Http.get('/api/products', {
+            keyword
+        });
+    },
+
+    async searchSuppliers(keyword = '') {
+        return await Http.get('/api/suppliers', {
             keyword
         });
     }

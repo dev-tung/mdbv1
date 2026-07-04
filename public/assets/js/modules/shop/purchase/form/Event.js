@@ -126,9 +126,7 @@ const Event = {
 
         document.querySelector('#warehouse_id')
             ?.addEventListener('change', e => {
-
                 Service.setWarehouse(e.target.value);
-
             });
 
         document.querySelector('#payment')
@@ -181,7 +179,9 @@ const Event = {
 
             }
 
-            Renderer.products();
+            if (e.target.classList.contains('order-price')) {
+                Service.setOrderPrice(index, e.target.value);
+            }
 
             Renderer.summary();
 

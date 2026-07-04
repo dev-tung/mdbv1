@@ -59,6 +59,7 @@ const State = {
                 name: 'Yonex 88D Pro',
                 quantity: 2,
                 purchase_price: 1200000,
+                order_price: 1200000,
                 total_amount: 2400000
             }
             */

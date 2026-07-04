@@ -101,10 +101,14 @@
                             <thead>
                                 <tr>
                                     <th>Tên</th>
-                                    <th>SL nhập</th>
-                                    <th>Giá nhập</th>
-                                    <th>Thành tiền</th>
-                                    <th>Hành động</th>
+                                    <th>SL</th>
+                                    <th>Giá </th>
+                                    <th>Giá bán</th>
+                                    <th>Tổng tiền</th>
+                                    <th>VAT(%)</th>
+                                    <th>Tiền thuế</th>
+                                    <th>Sau thuế</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
 

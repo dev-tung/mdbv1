@@ -20,8 +20,7 @@ class ProductEndpoint
 
         return Response::json([
             'success' => true,
-            'data'    => $result['data'],
-            'meta'    => $result['meta'],
+            'data'    => $result
         ]);
     }
 

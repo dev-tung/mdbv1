@@ -17,19 +17,18 @@ class PurchaseValidator
             return 'Kho không hợp lệ';
         }
 
-        // products (FIX từ items → products)
-        if (empty($data['products']) || !is_array($data['products'])) {
+        // items
+        if (empty($data['items']) || !is_array($data['items'])) {
             return 'Danh sách sản phẩm không hợp lệ';
         }
 
-        if (count($data['products']) === 0) {
+        if (count($data['items']) === 0) {
             return 'Phải có ít nhất 1 sản phẩm';
         }
 
-        foreach ($data['products'] as $product) {
+        foreach ($data['items'] as $product) {
 
-            // FIX: id thay vì product_id
-            if (empty($product['id']) || (int)$product['id'] <= 0) {
+            if (empty($product['product_id']) || (int)$product['product_id'] <= 0) {
                 return 'Sản phẩm không hợp lệ';
             }
 
@@ -37,7 +36,7 @@ class PurchaseValidator
                 return 'Số lượng sản phẩm không hợp lệ';
             }
 
-            if (!isset($product['price']) || (float)$product['price'] < 0) {
+            if (!isset($product['purchase_price']) || (float)$product['purchase_price'] < 0) {
                 return 'Giá sản phẩm không hợp lệ';
             }
         }
