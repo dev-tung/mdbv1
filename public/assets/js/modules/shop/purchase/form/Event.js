@@ -159,48 +159,64 @@ const Event = {
 
         const table = document.querySelector('#selected_products');
 
-        table?.addEventListener('input', e => {
+        if (!table) return;
+
+        /* =================================================
+        INPUT EVENTS
+        ================================================= */
+        table.addEventListener('input', e => {
 
             const row = e.target.closest('tr');
-
             if (!row) return;
 
             const index = Number(row.dataset.index);
+            const value = e.target.value;
+            const classList = e.target.classList;
 
-            if (e.target.classList.contains('quantity')) {
+            if (classList.contains('quantity')) {
 
-                Service.setQuantity(index, e.target.value);
-
-            }
-
-            if (e.target.classList.contains('purchase-price')) {
-
-                Service.setPurchasePrice(index, e.target.value);
+                Service.setQuantity(index, value);
 
             }
 
-            if (e.target.classList.contains('order-price')) {
-                Service.setOrderPrice(index, e.target.value);
+            else if (classList.contains('purchase-price')) {
+
+                Service.setPurchasePrice(index, value);
+
+            }
+
+            else if (classList.contains('order-price')) {
+
+                Service.setOrderPrice(index, value);
+
+            }
+
+            else if (classList.contains('vat-rate')) {
+
+                Service.setVatRate(index, value);
+
             }
 
             Renderer.summary();
 
         });
 
-        table?.addEventListener('click', e => {
+        /* =================================================
+        CLICK EVENTS
+        ================================================= */
+        table.addEventListener('click', e => {
 
             const button = e.target.closest('.btn-remove');
-
             if (!button) return;
 
             const row = button.closest('tr');
+            if (!row) return;
 
             const index = Number(row.dataset.index);
 
             Service.removeProduct(index);
 
             Renderer.products();
-
             Renderer.summary();
 
         });

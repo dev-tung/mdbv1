@@ -156,62 +156,68 @@ const Renderer = {
 
                 <tr data-index="${index}">
 
+                    <!-- NAME -->
                     <td>${item.name}</td>
 
-                    <td width="60">
-
+                    <!-- QUANTITY -->
+                    <td width="80">
                         <input
                             type="number"
                             class="form-control quantity"
                             value="${item.quantity}"
                             min="1">
-
                     </td>
 
+                    <!-- PURCHASE PRICE -->
                     <td width="120">
-
                         <input
                             type="number"
                             class="form-control purchase-price"
                             value="${item.purchase_price}"
                             min="0">
-
                     </td>
 
+                    <!-- ORDER PRICE -->
                     <td width="120">
-
                         <input
                             type="number"
                             class="form-control order-price"
                             value="${item.order_price}"
                             min="0">
-
                     </td>
 
-                    <td width="120">${item.total_amount}</td>
+                    <!-- BASE AMOUNT -->
+                    <td width="130">
+                        ${item.total_amount}
+                    </td>
 
-                    <td width="60">
-
+                    <!-- VAT RATE -->
+                    <td width="90">
                         <input
                             type="number"
-                            class="form-control vat-amount"
+                            class="form-control vat-rate"
                             value="${item.vat_rate}"
-                            min="0">
-
+                            min="0"
+                            max="100">
                     </td>
 
-                    <td width="120">${item.vat_amount}</td>
+                    <!-- VAT AMOUNT -->
+                    <td width="130">
+                        ${item.vat_amount}
+                    </td>
 
-                    <td width="120">${item.total_amount_with_vat}</td>
+                    <!-- TOTAL AFTER VAT -->
+                    <td width="140">
+                        ${item.total_amount_with_vat}
+                    </td>
 
+                    <!-- REMOVE -->
                     <td width="60">
-
                         <button
                             type="button"
                             class="btn btn-sm btn-danger btn-remove">
                             Xóa
                         </button>
-
                     </td>
 
                 </tr>

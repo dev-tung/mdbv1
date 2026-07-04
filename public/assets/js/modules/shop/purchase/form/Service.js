@@ -50,7 +50,7 @@ const Service = {
 
     setWarehouse(id) {
 
-        State.purchase.warehouse_id = Number(id);
+        State.purchase.warehouse_id = Number(id) || null;
 
     },
 
@@ -94,29 +94,25 @@ const Service = {
 
         if (exists) {
 
-            exists.quantity++;
+            exists.quantity = (Number(exists.quantity) || 0) + 1;
 
         } else {
 
             State.purchase.items.push({
 
                 product_id: product.id,
-
                 name: product.name,
 
-                quantity: product.quantity || 0,
-
-                purchase_price: product.purchase_price || 0,
-
-                order_price: product.order_price || 0,
-
-                total_amount: product.total_amount || 0,
+                quantity: 1,
+                purchase_price: 0,
+                order_price: 0,
 
                 vat_rate: product.vat_rate || 0,
 
-                vat_amount: product.vat_amount || 0,
-
-                total_amount_with_vat: product.total_amount_with_vat || 0
+                // calculated
+                total_amount: 0,
+                vat_amount: 0,
+                total_amount_with_vat: 0
 
             });
 
@@ -137,7 +133,6 @@ const Service = {
     setQuantity(index, quantity) {
 
         const item = State.purchase.items[index];
-
         if (!item) return;
 
         item.quantity = Number(quantity) || 0;
@@ -149,7 +144,6 @@ const Service = {
     setPurchasePrice(index, price) {
 
         const item = State.purchase.items[index];
-
         if (!item) return;
 
         item.purchase_price = Number(price) || 0;
@@ -161,10 +155,20 @@ const Service = {
     setOrderPrice(index, value) {
 
         const item = State.purchase.items[index];
-
         if (!item) return;
 
         item.order_price = Number(value) || 0;
+
+    },
+
+    setVatRate(index, value) {
+
+        const item = State.purchase.items[index];
+        if (!item) return;
+
+        item.vat_rate = Number(value) || 0;
+
+        this.recalc();
 
     },
 
@@ -175,22 +179,32 @@ const Service = {
     recalc() {
 
         let total = 0;
+        let vatTotal = 0;
 
         for (const item of State.purchase.items) {
 
-            item.total_amount =
-                (Number(item.quantity) || 0) *
-                (Number(item.purchase_price) || 0);
+            const quantity = Number(item.quantity) || 0;
+            const price = Number(item.purchase_price) || 0;
+            const vatRate = Number(item.vat_rate) || 0;
 
-            total += item.total_amount;
+            const base = quantity * price;
+            const vatAmount = base * vatRate / 100;
+            const totalWithVat = base + vatAmount;
 
+            item.total_amount = base;
+            item.vat_amount = vatAmount;
+            item.total_amount_with_vat = totalWithVat;
+
+            total += base;
+            vatTotal += vatAmount;
         }
 
         State.purchase.total_amount = total;
+        State.purchase.vat_amount = vatTotal;
+        State.purchase.total_amount_with_vat = total + vatTotal;
 
         const paid = Number(State.purchase.paid_amount) || 0;
-
-        State.purchase.debt_amount = Math.max(total - paid, 0);
+        State.purchase.debt_amount = Math.max(State.purchase.total_amount_with_vat - paid, 0);
 
     },
 

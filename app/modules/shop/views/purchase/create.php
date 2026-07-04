@@ -108,7 +108,7 @@
                                     <th>VAT(%)</th>
                                     <th>Tiền thuế</th>
                                     <th>Sau thuế</th>
-                                    <th>Action</th>
+                                    <th></th>
                                 </tr>
                             </thead>
 
