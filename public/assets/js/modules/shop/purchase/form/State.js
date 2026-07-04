@@ -42,7 +42,7 @@ const State = {
 
         description: '',
 
-        status: '',
+        status: 'draft',
 
         payment: '',
 
@@ -99,9 +99,9 @@ const State = {
 
             description: '',
 
-            status: '',
+            status: 'draft',
 
-            payment: '',
+            payment: 'unpaid',
 
             paid_amount: 0,
 

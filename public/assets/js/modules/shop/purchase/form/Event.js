@@ -145,7 +145,7 @@ const Event = {
 
                 Service.setPaidAmount(e.target.value);
                 
-                Service.setOverallAmount();
+                Service.setMoneyOverall();
                 Renderer.summary();
 
             });
