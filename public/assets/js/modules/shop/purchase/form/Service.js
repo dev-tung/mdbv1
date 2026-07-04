@@ -1,5 +1,6 @@
 import State from './State.js';
 import Api from './Api.js';
+import Calculator from './Calculator.js';
 
 const Service = {
 
@@ -13,7 +14,8 @@ const Service = {
 
         State.purchase = response.data;
 
-        this.recalc();
+        this.updateMoney();
+
     },
 
     async searchSuppliers() {
@@ -21,6 +23,7 @@ const Service = {
         const response = await Api.searchSuppliers(State.supplier.keyword);
 
         State.supplier.suggestions = response.data || [];
+
     },
 
     async searchProducts() {
@@ -28,6 +31,7 @@ const Service = {
         const response = await Api.searchProducts(State.product.keyword);
 
         State.product.suggestions = response.data || [];
+
     },
 
     async loadWarehouses() {
@@ -35,6 +39,7 @@ const Service = {
         const response = await Api.getWarehouses();
 
         State.warehouse.list = response.data || [];
+
     },
 
     /* =================================================
@@ -70,7 +75,7 @@ const Service = {
 
         State.purchase.payment = payment;
 
-        this.recalc();
+        this.updateMoney();
 
     },
 
@@ -78,7 +83,7 @@ const Service = {
 
         State.purchase.paid_amount = Number(amount) || 0;
 
-        this.recalc();
+        this.updateMoney();
 
     },
 
@@ -109,7 +114,6 @@ const Service = {
 
                 vat_rate: product.vat_rate || 0,
 
-                // calculated
                 total_amount: 0,
                 vat_amount: 0,
                 total_amount_with_vat: 0
@@ -118,7 +122,7 @@ const Service = {
 
         }
 
-        this.recalc();
+        this.updateMoney();
 
     },
 
@@ -126,7 +130,7 @@ const Service = {
 
         State.purchase.items.splice(index, 1);
 
-        this.recalc();
+        this.updateMoney();
 
     },
 
@@ -137,7 +141,7 @@ const Service = {
 
         item.quantity = Number(quantity) || 0;
 
-        this.recalc();
+        this.updateMoney();
 
     },
 
@@ -148,66 +152,75 @@ const Service = {
 
         item.purchase_price = Number(price) || 0;
 
-        this.recalc();
+        this.updateMoney();
 
     },
 
-    setOrderPrice(index, value) {
+    setOrderPrice(index, price) {
 
         const item = State.purchase.items[index];
         if (!item) return;
 
-        item.order_price = Number(value) || 0;
+        item.order_price = Number(price) || 0;
+
+        this.updateMoney();
 
     },
 
-    setVatRate(index, value) {
+    setVatRate(index, vatRate) {
 
         const item = State.purchase.items[index];
         if (!item) return;
 
-        item.vat_rate = Number(value) || 0;
+        item.vat_rate = Number(vatRate) || 0;
 
-        this.recalc();
+        this.updateMoney();
 
     },
+
     /* =================================================
-    CALC
+       CALCULATE
     ================================================= */
 
-    recalc() {
+    updateMoney() {
 
-        let total = 0;
-        let vatTotal = 0;
+        let totalAmount = 0;
+        let vatAmount = 0;
 
         for (const item of State.purchase.items) {
 
-            const quantity = Number(item.quantity) || 0;
-            const price = Number(item.purchase_price) || 0;
-            const vatRate = Number(item.vat_rate) || 0;
+            item.total_amount = Calculator.amount(
+                item.quantity,
+                item.purchase_price
+            );
 
-            const base = quantity * price;
-            const vatAmount = Math.round(base * vatRate / 100);
-            const totalWithVat = base + vatAmount;
+            item.vat_amount = Calculator.vat(
+                item.total_amount,
+                item.vat_rate
+            );
 
-            item.total_amount = Math.round(base);
-            item.vat_amount = vatAmount;
-            item.total_amount_with_vat = Math.round(totalWithVat);
+            item.total_amount_with_vat = Calculator.total(
+                item.total_amount,
+                item.vat_amount
+            );
 
-            total += item.total_amount;
-            vatTotal += item.vat_amount;
+            totalAmount += item.total_amount;
+            vatAmount += item.vat_amount;
+
         }
 
-        State.purchase.total_amount = Math.round(total);
-        State.purchase.vat_amount = Math.round(vatTotal);
-        State.purchase.total_amount_with_vat =
-            Math.round(State.purchase.total_amount + State.purchase.vat_amount);
+        State.purchase.total_amount = totalAmount;
 
-        const paid = Number(State.purchase.paid_amount) || 0;
+        State.purchase.vat_amount = vatAmount;
 
-        State.purchase.debt_amount = Math.max(
-            Math.round(State.purchase.total_amount_with_vat - paid),
-            0
+        State.purchase.total_amount_with_vat = Calculator.total(
+            totalAmount,
+            vatAmount
+        );
+
+        State.purchase.debt_amount = Calculator.debt(
+            State.purchase.total_amount_with_vat,
+            State.purchase.paid_amount
         );
 
     },
@@ -218,7 +231,7 @@ const Service = {
 
     async save() {
 
-        this.recalc();
+        this.updateMoney();
 
         if (State.purchase.id) {
 
