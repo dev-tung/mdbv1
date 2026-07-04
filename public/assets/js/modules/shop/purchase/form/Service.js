@@ -14,7 +14,7 @@ const Service = {
 
         State.purchase = response.data;
 
-        this.updateMoney();
+        this.setOverallAmount();
 
     },
 
@@ -75,7 +75,7 @@ const Service = {
 
         State.purchase.payment = payment;
 
-        this.updateMoney();
+        this.setOverallAmount();
 
     },
 
@@ -83,7 +83,7 @@ const Service = {
 
         State.purchase.paid_amount = Number(amount) || 0;
 
-        this.updateMoney();
+        this.setOverallAmount();
 
     },
 
@@ -122,7 +122,7 @@ const Service = {
 
         }
 
-        this.updateMoney();
+        this.setOverallAmount();
 
     },
 
@@ -130,7 +130,7 @@ const Service = {
 
         State.purchase.items.splice(index, 1);
 
-        this.updateMoney();
+        this.setOverallAmount();
 
     },
 
@@ -141,7 +141,7 @@ const Service = {
 
         item.quantity = Number(quantity) || 0;
 
-        this.updateMoney();
+        this.setOverallAmount();
 
     },
 
@@ -152,7 +152,7 @@ const Service = {
 
         item.purchase_price = Number(price) || 0;
 
-        this.updateMoney();
+        this.setOverallAmount();
 
     },
 
@@ -163,7 +163,7 @@ const Service = {
 
         item.order_price = Number(price) || 0;
 
-        this.updateMoney();
+        this.setOverallAmount();
 
     },
 
@@ -174,7 +174,7 @@ const Service = {
 
         item.vat_rate = Number(vatRate) || 0;
 
-        this.updateMoney();
+        this.setOverallAmount();
 
     },
 
@@ -182,7 +182,7 @@ const Service = {
        CALCULATE
     ================================================= */
 
-    updateMoney() {
+    setOverallAmount() {
 
         let totalAmount = 0;
         let vatAmount = 0;
@@ -231,7 +231,7 @@ const Service = {
 
     async save() {
 
-        this.updateMoney();
+        this.setOverallAmount();
 
         if (State.purchase.id) {
 
