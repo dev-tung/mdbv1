@@ -157,7 +157,7 @@ const Renderer = {
                 <tr data-index="${index}">
 
                     <!-- NAME -->
-                    <td>${item.name}</td>
+                    <td>${item.product_name}</td>
 
                     <!-- QUANTITY -->
                     <td width="80">
@@ -196,7 +196,7 @@ const Renderer = {
                         <input
                             type="number"
                             class="form-control vat-rate"
-                            value="${item.vat_rate}"
+                            value="${item.vat_rate || 0}"
                             min="0"
                             max="100">
                     </td>

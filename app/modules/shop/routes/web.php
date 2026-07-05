@@ -51,8 +51,8 @@ Router::get('/admin/suppliers/edit/{id}', 'SupplierController@edit', ['auth' => 
 // =========================
 
 Router::get('/admin/purchases', 'PurchaseController@index', ['auth' => 'admin']);
-Router::get('/admin/purchases/create', 'PurchaseController@create', ['auth' => 'admin']);
-Router::get('/admin/purchases/edit/{id}', 'PurchaseController@edit', ['auth' => 'admin']);
+Router::get('/admin/purchases/create', 'PurchaseController@form', ['auth' => 'admin']);
+Router::get('/admin/purchases/edit/{id}', 'PurchaseController@form', ['auth' => 'admin']);
 
 
 // =========================

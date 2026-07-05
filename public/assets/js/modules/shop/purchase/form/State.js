@@ -58,7 +58,7 @@ const State = {
             /*
             {
                 product_id: 1,
-                name: 'Yonex 88D Pro',
+                product_name: 'Yonex 88D Pro',
                 quantity: 2,
                 purchase_price: 1200000,
                 order_price: 1200000,

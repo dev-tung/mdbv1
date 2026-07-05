@@ -10,9 +10,16 @@ const Service = {
 
     async loadPurchase(id) {
 
-        const response = await Api.getPurchase(id);
+        const response = await Api.showPurchase(id);
 
-        State.purchase = response.data;
+        const [purchase, items] = response.data;
+
+        Object.assign(
+            State.purchase,
+            purchase[0] || {}
+        );
+
+        State.purchase.items = items || [];
 
         this.setMoneyOverall();
 
@@ -106,7 +113,7 @@ const Service = {
             State.purchase.items.push({
 
                 product_id: product.id,
-                name: product.name,
+                product_name: product.name,
 
                 quantity: 1,
                 purchase_price: 0,

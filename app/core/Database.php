@@ -33,6 +33,9 @@ class Database
         return self::$pdo;
     }
 
+    // =========================
+    // RAW SQL (Migration / Procedure)
+    // =========================
     public static function raw(string $sql): void
     {
         try {
@@ -48,7 +51,6 @@ class Database
             die($e->getMessage());
         }
     }
-
 
     // =========================
     // QUERY
@@ -91,6 +93,34 @@ class Database
         $row = self::query($sql, $params)->fetch();
 
         return $row ?: null;
+    }
+
+    // =========================
+    // CALL PROCEDURE
+    // =========================
+    public static function call(string $sql, array $params = []): array
+    {
+        $stmt = self::query($sql, $params);
+
+        $results = [];
+
+        do {
+
+            $results[] = $stmt->fetchAll();
+
+        } while ($stmt->nextRowset());
+
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+    // =========================
+    // EXECUTE
+    // =========================
+    public static function execute(string $sql, array $params = []): int
+    {
+        return self::query($sql, $params)->rowCount();
     }
 
     // =========================

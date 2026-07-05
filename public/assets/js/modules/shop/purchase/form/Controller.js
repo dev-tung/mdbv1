@@ -53,11 +53,6 @@ async function loadData(purchaseId) {
 ================================================= */
 
 function getPurchaseId() {
-
-    const match = window.location.pathname.match(
-        /^\/admin\/purchases\/edit\/(\d+)$/
-    );
-
-    return match ? Number(match[1]) : null;
-
+    const purchaseId = document.querySelector('#purchase_id').value;
+    return purchaseId ? parseInt(purchaseId) : null;
 }

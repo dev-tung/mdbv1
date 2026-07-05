@@ -3,7 +3,7 @@
     <h3 class="mb-4">Nhập hàng</h3>
 
     <form id="purchase-form" novalidate>
-
+        <input type="hidden" id="purchase_id" value="<?= $id ?? '' ?>">
         <div class="row g-3">
 
             <!-- SUPPLIER -->

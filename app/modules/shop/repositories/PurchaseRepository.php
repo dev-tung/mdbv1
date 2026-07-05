@@ -29,6 +29,23 @@ class PurchaseRepository extends Repository
         );
     }
 
+    // =========================
+    // SHOW
+    // =========================
+    public function show(int $id): array
+    {
+        return Database::call(
+            "CALL sp_purchase_show(
+                :id
+            )",
+            [
+                'id' => $id
+            ]
+        );
+    }
+
+
+
     public function create(array $data): int
     {
         Database::query(

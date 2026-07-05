@@ -7,14 +7,9 @@ class PurchaseController
         View::render('purchase/index');
     }
 
-    public function create(): void
+    public function form($id = null): void
     {
-        View::render('purchase/create');
-    }
-
-    public function edit($id): void
-    {
-        View::render('purchase/edit', [
+        View::render('purchase/form', [
             'id' => $id
         ]);
     }
