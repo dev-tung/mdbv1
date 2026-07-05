@@ -236,7 +236,13 @@ const Event = {
 
                 e.preventDefault();
 
-                await Service.save();
+                const response = await Service.save();
+
+                alert(response.message);
+                
+                if (response.success) {
+                    window.location.href = response.redirect;
+                }
 
             });
 

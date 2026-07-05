@@ -20,23 +20,33 @@ const Renderer = {
 
     purchase() {
 
+        document.querySelector('#supplier_search').value =
+            State.purchase.supplier_name ?? '';
+
         document.querySelector('#supplier_id').value =
             State.purchase.supplier_id ?? '';
+
+        document.querySelector('#warehouse_id').value =
+            State.purchase.warehouse_id ?? '';
 
         document.querySelector('#description').value =
             State.purchase.description ?? '';
 
         document.querySelector('#status').value =
-            State.purchase.status ?? '';
-
-        document.querySelector('#warehouse_id').value =
-            State.purchase.warehouse_id ?? '';
+            State.purchase.status ?? 'draft';
 
         document.querySelector('#payment').value =
-            State.purchase.payment ?? '';
+            State.purchase.payment ?? 'unpaid';
 
         document.querySelector('#paid_amount').value =
             State.purchase.paid_amount ?? 0;
+
+        const wrapper = document.querySelector('#paid_amount_wrapper');
+
+        wrapper.classList.toggle(
+            'd-none',
+            State.purchase.payment !== 'partial'
+        );
 
     },
 
@@ -164,7 +174,7 @@ const Renderer = {
                         <input
                             type="number"
                             class="form-control quantity"
-                            value="${item.quantity}"
+                            value="${item.quantity || 0}"
                             min="1">
                     </td>
 
@@ -173,8 +183,9 @@ const Renderer = {
                         <input
                             type="number"
                             class="form-control purchase-price"
-                            value="${item.purchase_price}"
-                            min="0">
+                            value="${item.purchase_price || 0}"
+                            min="0"
+                            step="0.01">
                     </td>
 
                     <!-- ORDER PRICE -->
@@ -182,13 +193,14 @@ const Renderer = {
                         <input
                             type="number"
                             class="form-control order-price"
-                            value="${item.order_price}"
-                            min="0">
+                            value="${item.order_price || 0}"
+                            min="0"
+                            step="0.01">
                     </td>
 
                     <!-- BASE AMOUNT -->
                     <td width="130" class="total-amount">
-                        ${item.total_amount}
+                        ${Number(item.total_amount || 0).toLocaleString('vi-VN')}
                     </td>
 
                     <!-- VAT RATE -->
@@ -198,17 +210,18 @@ const Renderer = {
                             class="form-control vat-rate"
                             value="${item.vat_rate || 0}"
                             min="0"
-                            max="100">
+                            max="100"
+                            step="0.01">
                     </td>
 
                     <!-- VAT AMOUNT -->
                     <td width="130" class="vat-amount-view">
-                        ${item.vat_amount}
+                        ${Number(item.vat_amount || 0).toLocaleString('vi-VN')}
                     </td>
 
                     <!-- TOTAL AFTER VAT -->
                     <td width="140" class="total-with-vat">
-                        ${item.total_amount_with_vat}
+                        ${Number(item.total_amount_with_vat || 0).toLocaleString('vi-VN')}
                     </td>
 
                     <!-- REMOVE -->

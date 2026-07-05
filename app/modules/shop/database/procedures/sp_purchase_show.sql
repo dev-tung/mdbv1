@@ -37,7 +37,8 @@ BEGIN
         pi.quantity,
         pi.vat_rate,
         pi.vat_amount,
-        pi.total_amount
+        pi.total_amount,
+        pi.order_price
     FROM purchase_items pi
     INNER JOIN products pr
         ON pr.id = pi.product_id

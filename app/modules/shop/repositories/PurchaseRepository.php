@@ -65,6 +65,24 @@ class PurchaseRepository extends Repository
         return Database::lastInsertId();
     }
 
+    public function update(array $data): void
+    {
+        Database::query(
+            "CALL sp_purchase_update(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                $data['id'],
+                $data['supplier_id'],
+                $data['warehouse_id'],
+                $data['description'],
+                $data['status'],
+                $data['payment'],
+                $data['paid_amount'],
+                $data['debt_amount'],
+                json_encode($data['items'])
+            ]
+        );
+    }
+
     public function payment(int $id, string $payment): int
     {
         $result = Database::first(
