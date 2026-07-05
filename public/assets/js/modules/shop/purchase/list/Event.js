@@ -70,7 +70,7 @@ const Event = {
 
                 if (e.target.classList.contains('purchase-payment')) {
 
-                    await Service.updatePayment(
+                    await Service.payment(
                         Number(e.target.dataset.id),
                         e.target.value
                     );

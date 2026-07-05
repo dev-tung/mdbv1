@@ -33,6 +33,23 @@ class Database
         return self::$pdo;
     }
 
+    public static function raw(string $sql): void
+    {
+        try {
+
+            self::connect()->exec($sql);
+
+        } catch (PDOException $e) {
+
+            echo "================ SQL ERROR ================\n";
+            echo $sql . "\n\n";
+
+            echo "================ ERROR ================\n";
+            die($e->getMessage());
+        }
+    }
+
+
     // =========================
     // QUERY
     // =========================

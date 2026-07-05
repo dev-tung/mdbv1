@@ -64,9 +64,9 @@ const Service = {
 
     },
 
-    async updatePayment(id, payment) {
+    async payment(id, payment) {
 
-        const response = await Api.updatePayment(id, payment);
+        const response = await Api.payment(id, payment);
 
         alert(response.message);
 

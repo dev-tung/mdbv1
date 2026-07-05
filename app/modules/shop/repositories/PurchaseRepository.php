@@ -48,10 +48,10 @@ class PurchaseRepository extends Repository
         return Database::lastInsertId();
     }
 
-    public function updatePayment(int $id, string $payment): int
+    public function payment(int $id, string $payment): int
     {
         $result = Database::first(
-            "CALL sp_purchase_update_payment(:id, :payment)",
+            "CALL sp_purchase_payment(:id, :payment)",
             [
                 'id' => $id,
                 'payment' => $payment,

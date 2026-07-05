@@ -31,7 +31,7 @@ const Api = {
 
     },
 
-    async updatePayment(id, payment) {
+    async payment(id, payment) {
 
         return await Http.post('/api/purchases/payment', {
             id,
