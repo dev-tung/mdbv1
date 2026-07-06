@@ -1,0 +1,27 @@
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users (
+    id INT NOT NULL AUTO_INCREMENT,
+
+    name VARCHAR(255) NOT NULL,
+    username VARCHAR(100) NOT NULL,
+    email VARCHAR(255) DEFAULT NULL,
+    password VARCHAR(255) NOT NULL,
+
+    phone VARCHAR(20) DEFAULT NULL,
+    address VARCHAR(255) DEFAULT NULL,
+
+    status VARCHAR(20) NOT NULL DEFAULT 'active',
+
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (id),
+
+    UNIQUE KEY uk_user_username (username),
+    UNIQUE KEY uk_user_email (email),
+
+    INDEX idx_user_name (name),
+    INDEX idx_user_status (status)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

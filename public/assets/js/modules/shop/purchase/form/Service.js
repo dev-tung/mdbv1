@@ -86,6 +86,14 @@ const Service = {
 
     },
 
+    setVatRate(rate) {
+
+        State.purchase.vat_rate = Number(rate) || 0;
+
+        this.setMoneyOverall();
+
+    },
+
     setPaidAmount(amount) {
 
         State.purchase.paid_amount = Number(amount) || 0;
@@ -117,13 +125,9 @@ const Service = {
 
                 quantity: 1,
                 purchase_price: 0,
-                order_price: 0,
+                selling_price: Number(product.sale_price) || 0,
 
-                vat_rate: product.vat_rate || 0,
-
-                total_amount: 0,
-                vat_amount: 0,
-                total_amount_with_vat: 0
+                subtotal_amount: 0
 
             });
 
@@ -168,18 +172,7 @@ const Service = {
         const item = State.purchase.items[index];
         if (!item) return;
 
-        item.order_price = Number(price) || 0;
-
-        this.setMoneyOverall();
-
-    },
-
-    setVatRate(index, vatRate) {
-
-        const item = State.purchase.items[index];
-        if (!item) return;
-
-        item.vat_rate = Number(vatRate) || 0;
+        item.selling_price = Number(price) || 0;
 
         this.setMoneyOverall();
 
@@ -191,42 +184,33 @@ const Service = {
 
     setMoneyOverall() {
 
-        let totalAmount = 0;
-        let vatAmount = 0;
+        let subtotalAmount = 0;
 
         for (const item of State.purchase.items) {
 
-            item.total_amount = Calculator.amount(
+            item.subtotal_amount = Calculator.amount(
                 item.quantity,
                 item.purchase_price
             );
 
-            item.vat_amount = Calculator.vat(
-                item.total_amount,
-                item.vat_rate
-            );
-
-            item.total_amount_with_vat = Calculator.total(
-                item.total_amount,
-                item.vat_amount
-            );
-
-            totalAmount += item.total_amount;
-            vatAmount += item.vat_amount;
+            subtotalAmount += item.subtotal_amount;
 
         }
 
-        State.purchase.total_amount = totalAmount;
+        State.purchase.subtotal_amount = subtotalAmount;
 
-        State.purchase.vat_amount = vatAmount;
+        State.purchase.vat_amount = Calculator.vat(
+            subtotalAmount,
+            State.purchase.vat_rate
+        );
 
-        State.purchase.total_amount_with_vat = Calculator.total(
-            totalAmount,
-            vatAmount
+        State.purchase.total_amount = Calculator.total(
+            subtotalAmount,
+            State.purchase.vat_amount
         );
 
         State.purchase.debt_amount = Calculator.debt(
-            State.purchase.total_amount_with_vat,
+            State.purchase.total_amount,
             State.purchase.paid_amount
         );
 
@@ -246,9 +230,11 @@ const Service = {
                 State.purchase.id,
                 State.purchase
             );
+
         }
 
         return await Api.createPurchase(State.purchase);
+
     }
 
 };

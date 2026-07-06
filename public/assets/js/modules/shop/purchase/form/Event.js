@@ -93,7 +93,6 @@ const Event = {
             Service.addProduct(product);
 
             Renderer.products();
-
             Renderer.summary();
 
             input.value = '';
@@ -126,7 +125,9 @@ const Event = {
 
         document.querySelector('#warehouse_id')
             ?.addEventListener('change', e => {
+
                 Service.setWarehouse(e.target.value);
+
             });
 
         document.querySelector('#payment')
@@ -135,7 +136,6 @@ const Event = {
                 Service.setPayment(e.target.value);
 
                 Renderer.payment();
-
                 Renderer.summary();
 
             });
@@ -144,8 +144,17 @@ const Event = {
             ?.addEventListener('input', e => {
 
                 Service.setPaidAmount(e.target.value);
-                
-                Service.setMoneyOverall();
+
+                Renderer.summary();
+
+            });
+
+        document.querySelector('#vat_rate')
+            ?.addEventListener('input', e => {
+
+                Service.setVatRate(e.target.value);
+
+                Renderer.products();
                 Renderer.summary();
 
             });
@@ -162,16 +171,16 @@ const Event = {
 
         if (!table) return;
 
-        /* =================================================
-        INPUT EVENTS
-        ================================================= */
         table.addEventListener('input', e => {
 
             const row = e.target.closest('tr');
+
             if (!row) return;
 
             const index = Number(row.dataset.index);
+
             const value = e.target.value;
+
             const classList = e.target.classList;
 
             if (classList.contains('quantity')) {
@@ -192,26 +201,19 @@ const Event = {
 
             }
 
-            else if (classList.contains('vat-rate')) {
-
-                Service.setVatRate(index, value);
-
-            }
-            
-            Renderer.productsUpdate(index); 
+            Renderer.productsUpdate(index);
             Renderer.summary();
 
         });
 
-        /* =================================================
-        CLICK EVENTS
-        ================================================= */
         table.addEventListener('click', e => {
 
             const button = e.target.closest('.btn-remove');
+
             if (!button) return;
 
             const row = button.closest('tr');
+
             if (!row) return;
 
             const index = Number(row.dataset.index);
@@ -239,9 +241,11 @@ const Event = {
                 const response = await Service.save();
 
                 alert(response.message);
-                
+
                 if (response.success) {
+
                     window.location.href = response.redirect;
+
                 }
 
             });

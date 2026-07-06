@@ -41,6 +41,9 @@ const Renderer = {
         document.querySelector('#paid_amount').value =
             State.purchase.paid_amount ?? 0;
 
+        document.querySelector('#vat_rate').value =
+            State.purchase.vat_rate ?? 0;
+
         const wrapper = document.querySelector('#paid_amount_wrapper');
 
         wrapper.classList.toggle(
@@ -51,7 +54,7 @@ const Renderer = {
     },
 
     /* =================================================
-    WAREHOUSE
+       WAREHOUSE
     ================================================= */
 
     warehouses() {
@@ -188,40 +191,29 @@ const Renderer = {
                             step="0.01">
                     </td>
 
-                    <!-- ORDER PRICE -->
+                    <!-- SELLING PRICE -->
                     <td width="120">
                         <input
                             type="number"
                             class="form-control order-price"
-                            value="${item.order_price || 0}"
+                            value="${item.selling_price || 0}"
                             min="0"
                             step="0.01">
                     </td>
 
-                    <!-- BASE AMOUNT -->
-                    <td width="130" class="total-amount">
-                        ${Number(item.total_amount || 0).toLocaleString('vi-VN')}
+                    <!-- SUBTOTAL -->
+                    <td class="subtotal-amount">
+                        ${Number(item.subtotal_amount || 0).toLocaleString('vi-VN')}
                     </td>
 
-                    <!-- VAT RATE -->
-                    <td width="90">
-                        <input
-                            type="number"
-                            class="form-control vat-rate"
-                            value="${item.vat_rate || 0}"
-                            min="0"
-                            max="100"
-                            step="0.01">
-                    </td>
-
-                    <!-- VAT AMOUNT -->
-                    <td width="130" class="vat-amount-view">
+                    <!-- VAT -->
+                    <td class="item-vat">
                         ${Number(item.vat_amount || 0).toLocaleString('vi-VN')}
                     </td>
 
-                    <!-- TOTAL AFTER VAT -->
-                    <td width="140" class="total-with-vat">
-                        ${Number(item.total_amount_with_vat || 0).toLocaleString('vi-VN')}
+                    <!-- TOTAL -->
+                    <td class="item-total">
+                        ${Number(item.total_amount || 0).toLocaleString('vi-VN')}
                     </td>
 
                     <!-- REMOVE -->
@@ -249,14 +241,14 @@ const Renderer = {
 
         const item = State.purchase.items[index];
 
-        row.querySelector('.total-amount').textContent =
-            item.total_amount.toLocaleString();
+        row.querySelector('.subtotal-amount').textContent =
+            Number(item.subtotal_amount || 0).toLocaleString('vi-VN');
 
-        row.querySelector('.vat-amount-view').textContent =
-            item.vat_amount.toLocaleString();
+        row.querySelector('.item-vat').textContent =
+            Number(item.vat_amount || 0).toLocaleString('vi-VN');
 
-        row.querySelector('.total-with-vat').textContent =
-            item.total_amount_with_vat.toLocaleString();
+        row.querySelector('.item-total').textContent =
+            Number(item.total_amount || 0).toLocaleString('vi-VN');
 
     },
 
@@ -266,14 +258,17 @@ const Renderer = {
 
     summary() {
 
+        document.querySelector('#subtotal_amount').textContent =
+            Number(State.purchase.subtotal_amount || 0).toLocaleString('vi-VN');
+
+        document.querySelector('#vat_amount').textContent =
+            Number(State.purchase.vat_amount || 0).toLocaleString('vi-VN');
+
         document.querySelector('#total_amount').textContent =
-            State.purchase.total_amount.toLocaleString();
+            Number(State.purchase.total_amount || 0).toLocaleString('vi-VN');
 
-        document.querySelector('#debt_amount_display').textContent =
-            State.purchase.debt_amount.toLocaleString();
-
-        document.querySelector('#total_amount_with_vat').textContent =
-            State.purchase.total_amount_with_vat.toLocaleString();
+        document.querySelector('#debt_amount').textContent =
+            Number(State.purchase.debt_amount || 0).toLocaleString('vi-VN');
 
     },
 

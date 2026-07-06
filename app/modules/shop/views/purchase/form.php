@@ -45,7 +45,6 @@
                 </select>
             </div>
 
-
             <!-- WAREHOUSE -->
             <div class="col-md-3">
                 <label class="form-label">Kho nhập</label>
@@ -57,11 +56,11 @@
                 <label class="form-label">VAT (%)</label>
 
                 <input type="number"
-                    id="vat_rate"
-                    class="form-control"
-                    min="0"
-                    max="100"
-                    value="0">
+                       id="vat_rate"
+                       class="form-control"
+                       min="0"
+                       max="100"
+                       value="0">
             </div>
 
             <!-- PAYMENT -->
@@ -77,7 +76,7 @@
                 </select>
             </div>
 
-            <!-- PAID AMOUNT (NEW) -->
+            <!-- PAID AMOUNT -->
             <div class="col-md-3 d-none" id="paid_amount_wrapper">
                 <label class="form-label">Đã thanh toán</label>
 
@@ -108,17 +107,15 @@
 
                     <div class="table-responsive">
                         <table class="table table-sm align-middle mb-0">
-
                             <thead>
                                 <tr>
                                     <th>Tên</th>
                                     <th>SL</th>
-                                    <th>Giá </th>
+                                    <th>Giá nhập</th>
                                     <th>Giá bán</th>
                                     <th>Thành tiền</th>
-                                    <th>VAT(%)</th>
-                                    <th>Tiền thuế</th>
-                                    <th>Sau thuế</th>
+                                    <th>VAT</th>
+                                    <th>Tổng sau VAT</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -132,18 +129,23 @@
                         <div class="mb-0 d-flex flex-wrap gap-5">
 
                             <span class="fs-5">
+                                Tạm tính
+                                <b id="subtotal_amount">0</b> ₫
+                            </span>
+
+                            <span class="fs-5">
+                                VAT
+                                <b id="vat_amount">0</b> ₫
+                            </span>
+
+                            <span class="fs-5">
                                 Tổng tiền
                                 <b id="total_amount">0</b> ₫
                             </span>
 
                             <span class="fs-5">
-                                Tổng sau thuế
-                                <b id="total_amount_with_vat">0</b> ₫
-                            </span>
-
-                            <span class="fs-5">
                                 Còn nợ
-                                <b id="debt_amount_display">0</b> ₫
+                                <b id="debt_amount">0</b> ₫
                             </span>
 
                         </div>
@@ -167,4 +169,3 @@
 </div>
 
 <script type="module" src="<?= asset('js/modules/shop/purchase/form/Controller.js') ?>"></script>
-

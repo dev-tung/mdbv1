@@ -44,25 +44,32 @@ const State = {
 
         status: 'draft',
 
-        payment: '',
+        payment: 'unpaid',
 
         paid_amount: 0,
+
+        subtotal_amount: 0,
+
+        vat_rate: 0,
+
+        vat_amount: 0,
 
         total_amount: 0,
 
         debt_amount: 0,
-
-        total_amount_with_vat: 0,
 
         items: [
             /*
             {
                 product_id: 1,
                 product_name: 'Yonex 88D Pro',
+
                 quantity: 2,
+
                 purchase_price: 1200000,
-                order_price: 1200000,
-                total_amount: 2400000
+                selling_price: 1500000,
+
+                subtotal_amount: 2400000
             }
             */
         ]
@@ -95,6 +102,8 @@ const State = {
 
             supplier_id: null,
 
+            supplier_name: '',
+
             warehouse_id: null,
 
             description: '',
@@ -105,9 +114,13 @@ const State = {
 
             paid_amount: 0,
 
-            total_amount: 0,
+            subtotal_amount: 0,
 
-            total_amount_with_vat: 0,
+            vat_rate: 0,
+
+            vat_amount: 0,
+
+            total_amount: 0,
 
             debt_amount: 0,
 
