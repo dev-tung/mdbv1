@@ -1,70 +1,52 @@
 <div class="container-fluid py-4 mt-5">
 
-    <h3 class="mb-4">
-        Cập nhật đơn hàng
-    </h3>
+    <h3 class="mb-4">Đơn hàng</h3>
 
-    <form id="order-update-form" novalidate>
-
+    <form id="order-form" novalidate>
+        <input type="hidden" id="order_id" value="<?= $id ?? '' ?>">
         <div class="row g-3">
 
-            <!-- SUPPLIER -->
+            <!-- CUSTOMER -->
             <div class="col-md-6 position-relative">
-
-                <label class="form-label">Nhà cung cấp</label>
+                <label class="form-label">Khách hàng</label>
 
                 <input type="text"
-                       id="supplier_search"
+                       id="customer_search"
                        class="form-control"
-                       placeholder="Tìm nhà cung cấp..."
+                       placeholder="Tìm khách hàng..."
                        autocomplete="off">
 
-                <input type="hidden" id="supplier_id">
+                <input type="hidden" id="customer_id">
 
-                <div id="supplier_suggestions"
-                     class="list-group position-absolute w-100 d-none z-3">
-                </div>
-
+                <div id="customer_suggestions"
+                     class="list-group position-absolute w-100 d-none z-1"></div>
             </div>
 
             <!-- DESCRIPTION -->
             <div class="col-md-6">
-
                 <label class="form-label">Mô tả</label>
 
                 <input type="text"
                        id="description"
                        class="form-control"
                        placeholder="Nhập mô tả đơn hàng">
-
             </div>
 
             <!-- STATUS -->
-            <div class="col-md-3">
-
+            <div class="col-md-4">
                 <label class="form-label">Trạng thái</label>
 
                 <select id="status" class="form-select">
-                    <?php foreach ((config('shop.option.order_status') ?? []) as $key => $status): ?>
+                    <?php foreach (config('shop.option.order_status') as $key => $status): ?>
                         <option value="<?= $key ?>">
                             <?= $status['label'] ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-
-            </div>
-
-            <!-- WAREHOUSE -->
-            <div class="col-md-3">
-
-                <label class="form-label">Kho nhập</label>
-
-                <select id="warehouse_id" class="form-select"></select>
-
             </div>
 
             <!-- PAYMENT -->
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label class="form-label">Thanh toán</label>
 
                 <select id="payment" class="form-select">
@@ -77,7 +59,7 @@
             </div>
 
             <!-- PAID AMOUNT (NEW) -->
-            <div class="col-md-3 d-none" id="paid_amount_wrapper">
+            <div class="col-md-4 d-none" id="paid_amount_wrapper">
                 <label class="form-label">Đã thanh toán</label>
 
                 <input type="number"
@@ -89,7 +71,6 @@
 
             <!-- PRODUCT SEARCH -->
             <div class="col-12 position-relative mt-4">
-
                 <label class="form-label">Sản phẩm</label>
 
                 <input type="text"
@@ -99,34 +80,33 @@
                        autocomplete="off">
 
                 <div id="product_suggestions"
-                     class="list-group position-absolute w-100 d-none">
-                </div>
-
+                     class="list-group position-absolute w-100 d-none"></div>
             </div>
 
-            <!-- TABLE -->
+            <!-- PRODUCT TABLE -->
             <div class="col-12">
-
                 <div class="border rounded p-3">
 
                     <div class="table-responsive">
-
                         <table class="table table-sm align-middle mb-0">
 
                             <thead>
                                 <tr>
                                     <th>Tên</th>
-                                    <th>SL nhập</th>
-                                    <th>Giá nhập</th>
+                                    <th>SL</th>
+                                    <th>Giá </th>
+                                    <th>Giá bán</th>
                                     <th>Thành tiền</th>
-                                    <th>Hành động</th>
+                                    <th>VAT(%)</th>
+                                    <th>Tiền thuế</th>
+                                    <th>Sau thuế</th>
+                                    <th></th>
                                 </tr>
                             </thead>
 
                             <tbody id="selected_products"></tbody>
 
                         </table>
-
                     </div>
 
                     <div class="mt-3">
@@ -138,30 +118,27 @@
                             </span>
 
                             <span class="fs-5">
-                                Đã trả
-                                <b id="paid_amount_view">0</b> ₫
+                                Tổng sau thuế
+                                <b id="total_amount_with_vat">0</b> ₫
                             </span>
 
                             <span class="fs-5">
                                 Còn nợ
-                                <b id="debt_amount_view">0</b> ₫
+                                <b id="debt_amount_display">0</b> ₫
                             </span>
 
                         </div>
                     </div>
 
                 </div>
-
             </div>
 
             <!-- SUBMIT -->
             <div class="col-12">
-
                 <button type="submit"
                         class="btn btn-outline-secondary mt-3">
-                    Cập nhật đơn hàng
+                    Tạo đơn hàng
                 </button>
-
             </div>
 
         </div>
@@ -170,40 +147,5 @@
 
 </div>
 
-<script type="module">
-    import { Supplier } from '/assets/js/modules/shop/orders/form/supplier.js';
-    import { Product } from '/assets/js/modules/shop/orders/form/product.js';
-    import { Warehouse } from '/assets/js/modules/shop/orders/form/warehouse.js';
-    import { Submit } from '/assets/js/modules/shop/orders/form/submit.js';
-    import { Payment } from '/assets/js/modules/shop/orders/form/payment.js';
-    import { Show } from '/assets/js/modules/shop/orders/form/show.js';
+<script type="module" src="<?= asset('js/modules/shop/order/form/Controller.js') ?>"></script>
 
-    document.addEventListener('DOMContentLoaded', async () => {
-
-        const orderId = window.location.pathname
-            .split('/')
-            .filter(Boolean)
-            .pop();
-
-        await Promise.all([
-            Supplier.init('/api/suppliers'),
-            Product.init('/api/products'),
-            Warehouse.init('/api/warehouses'),
-            Payment.init(`/api/orders/payment`, orderId),
-            Show.init(`/api/orders/show/${orderId}`)
-        ]);
-
-
-        document
-            .getElementById('order-update-form')
-            .addEventListener('submit', async (e) => {
-
-                e.preventDefault();
-
-                await Submit.update(`/api/orders/update/${orderId}`, {
-                    id: orderId
-                });
-            });
-
-    });
-</script>

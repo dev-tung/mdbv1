@@ -13,11 +13,9 @@
       </div>
 
       <div class="col-auto">
-        <input
-          type="text"
-          id="filter-customer-search"
-          class="form-control form-control-sm"
-          placeholder="Tìm khách hàng">
+        <select id="filter-supplier" class="form-select form-select-sm">
+          <option value="">Nhà cung cấp</option>
+        </select>
       </div>
 
       <div class="col-auto">
@@ -57,7 +55,8 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>Khách hàng</th>
+          <th>Nhà cung cấp</th>
+          <th>Kho</th>
           <th>Tổng tiền</th>
           <th>Đã trả</th>
           <th>Còn nợ</th>
@@ -102,31 +101,13 @@
   </nav>
 </div>
 
-<script type="module">
-    import { Binding } from "/assets/js/modules/shop/orders/list/binding.js";
-    import { Action } from "/assets/js/modules/shop/orders/list/action.js";
-
-    document.addEventListener('DOMContentLoaded', async () => {
-
-        const options = {
+<script>
+    window.OrderConfig = {
+        options: {
             statuses: <?= json_encode(config('shop.option.order_status')) ?>,
             payments: <?= json_encode(config('shop.option.payment')) ?>
-        };
-
-        Binding.init({
-            api: {
-                list: '/api/orders'
-            },
-            options
-        });
-
-        Action.init({
-            api: {
-                status : '/api/orders/status',
-                payment : '/api/orders/payment',
-                delete : '/api/orders/delete'
-            }
-        });
-
-    });
+        }
+    };
 </script>
+
+<script type="module" src="<?= asset('js/modules/shop/order/list/Controller.js') ?>"></script>

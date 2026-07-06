@@ -60,5 +60,5 @@ Router::get('/admin/purchases/edit/{id}', 'PurchaseController@form', ['auth' => 
 // =========================
 
 Router::get('/admin/orders', 'OrderController@index', ['auth' => 'admin']);
-Router::get('/admin/orders/create', 'OrderController@create', ['auth' => 'admin']);
-Router::get('/admin/orders/edit/{id}', 'OrderController@edit', ['auth' => 'admin']);
+Router::get('/admin/orders/create', 'OrderController@form', ['auth' => 'admin']);
+Router::get('/admin/orders/edit/{id}', 'OrderController@form', ['auth' => 'admin']);

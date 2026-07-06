@@ -7,14 +7,9 @@ class OrderController
         View::render('order/index');
     }
 
-    public function create(): void
+    public function form($id = null): void
     {
-        View::render('order/create');
-    }
-
-    public function edit($id): void
-    {
-        View::render('order/edit', [
+        View::render('order/form', [
             'id' => $id
         ]);
     }

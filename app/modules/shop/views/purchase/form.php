@@ -7,7 +7,7 @@
         <div class="row g-3">
 
             <!-- SUPPLIER -->
-            <div class="col-md-6 position-relative">
+            <div class="col-md-3 position-relative">
                 <label class="form-label">Nhà cung cấp</label>
 
                 <input type="text"
@@ -19,7 +19,7 @@
                 <input type="hidden" id="supplier_id">
 
                 <div id="supplier_suggestions"
-                     class="list-group position-absolute w-100 d-none z-1"></div>
+                     class="list-group position-absolute d-none z-1"></div>
             </div>
 
             <!-- DESCRIPTION -->
@@ -51,6 +51,17 @@
                 <label class="form-label">Kho nhập</label>
 
                 <select id="warehouse_id" class="form-select"></select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">VAT (%)</label>
+
+                <input type="number"
+                    id="vat_rate"
+                    class="form-control"
+                    min="0"
+                    max="100"
+                    value="0">
             </div>
 
             <!-- PAYMENT -->
