@@ -1,5 +1,6 @@
 import State from './State.js';
 import Service from './Service.js';
+import Renderer from './Renderer.js';
 
 const Event = {
 
@@ -10,77 +11,170 @@ const Event = {
 
     },
 
+
+    /* =========================
+       FILTER
+    ========================= */
+
     bindFilters() {
 
-        document.querySelector('#filter-date-from')
-            ?.addEventListener('change', async e => {
+        const filters = [
+            'date-from',
+            'date-to',
+            'supplier',
+            'payment'
+        ];
 
-                State.filter.date_from = e.target.value;
-                State.filter.page = 1;
 
-                await Service.loadPurchases();
+        filters.forEach(type => {
 
-            });
+            document.querySelector(`#filter-${type}`)
+                ?.addEventListener('change', async e => {
 
-        document.querySelector('#filter-date-to')
-            ?.addEventListener('change', async e => {
 
-                State.filter.date_to = e.target.value;
-                State.filter.page = 1;
+                    const key = type.replace('-', '_');
 
-                await Service.loadPurchases();
 
-            });
+                    State.filter[key] = e.target.value;
 
-        document.querySelector('#filter-supplier')
-            ?.addEventListener('change', async e => {
+                    State.filter.page = 1;
 
-                State.filter.supplier_id = e.target.value;
-                State.filter.page = 1;
 
-                await Service.loadPurchases();
+                    await this.reload();
 
-            });
 
-        document.querySelector('#filter-payment')
-            ?.addEventListener('change', async e => {
+                });
 
-                State.filter.payment = e.target.value;
-                State.filter.page = 1;
+        });
 
-                await Service.loadPurchases();
-
-            });
 
     },
 
+
+    /* =========================
+       TABLE
+    ========================= */
+
     bindTable() {
 
-        document.querySelector('#purchase-table-body')
-            ?.addEventListener('change', async e => {
+        const table =
+            document.querySelector('#purchase-table-body');
 
-                if (e.target.classList.contains('purchase-status')) {
 
+        if (!table) return;
+
+
+
+        table.addEventListener('change', async e => {
+
+
+            const id =
+                Number(e.target.dataset.id);
+
+
+            if (!id) return;
+
+
+
+            let response;
+
+
+
+            if (
+                e.target.classList.contains('purchase-status')
+            ) {
+
+                response =
                     await Service.updateStatus(
-                        Number(e.target.dataset.id),
+                        id,
                         e.target.value
                     );
 
-                }
+            }
 
-                if (e.target.classList.contains('purchase-payment')) {
 
+            if (
+                e.target.classList.contains('purchase-payment')
+            ) {
+
+                response =
                     await Service.payment(
-                        Number(e.target.dataset.id),
+                        id,
                         e.target.value
                     );
 
-                }
+            }
 
-            });
+
+            if (response) {
+
+                alert(response.message);
+
+                await this.reload();
+
+            }
+
+
+        });
+
+
+
+        table.onclick = async e => {
+
+
+            const button =
+                e.target.closest(
+                    '.btn-delete-purchase'
+                );
+
+
+            if (!button) return;
+
+
+
+            if (!confirm(
+                'Bạn có chắc muốn xóa phiếu nhập này?'
+            )) return;
+
+
+
+            const response =
+                await Service.deletePurchase(
+                    Number(button.dataset.id)
+                );
+
+
+            alert(response.message);
+
+
+
+            if (response.success) {
+
+                await this.reload();
+
+            }
+
+
+        };
+
+
+    },
+
+
+    /* =========================
+       RELOAD
+    ========================= */
+
+    async reload() {
+
+        await Service.loadPurchases();
+
+        Renderer.render();
 
     }
 
+
 };
+
 
 export default Event;

@@ -1,6 +1,6 @@
 <div class="container-fluid py-4 mt-5">
 
-    <h3 class="mb-4">Nhập hàng</h3>
+    <h3 class="mb-4">Phiếu nhập hàng</h3>
 
     <form id="purchase-form" novalidate>
         <input type="hidden" id="purchase_id" value="<?= $id ?? '' ?>">
@@ -158,7 +158,7 @@
             <div class="col-12">
                 <button type="submit"
                         class="btn btn-outline-secondary mt-3">
-                    Tạo phiếu nhập
+                    Lưu phiếu nhập
                 </button>
             </div>
 

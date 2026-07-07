@@ -48,6 +48,20 @@ const Calculator = {
 
         return (Number(amount) || 0) * (Number(rate) || 0) / 100;
 
+    },
+
+    number(value) {
+
+        return Number(value) || 0;
+
+    },
+
+    round(value, precision = 2) {
+
+        const factor = Math.pow(10, precision);
+
+        return Math.round((Number(value) || 0) * factor) / factor;
+
     }
 
 };

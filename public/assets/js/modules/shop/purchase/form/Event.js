@@ -136,7 +136,6 @@ const Event = {
                 Service.setPayment(e.target.value);
 
                 Renderer.payment();
-                Renderer.summary();
 
             });
 
@@ -156,6 +155,13 @@ const Event = {
 
                 Renderer.products();
                 Renderer.summary();
+
+            });
+
+        document.querySelector('#note')
+            ?.addEventListener('input', e => {
+
+                Service.setNote(e.target.value);
 
             });
 
@@ -195,9 +201,9 @@ const Event = {
 
             }
 
-            else if (classList.contains('order-price')) {
+            else if (classList.contains('selling_price')) {
 
-                Service.setOrderPrice(index, value);
+                Service.setSellingPrice(index, value);
 
             }
 

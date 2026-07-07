@@ -66,6 +66,7 @@ class PurchaseEndpoint
             ]);
         }
 
+        $input['created_by'] = Auth::id();
         $id = $this->purchaseRepository->create($input);
 
         return Response::json([
@@ -94,6 +95,7 @@ class PurchaseEndpoint
             ]);
         }
 
+        $input['updated_by'] = Auth::id();
         $this->purchaseRepository->update($input);
 
         return Response::json([

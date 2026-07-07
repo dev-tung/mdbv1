@@ -10,7 +10,7 @@ BEGIN
         i.purchase_id,
         i.product_id,
         i.purchase_price,
-        i.order_price,
+        i.selling_price,
         i.quantity
     FROM inventories i
     INNER JOIN products p

@@ -58,8 +58,6 @@ const Service = {
 
         const response = await Api.updateStatus(id, status);
 
-        alert(response.message);
-
         await this.loadPurchases();
 
     },
@@ -68,21 +66,13 @@ const Service = {
 
         const response = await Api.payment(id, payment);
 
-        alert(response.message);
-
         await this.loadPurchases();
 
     },
 
     async deletePurchase(id) {
 
-        if (!confirm('Bạn có chắc muốn xóa phiếu nhập này?')) {
-            return;
-        }
-
         const response = await Api.deletePurchase(id);
-
-        alert(response.message);
 
         await this.loadPurchases();
 

@@ -2,36 +2,84 @@ import Http from '/assets/js/common/Http.js';
 
 const Api = {
 
-    async getWarehouses() {
-        return await Http.get('/api/warehouses');
-    },
+    /* =================================================
+       PURCHASE
+    ================================================= */
 
-    async showPurchase(purchaseId) {
-        return await Http.get(`/api/purchases/show/${purchaseId}`);
+    async showPurchase(id) {
+
+        return await Http.get(
+            `/api/purchases/show/${id}`
+        );
+
     },
 
     async createPurchase(data) {
-        return await Http.post('/api/purchases', data);
+
+        return await Http.post(
+            '/api/purchases',
+            data
+        );
+
     },
 
-    async updatePurchase(purchaseId, data) {
-        return await Http.post(`/api/purchases/update/${purchaseId}`, data);
+    async updatePurchase(id, data) {
+
+        return await Http.post(
+            `/api/purchases/update/${id}`,
+            data
+        );
+
     },
 
-    async deletePurchase(purchaseId) {
-        return await Http.post(`/api/purchases/delete/${purchaseId}`);
+    async deletePurchase(id) {
+
+        return await Http.post(
+            `/api/purchases/delete/${id}`
+        );
+
     },
+
+    /* =================================================
+       PRODUCT
+    ================================================= */
 
     async searchProducts(keyword = '') {
-        return await Http.get('/api/products', {
-            keyword
-        });
+
+        return await Http.get(
+            '/api/products',
+            {
+                keyword
+            }
+        );
+
     },
 
+    /* =================================================
+       SUPPLIER
+    ================================================= */
+
     async searchSuppliers(keyword = '') {
-        return await Http.get('/api/suppliers', {
-            keyword
-        });
+
+        return await Http.get(
+            '/api/suppliers',
+            {
+                keyword
+            }
+        );
+
+    },
+
+    /* =================================================
+       WAREHOUSE
+    ================================================= */
+
+    async getWarehouses() {
+
+        return await Http.get(
+            '/api/warehouses'
+        );
+
     }
 
 };

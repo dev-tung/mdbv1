@@ -195,7 +195,7 @@ const Renderer = {
                     <td width="120">
                         <input
                             type="number"
-                            class="form-control order-price"
+                            class="form-control selling_price"
                             value="${item.selling_price || 0}"
                             min="0"
                             step="0.01">
@@ -213,7 +213,7 @@ const Renderer = {
 
                     <!-- TOTAL -->
                     <td class="item-total">
-                        ${Number(item.total_amount || 0).toLocaleString('vi-VN')}
+                        ${Number(item.total_amount_with_vat || 0).toLocaleString('vi-VN')}
                     </td>
 
                     <!-- REMOVE -->
@@ -248,7 +248,7 @@ const Renderer = {
             Number(item.vat_amount || 0).toLocaleString('vi-VN');
 
         row.querySelector('.item-total').textContent =
-            Number(item.total_amount || 0).toLocaleString('vi-VN');
+            Number(item.total_amount_with_vat || 0).toLocaleString('vi-VN');
 
     },
 

@@ -1,4 +1,5 @@
 <?php
+
 class Middleware
 {
     public static function handle(array $middlewares = []): void
@@ -14,36 +15,39 @@ class Middleware
             case 'customer':
                 self::customer();
                 break;
+
         }
     }
+
+    /* =================================================
+       ADMIN
+    ================================================= */
 
     protected static function admin(): void
     {
-        if (Session::get('auth_user')) {
+        if (
+            Auth::check()
+            && Auth::hasRole('admin')
+        ) {
             return;
         }
 
-        http_response_code(401);
-
-        echo json_encode([
-            'message' => 'Unauthorized'
-        ]);
-
-        exit;
+        Response::redirect('/admin/login');
     }
+
+    /* =================================================
+       CUSTOMER
+    ================================================= */
 
     protected static function customer(): void
     {
-        if (Session::get('auth_customer')) {
+        if (
+            Auth::check()
+            && Auth::hasRole('customer')
+        ) {
             return;
         }
 
-        http_response_code(401);
-
-        echo json_encode([
-            'message' => 'Unauthorized'
-        ]);
-
-        exit;
+        Response::redirect('/');
     }
 }
