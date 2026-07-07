@@ -2,117 +2,251 @@
 
 class OrderRepository extends Repository
 {
+
     protected string $table = 'orders';
 
-    // =========================
-    // BASE SELECT
-    // =========================
-    private function baseSelect(): string
+
+
+    /* =================================================
+       LIST
+    ================================================= */
+
+    public function getList(array $filters = []): array
     {
-        return "
-            SELECT
-                p.*,
-                c.name AS customer_name
-            FROM orders p
-            LEFT JOIN customers c
-                ON c.id = p.customer_id
-            WHERE 1=1
-        ";
+        return Database::get(
+
+            "CALL sp_order_list(
+                :date_from,
+                :date_to,
+                :customer_id,
+                :payment,
+                :status
+            )",
+
+            [
+
+                'date_from'   => $filters['date_from'] ?: null,
+
+                'date_to'     => $filters['date_to'] ?: null,
+
+                'customer_id' => $filters['customer_id'] ?: null,
+
+                'payment'     => $filters['payment'] ?: null,
+
+                'status'      => $filters['status'] ?: null,
+
+            ]
+
+        );
     }
 
-    // =========================
-    // BASE COUNT
-    // =========================
-    private function baseCount(): string
+
+
+
+    /* =================================================
+       SHOW
+    ================================================= */
+
+    public function show(int $id): array
     {
-        return "
-            SELECT COUNT(*) AS total
-            FROM orders p
-            LEFT JOIN customers c
-                ON c.id = p.customer_id
-            WHERE 1=1
-        ";
+
+        return Database::call(
+
+            "CALL sp_order_show(:id)",
+
+            [
+
+                'id' => $id
+
+            ]
+
+        );
+
     }
 
-    // =========================
-    // APPLY FILTERS
-    // =========================
-    private function applyFilters(string &$sql, array &$params, array $conditions): void
+
+
+
+
+    /* =================================================
+    CREATE
+    ================================================= */
+
+    public function create(array $data): int
     {
-        // CUSTOMER
-        if (!empty($conditions['keyword'])) {
-            $sql .= " AND c.name LIKE :customer_name";
-            $params['customer_name'] = '%' . trim($conditions['keyword']) . '%';
-        }
+        Database::query(
 
-        // STATUS
-        if (!empty($conditions['status'])) {
-            $sql .= " AND p.status = :status";
-            $params['status'] = $conditions['status'];
-        }
+            "CALL sp_order_create(
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            )",
 
-        // PAYMENT
-        if (!empty($conditions['payment'])) {
-            $sql .= " AND p.payment = :payment";
-            $params['payment'] = $conditions['payment'];
-        }
+            [
 
-        // DATE FROM
-        if (!empty($conditions['date_from'])) {
-            $sql .= " AND DATE(p.created_at) >= :date_from";
-            $params['date_from'] = $conditions['date_from'];
-        }
+                // CUSTOMER
+                $data['customer_id'] ?? null,
 
-        // DATE TO
-        if (!empty($conditions['date_to'])) {
-            $sql .= " AND DATE(p.created_at) <= :date_to";
-            $params['date_to'] = $conditions['date_to'];
-        }
+                // DESCRIPTION
+                $data['description'] ?? null,
+
+                // NOTE
+                $data['note'] ?? null,
+
+                // STATUS
+                $data['status'] ?? 'draft',
+
+                // PAYMENT
+                $data['payment'] ?? 'unpaid',
+
+                // AMOUNTS
+                $data['subtotal_amount'] ?? 0,
+
+                $data['discount_amount'] ?? 0,
+
+                $data['vat_rate'] ?? 0,
+
+                $data['vat_amount'] ?? 0,
+
+                $data['total_amount'] ?? 0,
+
+                $data['paid_amount'] ?? 0,
+
+                $data['debt_amount'] ?? 0,
+
+                // CREATED BY
+                $data['created_by'],
+
+                // ITEMS
+                json_encode(
+                    $data['items'] ?? [],
+                    JSON_UNESCAPED_UNICODE
+                )
+
+            ]
+
+        );
+
+        return Database::lastInsertId();
     }
 
-    // =========================
-    // LIST
-    // =========================
-    public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
+
+
+
+
+    /* =================================================
+    UPDATE
+    ================================================= */
+
+    public function update(array $data): void
     {
-        $sql = $this->baseSelect();
-        $params = [];
 
-        $this->applyFilters($sql, $params, $conditions);
+        Database::query(
 
-        $sql .= " ORDER BY p.id DESC";
+            "CALL sp_order_update(
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            )",
 
-        if ($limit > 0) {
-            $sql .= " LIMIT {$limit} OFFSET {$offset}";
-        }
+            [
 
-        return Database::get($sql, $params);
+                // ID
+                $data['id'],
+
+                // CUSTOMER
+                $data['customer_id'] ?? null,
+
+                // INFO
+                $data['description'] ?? null,
+
+                $data['note'] ?? null,
+
+                // STATUS
+                $data['status'] ?? 'draft',
+
+                $data['payment'] ?? 'unpaid',
+
+                // AMOUNT
+                $data['subtotal_amount'] ?? 0,
+
+                $data['discount_amount'] ?? 0,
+
+                $data['vat_rate'] ?? 0,
+
+                $data['vat_amount'] ?? 0,
+
+                $data['total_amount'] ?? 0,
+
+                $data['paid_amount'] ?? 0,
+
+                $data['debt_amount'] ?? 0,
+
+                // ITEMS
+                json_encode(
+                    $data['items'] ?? [],
+                    JSON_UNESCAPED_UNICODE
+                )
+
+            ]
+
+        );
+
     }
 
-    // =========================
-    // COUNT
-    // =========================
-    public function count(array $conditions = []): int
+
+
+
+
+    /* =================================================
+       PAYMENT
+    ================================================= */
+
+    public function payment(int $id, string $payment): int
     {
-        $sql = $this->baseCount();
-        $params = [];
 
-        $this->applyFilters($sql, $params, $conditions);
+        $result = Database::first(
 
-        $row = Database::first($sql, $params);
+            "CALL sp_order_payment(
+                :id,
+                :payment
+            )",
 
-        return (int) ($row['total'] ?? 0);
+            [
+
+                'id'      => $id,
+
+                'payment' => $payment
+
+            ]
+
+        );
+
+
+        return (int) ($result['affected_rows'] ?? 0);
+
     }
 
-    // =========================
-    // FIND BY ID
-    // =========================
-    public function findById(int $id): ?array
-    {
-        $sql = $this->baseSelect() . " AND p.id = :id LIMIT 1";
 
-        return Database::first($sql, [
-            'id' => $id
-        ]);
+
+
+
+    /* =================================================
+       DELETE
+    ================================================= */
+
+    public function delete(int $id): void
+    {
+
+        Database::query(
+
+            "CALL sp_order_delete(?)",
+
+            [
+
+                $id
+
+            ]
+
+        );
+
     }
+
+
 }

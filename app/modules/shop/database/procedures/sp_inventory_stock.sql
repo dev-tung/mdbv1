@@ -1,30 +1,75 @@
 DROP PROCEDURE IF EXISTS sp_inventory_stock;
 
-CREATE PROCEDURE `sp_inventory_stock`(
+CREATE PROCEDURE sp_inventory_stock(
+
     IN p_keyword VARCHAR(255)
+
 )
+
 BEGIN
+
+
     SELECT
-        p.id,
-        p.name,
-        i.purchase_id,
-        i.product_id,
-        i.purchase_price,
-        i.selling_price,
-        i.quantity
+
+
+        p.id AS product_id,
+
+
+        p.name AS product_name,
+
+        SUM(i.quantity) AS quantity,
+
+
+        MAX(i.purchase_price) AS purchase_price,
+
+
+        MAX(i.selling_price) AS selling_price
+
+
+
     FROM inventories i
+
+
+
     INNER JOIN products p
+
         ON p.id = i.product_id
-    INNER JOIN purchases pu
-        ON pu.id = i.purchase_id
-    WHERE i.quantity > 0
-      AND pu.status = 'received'
-      AND (
+
+
+
+    WHERE
+
+        (
+
             p_keyword IS NULL
-         OR p_keyword = ''
-         OR p.name LIKE CONCAT('%', p_keyword, '%')
-      )
-    ORDER BY
+
+            OR p_keyword = ''
+
+            OR p.name LIKE CONCAT('%', p_keyword, '%')
+
+        )
+
+
+
+    GROUP BY
+
+
         p.id,
-        i.purchase_id;
+
+        p.name
+
+
+
+    HAVING
+
+        SUM(i.quantity) > 0
+
+
+
+    ORDER BY
+
+        p.name ASC;
+
+
+
 END

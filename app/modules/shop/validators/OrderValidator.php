@@ -2,62 +2,146 @@
 
 class OrderValidator
 {
+
+
     /**
      * Validate khi CREATE
      */
     public static function create(array $data): ?string
     {
+
+
         // customer_id
-        if (empty($data['customer_id']) || (int)$data['customer_id'] <= 0) {
-            return 'Nhà cung cấp không hợp lệ';
+        // Có thể cho phép khách lẻ nên không bắt buộc
+
+        if (
+            isset($data['customer_id']) &&
+            (int)$data['customer_id'] < 0
+        ) {
+
+            return 'Khách hàng không hợp lệ';
+
         }
 
-        // products (FIX từ items → products)
-        if (empty($data['products']) || !is_array($data['products'])) {
+
+
+
+        // items
+
+        if (
+            empty($data['items']) ||
+            !is_array($data['items'])
+        ) {
+
             return 'Danh sách sản phẩm không hợp lệ';
+
         }
 
-        if (count($data['products']) === 0) {
+
+
+        if (
+            count($data['items']) === 0
+        ) {
+
             return 'Phải có ít nhất 1 sản phẩm';
+
         }
 
-        foreach ($data['products'] as $product) {
 
-            // FIX: id thay vì product_id
-            if (empty($product['product_id']) || (int)$product['product_id'] <= 0) {
+
+
+        foreach ($data['items'] as $product) {
+
+
+
+            // product_id
+
+            if (
+                empty($product['product_id']) ||
+                (int)$product['product_id'] <= 0
+            ) {
+
                 return 'Sản phẩm không hợp lệ';
+
             }
 
-            if (!isset($product['quantity']) || (int)$product['quantity'] <= 0) {
+
+
+
+            // quantity
+
+            if (
+                !isset($product['quantity']) ||
+                (int)$product['quantity'] <= 0
+            ) {
+
                 return 'Số lượng sản phẩm không hợp lệ';
+
             }
 
-            if (!isset($product['price']) || (float)$product['price'] < 0) {
-                return 'Giá sản phẩm không hợp lệ';
+
+
+
+            // selling_price
+
+            if (
+                !isset($product['selling_price']) ||
+                (float)$product['selling_price'] < 0
+            ) {
+
+                return 'Giá bán sản phẩm không hợp lệ';
+
             }
+
+
         }
+
+
 
         return null;
+
     }
+
+
+
 
     /**
      * Validate khi UPDATE
      */
     public static function update(array $data): ?string
     {
+
+
         // ID
-        if (!isset($data['id']) || (int)$data['id'] <= 0) {
+
+        if (
+            !isset($data['id']) ||
+            (int)$data['id'] <= 0
+        ) {
+
             return 'ID không hợp lệ';
+
         }
 
-        if (!empty($data['customer_id']) && (int)$data['customer_id'] <= 0) {
-            return 'Nhà cung cấp không hợp lệ';
+
+
+
+        // customer
+
+        if (
+            !empty($data['customer_id']) &&
+            (int)$data['customer_id'] <= 0
+        ) {
+
+            return 'Khách hàng không hợp lệ';
+
         }
 
-        if (!empty($data['warehouse_id']) && (int)$data['warehouse_id'] <= 0) {
-            return 'Kho không hợp lệ';
-        }
+
 
         return null;
+
     }
+
+
 }

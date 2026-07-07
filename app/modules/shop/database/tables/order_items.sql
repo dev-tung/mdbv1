@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS purchase_items;
+DROP TABLE IF EXISTS order_items;
 
-CREATE TABLE purchase_items (
+CREATE TABLE order_items (
 
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
 
-    purchase_id INT NOT NULL,
+    order_id INT NOT NULL,
 
     product_id INT UNSIGNED NOT NULL,
 
@@ -18,13 +18,15 @@ CREATE TABLE purchase_items (
 
     subtotal_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
 
+    discount_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
+
+    is_gift TINYINT(1) NOT NULL DEFAULT 0,
+
     vat_rate DECIMAL(5,2) NOT NULL DEFAULT 0.00,
 
     vat_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
 
     total_amount DECIMAL(15,2) NOT NULL DEFAULT 0.00,
-
-    total_amount_with_vat DECIMAL(15,2) NOT NULL DEFAULT 0.00,
 
     created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -33,16 +35,16 @@ CREATE TABLE purchase_items (
 
     PRIMARY KEY (id),
 
-    INDEX idx_purchase (purchase_id),
+    INDEX idx_order (order_id),
 
     INDEX idx_product (product_id),
 
-    CONSTRAINT fk_purchase_item_purchase
-        FOREIGN KEY (purchase_id)
-        REFERENCES purchases(id)
+    CONSTRAINT fk_order_item_order
+        FOREIGN KEY (order_id)
+        REFERENCES orders(id)
         ON DELETE CASCADE,
 
-    CONSTRAINT fk_purchase_item_product
+    CONSTRAINT fk_order_item_product
         FOREIGN KEY (product_id)
         REFERENCES products(id)
 

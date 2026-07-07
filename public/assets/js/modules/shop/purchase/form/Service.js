@@ -72,6 +72,7 @@ const Service = {
 
     },
 
+    
     setNote(note) {
 
         State.purchase.note = note;
@@ -180,7 +181,7 @@ const Service = {
 
     },
 
-    setOrderPrice(index, price) {
+    setSellingPrice(index, price) {
 
         const item = State.purchase.items[index];
 

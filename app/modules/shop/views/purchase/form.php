@@ -98,7 +98,7 @@
                        autocomplete="off">
 
                 <div id="product_suggestions"
-                     class="list-group position-absolute w-100 d-none"></div>
+                     class="list-group position-absolute d-none"></div>
             </div>
 
             <!-- PRODUCT TABLE -->

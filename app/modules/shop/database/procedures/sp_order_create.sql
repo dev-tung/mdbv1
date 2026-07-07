@@ -1,23 +1,21 @@
-DROP PROCEDURE IF EXISTS sp_purchase_create;
+DROP PROCEDURE IF EXISTS sp_order_create;
 
-CREATE PROCEDURE sp_purchase_create(
+CREATE PROCEDURE sp_order_create
+(
 
-    IN p_supplier_id INT,
-
-    IN p_warehouse_id INT,
-
+    IN p_customer_id INT,
 
     IN p_description VARCHAR(255),
 
     IN p_note TEXT,
 
-
     IN p_status VARCHAR(20),
 
     IN p_payment VARCHAR(20),
 
-
     IN p_subtotal_amount DECIMAL(15,2),
+
+    IN p_discount_amount DECIMAL(15,2),
 
     IN p_vat_rate DECIMAL(5,2),
 
@@ -25,14 +23,11 @@ CREATE PROCEDURE sp_purchase_create(
 
     IN p_total_amount DECIMAL(15,2),
 
-
     IN p_paid_amount DECIMAL(15,2),
 
     IN p_debt_amount DECIMAL(15,2),
 
-
     IN p_created_by INT,
-
 
     IN p_items JSON
 
@@ -40,54 +35,36 @@ CREATE PROCEDURE sp_purchase_create(
 
 BEGIN
 
-
-    DECLARE v_purchase_id INT;
-
-
+    DECLARE v_order_id INT;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
-
     BEGIN
-
         ROLLBACK;
-
         RESIGNAL;
-
     END;
-
-
 
     START TRANSACTION;
 
-
-
-
-
     /* =====================================
-       CREATE PURCHASE
+       CREATE ORDER
     ===================================== */
 
-
-    INSERT INTO purchases
-
+    INSERT INTO orders
     (
 
-        supplier_id,
-
-        warehouse_id,
-
+        customer_id,
 
         description,
 
         note,
 
-
         status,
 
         payment,
 
-
         subtotal_amount,
+
+        discount_amount,
 
         vat_rate,
 
@@ -95,36 +72,29 @@ BEGIN
 
         total_amount,
 
-
         paid_amount,
 
         debt_amount,
 
-
         created_by
 
     )
-
     VALUES
-
     (
 
-        p_supplier_id,
-
-        p_warehouse_id,
-
+        p_customer_id,
 
         p_description,
 
         p_note,
 
-
         p_status,
 
         p_payment,
 
-
         p_subtotal_amount,
+
+        p_discount_amount,
 
         p_vat_rate,
 
@@ -132,100 +102,76 @@ BEGIN
 
         p_total_amount,
 
-
         p_paid_amount,
 
         p_debt_amount,
-
 
         p_created_by
 
     );
 
-
-
-    SET v_purchase_id = LAST_INSERT_ID();
-
-
-
-
-
-
+    SET v_order_id = LAST_INSERT_ID();
 
     /* =====================================
-       CREATE PURCHASE ITEMS
+       CREATE ORDER ITEMS
     ===================================== */
 
-
-    INSERT INTO purchase_items
-
+    INSERT INTO order_items
     (
 
-        purchase_id,
+        order_id,
 
         product_id,
 
         product_name,
 
-
         quantity,
-
 
         purchase_price,
 
         selling_price,
 
-
         subtotal_amount,
 
+        discount_amount,
+
+        is_gift,
 
         vat_rate,
 
         vat_amount,
 
-
-        total_amount,
-
-        total_amount_with_vat
+        total_amount
 
     )
 
     SELECT
 
-
-        v_purchase_id,
-
+        v_order_id,
 
         product_id,
 
-
         product_name,
 
-
         quantity,
-
 
         purchase_price,
 
         selling_price,
 
-
         subtotal_amount,
 
+        discount_amount,
+
+        is_gift,
 
         vat_rate,
 
         vat_amount,
 
-
-        total_amount,
-
-        total_amount_with_vat
-
-
+        total_amount
 
     FROM JSON_TABLE
-
     (
 
         p_items,
@@ -233,126 +179,53 @@ BEGIN
         '$[*]'
 
         COLUMNS
-
         (
 
             product_id INT
                 PATH '$.product_id',
 
-
             product_name VARCHAR(255)
                 PATH '$.product_name',
-
 
             quantity INT
                 PATH '$.quantity',
 
-
             purchase_price DECIMAL(15,2)
                 PATH '$.purchase_price',
 
-
             selling_price DECIMAL(15,2)
                 PATH '$.selling_price',
-
 
             subtotal_amount DECIMAL(15,2)
                 PATH '$.subtotal_amount',
 
+            discount_amount DECIMAL(15,2)
+                PATH '$.discount_amount',
+
+            is_gift TINYINT
+                PATH '$.is_gift',
 
             vat_rate DECIMAL(5,2)
                 PATH '$.vat_rate',
 
-
             vat_amount DECIMAL(15,2)
                 PATH '$.vat_amount',
 
-
             total_amount DECIMAL(15,2)
-                PATH '$.total_amount',
-
-
-            total_amount_with_vat DECIMAL(15,2)
-                PATH '$.total_amount_with_vat'
+                PATH '$.total_amount'
 
         )
 
     ) jt;
 
-
-
-
-
-
-
     /* =====================================
-       CREATE INVENTORY
+       UPDATE INVENTORY
+       TRỪ TỒN KHO
     ===================================== */
 
+    UPDATE inventories i
 
-    INSERT INTO inventories
-
-    (
-
-        purchase_id,
-
-        product_id,
-
-        product_name,
-
-
-        purchase_price,
-
-        selling_price,
-
-
-        quantity,
-
-
-        vat_rate,
-
-        vat_amount,
-
-
-        total_amount,
-
-        total_amount_with_vat
-
-    )
-
-    SELECT
-
-
-        v_purchase_id,
-
-
-        product_id,
-
-
-        product_name,
-
-
-        purchase_price,
-
-        selling_price,
-
-
-        quantity,
-
-
-        vat_rate,
-
-        vat_amount,
-
-
-        total_amount,
-
-        total_amount_with_vat
-
-
-
-    FROM JSON_TABLE
-
+    JOIN JSON_TABLE
     (
 
         p_items,
@@ -360,59 +233,26 @@ BEGIN
         '$[*]'
 
         COLUMNS
-
         (
 
             product_id INT
                 PATH '$.product_id',
 
-
-            product_name VARCHAR(255)
-                PATH '$.product_name',
-
-
             quantity INT
-                PATH '$.quantity',
-
-
-            purchase_price DECIMAL(15,2)
-                PATH '$.purchase_price',
-
-
-            selling_price DECIMAL(15,2)
-                PATH '$.selling_price',
-
-
-            vat_rate DECIMAL(5,2)
-                PATH '$.vat_rate',
-
-
-            vat_amount DECIMAL(15,2)
-                PATH '$.vat_amount',
-
-
-            total_amount DECIMAL(15,2)
-                PATH '$.total_amount',
-
-
-            total_amount_with_vat DECIMAL(15,2)
-                PATH '$.total_amount_with_vat'
+                PATH '$.quantity'
 
         )
 
-    ) jt;
+    ) jt
 
+    ON i.product_id = jt.product_id
 
+    SET
 
-
-
+        i.quantity = i.quantity - jt.quantity;
 
     COMMIT;
 
-
-
-    SELECT v_purchase_id AS id;
-
-
+    SELECT v_order_id AS id;
 
 END
