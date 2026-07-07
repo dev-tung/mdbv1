@@ -182,7 +182,7 @@ const Renderer = {
                     </td>
 
                     <!-- PURCHASE PRICE -->
-                    <td width="120">
+                    <td width="140">
                         <input
                             type="number"
                             class="form-control purchase-price"
@@ -192,7 +192,7 @@ const Renderer = {
                     </td>
 
                     <!-- SELLING PRICE -->
-                    <td width="120">
+                    <td width="140">
                         <input
                             type="number"
                             class="form-control selling_price"
@@ -202,17 +202,17 @@ const Renderer = {
                     </td>
 
                     <!-- SUBTOTAL -->
-                    <td class="subtotal-amount">
+                    <td class="subtotal-amount" width="150">
                         ${Number(item.subtotal_amount || 0).toLocaleString('vi-VN')}
                     </td>
 
                     <!-- VAT -->
-                    <td class="item-vat">
+                    <td class="item-vat" width="150">
                         ${Number(item.vat_amount || 0).toLocaleString('vi-VN')}
                     </td>
 
                     <!-- TOTAL -->
-                    <td class="item-total">
+                    <td class="item-total" width="150">
                         ${Number(item.total_amount_with_vat || 0).toLocaleString('vi-VN')}
                     </td>
 
