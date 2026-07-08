@@ -140,6 +140,27 @@ class OrderRepository extends Repository
     }
 
     /* =================================================
+       STATUS
+    ================================================= */
+
+    public function status(int $id, string $status): int
+    {
+        $result = Database::first(
+            'CALL sp_order_status(
+                :id,
+                :status
+            )',
+            [
+                'id' => $id,
+
+                'status' => $status,
+            ],
+        );
+
+        return (int) ($result['affected_rows'] ?? 0);
+    }
+
+    /* =================================================
        PAYMENT
     ================================================= */
 
