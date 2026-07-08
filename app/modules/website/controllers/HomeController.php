@@ -11,6 +11,7 @@ class HomeController
 
     public function index(): void
     {
+        dd('Website is in maintainent mode!');
         // danh mục
         $categories = $this->categoryRepository->getList();
 
