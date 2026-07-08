@@ -4,6 +4,7 @@ class AdminEndpoint
 {
     public function apiLogin()
     {
+        
         $username = trim($_POST['username'] ?? '');
         $password = trim($_POST['password'] ?? '');
 
@@ -18,9 +19,7 @@ class AdminEndpoint
 
         $userRepository = new UserRepository();
 
-        $user = $userRepository->first([
-            'username' => $username
-        ]);
+        $user = $userRepository->findByUsername($username);
 
         if (!$user) {
 
@@ -31,8 +30,7 @@ class AdminEndpoint
 
         }
 
-        // TEMP LOGIN
-        if ($password !== '123456') {
+        if (!password_verify($password, $user['password'])) {
 
             return Response::json([
                 'success' => false,

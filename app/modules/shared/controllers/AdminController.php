@@ -4,6 +4,12 @@ class AdminController
 {
     public function login(): void
     {
+        // $password = '123456';
+
+        // $hash = password_hash($password, PASSWORD_DEFAULT);
+
+        // dd($hash);
+
         if (Session::get('auth_user')) {
             header('Location: /admin/orders');
             exit;
