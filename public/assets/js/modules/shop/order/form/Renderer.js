@@ -98,21 +98,21 @@ const Renderer = {
             return;
         }
 
-State.product.suggestions.forEach(item => {
-    box.insertAdjacentHTML(
-        'beforeend',
-        `
-        <button
-            type="button"
-            class="list-group-item list-group-item-action product-item"
-            data-id="${item.product_id}">
+        State.product.suggestions.forEach(item => {
+            box.insertAdjacentHTML(
+                'beforeend',
+                `
+                <button
+                    type="button"
+                    class="list-group-item list-group-item-action product-item"
+                    data-id="${item.product_id}">
 
-            ${item.product_name} ${Number(item.vat_rate) > 0 ? '(VAT)' : ''}
+                    ${item.product_name} ${Number(item.vat_rate) > 0 ? '(VAT)' : ''}
 
-        </button>
-        `
-    );
-});
+                </button>
+                `
+            );
+        });
 
         box.classList.remove('d-none');
     },
