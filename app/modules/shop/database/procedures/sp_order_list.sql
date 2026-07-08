@@ -2,8 +2,6 @@
 
 DROP PROCEDURE IF EXISTS sp_order_list;
 
-SET NAMES utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-
 CREATE PROCEDURE sp_order_list (
     IN p_date_from DATE,
     IN p_date_to DATE,

@@ -39,7 +39,7 @@ const Renderer = {
         wrapper.classList.toggle(
             'd-none',
 
-            !['partial', 'credit'].includes(State.order.payment),
+            !['partial', 'credit'].includes(State.order.payment)
         );
     },
 
@@ -60,7 +60,7 @@ const Renderer = {
             return;
         }
 
-        State.customer.suggestions.forEach((item) => {
+        State.customer.suggestions.forEach(item => {
             box.insertAdjacentHTML(
                 'beforeend',
                 `
@@ -74,7 +74,7 @@ const Renderer = {
 
                 </button>
 
-            `,
+            `
             );
         });
 
@@ -98,23 +98,21 @@ const Renderer = {
             return;
         }
 
-        State.product.suggestions.forEach((item) => {
-            box.insertAdjacentHTML(
-                'beforeend',
-                `
+State.product.suggestions.forEach(item => {
+    box.insertAdjacentHTML(
+        'beforeend',
+        `
+        <button
+            type="button"
+            class="list-group-item list-group-item-action product-item"
+            data-id="${item.product_id}">
 
-                <button
-                    type="button"
-                    class="list-group-item list-group-item-action product-item"
-                    data-id="${item.product_id}">
+            ${item.product_name} ${Number(item.vat_rate) > 0 ? '(VAT)' : ''}
 
-                    ${item.product_name}
-
-                </button>
-
-            `,
-            );
-        });
+        </button>
+        `
+    );
+});
 
         box.classList.remove('d-none');
     },
@@ -229,7 +227,7 @@ const Renderer = {
 
               </tr>
 
-          `,
+          `
             );
         });
     },
@@ -274,7 +272,7 @@ const Renderer = {
         wrapper.classList.toggle(
             'd-none',
 
-            !['partial', 'credit'].includes(State.order.payment),
+            !['partial', 'credit'].includes(State.order.payment)
         );
     },
 

@@ -15,8 +15,8 @@ const Event = {
     bindFilters() {
         const filters = ['date-from', 'date-to', 'supplier', 'payment'];
 
-        filters.forEach((type) => {
-            document.querySelector(`#filter-${type}`)?.addEventListener('change', async (e) => {
+        filters.forEach(type => {
+            document.querySelector(`#filter-${type}`)?.addEventListener('change', async e => {
                 const key = type.replace('-', '_');
 
                 State.filter[key] = e.target.value;
@@ -37,7 +37,7 @@ const Event = {
 
         if (!table) return;
 
-        table.addEventListener('change', async (e) => {
+        table.addEventListener('change', async e => {
             const id = Number(e.target.dataset.id);
 
             if (!id) return;
@@ -58,22 +58,6 @@ const Event = {
                 await this.reload();
             }
         });
-
-        table.onclick = async (e) => {
-            const button = e.target.closest('.btn-delete-purchase');
-
-            if (!button) return;
-
-            if (!confirm('Bạn có chắc muốn xóa phiếu nhập này?')) return;
-
-            const response = await Service.deletePurchase(Number(button.dataset.id));
-
-            alert(response.message);
-
-            if (response.success) {
-                await this.reload();
-            }
-        };
     },
 
     /* =========================

@@ -155,7 +155,7 @@
             </div>
 
             <!-- SUBMIT -->
-            <div class="col-12">
+            <div class="col-12" id="btn-submit">
                 <button type="submit"
                         class="btn btn-outline-secondary mt-3">
                     Lưu phiếu nhập
