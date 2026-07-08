@@ -15,8 +15,8 @@ const Event = {
     bindFilters() {
         const filters = ['date-from', 'date-to', 'supplier', 'payment'];
 
-        filters.forEach(type => {
-            document.querySelector(`#filter-${type}`)?.addEventListener('change', async e => {
+        filters.forEach((type) => {
+            document.querySelector(`#filter-${type}`)?.addEventListener('change', async (e) => {
                 const key = type.replace('-', '_');
 
                 State.filter[key] = e.target.value;
@@ -37,7 +37,7 @@ const Event = {
 
         if (!table) return;
 
-        table.addEventListener('change', async e => {
+        table.addEventListener('change', async (e) => {
             const id = Number(e.target.dataset.id);
 
             if (!id) return;
@@ -45,7 +45,7 @@ const Event = {
             let response;
 
             if (e.target.classList.contains('purchase-status')) {
-                response = await Service.updateStatus(id, e.target.value);
+                response = await Service.status(id, e.target.value);
             }
 
             if (e.target.classList.contains('purchase-payment')) {
@@ -59,7 +59,7 @@ const Event = {
             }
         });
 
-        table.onclick = async e => {
+        table.onclick = async (e) => {
             const button = e.target.closest('.btn-delete-purchase');
 
             if (!button) return;

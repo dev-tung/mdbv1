@@ -39,7 +39,6 @@ class YonexProductCrawler
         $products = [];
 
         foreach ($categories as $category) {
-
             crawl_log('');
             crawl_log('====================');
             crawl_log('Category: ' . $category['name']);
@@ -58,12 +57,7 @@ class YonexProductCrawler
          */
         file_put_contents(
             $this->jsonFile,
-            json_encode(
-                array_values($products),
-                JSON_PRETTY_PRINT
-                | JSON_UNESCAPED_UNICODE
-                | JSON_UNESCAPED_SLASHES,
-            ),
+            json_encode(array_values($products), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
         );
 
         crawl_log('');
@@ -93,7 +87,6 @@ class YonexProductCrawler
         $products = [];
 
         foreach ($pageUrls as $url) {
-
             crawl_log("Crawling: $url");
 
             $html = crawl_get_html($url);
@@ -135,11 +128,7 @@ class YonexProductCrawler
         $this->ensureDir($categoryImgDir);
 
         foreach ($nodes as $node) {
-
-            $linkNode = $xpath->query(
-                './/a[contains(@class,"product-item-link")]',
-                $node,
-            )->item(0);
+            $linkNode = $xpath->query('.//a[contains(@class,"product-item-link")]', $node)->item(0);
 
             if (!$linkNode) {
                 continue;
@@ -157,9 +146,10 @@ class YonexProductCrawler
             $image = null;
 
             if ($imgNode) {
-                $image = $imgNode->getAttribute('src')
-                    ?: $imgNode->getAttribute('data-src')
-                    ?: $imgNode->getAttribute('data-original');
+                $image =
+                    $imgNode->getAttribute('src') ?:
+                    $imgNode->getAttribute('data-src') ?:
+                    $imgNode->getAttribute('data-original');
             }
 
             $slug = $this->slugify($name);
@@ -177,7 +167,6 @@ class YonexProductCrawler
              * DOWNLOAD IMAGE
              */
             if ($image) {
-
                 $ext = pathinfo(parse_url($image, PHP_URL_PATH), PATHINFO_EXTENSION);
                 if (!$ext) {
                     $ext = 'jpg';
@@ -189,11 +178,7 @@ class YonexProductCrawler
                 crawl_log("Downloading: $name");
 
                 if (crawl_download_image($image, $savePath)) {
-
-                    $product['image_file']
-                        = 'image/yonex_product/'
-                        . $category['slug'] . '/'
-                        . $fileName;
+                    $product['image_file'] = 'image/yonex_product/' . $category['slug'] . '/' . $fileName;
                 }
             }
 
@@ -222,7 +207,6 @@ class YonexProductCrawler
         $urls = [];
 
         foreach ($nodes as $node) {
-
             $href = trim($node->getAttribute('href'));
 
             if ($href) {

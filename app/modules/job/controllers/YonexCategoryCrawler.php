@@ -49,11 +49,7 @@ class YonexCategoryCrawler
         /**
          * GET MENU IMAGES
          */
-        preg_match_all(
-            '#https://www\.yonex\.com/media/wysiwyg/submenu-icons/[^"\']+#i',
-            $html,
-            $matches,
-        );
+        preg_match_all('#https://www\.yonex\.com/media/wysiwyg/submenu-icons/[^"\']+#i', $html, $matches);
 
         $images = array_values(array_unique($matches[0] ?? []));
 
@@ -78,7 +74,6 @@ class YonexCategoryCrawler
          * ATTACH IMAGES
          */
         foreach ($categories as $key => $category) {
-
             $keyword = $map[$category['slug']] ?? null;
 
             if (!$keyword) {
@@ -88,7 +83,6 @@ class YonexCategoryCrawler
             $matchedImage = null;
 
             foreach ($images as $imageUrl) {
-
                 if (stripos($imageUrl, $keyword) !== false) {
                     $matchedImage = $imageUrl;
                     break;
@@ -105,10 +99,8 @@ class YonexCategoryCrawler
             crawl_log("Downloading: $fileName");
 
             if (crawl_download_image($matchedImage, $savePath)) {
-
                 $categories[$key]['image'] = $matchedImage;
-                $categories[$key]['image_file']
-                    = 'image/yonex_category/' . $fileName;
+                $categories[$key]['image_file'] = 'image/yonex_category/' . $fileName;
             }
         }
 
@@ -117,12 +109,7 @@ class YonexCategoryCrawler
          */
         file_put_contents(
             $this->jsonFile,
-            json_encode(
-                array_values($categories),
-                JSON_PRETTY_PRINT
-                | JSON_UNESCAPED_UNICODE
-                | JSON_UNESCAPED_SLASHES,
-            ),
+            json_encode(array_values($categories), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
         );
 
         /**
@@ -163,7 +150,6 @@ class YonexCategoryCrawler
         $nodes = $xpath->query('//a[@href]');
 
         foreach ($nodes as $node) {
-
             $href = trim($node->getAttribute('href'));
 
             if (!str_contains($href, '/badminton/')) {
@@ -179,9 +165,7 @@ class YonexCategoryCrawler
                 continue;
             }
 
-            $url = str_starts_with($href, 'http')
-                ? $href
-                : 'https://www.yonex.com' . $href;
+            $url = str_starts_with($href, 'http') ? $href : 'https://www.yonex.com' . $href;
 
             $path = parse_url($url, PHP_URL_PATH);
             $slug = basename(trim($path, '/'));

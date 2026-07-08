@@ -48,7 +48,7 @@ const Renderer = {
             <option value="">-- Chọn kho --</option>
         `;
 
-        State.warehouse.list.forEach(warehouse => {
+        State.warehouse.list.forEach((warehouse) => {
             select.insertAdjacentHTML(
                 'beforeend',
                 `
@@ -57,7 +57,7 @@ const Renderer = {
                     ${warehouse.id == State.purchase.warehouse_id ? 'selected' : ''}>
                     ${warehouse.name}
                 </option>
-            `
+            `,
             );
         });
     },
@@ -77,7 +77,7 @@ const Renderer = {
             return;
         }
 
-        State.supplier.suggestions.forEach(item => {
+        State.supplier.suggestions.forEach((item) => {
             box.insertAdjacentHTML(
                 'beforeend',
                 `
@@ -91,7 +91,7 @@ const Renderer = {
 
                 </button>
 
-            `
+            `,
             );
         });
 
@@ -113,7 +113,7 @@ const Renderer = {
             return;
         }
 
-        State.product.suggestions.forEach(item => {
+        State.product.suggestions.forEach((item) => {
             box.insertAdjacentHTML(
                 'beforeend',
                 `
@@ -127,7 +127,7 @@ const Renderer = {
 
                 </button>
 
-            `
+            `,
             );
         });
 
@@ -204,7 +204,7 @@ const Renderer = {
 
                 </tr>
 
-            `
+            `,
             );
         });
     },
@@ -229,19 +229,19 @@ const Renderer = {
 
     summary() {
         document.querySelector('#subtotal_amount').textContent = Number(
-            State.purchase.subtotal_amount || 0
+            State.purchase.subtotal_amount || 0,
         ).toLocaleString('vi-VN');
 
         document.querySelector('#vat_amount').textContent = Number(State.purchase.vat_amount || 0).toLocaleString(
-            'vi-VN'
+            'vi-VN',
         );
 
         document.querySelector('#total_amount').textContent = Number(State.purchase.total_amount || 0).toLocaleString(
-            'vi-VN'
+            'vi-VN',
         );
 
         document.querySelector('#debt_amount').textContent = Number(State.purchase.debt_amount || 0).toLocaleString(
-            'vi-VN'
+            'vi-VN',
         );
     },
 

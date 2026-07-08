@@ -1,10 +1,9 @@
-SET FOREIGN_KEY_CHECKS = 0;
-
+SET
+    FOREIGN_KEY_CHECKS = 0;
 
 TRUNCATE TABLE order_items;
 
 TRUNCATE TABLE orders;
-
 
 TRUNCATE TABLE inventories;
 
@@ -12,5 +11,5 @@ TRUNCATE TABLE purchase_items;
 
 TRUNCATE TABLE purchases;
 
-
-SET FOREIGN_KEY_CHECKS = 1;
+SET
+    FOREIGN_KEY_CHECKS = 1;

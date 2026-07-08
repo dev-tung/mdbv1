@@ -22,7 +22,7 @@ const Service = {
 
         this.calculate();
 
-        State.order.items.forEach(item => {
+        State.order.items.forEach((item) => {
             item.discount_amount = Number(item.discount_amount || 0);
 
             item.is_gift = Boolean(Number(item.is_gift));
@@ -90,7 +90,7 @@ const Service = {
     ================================================= */
 
     addProduct(product) {
-        const exists = State.order.items.find(item => item.product_id == product.product_id);
+        const exists = State.order.items.find((item) => item.product_id == product.product_id);
 
         if (exists) {
             exists.quantity++;
@@ -166,7 +166,7 @@ const Service = {
     setVatRate(value) {
         State.order.vat_rate = Number(value || 0);
 
-        State.order.items.forEach(item => {
+        State.order.items.forEach((item) => {
             item.vat_rate = Number(value || 0);
         });
 
@@ -204,7 +204,7 @@ const Service = {
 
         let discount = 0;
 
-        State.order.items.forEach(item => {
+        State.order.items.forEach((item) => {
             if (item.is_gift) {
                 item.subtotal_amount = 0;
                 item.discount_amount = 0;
@@ -273,7 +273,7 @@ const Service = {
             response = await Api.updateOrder(
                 State.order.id,
 
-                State.order
+                State.order,
             );
         } else {
             response = await Api.createOrder(State.order);

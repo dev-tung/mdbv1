@@ -20,11 +20,11 @@ class OrderRepository extends Repository
             )',
             [
                 'date_from' => $filters['date_from'] ?: null,
-                'date_to'   => $filters['date_to'] ?: null,
-                'customer'  => $filters['customer'] ?: null,
-                'payment'   => $filters['payment'] ?: null,
-                'status'    => $filters['status'] ?: null,
-            ]
+                'date_to' => $filters['date_to'] ?: null,
+                'customer' => $filters['customer'] ?: null,
+                'payment' => $filters['payment'] ?: null,
+                'status' => $filters['status'] ?: null,
+            ],
         );
     }
 
@@ -34,16 +34,9 @@ class OrderRepository extends Repository
 
     public function show(int $id): array
     {
-
-        return Database::call(
-            'CALL sp_order_show(:id)',
-            [
-
-                'id' => $id,
-
-            ],
-        );
-
+        return Database::call('CALL sp_order_show(:id)', [
+            'id' => $id,
+        ]);
     }
 
     /* =================================================
@@ -57,7 +50,6 @@ class OrderRepository extends Repository
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )',
             [
-
                 // CUSTOMER
                 $data['customer_id'] ?? null,
 
@@ -92,11 +84,7 @@ class OrderRepository extends Repository
                 $data['created_by'],
 
                 // ITEMS
-                json_encode(
-                    $data['items'] ?? [],
-                    JSON_UNESCAPED_UNICODE,
-                ),
-
+                json_encode($data['items'] ?? [], JSON_UNESCAPED_UNICODE),
             ],
         );
 
@@ -109,13 +97,11 @@ class OrderRepository extends Repository
 
     public function update(array $data): void
     {
-
         Database::query(
             'CALL sp_order_update(
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )',
             [
-
                 // ID
                 $data['id'],
 
@@ -148,14 +134,9 @@ class OrderRepository extends Repository
                 $data['debt_amount'] ?? 0,
 
                 // ITEMS
-                json_encode(
-                    $data['items'] ?? [],
-                    JSON_UNESCAPED_UNICODE,
-                ),
-
+                json_encode($data['items'] ?? [], JSON_UNESCAPED_UNICODE),
             ],
         );
-
     }
 
     /* =================================================
@@ -164,23 +145,19 @@ class OrderRepository extends Repository
 
     public function payment(int $id, string $payment): int
     {
-
         $result = Database::first(
             'CALL sp_order_payment(
                 :id,
                 :payment
             )',
             [
-
                 'id' => $id,
 
                 'payment' => $payment,
-
             ],
         );
 
         return (int) ($result['affected_rows'] ?? 0);
-
     }
 
     /* =================================================
@@ -189,15 +166,6 @@ class OrderRepository extends Repository
 
     public function delete(int $id): void
     {
-
-        Database::query(
-            'CALL sp_order_delete(?)',
-            [
-
-                $id,
-
-            ],
-        );
-
+        Database::query('CALL sp_order_delete(?)', [$id]);
     }
 }

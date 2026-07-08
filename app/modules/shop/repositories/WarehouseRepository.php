@@ -11,7 +11,6 @@ class WarehouseRepository
 
         // KEYWORD
         if (!empty($conditions['keyword'])) {
-
             $sql .= '
                 AND (
                     name LIKE :keyword
@@ -24,7 +23,6 @@ class WarehouseRepository
 
         // STATUS
         if (isset($conditions['status']) && $conditions['status'] !== '') {
-
             $sql .= ' AND status = :status';
             $params['status'] = $conditions['status'];
         }
@@ -35,11 +33,8 @@ class WarehouseRepository
     /**
      * GET LIST
      */
-    public function getList(
-        array $conditions = [],
-        int $limit = 0,
-        int $offset = 0,
-    ): array {
+    public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
+    {
         $params = [];
 
         $sql = '
@@ -52,7 +47,6 @@ class WarehouseRepository
         $sql .= ' ORDER BY id DESC';
 
         if ($limit > 0) {
-
             $limit = (int) $limit;
             $offset = (int) $offset;
 
@@ -134,9 +128,12 @@ class WarehouseRepository
 
         $data['id'] = $id;
 
-        $sql = '
+        $sql =
+            '
             UPDATE warehouses
-            SET ' . implode(', ', $set) . '
+            SET ' .
+            implode(', ', $set) .
+            '
             WHERE id = :id
         ';
 

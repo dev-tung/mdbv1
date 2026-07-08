@@ -9,7 +9,8 @@
                 <!-- SẢN PHẨM -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/products') ?: active_menu('/admin/products/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/products') ?:
+                        active_menu('/admin/products/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -18,7 +19,9 @@
 
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= route('/admin/products') ?>">Danh sách sản phẩm</a></li>
-                        <li><a class="dropdown-item" href="<?= route('/admin/products/create') ?>">Thêm sản phẩm</a></li>
+                        <li><a class="dropdown-item" href="<?= route(
+                            '/admin/products/create',
+                        ) ?>">Thêm sản phẩm</a></li>
                     </ul>
                 </li>
 
@@ -26,7 +29,8 @@
                 <!-- NHÀ CUNG CẤP -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/suppliers') ?: active_menu('/admin/suppliers/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/suppliers') ?:
+                        active_menu('/admin/suppliers/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -34,8 +38,12 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= route('/admin/suppliers') ?>">Danh sách nhà cung cấp</a></li>
-                        <li><a class="dropdown-item" href="<?= route('/admin/suppliers/create') ?>">Thêm nhà cung cấp</a></li>
+                        <li><a class="dropdown-item" href="<?= route(
+                            '/admin/suppliers',
+                        ) ?>">Danh sách nhà cung cấp</a></li>
+                        <li><a class="dropdown-item" href="<?= route(
+                            '/admin/suppliers/create',
+                        ) ?>">Thêm nhà cung cấp</a></li>
                     </ul>
                 </li>
 
@@ -43,7 +51,8 @@
                 <!-- MUA HÀNG -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/purchases') ?: active_menu('/admin/purchases/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/purchases') ?:
+                        active_menu('/admin/purchases/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -51,8 +60,12 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= route('/admin/purchases') ?>">Danh sách phiếu mua</a></li>
-                        <li><a class="dropdown-item" href="<?= route('/admin/purchases/create') ?>">Thêm phiếu mua</a></li>
+                        <li><a class="dropdown-item" href="<?= route(
+                            '/admin/purchases',
+                        ) ?>">Danh sách phiếu mua</a></li>
+                        <li><a class="dropdown-item" href="<?= route(
+                            '/admin/purchases/create',
+                        ) ?>">Thêm phiếu mua</a></li>
                     </ul>
                 </li>
 
@@ -60,7 +73,8 @@
                 <!-- KHÁCH HÀNG -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/customers') ?: active_menu('/admin/customers/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/customers') ?:
+                        active_menu('/admin/customers/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -68,8 +82,12 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= route('/admin/customers') ?>">Danh sách khách hàng</a></li>
-                        <li><a class="dropdown-item" href="<?= route('/admin/customers/create') ?>">Thêm khách hàng</a></li>
+                        <li><a class="dropdown-item" href="<?= route(
+                            '/admin/customers',
+                        ) ?>">Danh sách khách hàng</a></li>
+                        <li><a class="dropdown-item" href="<?= route(
+                            '/admin/customers/create',
+                        ) ?>">Thêm khách hàng</a></li>
                     </ul>
                 </li>
 
@@ -77,7 +95,8 @@
                 <!-- ĐƠN HÀNG -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/orders') ?: active_menu('/admin/orders/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/orders') ?:
+                        active_menu('/admin/orders/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 

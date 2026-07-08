@@ -27,7 +27,6 @@ function dump(...$vars): void
 function dd_sql(string $sql, array $params = []): string
 {
     foreach ($params as $key => $value) {
-
         if ($value === null) {
             $value = 'NULL';
         } elseif (is_string($value)) {
@@ -36,11 +35,7 @@ function dd_sql(string $sql, array $params = []): string
             $value = $value ? 1 : 0;
         }
 
-        $sql = preg_replace(
-            '/:' . preg_quote($key, '/') . '\b/',
-            (string) $value,
-            $sql,
-        );
+        $sql = preg_replace('/:' . preg_quote($key, '/') . '\b/', (string) $value, $sql);
     }
 
     dd($sql);

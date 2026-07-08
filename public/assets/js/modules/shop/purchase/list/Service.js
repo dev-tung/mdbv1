@@ -40,8 +40,8 @@ const Service = {
        ACTION
     ================================================= */
 
-    async updateStatus(id, status) {
-        const response = await Api.updateStatus(id, status);
+    async status(id, status) {
+        const response = await Api.status(id, status);
 
         await this.loadPurchases();
     },

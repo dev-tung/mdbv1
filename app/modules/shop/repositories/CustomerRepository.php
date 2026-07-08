@@ -23,7 +23,6 @@ class CustomerRepository
 
         // KEYWORD SEARCH
         if (!empty($conditions['keyword'])) {
-
             $sql .= '
                 AND (
                     c.name LIKE :name
@@ -61,7 +60,6 @@ class CustomerRepository
 
         // KEYWORD SEARCH
         if (!empty($conditions['keyword'])) {
-
             $sql .= '
                 AND (
                     c.name LIKE :name

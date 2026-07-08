@@ -36,12 +36,9 @@ class PurchaseRepository extends Repository
 
     public function show(int $id): array
     {
-        return Database::call(
-            'CALL sp_purchase_show(:id)',
-            [
-                'id' => $id,
-            ],
-        );
+        return Database::call('CALL sp_purchase_show(:id)', [
+            'id' => $id,
+        ]);
     }
 
     /* =================================================
@@ -55,7 +52,6 @@ class PurchaseRepository extends Repository
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )',
             [
-
                 $data['supplier_id'],
                 $data['warehouse_id'],
 
@@ -76,7 +72,6 @@ class PurchaseRepository extends Repository
                 $data['created_by'],
 
                 json_encode($data['items']),
-
             ],
         );
 
@@ -94,7 +89,6 @@ class PurchaseRepository extends Repository
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
             )',
             [
-
                 $data['id'],
 
                 $data['supplier_id'],
@@ -115,9 +109,28 @@ class PurchaseRepository extends Repository
                 $data['debt_amount'],
 
                 json_encode($data['items']),
-
             ],
         );
+    }
+
+    /* =================================================
+       STATUS
+    ================================================= */
+
+    public function status(int $id, string $status): int
+    {
+        $result = Database::first(
+            'CALL sp_purchase_status(
+                :id,
+                :status
+            )',
+            [
+                'id' => $id,
+                'status' => $status,
+            ],
+        );
+
+        return (int) ($result['affected_rows'] ?? 0);
     }
 
     /* =================================================
@@ -146,11 +159,6 @@ class PurchaseRepository extends Repository
 
     public function delete(int $id): void
     {
-        Database::query(
-            'CALL sp_purchase_delete(?)',
-            [
-                $id,
-            ],
-        );
+        Database::query('CALL sp_purchase_delete(?)', [$id]);
     }
 }

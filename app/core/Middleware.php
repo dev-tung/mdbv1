@@ -7,7 +7,6 @@ class Middleware
         $auth = $middlewares['auth'] ?? null;
 
         switch ($auth) {
-
             case 'admin':
                 self::admin();
                 break;
@@ -15,7 +14,6 @@ class Middleware
             case 'customer':
                 self::customer();
                 break;
-
         }
     }
 
@@ -25,10 +23,7 @@ class Middleware
 
     protected static function admin(): void
     {
-        if (
-            Auth::check()
-            && Auth::hasRole('admin')
-        ) {
+        if (Auth::check() && Auth::hasRole('admin')) {
             return;
         }
 
@@ -41,10 +36,7 @@ class Middleware
 
     protected static function customer(): void
     {
-        if (
-            Auth::check()
-            && Auth::hasRole('customer')
-        ) {
+        if (Auth::check() && Auth::hasRole('customer')) {
             return;
         }
 

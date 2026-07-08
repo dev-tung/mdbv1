@@ -19,11 +19,7 @@ class BrandEndpoint
 
         $filters = request_filters(['keyword', 'status']);
 
-        $brands = $this->brandRepository->getList(
-            $filters,
-            $limit,
-            ($page - 1) * $limit,
-        );
+        $brands = $this->brandRepository->getList($filters, $limit, ($page - 1) * $limit);
 
         $total = $this->brandRepository->count($filters);
 
@@ -88,14 +84,12 @@ class BrandEndpoint
         // UPLOAD LOGO
         // =========================
         if (!empty($_FILES['logo']['name'])) {
-
             $file = $_FILES['logo'];
 
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             $allowedExt = ['jpg', 'jpeg', 'png', 'webp'];
 
             if (in_array($ext, $allowedExt)) {
-
                 $fileName = uniqid('brand_') . '.' . $ext;
 
                 $uploadDir = PATH_ROOT . '/public/uploads/brands/';
@@ -152,14 +146,12 @@ class BrandEndpoint
         // UPDATE LOGO
         // =========================
         if (!empty($_FILES['logo']['name'])) {
-
             $file = $_FILES['logo'];
 
             $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
             $allowedExt = ['jpg', 'jpeg', 'png', 'webp'];
 
             if (in_array($ext, $allowedExt)) {
-
                 $fileName = uniqid('brand_') . '.' . $ext;
 
                 $uploadDir = PATH_ROOT . '/public/uploads/brands/';

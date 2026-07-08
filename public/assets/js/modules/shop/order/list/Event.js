@@ -21,7 +21,7 @@ const Event = {
             ['status', 'change'],
             ['customer', 'keyup'],
         ].forEach(([type, event]) => {
-            document.querySelector(`#filter-${type}`)?.addEventListener(event, async e => {
+            document.querySelector(`#filter-${type}`)?.addEventListener(event, async (e) => {
                 State.filter[type.replace('-', '_')] = e.target.value.trim();
 
                 State.filter.page = 1;
@@ -44,7 +44,7 @@ const Event = {
             CHANGE
         */
 
-        table.addEventListener('change', async e => {
+        table.addEventListener('change', async (e) => {
             const id = Number(e.target.dataset.id);
 
             if (!id) return;
@@ -70,7 +70,7 @@ const Event = {
             CLICK
         */
 
-        table.addEventListener('click', async e => {
+        table.addEventListener('click', async (e) => {
             /*
                     DELETE
                 */

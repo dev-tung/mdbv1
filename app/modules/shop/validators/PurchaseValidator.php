@@ -27,7 +27,6 @@ class PurchaseValidator
         }
 
         foreach ($data['items'] as $product) {
-
             if (empty($product['product_id']) || (int) $product['product_id'] <= 0) {
                 return 'Sản phẩm không hợp lệ';
             }

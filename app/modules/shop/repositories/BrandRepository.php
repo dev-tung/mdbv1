@@ -120,9 +120,12 @@ class BrandRepository
 
         $data['id'] = $id;
 
-        $sql = '
+        $sql =
+            '
             UPDATE brands
-            SET ' . implode(', ', $set) . '
+            SET ' .
+            implode(', ', $set) .
+            '
             WHERE id = :id
         ';
 

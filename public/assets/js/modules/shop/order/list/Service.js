@@ -34,8 +34,8 @@ const Service = {
         Renderer.renderCustomers();
     },
 
-    async updateStatus(id, status) {
-        await Api.updateStatus(id, status);
+    async status(id, status) {
+        await Api.status(id, status);
 
         await this.loadOrders();
     },

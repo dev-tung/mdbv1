@@ -21,7 +21,6 @@ class CustomerRepository
         $keyword = $conditions['keyword'] ?? null;
 
         if (is_string($keyword) && trim($keyword) !== '') {
-
             $keyword = '%' . trim($keyword) . '%';
 
             $sql .= ' AND (
@@ -39,7 +38,6 @@ class CustomerRepository
         // GROUP FILTER
         // =========================
         if (!empty($conditions['group_id'])) {
-
             $sql .= ' AND group_id = :group_id';
             $params['group_id'] = (int) $conditions['group_id'];
         }
@@ -72,16 +70,7 @@ class CustomerRepository
     // =========================
     public function create(array $data): int
     {
-        $allowed = [
-            'name',
-            'group_id',
-            'phone',
-            'address',
-            'description',
-            'email',
-            'created_at',
-            'updated_at',
-        ];
+        $allowed = ['name', 'group_id', 'phone', 'address', 'description', 'email', 'created_at', 'updated_at'];
 
         $data = array_intersect_key($data, array_flip($allowed));
 
@@ -114,15 +103,7 @@ class CustomerRepository
     // =========================
     public function updateById(int $id, array $data): int
     {
-        $allowed = [
-            'name',
-            'group_id',
-            'phone',
-            'address',
-            'description',
-            'email',
-            'updated_at',
-        ];
+        $allowed = ['name', 'group_id', 'phone', 'address', 'description', 'email', 'updated_at'];
 
         $data = array_intersect_key($data, array_flip($allowed));
 
@@ -146,8 +127,11 @@ class CustomerRepository
 
         $clean['id'] = $id;
 
-        $sql = "UPDATE {$this->table}
-                SET " . implode(', ', $set) . '
+        $sql =
+            "UPDATE {$this->table}
+                SET " .
+            implode(', ', $set) .
+            '
                 WHERE id = :id';
 
         return Database::update($sql, $clean);
@@ -179,7 +163,6 @@ class CustomerRepository
         $keyword = $conditions['keyword'] ?? null;
 
         if (is_string($keyword) && trim($keyword) !== '') {
-
             $keyword = '%' . trim($keyword) . '%';
 
             $sql .= ' AND (
@@ -194,7 +177,6 @@ class CustomerRepository
         }
 
         if (!empty($conditions['group_id'])) {
-
             $sql .= ' AND group_id = :group_id';
             $params['group_id'] = (int) $conditions['group_id'];
         }

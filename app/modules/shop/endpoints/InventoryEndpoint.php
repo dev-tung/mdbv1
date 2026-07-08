@@ -12,12 +12,7 @@ class InventoryEndpoint
     // LIST
     public function apiList()
     {
-        $filters = request_filters([
-            'keyword',
-            'category_id',
-            'status',
-            'stock',
-        ]);
+        $filters = request_filters(['keyword', 'category_id', 'status', 'stock']);
 
         return Response::json([
             'success' => true,
@@ -28,9 +23,7 @@ class InventoryEndpoint
     // LIST
     public function apiStock()
     {
-        $filters = request_filters([
-            'keyword',
-        ]);
+        $filters = request_filters(['keyword']);
 
         return Response::json([
             'success' => true,
@@ -44,12 +37,13 @@ class InventoryEndpoint
         $data = $this->inventoryRepository->apiShow($id);
 
         if (!$data) {
-
-            return Response::json([
-                'success' => false,
-                'message' => 'Inventory not found',
-            ], 404);
-
+            return Response::json(
+                [
+                    'success' => false,
+                    'message' => 'Inventory not found',
+                ],
+                404,
+            );
         }
 
         return Response::json([

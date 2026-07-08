@@ -83,7 +83,7 @@ const Service = {
     ================================================= */
 
     addProduct(product) {
-        const exists = State.purchase.items.find(item => item.product_id === product.id);
+        const exists = State.purchase.items.find((item) => item.product_id === product.id);
 
         if (exists) {
             exists.quantity++;

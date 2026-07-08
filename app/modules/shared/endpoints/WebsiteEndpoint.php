@@ -8,10 +8,13 @@ class WebsiteEndpoint
         $password = $_POST['password'] ?? '';
 
         if ($password !== '123456') {
-            return Response::json([
-                'success' => false,
-                'message' => 'Sai mật khẩu',
-            ], 401);
+            return Response::json(
+                [
+                    'success' => false,
+                    'message' => 'Sai mật khẩu',
+                ],
+                401,
+            );
         }
 
         $customer = [

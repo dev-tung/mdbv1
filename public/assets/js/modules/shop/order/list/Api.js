@@ -17,7 +17,7 @@ const Api = {
        ACTIONS
     ================================================= */
 
-    async updateStatus(id, status) {
+    async status(id, status) {
         return await Http.post('/api/orders/status', {
             id,
             status,

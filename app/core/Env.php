@@ -19,7 +19,6 @@ class Env
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         foreach ($lines as $line) {
-
             $line = trim($line);
 
             // bỏ comment / dòng rỗng

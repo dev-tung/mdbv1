@@ -20,7 +20,7 @@ const Event = {
 
         const suggestions = document.querySelector('#supplier_suggestions');
 
-        input?.addEventListener('input', async e => {
+        input?.addEventListener('input', async (e) => {
             State.supplier.keyword = e.target.value.trim();
 
             await Service.searchSuppliers();
@@ -28,12 +28,12 @@ const Event = {
             Renderer.supplierSuggestions();
         });
 
-        suggestions?.addEventListener('click', e => {
+        suggestions?.addEventListener('click', (e) => {
             const button = e.target.closest('.supplier-item');
 
             if (!button) return;
 
-            const supplier = State.supplier.suggestions.find(item => item.id == button.dataset.id);
+            const supplier = State.supplier.suggestions.find((item) => item.id == button.dataset.id);
 
             if (!supplier) return;
 
@@ -56,7 +56,7 @@ const Event = {
 
         const suggestions = document.querySelector('#product_suggestions');
 
-        input?.addEventListener('input', async e => {
+        input?.addEventListener('input', async (e) => {
             State.product.keyword = e.target.value.trim();
 
             await Service.searchProducts();
@@ -64,12 +64,12 @@ const Event = {
             Renderer.productSuggestions();
         });
 
-        suggestions?.addEventListener('click', e => {
+        suggestions?.addEventListener('click', (e) => {
             const button = e.target.closest('.product-item');
 
             if (!button) return;
 
-            const product = State.product.suggestions.find(item => item.id == button.dataset.id);
+            const product = State.product.suggestions.find((item) => item.id == button.dataset.id);
 
             if (!product) return;
 
@@ -89,38 +89,38 @@ const Event = {
     ================================================= */
 
     purchase() {
-        document.querySelector('#description')?.addEventListener('input', e => {
+        document.querySelector('#description')?.addEventListener('input', (e) => {
             Service.setDescription(e.target.value);
         });
 
-        document.querySelector('#status')?.addEventListener('change', e => {
+        document.querySelector('#status')?.addEventListener('change', (e) => {
             Service.setStatus(e.target.value);
         });
 
-        document.querySelector('#warehouse_id')?.addEventListener('change', e => {
+        document.querySelector('#warehouse_id')?.addEventListener('change', (e) => {
             Service.setWarehouse(e.target.value);
         });
 
-        document.querySelector('#payment')?.addEventListener('change', e => {
+        document.querySelector('#payment')?.addEventListener('change', (e) => {
             Service.setPayment(e.target.value);
 
             Renderer.payment();
         });
 
-        document.querySelector('#paid_amount')?.addEventListener('input', e => {
+        document.querySelector('#paid_amount')?.addEventListener('input', (e) => {
             Service.setPaidAmount(e.target.value);
 
             Renderer.summary();
         });
 
-        document.querySelector('#vat_rate')?.addEventListener('input', e => {
+        document.querySelector('#vat_rate')?.addEventListener('input', (e) => {
             Service.setVatRate(e.target.value);
 
             Renderer.products();
             Renderer.summary();
         });
 
-        document.querySelector('#note')?.addEventListener('input', e => {
+        document.querySelector('#note')?.addEventListener('input', (e) => {
             Service.setNote(e.target.value);
         });
     },
@@ -134,7 +134,7 @@ const Event = {
 
         if (!table) return;
 
-        table.addEventListener('input', e => {
+        table.addEventListener('input', (e) => {
             const row = e.target.closest('tr');
 
             if (!row) return;
@@ -157,7 +157,7 @@ const Event = {
             Renderer.summary();
         });
 
-        table.addEventListener('click', e => {
+        table.addEventListener('click', (e) => {
             const button = e.target.closest('.btn-remove');
 
             if (!button) return;
@@ -180,7 +180,7 @@ const Event = {
     ================================================= */
 
     submit() {
-        document.querySelector('#purchase-form')?.addEventListener('submit', async e => {
+        document.querySelector('#purchase-form')?.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const response = await Service.save();

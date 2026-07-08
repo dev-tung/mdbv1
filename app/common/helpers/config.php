@@ -2,7 +2,6 @@
 
 function config($key)
 {
-
     static $cache = [];
 
     if (isset($cache[$key])) {
@@ -13,7 +12,7 @@ function config($key)
 
     // module: shop.option.purchase_status
     $module = array_shift($parts); // shop
-    $file = array_shift($parts);   // option
+    $file = array_shift($parts); // option
 
     $path = BASE_PATH . "/app/modules/{$module}/config/{$file}.php";
 

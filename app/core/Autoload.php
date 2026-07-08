@@ -5,7 +5,6 @@ class Autoload
     public static function register(): void
     {
         spl_autoload_register(function ($class) {
-
             $paths = [
                 BASE_PATH . '/app/core/' . $class . '.php',
                 BASE_PATH . '/app/config/' . $class . '.php',

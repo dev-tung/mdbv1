@@ -44,12 +44,7 @@ class View
 
     protected static function getContent(string $view): string
     {
-        return BASE_PATH
-            . '/app/modules/'
-            . self::$module
-            . '/views/'
-            . $view
-            . '.php';
+        return BASE_PATH . '/app/modules/' . self::$module . '/views/' . $view . '.php';
     }
 
     protected static function getLayout(): string

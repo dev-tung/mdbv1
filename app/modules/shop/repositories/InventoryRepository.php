@@ -7,12 +7,9 @@ class InventoryRepository extends Repository
     // =========================
     public function getList(array $filters = []): array
     {
-        return Database::get(
-            'CALL sp_inventory_list(:keyword)',
-            [
-                'keyword' => $filters['keyword'] ?? null,
-            ],
-        );
+        return Database::get('CALL sp_inventory_list(:keyword)', [
+            'keyword' => $filters['keyword'] ?? null,
+        ]);
     }
 
     // =========================
@@ -20,11 +17,8 @@ class InventoryRepository extends Repository
     // =========================
     public function getStock(array $filters = []): array
     {
-        return Database::get(
-            'CALL sp_inventory_stock(:keyword)',
-            [
-                'keyword' => $filters['keyword'] ?? null,
-            ],
-        );
+        return Database::get('CALL sp_inventory_stock(:keyword)', [
+            'keyword' => $filters['keyword'] ?? null,
+        ]);
     }
 }

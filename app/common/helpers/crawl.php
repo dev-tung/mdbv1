@@ -1,7 +1,6 @@
 <?php
 
 if (!function_exists('crawl_get_html')) {
-
     function crawl_get_html(string $url): string
     {
         $ch = curl_init();
@@ -35,7 +34,6 @@ if (!function_exists('crawl_get_html')) {
 }
 
 if (!function_exists('crawl_download_image')) {
-
     function crawl_download_image(string $url, string $path): bool
     {
         $fp = fopen($path, 'wb');
@@ -60,7 +58,6 @@ if (!function_exists('crawl_download_image')) {
 }
 
 if (!function_exists('crawl_delete_directory')) {
-
     function crawl_delete_directory(string $dir): void
     {
         if (!is_dir($dir)) {
@@ -83,11 +80,9 @@ if (!function_exists('crawl_delete_directory')) {
 
         @rmdir($dir);
     }
-
 }
 
 if (!function_exists('crawl_log')) {
-
     function crawl_log(string $message): void
     {
         if (php_sapi_name() === 'cli') {

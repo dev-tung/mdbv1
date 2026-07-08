@@ -55,7 +55,6 @@ class YonexProductDetailCrawler
         $results = $this->loadResume();
 
         foreach ($products as $i => $product) {
-
             $url = $product['url'] ?? '';
             $slug = $product['slug'] ?? '';
 
@@ -170,7 +169,6 @@ class YonexProductDetailCrawler
         }
 
         foreach ($xpath->query('//table//tr') as $row) {
-
             $cols = $xpath->query('.//td|./th', $row);
 
             if ($cols->length < 2) {
@@ -191,7 +189,6 @@ class YonexProductDetailCrawler
         $images = [];
 
         if (preg_match('#"data"\s*:\s*(\[[\s\S]*?\])#', $html, $m)) {
-
             $json = json_decode($m[1], true);
 
             if (is_array($json)) {
@@ -207,7 +204,6 @@ class YonexProductDetailCrawler
         }
 
         if (empty($images)) {
-
             $dom2 = new DOMDocument();
             @$dom2->loadHTML($html);
             $xpath2 = new DOMXPath($dom2);
@@ -215,7 +211,6 @@ class YonexProductDetailCrawler
             $frames = $xpath2->query('//div[contains(@class,"fotorama__stage__frame")]');
 
             foreach ($frames as $frame) {
-
                 $href = $frame->getAttribute('href');
                 if ($href) {
                     $images[] = $this->normalizeImage($href);
@@ -232,7 +227,6 @@ class YonexProductDetailCrawler
         }
 
         if (empty($images)) {
-
             $dom3 = new DOMDocument();
             @$dom3->loadHTML($html);
             $xpath3 = new DOMXPath($dom3);
@@ -262,7 +256,6 @@ class YonexProductDetailCrawler
         $saved = [];
 
         foreach ($images as $i => $url) {
-
             if (!$url) {
                 continue;
             }
@@ -272,7 +265,7 @@ class YonexProductDetailCrawler
                 $ext = 'jpg';
             }
 
-            $file = ($i + 1) . '.' . $ext;
+            $file = $i + 1 . '.' . $ext;
             $path = $dir . '/' . $file;
 
             crawl_log("Downloading: $url");
@@ -322,12 +315,7 @@ class YonexProductDetailCrawler
     {
         file_put_contents(
             $this->outputFile,
-            json_encode(
-                array_values($data),
-                JSON_PRETTY_PRINT
-                | JSON_UNESCAPED_UNICODE
-                | JSON_UNESCAPED_SLASHES,
-            ),
+            json_encode(array_values($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
         );
     }
 

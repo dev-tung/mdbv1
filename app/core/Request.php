@@ -27,22 +27,17 @@ class Request
     // =========================
     public static function json(): array
     {
-        return json_decode(
-            file_get_contents('php://input'),
-            true,
-        ) ?? [];
+        return json_decode(file_get_contents('php://input'), true) ?? [];
     }
 
     // =========================
     // INPUT
     // =========================
-    public static function input(
-        string $key,
-        $default = null,
-    ) {
+    public static function input(string $key, $default = null)
+    {
         $data = self::json();
 
-        return $data[$key] ?? $_POST[$key] ?? $_GET[$key] ?? $default;
+        return $data[$key] ?? ($_POST[$key] ?? ($_GET[$key] ?? $default));
     }
 
     // =========================
@@ -50,11 +45,7 @@ class Request
     // =========================
     public static function all(): array
     {
-        return array_merge(
-            $_GET,
-            $_POST,
-            self::json(),
-        );
+        return array_merge($_GET, $_POST, self::json());
     }
 
     // =========================

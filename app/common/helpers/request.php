@@ -5,7 +5,7 @@
  */
 function request_input(string $key, mixed $default = null): mixed
 {
-    return $_POST[$key] ?? $_GET[$key] ?? $default;
+    return $_POST[$key] ?? ($_GET[$key] ?? $default);
 }
 
 /**

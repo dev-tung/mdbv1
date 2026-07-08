@@ -345,8 +345,7 @@ account_id
 All business tables must contain:
 
 ```sql
-created_at DATETIME NULL
-updated_at DATETIME NULL
+created_at DATETIME NULL updated_at DATETIME NULL
 ```
 
 ---
@@ -383,14 +382,13 @@ Convention:
 Use:
 
 ```sql
-TINYINT(1)
+TINYINT (1)
 ```
 
 Examples:
 
 ```sql
-is_default TINYINT(1) DEFAULT 0
-is_featured TINYINT(1) DEFAULT 0
+is_default TINYINT (1) DEFAULT 0 is_featured TINYINT (1) DEFAULT 0
 ```
 
 ---
@@ -400,23 +398,19 @@ is_featured TINYINT(1) DEFAULT 0
 Never use:
 
 ```sql
-FLOAT
-DOUBLE
+FLOAT DOUBLE
 ```
 
 Always use:
 
 ```sql
-DECIMAL(15,2)
+DECIMAL(15, 2)
 ```
 
 Examples:
 
 ```sql
-price DECIMAL(15,2)
-cost_price DECIMAL(15,2)
-sale_price DECIMAL(15,2)
-amount DECIMAL(15,2)
+price DECIMAL(15, 2) cost_price DECIMAL(15, 2) sale_price DECIMAL(15, 2) amount DECIMAL(15, 2)
 ```
 
 ---
@@ -432,8 +426,7 @@ INT
 Examples:
 
 ```sql
-quantity INT DEFAULT 0
-stock_quantity INT DEFAULT 0
+quantity INT DEFAULT 0 stock_quantity INT DEFAULT 0
 ```
 
 ---
@@ -449,9 +442,7 @@ VARCHAR(255)
 Examples:
 
 ```sql
-name VARCHAR(255)
-slug VARCHAR(255)
-sku VARCHAR(255)
+name VARCHAR(255) slug VARCHAR(255) sku VARCHAR(255)
 ```
 
 ### Long Text
@@ -463,8 +454,7 @@ TEXT
 Examples:
 
 ```sql
-description TEXT
-note TEXT
+description TEXT note TEXT
 ```
 
 ---
@@ -474,8 +464,7 @@ note TEXT
 Store image path only.
 
 ```sql
-image VARCHAR(255)
-thumbnail VARCHAR(255)
+image VARCHAR(255) thumbnail VARCHAR(255)
 ```
 
 Do not store image binary data inside database.
@@ -493,8 +482,7 @@ ENUM
 Prefer:
 
 ```sql
-type VARCHAR(50)
-status TINYINT
+type VARCHAR(50) status TINYINT
 ```
 
 Or create lookup tables:
@@ -512,9 +500,7 @@ transaction_types
 Examples:
 
 ```sql
-sku VARCHAR(100) UNIQUE
-slug VARCHAR(255) UNIQUE
-email VARCHAR(255) UNIQUE
+sku VARCHAR(100) UNIQUE slug VARCHAR(255) UNIQUE email VARCHAR(255) UNIQUE
 ```
 
 ---
@@ -526,10 +512,7 @@ Create indexes on frequently searched columns.
 Examples:
 
 ```sql
-INDEX idx_name(name)
-INDEX idx_slug(slug)
-INDEX idx_category_id(category_id)
-INDEX idx_created_at(created_at)
+INDEX idx_name (name) INDEX idx_slug (slug) INDEX idx_category_id (category_id) INDEX idx_created_at (created_at)
 ```
 
 ---
@@ -554,9 +537,7 @@ fk_order_items_order
 Example:
 
 ```sql
-CONSTRAINT fk_products_category
-FOREIGN KEY (category_id)
-REFERENCES categories(id)
+CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories (id)
 ```
 
 ---
@@ -570,10 +551,14 @@ Always uppercase.
 Example:
 
 ```sql
-SELECT *
-FROM products
-WHERE status = 1
-ORDER BY id DESC
+SELECT
+    *
+FROM
+    products
+WHERE
+    status = 1
+ORDER BY
+    id DESC
 ```
 
 ---
@@ -588,7 +573,8 @@ SELECT
     name,
     price,
     status
-FROM products;
+FROM
+    products;
 ```
 
 ---
@@ -596,16 +582,10 @@ FROM products;
 ## Insert Style
 
 ```sql
-INSERT INTO products (
-    name,
-    sku,
-    price
-)
-VALUES (
-    'Astrox 100ZZ',
-    'AX100ZZ',
-    5200000
-);
+INSERT INTO
+    products (name, sku, price)
+VALUES
+    ('Astrox 100ZZ', 'AX100ZZ', 5200000);
 ```
 
 ---
@@ -615,36 +595,23 @@ VALUES (
 ```sql
 CREATE TABLE products (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-
     category_id BIGINT UNSIGNED NOT NULL,
     brand_id BIGINT UNSIGNED NULL,
-
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL UNIQUE,
     sku VARCHAR(100) UNIQUE,
-
-    price DECIMAL(15,2) DEFAULT 0,
+    price DECIMAL(15, 2) DEFAULT 0,
     stock_quantity INT DEFAULT 0,
-
     image VARCHAR(255) NULL,
     description TEXT NULL,
-
     status TINYINT DEFAULT 1,
-
     created_at DATETIME NULL,
     updated_at DATETIME NULL,
-
-    INDEX idx_name(name),
-    INDEX idx_slug(slug),
-    INDEX idx_category_id(category_id),
-
-    CONSTRAINT fk_products_category
-        FOREIGN KEY (category_id)
-        REFERENCES categories(id),
-
-    CONSTRAINT fk_products_brand
-        FOREIGN KEY (brand_id)
-        REFERENCES brands(id)
+    INDEX idx_name (name),
+    INDEX idx_slug (slug),
+    INDEX idx_category_id (category_id),
+    CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories (id),
+    CONSTRAINT fk_products_brand FOREIGN KEY (brand_id) REFERENCES brands (id)
 );
 ```
 

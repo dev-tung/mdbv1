@@ -31,8 +31,7 @@ class ProductController
 
     public function edit($id): void
     {
-        $product = $this->productRepository->findById((int) $id)
-            or die('Product not found');
+        ($product = $this->productRepository->findById((int) $id)) or die('Product not found');
 
         View::render('product/edit', compact('id', 'product'));
     }

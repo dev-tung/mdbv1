@@ -34,7 +34,6 @@ class YonexProductImporter
             Database::commit();
 
             echo "<pre style='color:green'>IMPORT DONE!</pre>";
-
         } catch (Throwable $e) {
             Database::rollback();
 
@@ -45,7 +44,7 @@ class YonexProductImporter
             echo 'Line: ' . $e->getLine() . "\n";
             echo '</pre>';
 
-            exit;
+            exit();
         }
     }
 
@@ -98,7 +97,6 @@ class YonexProductImporter
 
         /* STEP 1: build image map */
         foreach ($products as $p) {
-
             $cat = $this->cleanSlug($p['category'] ?? '');
 
             if (isset($seriesMap[$cat])) {
@@ -129,7 +127,6 @@ class YonexProductImporter
 
         /* STEP 2: insert categories */
         foreach ($categories as $item) {
-
             $slug = $this->cleanSlug($item['slug'] ?? '');
             if ($slug === '') {
                 continue;
@@ -138,7 +135,6 @@ class YonexProductImporter
             $thumbnail = null;
 
             if (!empty($firstImageByCategory[$slug])) {
-
                 $relativePath = ltrim($firstImageByCategory[$slug], '/');
 
                 // FIX: bỏ duplicate uploads/
@@ -245,9 +241,8 @@ class YonexProductImporter
         $this->brandId = $this->getBrandId();
 
         foreach ($products as $item) {
-
             $slug = $this->cleanSlug($item['slug'] ?? '');
-            $name = $item['name'] ?? $item['title'] ?? '';
+            $name = $item['name'] ?? ($item['title'] ?? '');
 
             if ($slug === '' || $name === '') {
                 throw new Exception('Missing slug or name');
@@ -281,9 +276,7 @@ class YonexProductImporter
                     'brand_id' => $this->brandId,
                     'name' => $name,
                     'slug' => $slug,
-                    'thumbnail' => isset($item['image_file'])
-                        ? 'uploads/' . ltrim($item['image_file'], '/')
-                        : null,
+                    'thumbnail' => isset($item['image_file']) ? 'uploads/' . ltrim($item['image_file'], '/') : null,
                     'description' => $item['description'] ?? null,
                     'price' => 0,
                     'status' => 1,
@@ -315,7 +308,6 @@ class YonexProductImporter
     protected function importAttributes(int $productId, array $specs): void
     {
         foreach ($specs as $key => $value) {
-
             $key = trim((string) $key);
             $value = trim((string) $value);
 
@@ -343,7 +335,6 @@ class YonexProductImporter
     protected function importImages(int $productId, array $images): void
     {
         foreach ($images as $index => $image) {
-
             if (is_array($image)) {
                 $image = $image[0] ?? '';
             }

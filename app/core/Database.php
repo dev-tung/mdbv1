@@ -10,7 +10,6 @@ class Database
     private static function connect(): PDO
     {
         if (self::$pdo === null) {
-
             $host = Env::get('DB_HOST');
             $dbname = Env::get('DB_NAME');
             $username = Env::get('DB_USER');
@@ -18,16 +17,11 @@ class Database
 
             $dsn = "mysql:host={$host};dbname={$dbname};charset=utf8mb4";
 
-            self::$pdo = new PDO(
-                $dsn,
-                $username,
-                $password,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false,
-                ],
-            );
+            self::$pdo = new PDO($dsn, $username, $password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]);
         }
 
         return self::$pdo;
@@ -39,11 +33,8 @@ class Database
     public static function raw(string $sql): void
     {
         try {
-
             self::connect()->exec($sql);
-
         } catch (PDOException $e) {
-
             echo "================ SQL ERROR ================\n";
             echo $sql . "\n\n";
 
@@ -58,14 +49,11 @@ class Database
     public static function query(string $sql, array $params = []): PDOStatement
     {
         try {
-
             $stmt = self::connect()->prepare($sql);
             $stmt->execute($params);
 
             return $stmt;
-
         } catch (PDOException $e) {
-
             echo "================ SQL ERROR ================\n";
             echo $sql . "\n\n";
 
@@ -105,9 +93,7 @@ class Database
         $results = [];
 
         do {
-
             $results[] = $stmt->fetchAll();
-
         } while ($stmt->nextRowset());
 
         $stmt->closeCursor();
@@ -139,15 +125,12 @@ class Database
         self::connect()->beginTransaction();
 
         try {
-
             $result = $callback();
 
             self::connect()->commit();
 
             return $result;
-
         } catch (Throwable $e) {
-
             self::connect()->rollBack();
 
             throw $e;

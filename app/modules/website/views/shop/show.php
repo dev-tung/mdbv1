@@ -1,27 +1,25 @@
 <main class="container py-4">
 
-    <?php
-        // normalize image url
-        function img_url($img)
-        {
-            if (!$img) {
-                return 'https://placehold.co/600x600';
-            }
-            if (str_starts_with($img, 'http')) {
-                return $img;
-            }
-            return '/' . ltrim($img, '/');
+    <?php // normalize image url
+// normalize image url
+// normalize image url
+    function img_url($img)
+    {
+        if (!$img) {
+            return 'https://placehold.co/600x600';
         }
-    ?>
+        if (str_starts_with($img, 'http')) {
+            return $img;
+        }
+        return '/' . ltrim($img, '/');
+    } ?>
 
     <div class="row g-5">
 
         <!-- LEFT -->
         <div class="col-lg-6">
 
-            <?php
-                $mainImage = img_url($product['thumbnail'] ?? null);
-    ?>
+            <?php $mainImage = img_url($product['thumbnail'] ?? null); ?>
 
             <div class="bg-white border rounded p-3 text-center">
 
@@ -79,9 +77,9 @@
                 <div class="fs-3 fw-bold text-success">
 
                     <?php
-                $price = $product['price'] ?? 0;
-    $sale = $product['sale_price'] ?? 0;
-    ?>
+                    $price = $product['price'] ?? 0;
+                    $sale = $product['sale_price'] ?? 0;
+                    ?>
 
                     <?php if ($price > 0): ?>
 
@@ -118,7 +116,7 @@
                         class="btn btn-success mt-3"
                         data-id="<?= $product['id'] ?>"
                         data-name="<?= urlencode($product['name']) ?>"
-                        data-price="<?= ($sale > 0 ? $sale : $price) ?>"
+                        data-price="<?= $sale > 0 ? $sale : $price ?>"
                         data-image="<?= urlencode($product['thumbnail'] ?? '') ?>"
                         data-stock="<?= $product['stock'] ?>"
                         onclick="handleBuy(this)"

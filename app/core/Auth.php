@@ -10,17 +10,12 @@ class Auth
 
     public static function login(array $user): void
     {
-        Session::set(
-            self::SESSION_KEY,
-            $user,
-        );
+        Session::set(self::SESSION_KEY, $user);
     }
 
     public static function logout(): void
     {
-        Session::remove(
-            self::SESSION_KEY,
-        );
+        Session::remove(self::SESSION_KEY);
     }
 
     /* =================================================
@@ -29,23 +24,17 @@ class Auth
 
     public static function user(): ?array
     {
-        return Session::get(
-            self::SESSION_KEY,
-        );
+        return Session::get(self::SESSION_KEY);
     }
 
     public static function id(): ?int
     {
-        return (int) (
-            self::user()['id']
-            ?? 0
-        );
+        return (int) (self::user()['id'] ?? 0);
     }
 
     public static function role(): ?string
     {
-        return self::user()['role']
-            ?? null;
+        return self::user()['role'] ?? null;
     }
 
     /* =================================================
@@ -68,10 +57,6 @@ class Auth
             return false;
         }
 
-        return in_array(
-            self::role(),
-            (array) $roles,
-            true,
-        );
+        return in_array(self::role(), (array) $roles, true);
     }
 }

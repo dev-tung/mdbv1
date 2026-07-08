@@ -12,7 +12,7 @@ class AdminController
 
         if (Session::get('auth_user')) {
             header('Location: /admin/orders');
-            exit;
+            exit();
         }
 
         View::render('admin/login', [], false);
@@ -23,6 +23,6 @@ class AdminController
         Session::remove('auth_user');
 
         header('Location: /admin/login');
-        exit;
+        exit();
     }
 }

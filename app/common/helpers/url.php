@@ -30,7 +30,7 @@ function route(string $path = ''): string
 function redirect_url(string $url): void
 {
     header("Location: {$url}");
-    exit;
+    exit();
 }
 
 function previous_url(string $default = '/'): string

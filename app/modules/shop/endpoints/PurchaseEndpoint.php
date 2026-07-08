@@ -134,10 +134,7 @@ class PurchaseEndpoint
             ]);
         }
 
-        $updated = $this->purchaseRepository->updateById(
-            (int) $input['id'],
-            ['status' => $input['status']],
-        );
+        $updated = $this->purchaseRepository->status((int) $input['id'], $input['status']);
 
         return Response::json([
             'success' => true,
@@ -163,10 +160,7 @@ class PurchaseEndpoint
             ]);
         }
 
-        $updated = $this->purchaseRepository->payment(
-            (int) $input['id'],
-            $input['payment'],
-        );
+        $updated = $this->purchaseRepository->payment((int) $input['id'], $input['payment']);
 
         return Response::json([
             'success' => true,

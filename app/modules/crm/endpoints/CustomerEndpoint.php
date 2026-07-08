@@ -19,11 +19,7 @@ class CustomerEndpoint
 
         $filters = request_filters(['keyword', 'group_id']);
 
-        $data = $this->customerRepository->getList(
-            $filters,
-            $limit,
-            ($page - 1) * $limit,
-        );
+        $data = $this->customerRepository->getList($filters, $limit, ($page - 1) * $limit);
 
         $total = $this->customerRepository->count($filters);
 

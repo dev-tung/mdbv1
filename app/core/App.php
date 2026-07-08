@@ -8,10 +8,7 @@ class App
         $this->loadHelpers();
         $this->loadRoutes();
 
-        Router::dispatch(
-            Request::method(),
-            Request::path(),
-        );
+        Router::dispatch(Request::method(), Request::path());
     }
 
     protected function loadHelpers(): void

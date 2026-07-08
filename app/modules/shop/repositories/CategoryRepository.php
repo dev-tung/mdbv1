@@ -118,9 +118,12 @@ class CategoryRepository extends Repository
 
         $data['id'] = $id;
 
-        $sql = '
+        $sql =
+            '
             UPDATE categories
-            SET ' . implode(', ', $set) . '
+            SET ' .
+            implode(', ', $set) .
+            '
             WHERE id = :id
         ';
 

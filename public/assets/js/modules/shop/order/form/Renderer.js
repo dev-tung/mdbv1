@@ -39,7 +39,7 @@ const Renderer = {
         wrapper.classList.toggle(
             'd-none',
 
-            !['partial', 'credit'].includes(State.order.payment)
+            !['partial', 'credit'].includes(State.order.payment),
         );
     },
 
@@ -60,7 +60,7 @@ const Renderer = {
             return;
         }
 
-        State.customer.suggestions.forEach(item => {
+        State.customer.suggestions.forEach((item) => {
             box.insertAdjacentHTML(
                 'beforeend',
                 `
@@ -74,7 +74,7 @@ const Renderer = {
 
                 </button>
 
-            `
+            `,
             );
         });
 
@@ -98,7 +98,7 @@ const Renderer = {
             return;
         }
 
-        State.product.suggestions.forEach(item => {
+        State.product.suggestions.forEach((item) => {
             box.insertAdjacentHTML(
                 'beforeend',
                 `
@@ -112,7 +112,7 @@ const Renderer = {
 
                 </button>
 
-            `
+            `,
             );
         });
 
@@ -229,7 +229,7 @@ const Renderer = {
 
               </tr>
 
-          `
+          `,
             );
         });
     },
@@ -274,7 +274,7 @@ const Renderer = {
         wrapper.classList.toggle(
             'd-none',
 
-            !['partial', 'credit'].includes(State.order.payment)
+            !['partial', 'credit'].includes(State.order.payment),
         );
     },
 

@@ -38,7 +38,7 @@ const Renderer = {
 
             ${(State.customers || [])
                 .map(
-                    item => `
+                    (item) => `
 
                     <option
                         value="${item.id}"
@@ -47,7 +47,7 @@ const Renderer = {
                         ${item.name}
                     </option>
 
-                `
+                `,
                 )
                 .join('')}
 
@@ -243,7 +243,7 @@ const Renderer = {
 
                 </tr>
 
-            `
+            `,
             )
             .join('');
     },
@@ -270,7 +270,7 @@ const Renderer = {
 
                 </option>
 
-            `
+            `,
             )
 
             .join('');

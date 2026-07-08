@@ -43,11 +43,9 @@ abstract class Repository
         $placeholders = [];
 
         foreach ($rows as $index => $row) {
-
             $values = [];
 
             foreach ($columns as $column) {
-
                 $key = "{$column}_{$index}";
 
                 $values[] = ":{$key}";
@@ -84,9 +82,12 @@ abstract class Repository
 
         $data['id'] = $id;
 
-        $sql = "
+        $sql =
+            "
             UPDATE {$this->table}
-            SET " . implode(', ', $set) . '
+            SET " .
+            implode(', ', $set) .
+            '
             WHERE id = :id
         ';
 
@@ -98,10 +99,7 @@ abstract class Repository
     // =========================
     public function deleteById(int $id): int
     {
-        return Database::query(
-            "DELETE FROM {$this->table} WHERE id = :id",
-            ['id' => $id],
-        )->rowCount();
+        return Database::query("DELETE FROM {$this->table} WHERE id = :id", ['id' => $id])->rowCount();
     }
 
     // =========================
@@ -109,9 +107,6 @@ abstract class Repository
     // =========================
     public function findById(int $id): ?array
     {
-        return Database::first(
-            "SELECT * FROM {$this->table} WHERE id = :id",
-            ['id' => $id],
-        );
+        return Database::first("SELECT * FROM {$this->table} WHERE id = :id", ['id' => $id]);
     }
 }
