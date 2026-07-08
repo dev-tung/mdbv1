@@ -156,7 +156,9 @@ class OrderEndpoint
             ]);
         }
 
-        $updated = $this->orderRepository->status((int) $input['id'], $input['status']);
+        $updated = $this->orderRepository->updateById((int) $input['id'], [
+            'status' => $input['status'],
+        ]);
 
         return Response::json([
             'success' => true,
