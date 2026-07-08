@@ -4,7 +4,7 @@ class AdminEndpoint
 {
     public function apiLogin()
     {
-        
+
         $username = trim($_POST['username'] ?? '');
         $password = trim($_POST['password'] ?? '');
 
@@ -12,7 +12,7 @@ class AdminEndpoint
 
             return Response::json([
                 'success' => false,
-                'message' => 'Vui lòng nhập tài khoản và mật khẩu'
+                'message' => 'Vui lòng nhập tài khoản và mật khẩu',
             ], 400);
 
         }
@@ -25,7 +25,7 @@ class AdminEndpoint
 
             return Response::json([
                 'success' => false,
-                'message' => 'Tài khoản không tồn tại'
+                'message' => 'Tài khoản không tồn tại',
             ], 401);
 
         }
@@ -34,22 +34,22 @@ class AdminEndpoint
 
             return Response::json([
                 'success' => false,
-                'message' => 'Sai mật khẩu'
+                'message' => 'Sai mật khẩu',
             ], 401);
 
         }
 
         Auth::login([
-            'id'    => $user['id'],
-            'name'  => $user['name'],
+            'id' => $user['id'],
+            'name' => $user['name'],
             'email' => $user['email'],
-            'role'  => 'admin'
+            'role' => 'admin',
         ]);
 
         return Response::json([
             'success' => true,
             'message' => 'Đăng nhập thành công',
-            'data'    => Auth::user()
+            'data' => Auth::user(),
         ]);
     }
 
@@ -59,7 +59,7 @@ class AdminEndpoint
 
         return Response::json([
             'success' => true,
-            'message' => 'Đăng xuất thành công'
+            'message' => 'Đăng xuất thành công',
         ]);
     }
 }

@@ -15,7 +15,7 @@ class BrandController
     public function edit($id): void
     {
         View::render('brand/edit', [
-            'id' => $id
+            'id' => $id,
         ]);
     }
 }

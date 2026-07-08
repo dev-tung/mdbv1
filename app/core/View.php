@@ -16,9 +16,9 @@ class View
 
     public static function render(string $view, array $data = [], $menu = true): void
     {
-        $header  = self::getHeader();
+        $header = self::getHeader();
         $content = self::getContent($view);
-        $footer  = self::getFooter();
+        $footer = self::getFooter();
 
         if (!file_exists($header)) {
             self::fail("Header not found: {$header}");
@@ -45,11 +45,11 @@ class View
     protected static function getContent(string $view): string
     {
         return BASE_PATH
-            . "/app/modules/"
+            . '/app/modules/'
             . self::$module
-            . "/views/"
+            . '/views/'
             . $view
-            . ".php";
+            . '.php';
     }
 
     protected static function getLayout(): string

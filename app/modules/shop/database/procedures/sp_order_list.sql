@@ -5,14 +5,13 @@ CREATE PROCEDURE sp_order_list(
     IN p_date_from DATE,
     IN p_date_to DATE,
 
-    IN p_customer_id INT,
+    IN p_customer VARCHAR(255),
 
     IN p_payment VARCHAR(20),
 
     IN p_status VARCHAR(20)
 
 )
-
 BEGIN
 
     SELECT
@@ -62,8 +61,9 @@ BEGIN
         AND
 
         (
-            p_customer_id IS NULL
-            OR o.customer_id = p_customer_id
+            p_customer IS NULL
+            OR c.name LIKE CONCAT('%', p_customer, '%')
+            OR c.phone LIKE CONCAT('%', p_customer, '%')
         )
 
         AND
@@ -82,4 +82,4 @@ BEGIN
 
     ORDER BY o.id DESC;
 
-END
+END;

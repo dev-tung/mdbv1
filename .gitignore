@@ -10,3 +10,21 @@ public/craw/
 # ENV FILE
 # ======================
 .env
+
+# PHP CS Fixer
+.php-cs-fixer.cache
+.php-cs-fixer.dist.php
+
+# Prettier
+.prettierignore
+.prettierrc
+
+# Composer
+composer.json
+composer.lock
+vendor/
+
+# Node.js
+package.json
+package-lock.json
+node_modules/

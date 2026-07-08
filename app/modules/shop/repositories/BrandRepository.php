@@ -7,17 +7,17 @@ class BrandRepository
      */
     private function buildWhere(array $conditions, array &$params): string
     {
-        $sql = " WHERE 1=1 ";
+        $sql = ' WHERE 1=1 ';
 
         // STATUS
         if (isset($conditions['status']) && $conditions['status'] !== '') {
-            $sql .= " AND status = :status";
+            $sql .= ' AND status = :status';
             $params['status'] = $conditions['status'];
         }
 
         // KEYWORD
         if (!empty($conditions['keyword'])) {
-            $sql .= " AND name LIKE :keyword";
+            $sql .= ' AND name LIKE :keyword';
             $params['keyword'] = '%' . $conditions['keyword'] . '%';
         }
 
@@ -31,14 +31,14 @@ class BrandRepository
     {
         $params = [];
 
-        $sql = "
+        $sql = '
             SELECT *
             FROM brands
-        ";
+        ';
 
         $sql .= $this->buildWhere($conditions, $params);
 
-        $sql .= " ORDER BY id DESC";
+        $sql .= ' ORDER BY id DESC';
 
         if ($limit > 0) {
             $limit = (int) $limit;
@@ -57,10 +57,10 @@ class BrandRepository
     {
         $params = [];
 
-        $sql = "
+        $sql = '
             SELECT COUNT(*) AS total
             FROM brands
-        ";
+        ';
 
         $sql .= $this->buildWhere($conditions, $params);
 
@@ -75,13 +75,13 @@ class BrandRepository
     public function findById(int $id): ?array
     {
         return Database::first(
-            "
+            '
                 SELECT *
                 FROM brands
                 WHERE id = :id
                 LIMIT 1
-            ",
-            ['id' => $id]
+            ',
+            ['id' => $id],
         );
     }
 
@@ -120,11 +120,11 @@ class BrandRepository
 
         $data['id'] = $id;
 
-        $sql = "
+        $sql = '
             UPDATE brands
-            SET " . implode(', ', $set) . "
+            SET ' . implode(', ', $set) . '
             WHERE id = :id
-        ";
+        ';
 
         return Database::update($sql, $data);
     }
@@ -135,11 +135,11 @@ class BrandRepository
     public function deleteById(int $id): int
     {
         return Database::delete(
-            "
+            '
                 DELETE FROM brands
                 WHERE id = :id
-            ",
-            ['id' => $id]
+            ',
+            ['id' => $id],
         );
     }
 }

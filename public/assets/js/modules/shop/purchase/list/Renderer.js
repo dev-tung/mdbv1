@@ -1,14 +1,11 @@
 import State from './State.js';
 
 const Renderer = {
-
-
     /* =================================================
        MAIN
     ================================================= */
 
     render() {
-
         this.renderFilters();
 
         this.renderSummary();
@@ -16,31 +13,22 @@ const Renderer = {
         this.renderTable();
 
         this.renderPagination();
-
     },
-
 
     /* =================================================
        FILTER
     ================================================= */
 
     renderFilters() {
-
         this.renderSuppliers();
 
         this.renderPayments();
-
     },
 
-
     renderSuppliers() {
-
-        const select =
-            document.querySelector('#filter-supplier');
-
+        const select = document.querySelector('#filter-supplier');
 
         if (!select) return;
-
 
         select.innerHTML = `
 
@@ -49,37 +37,28 @@ const Renderer = {
             </option>
 
 
-            ${
-                (State.suppliers || [])
-                .map(item => `
+            ${(State.suppliers || [])
+                .map(
+                    item => `
 
                     <option
                         value="${item.id}"
-                        ${State.filter.supplier_id == item.id
-                            ? 'selected'
-                            : ''
-                        }
+                        ${State.filter.supplier_id == item.id ? 'selected' : ''}
                     >
                         ${item.name}
                     </option>
 
-                `)
-                .join('')
-            }
+                `
+                )
+                .join('')}
 
         `;
-
     },
 
-
     renderPayments() {
-
-        const select =
-            document.querySelector('#filter-payment');
-
+        const select = document.querySelector('#filter-payment');
 
         if (!select) return;
-
 
         select.innerHTML = `
 
@@ -88,85 +67,47 @@ const Renderer = {
             </option>
 
 
-            ${
-                this.renderOptions(
-                    State.options?.payments || {},
-                    State.filter.payment
-                )
-            }
+            ${this.renderOptions(State.options?.payments || {}, State.filter.payment)}
 
         `;
-
     },
-
 
     /* =================================================
        SUMMARY
     ================================================= */
 
     renderSummary() {
+        const summary = State.summary || {};
 
-        const summary =
-            State.summary || {};
-
-
-        const total =
-            document.querySelector('#sum-total-amount');
-
+        const total = document.querySelector('#sum-total-amount');
 
         if (total) {
-
-            total.textContent =
-                this.money(summary.total_amount);
-
+            total.textContent = this.money(summary.total_amount);
         }
 
-
-
-        const paid =
-            document.querySelector('#sum-paid-amount');
-
+        const paid = document.querySelector('#sum-paid-amount');
 
         if (paid) {
-
-            paid.textContent =
-                this.money(summary.paid_amount);
-
+            paid.textContent = this.money(summary.paid_amount);
         }
 
-
-
-        const debt =
-            document.querySelector('#sum-debt-amount');
-
+        const debt = document.querySelector('#sum-debt-amount');
 
         if (debt) {
-
-            debt.textContent =
-                this.money(summary.debt_amount);
-
+            debt.textContent = this.money(summary.debt_amount);
         }
-
     },
-
 
     /* =================================================
        TABLE
     ================================================= */
 
     renderTable() {
-
-        const tbody =
-            document.querySelector('#purchase-table-body');
-
+        const tbody = document.querySelector('#purchase-table-body');
 
         if (!tbody) return;
 
-
-
         if (!State.purchases?.length) {
-
-
             tbody.innerHTML = `
 
                 <tr>
@@ -184,16 +125,12 @@ const Renderer = {
 
             `;
 
-
             return;
-
         }
 
-
-
-        tbody.innerHTML =
-
-            State.purchases.map((purchase, index) => `
+        tbody.innerHTML = State.purchases
+            .map(
+                (purchase, index) => `
 
 
             <tr>
@@ -218,25 +155,19 @@ const Renderer = {
 
 
                 <td>
-                    ${this.money(
-                        purchase.total_amount
-                    )}
+                    ${this.money(purchase.total_amount)}
                 </td>
 
 
 
                 <td>
-                    ${this.money(
-                        purchase.paid_amount
-                    )}
+                    ${this.money(purchase.paid_amount)}
                 </td>
 
 
 
                 <td>
-                    ${this.money(
-                        purchase.debt_amount
-                    )}
+                    ${this.money(purchase.debt_amount)}
                 </td>
 
 
@@ -251,24 +182,14 @@ const Renderer = {
                             form-select
                             form-select-sm
                             purchase-status
-                            text-${
-                                this.getColor(
-                                    State.options?.statuses,
-                                    purchase.status
-                                )
-                            }
+                            text-${this.getColor(State.options?.statuses, purchase.status)}
                         "
 
                         data-id="${purchase.id}"
 
                     >
 
-                        ${
-                            this.renderOptions(
-                                State.options?.statuses || {},
-                                purchase.status
-                            )
-                        }
+                        ${this.renderOptions(State.options?.statuses || {}, purchase.status)}
 
 
                     </select>
@@ -290,12 +211,7 @@ const Renderer = {
                             form-select
                             form-select-sm
                             purchase-payment
-                            text-${
-                                this.getColor(
-                                    State.options?.payments,
-                                    purchase.payment
-                                )
-                            }
+                            text-${this.getColor(State.options?.payments, purchase.payment)}
                         "
 
                         data-id="${purchase.id}"
@@ -303,12 +219,7 @@ const Renderer = {
                     >
 
 
-                        ${
-                            this.renderOptions(
-                                State.options?.payments || {},
-                                purchase.payment
-                            )
-                        }
+                        ${this.renderOptions(State.options?.payments || {}, purchase.payment)}
 
 
                     </select>
@@ -374,31 +285,27 @@ const Renderer = {
             </tr>
 
 
-        `).join('');
-
+        `
+            )
+            .join('');
     },
-
 
     /* =================================================
        OPTIONS
     ================================================= */
 
     renderOptions(data = {}, selected) {
-
-
         return Object.entries(data)
 
-            .map(([value, item]) => `
+            .map(
+                ([value, item]) => `
 
 
                 <option
 
                     value="${value}"
 
-                    ${value == selected
-                        ? 'selected'
-                        : ''
-                    }
+                    ${value == selected ? 'selected' : ''}
 
                 >
 
@@ -407,47 +314,31 @@ const Renderer = {
                 </option>
 
 
-            `)
+            `
+            )
 
             .join('');
-
     },
-
-
 
     getColor(data = {}, value) {
-
         return data?.[value]?.color || '';
-
     },
-
-
 
     /* =================================================
        PAGINATION
     ================================================= */
 
     renderPagination() {
-
         // làm sau
-
     },
-
-
 
     /* =================================================
        MONEY
     ================================================= */
 
     money(value) {
-
-        return Number(value || 0)
-            .toLocaleString('vi-VN');
-
-    }
-
-
+        return Number(value || 0).toLocaleString('vi-VN');
+    },
 };
-
 
 export default Renderer;

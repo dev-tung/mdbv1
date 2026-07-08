@@ -11,7 +11,7 @@ class ProductValidator
             return 'Tên sản phẩm không được để trống';
         }
 
-        if (!isset($input['category_id']) || (int)$input['category_id'] <= 0) {
+        if (!isset($input['category_id']) || (int) $input['category_id'] <= 0) {
             return 'Category không hợp lệ';
         }
 
@@ -23,7 +23,7 @@ class ProductValidator
             return 'Giá sale không hợp lệ';
         }
 
-        if (isset($input['status']) && !in_array((int)$input['status'], [0, 1])) {
+        if (isset($input['status']) && !in_array((int) $input['status'], [0, 1])) {
             return 'Status không hợp lệ';
         }
 
@@ -35,7 +35,7 @@ class ProductValidator
     // =========================
     public static function update(array $input): ?string
     {
-        if (!isset($input['id']) || (int)$input['id'] <= 0) {
+        if (!isset($input['id']) || (int) $input['id'] <= 0) {
             return 'ID không hợp lệ';
         }
 

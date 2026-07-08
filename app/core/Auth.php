@@ -12,14 +12,14 @@ class Auth
     {
         Session::set(
             self::SESSION_KEY,
-            $user
+            $user,
         );
     }
 
     public static function logout(): void
     {
         Session::remove(
-            self::SESSION_KEY
+            self::SESSION_KEY,
         );
     }
 
@@ -30,7 +30,7 @@ class Auth
     public static function user(): ?array
     {
         return Session::get(
-            self::SESSION_KEY
+            self::SESSION_KEY,
         );
     }
 
@@ -71,7 +71,7 @@ class Auth
         return in_array(
             self::role(),
             (array) $roles,
-            true
+            true,
         );
     }
 }

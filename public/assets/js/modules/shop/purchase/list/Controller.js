@@ -10,20 +10,11 @@ import Event from './Event.js';
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
-
     try {
-
-        await Promise.all([
-            Service.loadSuppliers(),
-            Service.loadPurchases()
-        ]);
+        await Promise.all([Service.loadSuppliers(), Service.loadPurchases()]);
 
         Event.init();
-
     } catch (error) {
-
         console.error(error);
-
     }
-
 }

@@ -4,20 +4,13 @@ import Renderer from './Renderer.js';
 import Event from './Event.js';
 
 const Controller = {
-
     async init() {
-
-        await Promise.all([
-            Service.loadCustomers(),
-            Service.loadOrders()
-        ]);
+        await Promise.all([Service.loadCustomers(), Service.loadOrders()]);
 
         Renderer.render();
 
         Event.init();
-
-    }
-
+    },
 };
 
 document.addEventListener('DOMContentLoaded', () => {

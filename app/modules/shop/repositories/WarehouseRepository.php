@@ -7,17 +7,17 @@ class WarehouseRepository
      */
     private function buildWhere(array $conditions, array &$params): string
     {
-        $sql = " WHERE 1=1";
+        $sql = ' WHERE 1=1';
 
         // KEYWORD
         if (!empty($conditions['keyword'])) {
 
-            $sql .= "
+            $sql .= '
                 AND (
                     name LIKE :keyword
                     OR address LIKE :keyword
                 )
-            ";
+            ';
 
             $params['keyword'] = '%' . trim($conditions['keyword']) . '%';
         }
@@ -25,7 +25,7 @@ class WarehouseRepository
         // STATUS
         if (isset($conditions['status']) && $conditions['status'] !== '') {
 
-            $sql .= " AND status = :status";
+            $sql .= ' AND status = :status';
             $params['status'] = $conditions['status'];
         }
 
@@ -38,18 +38,18 @@ class WarehouseRepository
     public function getList(
         array $conditions = [],
         int $limit = 0,
-        int $offset = 0
+        int $offset = 0,
     ): array {
         $params = [];
 
-        $sql = "
+        $sql = '
             SELECT *
             FROM warehouses
-        ";
+        ';
 
         $sql .= $this->buildWhere($conditions, $params);
 
-        $sql .= " ORDER BY id DESC";
+        $sql .= ' ORDER BY id DESC';
 
         if ($limit > 0) {
 
@@ -69,10 +69,10 @@ class WarehouseRepository
     {
         $params = [];
 
-        $sql = "
+        $sql = '
             SELECT COUNT(*) AS total
             FROM warehouses
-        ";
+        ';
 
         $sql .= $this->buildWhere($conditions, $params);
 
@@ -87,15 +87,15 @@ class WarehouseRepository
     public function findById(int $id): ?array
     {
         return Database::first(
-            "
+            '
                 SELECT *
                 FROM warehouses
                 WHERE id = :id
                 LIMIT 1
-            ",
+            ',
             [
-                'id' => $id
-            ]
+                'id' => $id,
+            ],
         );
     }
 
@@ -134,11 +134,11 @@ class WarehouseRepository
 
         $data['id'] = $id;
 
-        $sql = "
+        $sql = '
             UPDATE warehouses
-            SET " . implode(', ', $set) . "
+            SET ' . implode(', ', $set) . '
             WHERE id = :id
-        ";
+        ';
 
         return Database::update($sql, $data);
     }
@@ -149,13 +149,13 @@ class WarehouseRepository
     public function deleteById(int $id): int
     {
         return Database::delete(
-            "
+            '
                 DELETE FROM warehouses
                 WHERE id = :id
-            ",
+            ',
             [
-                'id' => $id
-            ]
+                'id' => $id,
+            ],
         );
     }
 }

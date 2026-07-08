@@ -2,10 +2,7 @@
 
 class OrderEndpoint
 {
-
     private OrderRepository $orderRepository;
-
-
 
     public function __construct()
     {
@@ -13,8 +10,6 @@ class OrderEndpoint
         $this->orderRepository = new OrderRepository();
 
     }
-
-
 
     // =========================
     // LIST
@@ -25,10 +20,7 @@ class OrderEndpoint
 
         $filters = request_all();
 
-
         $result = $this->orderRepository->getList($filters);
-
-
 
         return Response::json([
 
@@ -36,13 +28,11 @@ class OrderEndpoint
 
             'message' => 'Lấy danh sách đơn hàng thành công',
 
-            'data'    => $result
+            'data' => $result,
 
         ]);
 
     }
-
-
 
     // =========================
     // SHOW
@@ -53,14 +43,9 @@ class OrderEndpoint
 
         $id = request_id();
 
-
-
         $data = $this->orderRepository->show($id);
 
-
-
         if (!$data) {
-
 
             return Response::json([
 
@@ -68,13 +53,11 @@ class OrderEndpoint
 
                 'message' => 'Không tìm thấy đơn hàng',
 
-                'data'    => null
+                'data' => null,
 
             ]);
 
         }
-
-
 
         return Response::json([
 
@@ -82,14 +65,11 @@ class OrderEndpoint
 
             'message' => 'Lấy chi tiết đơn hàng thành công',
 
-            'data'    => $data
+            'data' => $data,
 
         ]);
 
     }
-
-
-
 
     // =========================
     // CREATE
@@ -100,34 +80,23 @@ class OrderEndpoint
 
         $input = request_all();
 
-
-
         $error = OrderValidator::create($input);
 
-
-
         if ($error) {
-
 
             return Response::json([
 
                 'success' => false,
 
-                'message' => $error
+                'message' => $error,
 
             ]);
 
         }
 
-
-
         $input['created_by'] = Auth::id();
 
-
-
         $id = $this->orderRepository->create($input);
-
-
 
         return Response::json([
 
@@ -137,20 +106,15 @@ class OrderEndpoint
 
             'data' => [
 
-                'id' => $id
+                'id' => $id,
 
             ],
 
-
-            'redirect' => "/admin/orders"
+            'redirect' => '/admin/orders',
 
         ]);
 
     }
-
-
-
-
 
     // =========================
     // UPDATE
@@ -161,34 +125,23 @@ class OrderEndpoint
 
         $input = request_all();
 
-
-
         $error = OrderValidator::update($input);
 
-
-
         if ($error) {
-
 
             return Response::json([
 
                 'success' => false,
 
-                'message' => $error
+                'message' => $error,
 
             ]);
 
         }
 
-
-
         $input['updated_by'] = Auth::id();
 
-
-
         $this->orderRepository->update($input);
-
-
 
         return Response::json([
 
@@ -196,15 +149,11 @@ class OrderEndpoint
 
             'message' => 'Cập nhật đơn hàng thành công',
 
-            'redirect' => "/admin/orders"
+            'redirect' => '/admin/orders',
 
         ]);
 
     }
-
-
-
-
 
     // =========================
     // DELETE
@@ -215,25 +164,17 @@ class OrderEndpoint
 
         $id = request_id();
 
-
-
         $this->orderRepository->delete($id);
-
-
 
         return Response::json([
 
             'success' => true,
 
-            'message' => 'Xoá đơn hàng thành công'
+            'message' => 'Xoá đơn hàng thành công',
 
         ]);
 
     }
-
-
-
-
 
     // =========================
     // STATUS
@@ -244,40 +185,30 @@ class OrderEndpoint
 
         $input = request_all();
 
-
-
         if (
-            empty($input['id']) ||
-            !isset($input['status'])
+            empty($input['id'])
+            || !isset($input['status'])
         ) {
-
 
             return Response::json([
 
                 'success' => false,
 
-                'message' => 'Thiếu dữ liệu trạng thái'
+                'message' => 'Thiếu dữ liệu trạng thái',
 
             ]);
 
         }
 
-
-
-        $updated =
-            $this->orderRepository->updateById(
-
-                (int)$input['id'],
-
+        $updated
+            = $this->orderRepository->updateById(
+                (int) $input['id'],
                 [
 
-                    'status' => $input['status']
+                    'status' => $input['status'],
 
-                ]
-
+                ],
             );
-
-
 
         return Response::json([
 
@@ -287,17 +218,13 @@ class OrderEndpoint
 
             'data' => [
 
-                'affected_rows' => $updated
+                'affected_rows' => $updated,
 
-            ]
+            ],
 
         ]);
 
     }
-
-
-
-
 
     // =========================
     // PAYMENT
@@ -308,36 +235,26 @@ class OrderEndpoint
 
         $input = request_all();
 
-
-
         if (
-            empty($input['id']) ||
-            !isset($input['payment'])
+            empty($input['id'])
+            || !isset($input['payment'])
         ) {
-
 
             return Response::json([
 
                 'success' => false,
 
-                'message' => 'Thiếu dữ liệu thanh toán'
+                'message' => 'Thiếu dữ liệu thanh toán',
 
             ]);
 
         }
 
-
-
-        $updated =
-            $this->orderRepository->payment(
-
-                (int)$input['id'],
-
-                $input['payment']
-
+        $updated
+            = $this->orderRepository->payment(
+                (int) $input['id'],
+                $input['payment'],
             );
-
-
 
         return Response::json([
 
@@ -347,13 +264,11 @@ class OrderEndpoint
 
             'data' => [
 
-                'affected_rows' => $updated
+                'affected_rows' => $updated,
 
-            ]
+            ],
 
         ]);
 
     }
-
-
 }

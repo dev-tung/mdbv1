@@ -10,9 +10,7 @@ import Event from './Event.js';
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
-
     try {
-
         State.reset();
 
         const purchaseId = getPurchaseId();
@@ -21,13 +19,9 @@ async function init() {
 
         Renderer.init();
         Event.bind();
-
     } catch (error) {
-
         console.error(error);
-
     }
-
 }
 
 /* =================================================
@@ -35,17 +29,13 @@ async function init() {
 ================================================= */
 
 async function loadData(purchaseId) {
-
-    const tasks = [
-        Service.loadWarehouses()
-    ];
+    const tasks = [Service.loadWarehouses()];
 
     if (purchaseId) {
         tasks.push(Service.loadPurchase(purchaseId));
     }
 
     await Promise.all(tasks);
-
 }
 
 /* =================================================

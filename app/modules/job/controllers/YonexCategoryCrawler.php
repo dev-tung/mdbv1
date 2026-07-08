@@ -5,12 +5,13 @@ class YonexCategoryCrawler
     protected string $baseUrl = 'https://www.yonex.com/badminton';
 
     protected string $jsonFile;
+
     protected string $imgDir;
 
     public function __construct()
     {
         $this->jsonFile = PATH_ROOT . '/public/craw/json/yonex_category.json';
-        $this->imgDir   = PATH_ROOT . '/public/craw/image/yonex_category';
+        $this->imgDir = PATH_ROOT . '/public/craw/image/yonex_category';
     }
 
     public function run(): void
@@ -30,12 +31,12 @@ class YonexCategoryCrawler
 
         $this->ensureDir($this->imgDir);
 
-        crawl_log("Loading homepage...");
+        crawl_log('Loading homepage...');
 
         $html = crawl_get_html($this->baseUrl);
 
         if (!$html) {
-            throw new RuntimeException("Cannot load Yonex website");
+            throw new RuntimeException('Cannot load Yonex website');
         }
 
         /**
@@ -43,7 +44,7 @@ class YonexCategoryCrawler
          */
         $categories = $this->extractCategories($html);
 
-        crawl_log("Found " . count($categories) . " categories");
+        crawl_log('Found ' . count($categories) . ' categories');
 
         /**
          * GET MENU IMAGES
@@ -51,26 +52,26 @@ class YonexCategoryCrawler
         preg_match_all(
             '#https://www\.yonex\.com/media/wysiwyg/submenu-icons/[^"\']+#i',
             $html,
-            $matches
+            $matches,
         );
 
         $images = array_values(array_unique($matches[0] ?? []));
 
-        crawl_log("Found " . count($images) . " menu images");
+        crawl_log('Found ' . count($images) . ' menu images');
 
         /**
          * MAP CATEGORY → KEYWORD
          */
         $map = [
-            'racquets'           => 'racket',
-            'strings'            => 'string',
+            'racquets' => 'racket',
+            'strings' => 'string',
             'stringing-machines' => 'machine',
-            'shuttlecocks'       => 'shuttle',
-            'shoes'              => 'shoe',
-            'footwear'           => 'shoe',
-            'bags'               => 'bag',
-            'apparel'            => 'apparel',
-            'accessories'        => 'accessory',
+            'shuttlecocks' => 'shuttle',
+            'shoes' => 'shoe',
+            'footwear' => 'shoe',
+            'bags' => 'bag',
+            'apparel' => 'apparel',
+            'accessories' => 'accessory',
         ];
 
         /**
@@ -106,8 +107,8 @@ class YonexCategoryCrawler
             if (crawl_download_image($matchedImage, $savePath)) {
 
                 $categories[$key]['image'] = $matchedImage;
-                $categories[$key]['image_file'] =
-                    'image/yonex_category/' . $fileName;
+                $categories[$key]['image_file']
+                    = 'image/yonex_category/' . $fileName;
             }
         }
 
@@ -118,21 +119,21 @@ class YonexCategoryCrawler
             $this->jsonFile,
             json_encode(
                 array_values($categories),
-                JSON_PRETTY_PRINT |
-                JSON_UNESCAPED_UNICODE |
-                JSON_UNESCAPED_SLASHES
-            )
+                JSON_PRETTY_PRINT
+                | JSON_UNESCAPED_UNICODE
+                | JSON_UNESCAPED_SLASHES,
+            ),
         );
 
         /**
          * LOG RESULT
          */
-        crawl_log("====================");
-        crawl_log("DONE");
-        crawl_log("Categories: " . count($categories));
-        crawl_log("JSON: " . $this->jsonFile);
-        crawl_log("Images: " . $this->imgDir);
-        crawl_log("====================");
+        crawl_log('====================');
+        crawl_log('DONE');
+        crawl_log('Categories: ' . count($categories));
+        crawl_log('JSON: ' . $this->jsonFile);
+        crawl_log('Images: ' . $this->imgDir);
+        crawl_log('====================');
     }
 
     /**
@@ -172,7 +173,7 @@ class YonexCategoryCrawler
             if (
                 !preg_match(
                     '#/badminton/(racquets|strings|stringing-machines|shuttlecocks|apparel|shoes|footwear|bags|accessories)#i',
-                    $href
+                    $href,
                 )
             ) {
                 continue;
@@ -196,10 +197,10 @@ class YonexCategoryCrawler
             }
 
             $categories[$slug] = [
-                'name'       => $name,
-                'slug'       => $slug,
-                'url'        => $url,
-                'image'      => null,
+                'name' => $name,
+                'slug' => $slug,
+                'url' => $url,
+                'image' => null,
                 'image_file' => null,
             ];
         }

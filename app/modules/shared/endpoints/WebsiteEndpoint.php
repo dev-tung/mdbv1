@@ -10,14 +10,14 @@ class WebsiteEndpoint
         if ($password !== '123456') {
             return Response::json([
                 'success' => false,
-                'message' => 'Sai mật khẩu'
+                'message' => 'Sai mật khẩu',
             ], 401);
         }
 
         $customer = [
-            'id'    => 1,
+            'id' => 1,
             'email' => $email,
-            'name'  => 'Customer'
+            'name' => 'Customer',
         ];
 
         Session::set('auth_customer', $customer);
@@ -25,7 +25,7 @@ class WebsiteEndpoint
         return Response::json([
             'success' => true,
             'message' => 'Login success',
-            'data' => $customer
+            'data' => $customer,
         ]);
     }
 }

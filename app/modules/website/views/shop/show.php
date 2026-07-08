@@ -2,9 +2,14 @@
 
     <?php
         // normalize image url
-        function img_url($img) {
-            if (!$img) return 'https://placehold.co/600x600';
-            if (str_starts_with($img, 'http')) return $img;
+        function img_url($img)
+        {
+            if (!$img) {
+                return 'https://placehold.co/600x600';
+            }
+            if (str_starts_with($img, 'http')) {
+                return $img;
+            }
             return '/' . ltrim($img, '/');
         }
     ?>
@@ -16,7 +21,7 @@
 
             <?php
                 $mainImage = img_url($product['thumbnail'] ?? null);
-            ?>
+    ?>
 
             <div class="bg-white border rounded p-3 text-center">
 
@@ -74,9 +79,9 @@
                 <div class="fs-3 fw-bold text-success">
 
                     <?php
-                        $price = $product['price'] ?? 0;
-                        $sale = $product['sale_price'] ?? 0;
-                    ?>
+                $price = $product['price'] ?? 0;
+    $sale = $product['sale_price'] ?? 0;
+    ?>
 
                     <?php if ($price > 0): ?>
 

@@ -3,14 +3,16 @@
 class YonexProductCrawler
 {
     protected string $categoryFile;
+
     protected string $jsonFile;
+
     protected string $imgDir;
 
     public function __construct()
     {
         $this->categoryFile = PATH_ROOT . '/public/craw/json/yonex_category.json';
         $this->jsonFile = PATH_ROOT . '/public/craw/json/yonex_product.json';
-        $this->imgDir   = PATH_ROOT . '/public/craw/image/yonex_product';
+        $this->imgDir = PATH_ROOT . '/public/craw/image/yonex_product';
     }
 
     public function run(): void
@@ -26,21 +28,21 @@ class YonexProductCrawler
         crawl_delete_directory($this->imgDir);
         $this->ensureDir($this->imgDir);
 
-        crawl_log("Loading categories...");
+        crawl_log('Loading categories...');
 
         $categories = json_decode(file_get_contents($this->categoryFile), true);
 
         if (!is_array($categories)) {
-            throw new RuntimeException("Invalid category file");
+            throw new RuntimeException('Invalid category file');
         }
 
         $products = [];
 
         foreach ($categories as $category) {
 
-            crawl_log("");
-            crawl_log("====================");
-            crawl_log("Category: " . $category['name']);
+            crawl_log('');
+            crawl_log('====================');
+            crawl_log('Category: ' . $category['name']);
 
             $items = $this->crawlCategory($category);
 
@@ -48,7 +50,7 @@ class YonexProductCrawler
                 $products[$key] = $item;
             }
 
-            crawl_log("Found: " . count($items));
+            crawl_log('Found: ' . count($items));
         }
 
         /**
@@ -58,17 +60,17 @@ class YonexProductCrawler
             $this->jsonFile,
             json_encode(
                 array_values($products),
-                JSON_PRETTY_PRINT |
-                JSON_UNESCAPED_UNICODE |
-                JSON_UNESCAPED_SLASHES
-            )
+                JSON_PRETTY_PRINT
+                | JSON_UNESCAPED_UNICODE
+                | JSON_UNESCAPED_SLASHES,
+            ),
         );
 
-        crawl_log("");
-        crawl_log("====================");
-        crawl_log("DONE");
-        crawl_log("TOTAL PRODUCTS: " . count($products));
-        crawl_log("====================");
+        crawl_log('');
+        crawl_log('====================');
+        crawl_log('DONE');
+        crawl_log('TOTAL PRODUCTS: ' . count($products));
+        crawl_log('====================');
     }
 
     /**
@@ -86,7 +88,7 @@ class YonexProductCrawler
 
         $pageUrls = $this->getPageUrls($firstHtml, $category['url']);
 
-        crawl_log("Pages found: " . count($pageUrls));
+        crawl_log('Pages found: ' . count($pageUrls));
 
         $products = [];
 
@@ -136,7 +138,7 @@ class YonexProductCrawler
 
             $linkNode = $xpath->query(
                 './/a[contains(@class,"product-item-link")]',
-                $node
+                $node,
             )->item(0);
 
             if (!$linkNode) {
@@ -144,7 +146,7 @@ class YonexProductCrawler
             }
 
             $name = trim(preg_replace('/\s+/', ' ', $linkNode->textContent));
-            $url  = trim($linkNode->getAttribute('href'));
+            $url = trim($linkNode->getAttribute('href'));
 
             if (!$name || !$url) {
                 continue;
@@ -163,12 +165,12 @@ class YonexProductCrawler
             $slug = $this->slugify($name);
 
             $product = [
-                'name'        => $name,
-                'slug'        => $slug,
-                'url'         => $url,
-                'category'    => $category['slug'],
-                'image'       => $image,
-                'image_file'  => null,
+                'name' => $name,
+                'slug' => $slug,
+                'url' => $url,
+                'category' => $category['slug'],
+                'image' => $image,
+                'image_file' => null,
             ];
 
             /**
@@ -188,10 +190,10 @@ class YonexProductCrawler
 
                 if (crawl_download_image($image, $savePath)) {
 
-                    $product['image_file'] =
-                        'image/yonex_product/' .
-                        $category['slug'] . '/' .
-                        $fileName;
+                    $product['image_file']
+                        = 'image/yonex_product/'
+                        . $category['slug'] . '/'
+                        . $fileName;
                 }
             }
 

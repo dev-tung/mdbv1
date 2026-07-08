@@ -10,11 +10,11 @@ class Router
     public static function get(
         string $uri,
         string $handler,
-        array $middleware = []
+        array $middleware = [],
     ): void {
         self::$routes['GET'][] = [
-            'uri'        => $uri,
-            'handler'    => $handler,
+            'uri' => $uri,
+            'handler' => $handler,
             'middleware' => $middleware,
         ];
     }
@@ -25,11 +25,11 @@ class Router
     public static function post(
         string $uri,
         string $handler,
-        array $middleware = []
+        array $middleware = [],
     ): void {
         self::$routes['POST'][] = [
-            'uri'        => $uri,
-            'handler'    => $handler,
+            'uri' => $uri,
+            'handler' => $handler,
             'middleware' => $middleware,
         ];
     }
@@ -53,7 +53,7 @@ class Router
 
             // resolve controller file
             $controllerFile = self::resolveControllerFile(
-                $route['handler']
+                $route['handler'],
             );
 
             if (!$controllerFile) {
@@ -64,7 +64,7 @@ class Router
 
             // detect module
             $module = self::detectModuleFromPath(
-                $controllerFile
+                $controllerFile,
             );
 
             // set view module
@@ -72,14 +72,14 @@ class Router
 
             // middleware
             Middleware::handle(
-                $route['middleware'] ?? []
+                $route['middleware'] ?? [],
             );
 
             // controller action
             self::callAction(
                 $route['handler'],
                 $controllerFile,
-                $matches
+                $matches,
             );
 
             return;
@@ -94,12 +94,12 @@ class Router
     // CONVERT ROUTE PARAMS
     // =========================
     protected static function convertUriToRegex(
-        string $uri
+        string $uri,
     ): string {
         $pattern = preg_replace_callback(
             '#\{([a-zA-Z_]+)\}#',
             fn() => '([a-zA-Z0-9_-]+)',
-            $uri
+            $uri,
         );
 
         return "#^{$pattern}$#";
@@ -111,11 +111,11 @@ class Router
     protected static function callAction(
         string $handler,
         string $file,
-        array $params = []
+        array $params = [],
     ): void {
         [$controller, $action] = explode(
             '@',
-            $handler
+            $handler,
         );
 
         require_once $file;
@@ -136,7 +136,7 @@ class Router
 
         call_user_func_array(
             [$instance, $action],
-            $params
+            $params,
         );
     }
 
@@ -144,16 +144,16 @@ class Router
     // RESOLVE CONTROLLER FILE
     // =========================
     protected static function resolveControllerFile(
-        string $handler
+        string $handler,
     ): ?string {
         [$controller] = explode(
             '@',
-            $handler
+            $handler,
         );
 
         $modules = glob(
             BASE_PATH . '/app/modules/*',
-            GLOB_ONLYDIR
+            GLOB_ONLYDIR,
         );
 
         foreach ($modules as $module) {
@@ -178,13 +178,13 @@ class Router
     // DETECT MODULE
     // =========================
     protected static function detectModuleFromPath(
-        string $file
+        string $file,
     ): string {
         $parts = explode('/modules/', $file);
 
         $sub = explode(
             '/',
-            $parts[1] ?? ''
+            $parts[1] ?? '',
         );
 
         return $sub[0] ?? 'website';

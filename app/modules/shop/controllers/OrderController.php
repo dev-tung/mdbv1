@@ -10,7 +10,7 @@ class OrderController
     public function form($id = null): void
     {
         View::render('order/form', [
-            'id' => $id
+            'id' => $id,
         ]);
     }
 }

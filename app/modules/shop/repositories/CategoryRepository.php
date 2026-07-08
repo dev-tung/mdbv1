@@ -9,11 +9,11 @@ class CategoryRepository extends Repository
     // =========================
     private function baseSelect(): string
     {
-        return "
+        return '
             SELECT *
             FROM categories c
             WHERE 1=1
-        ";
+        ';
     }
 
     // =========================
@@ -23,7 +23,7 @@ class CategoryRepository extends Repository
     {
         // keyword
         if (!empty($conditions['keyword'])) {
-            $sql .= " AND c.name LIKE :keyword";
+            $sql .= ' AND c.name LIKE :keyword';
             $params['keyword'] = '%' . trim($conditions['keyword']) . '%';
         }
     }
@@ -38,7 +38,7 @@ class CategoryRepository extends Repository
 
         $this->applyFilters($sql, $params, $conditions);
 
-        $sql .= " ORDER BY c.id DESC";
+        $sql .= ' ORDER BY c.id DESC';
 
         if ($limit > 0) {
             $sql .= " LIMIT {$limit} OFFSET {$offset}";
@@ -52,11 +52,11 @@ class CategoryRepository extends Repository
     // =========================
     public function count(array $conditions = []): int
     {
-        $sql = "
+        $sql = '
             SELECT COUNT(*) AS total
             FROM categories c
             WHERE 1=1
-        ";
+        ';
 
         $params = [];
 
@@ -73,13 +73,13 @@ class CategoryRepository extends Repository
     public function findById(int $id): ?array
     {
         return Database::first(
-            "
+            '
                 SELECT *
                 FROM categories
                 WHERE id = :id
                 LIMIT 1
-            ",
-            ['id' => $id]
+            ',
+            ['id' => $id],
         );
     }
 
@@ -118,11 +118,11 @@ class CategoryRepository extends Repository
 
         $data['id'] = $id;
 
-        $sql = "
+        $sql = '
             UPDATE categories
-            SET " . implode(', ', $set) . "
+            SET ' . implode(', ', $set) . '
             WHERE id = :id
-        ";
+        ';
 
         return Database::update($sql, $data);
     }
@@ -133,11 +133,11 @@ class CategoryRepository extends Repository
     public function deleteById(int $id): int
     {
         return Database::delete(
-            "
+            '
                 DELETE FROM categories
                 WHERE id = :id
-            ",
-            ['id' => $id]
+            ',
+            ['id' => $id],
         );
     }
 }

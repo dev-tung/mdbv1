@@ -4,15 +4,15 @@
 
 # 1. Core Principles
 
-* One file = one responsibility.
-* Controllers must remain thin.
-* Services contain business logic.
-* Repositories are responsible for data access only.
-* Views are responsible for presentation only.
-* No SQL queries inside Controllers.
-* No business logic inside Views.
-* Strict separation between layers.
-* Code must be modular, scalable, maintainable, and predictable.
+- One file = one responsibility.
+- Controllers must remain thin.
+- Services contain business logic.
+- Repositories are responsible for data access only.
+- Views are responsible for presentation only.
+- No SQL queries inside Controllers.
+- No business logic inside Views.
+- Strict separation between layers.
+- Code must be modular, scalable, maintainable, and predictable.
 
 ---
 
@@ -74,8 +74,8 @@ CACHE_LIFETIME
 
 Module names must:
 
-* Use lowercase letters only.
-* Prefer singular nouns.
+- Use lowercase letters only.
+- Prefer singular nouns.
 
 Examples:
 
@@ -176,15 +176,15 @@ Router::delete('/admin/products/{id}', 'ProductController@destroy');
 
 Responsibilities:
 
-* Receive HTTP requests.
-* Validate request flow.
-* Call Services.
-* Return Views or Responses.
+- Receive HTTP requests.
+- Validate request flow.
+- Call Services.
+- Return Views or Responses.
 
 Controllers should not:
 
-* Execute SQL queries.
-* Contain business logic.
+- Execute SQL queries.
+- Contain business logic.
 
 ---
 
@@ -192,14 +192,14 @@ Controllers should not:
 
 Responsibilities:
 
-* Contain all business logic.
-* Coordinate repositories.
-* Process application rules.
+- Contain all business logic.
+- Coordinate repositories.
+- Process application rules.
 
 Services should not:
 
-* Render HTML.
-* Access HTTP directly.
+- Render HTML.
+- Access HTTP directly.
 
 ---
 
@@ -207,14 +207,14 @@ Services should not:
 
 Responsibilities:
 
-* Communicate with the database.
-* Execute queries.
-* Return data objects or arrays.
+- Communicate with the database.
+- Execute queries.
+- Return data objects or arrays.
 
 Repositories should not:
 
-* Contain business rules.
-* Handle HTTP requests.
+- Contain business rules.
+- Handle HTTP requests.
 
 ---
 
@@ -222,25 +222,25 @@ Repositories should not:
 
 Responsibilities:
 
-* Render UI only.
-* Display prepared data.
+- Render UI only.
+- Display prepared data.
 
 Views should not:
 
-* Execute SQL.
-* Contain business logic.
+- Execute SQL.
+- Contain business logic.
 
 ---
 
 # 5. General Rules
 
-* Follow the Single Responsibility Principle (SRP).
-* Keep methods small and focused.
-* Avoid duplicated code (DRY).
-* Prefer dependency injection over tight coupling.
-* Write reusable and testable code.
-* Keep naming explicit and meaningful.
-* Maintain consistent project structure.
+- Follow the Single Responsibility Principle (SRP).
+- Keep methods small and focused.
+- Avoid duplicated code (DRY).
+- Prefer dependency injection over tight coupling.
+- Write reusable and testable code.
+- Keep naming explicit and meaningful.
+- Maintain consistent project structure.
 
 ---
 
@@ -264,9 +264,9 @@ booking_management
 
 ### Rules
 
-* Use lowercase.
-* Use plural nouns.
-* Use snake_case.
+- Use lowercase.
+- Use plural nouns.
+- Use snake_case.
 
 Examples:
 
@@ -654,14 +654,15 @@ CREATE TABLE products (
 
 The architecture must ensure:
 
-* High maintainability.
-* Easy onboarding for new developers.
-* Clear separation of concerns.
-* Consistent naming and structure.
-* Scalability for future modules.
-* Predictable code organization.
-* Easy testing and deployment.
-* Long-term project sustainability.
+- High maintainability.
+- Easy onboarding for new developers.
+- Clear separation of concerns.
+- Consistent naming and structure.
+- Scalability for future modules.
+- Predictable code organization.
+- Easy testing and deployment.
+- Long-term project sustainability.
 
 ```
+
 ```

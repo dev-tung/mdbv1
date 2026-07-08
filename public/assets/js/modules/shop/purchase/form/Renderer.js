@@ -1,9 +1,7 @@
 import State from './State.js';
 
 const Renderer = {
-
     init() {
-
         this.purchase();
         this.warehouses();
         this.products();
@@ -11,7 +9,6 @@ const Renderer = {
         this.payment();
         this.supplierSuggestions();
         this.productSuggestions();
-
     },
 
     /* =================================================
@@ -19,38 +16,25 @@ const Renderer = {
     ================================================= */
 
     purchase() {
+        document.querySelector('#supplier_search').value = State.purchase.supplier_name ?? '';
 
-        document.querySelector('#supplier_search').value =
-            State.purchase.supplier_name ?? '';
+        document.querySelector('#supplier_id').value = State.purchase.supplier_id ?? '';
 
-        document.querySelector('#supplier_id').value =
-            State.purchase.supplier_id ?? '';
+        document.querySelector('#warehouse_id').value = State.purchase.warehouse_id ?? '';
 
-        document.querySelector('#warehouse_id').value =
-            State.purchase.warehouse_id ?? '';
+        document.querySelector('#description').value = State.purchase.description ?? '';
 
-        document.querySelector('#description').value =
-            State.purchase.description ?? '';
+        document.querySelector('#status').value = State.purchase.status ?? 'draft';
 
-        document.querySelector('#status').value =
-            State.purchase.status ?? 'draft';
+        document.querySelector('#payment').value = State.purchase.payment ?? 'unpaid';
 
-        document.querySelector('#payment').value =
-            State.purchase.payment ?? 'unpaid';
+        document.querySelector('#paid_amount').value = State.purchase.paid_amount ?? 0;
 
-        document.querySelector('#paid_amount').value =
-            State.purchase.paid_amount ?? 0;
-
-        document.querySelector('#vat_rate').value =
-            State.purchase.vat_rate ?? 0;
+        document.querySelector('#vat_rate').value = State.purchase.vat_rate ?? 0;
 
         const wrapper = document.querySelector('#paid_amount_wrapper');
 
-        wrapper.classList.toggle(
-            'd-none',
-            State.purchase.payment !== 'partial'
-        );
-
+        wrapper.classList.toggle('d-none', State.purchase.payment !== 'partial');
     },
 
     /* =================================================
@@ -58,7 +42,6 @@ const Renderer = {
     ================================================= */
 
     warehouses() {
-
         const select = document.querySelector('#warehouse_id');
 
         select.innerHTML = `
@@ -66,17 +49,17 @@ const Renderer = {
         `;
 
         State.warehouse.list.forEach(warehouse => {
-
-            select.insertAdjacentHTML('beforeend', `
+            select.insertAdjacentHTML(
+                'beforeend',
+                `
                 <option
                     value="${warehouse.id}"
                     ${warehouse.id == State.purchase.warehouse_id ? 'selected' : ''}>
                     ${warehouse.name}
                 </option>
-            `);
-
+            `
+            );
         });
-
     },
 
     /* =================================================
@@ -84,22 +67,20 @@ const Renderer = {
     ================================================= */
 
     supplierSuggestions() {
-
         const box = document.querySelector('#supplier_suggestions');
 
         box.innerHTML = '';
 
         if (!State.supplier.suggestions.length) {
-
             box.classList.add('d-none');
 
             return;
-
         }
 
         State.supplier.suggestions.forEach(item => {
-
-            box.insertAdjacentHTML('beforeend', `
+            box.insertAdjacentHTML(
+                'beforeend',
+                `
 
                 <button
                     type="button"
@@ -110,12 +91,11 @@ const Renderer = {
 
                 </button>
 
-            `);
-
+            `
+            );
         });
 
         box.classList.remove('d-none');
-
     },
 
     /* =================================================
@@ -123,22 +103,20 @@ const Renderer = {
     ================================================= */
 
     productSuggestions() {
-
         const box = document.querySelector('#product_suggestions');
 
         box.innerHTML = '';
 
         if (!State.product.suggestions.length) {
-
             box.classList.add('d-none');
 
             return;
-
         }
 
         State.product.suggestions.forEach(item => {
-
-            box.insertAdjacentHTML('beforeend', `
+            box.insertAdjacentHTML(
+                'beforeend',
+                `
 
                 <button
                     type="button"
@@ -149,23 +127,22 @@ const Renderer = {
 
                 </button>
 
-            `);
-
+            `
+            );
         });
 
         box.classList.remove('d-none');
-
     },
 
     products() {
-
         const tbody = document.querySelector('#selected_products');
 
         tbody.innerHTML = '';
 
         State.purchase.items.forEach((item, index) => {
-
-            tbody.insertAdjacentHTML('beforeend', `
+            tbody.insertAdjacentHTML(
+                'beforeend',
+                `
 
                 <tr data-index="${index}">
 
@@ -227,29 +204,23 @@ const Renderer = {
 
                 </tr>
 
-            `);
-
+            `
+            );
         });
-
     },
 
     productsUpdate(index) {
-
         const row = document.querySelector(`tr[data-index="${index}"]`);
 
         if (!row) return;
 
         const item = State.purchase.items[index];
 
-        row.querySelector('.subtotal-amount').textContent =
-            Number(item.subtotal_amount || 0).toLocaleString('vi-VN');
+        row.querySelector('.subtotal-amount').textContent = Number(item.subtotal_amount || 0).toLocaleString('vi-VN');
 
-        row.querySelector('.item-vat').textContent =
-            Number(item.vat_amount || 0).toLocaleString('vi-VN');
+        row.querySelector('.item-vat').textContent = Number(item.vat_amount || 0).toLocaleString('vi-VN');
 
-        row.querySelector('.item-total').textContent =
-            Number(item.total_amount_with_vat || 0).toLocaleString('vi-VN');
-
+        row.querySelector('.item-total').textContent = Number(item.total_amount_with_vat || 0).toLocaleString('vi-VN');
     },
 
     /* =================================================
@@ -257,19 +228,21 @@ const Renderer = {
     ================================================= */
 
     summary() {
+        document.querySelector('#subtotal_amount').textContent = Number(
+            State.purchase.subtotal_amount || 0
+        ).toLocaleString('vi-VN');
 
-        document.querySelector('#subtotal_amount').textContent =
-            Number(State.purchase.subtotal_amount || 0).toLocaleString('vi-VN');
+        document.querySelector('#vat_amount').textContent = Number(State.purchase.vat_amount || 0).toLocaleString(
+            'vi-VN'
+        );
 
-        document.querySelector('#vat_amount').textContent =
-            Number(State.purchase.vat_amount || 0).toLocaleString('vi-VN');
+        document.querySelector('#total_amount').textContent = Number(State.purchase.total_amount || 0).toLocaleString(
+            'vi-VN'
+        );
 
-        document.querySelector('#total_amount').textContent =
-            Number(State.purchase.total_amount || 0).toLocaleString('vi-VN');
-
-        document.querySelector('#debt_amount').textContent =
-            Number(State.purchase.debt_amount || 0).toLocaleString('vi-VN');
-
+        document.querySelector('#debt_amount').textContent = Number(State.purchase.debt_amount || 0).toLocaleString(
+            'vi-VN'
+        );
     },
 
     /* =================================================
@@ -277,24 +250,14 @@ const Renderer = {
     ================================================= */
 
     payment() {
-
         const wrapper = document.querySelector('#paid_amount_wrapper');
 
-        if (
-            State.purchase.payment === 'partial'
-            || State.purchase.payment === 'credit'
-        ) {
-
+        if (State.purchase.payment === 'partial' || State.purchase.payment === 'credit') {
             wrapper.classList.remove('d-none');
-
         } else {
-
             wrapper.classList.add('d-none');
-
         }
-
-    }
-
+    },
 };
 
 export default Renderer;

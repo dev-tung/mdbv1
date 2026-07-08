@@ -15,7 +15,7 @@ class SupplierController
     public function edit($id): void
     {
         View::render('supplier/edit', [
-            'id' => $id
+            'id' => $id,
         ]);
     }
 }

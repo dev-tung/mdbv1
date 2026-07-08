@@ -14,7 +14,7 @@ class BrandEndpoint
     // =========================
     public function apiList()
     {
-        $page  = max(1, (int)($_GET['page'] ?? 1));
+        $page = max(1, (int) ($_GET['page'] ?? 1));
         $limit = Config::get('pagination', 'default_per_page');
 
         $filters = request_filters(['keyword', 'status']);
@@ -22,7 +22,7 @@ class BrandEndpoint
         $brands = $this->brandRepository->getList(
             $filters,
             $limit,
-            ($page - 1) * $limit
+            ($page - 1) * $limit,
         );
 
         $total = $this->brandRepository->count($filters);
@@ -30,11 +30,11 @@ class BrandEndpoint
         return Response::json([
             'data' => $brands,
             'meta' => [
-                'page'       => $page,
-                'total'      => $total,
+                'page' => $page,
+                'total' => $total,
                 'totalPages' => ceil($total / $limit),
-                'perPage'    => $limit
-            ]
+                'perPage' => $limit,
+            ],
         ]);
     }
 
@@ -46,7 +46,7 @@ class BrandEndpoint
         if ($id <= 0) {
             return Response::json([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
         }
 
@@ -55,13 +55,13 @@ class BrandEndpoint
         if (!$brand) {
             return Response::json([
                 'success' => false,
-                'message' => 'Không tìm thấy thương hiệu'
+                'message' => 'Không tìm thấy thương hiệu',
             ]);
         }
 
         return Response::json([
             'success' => true,
-            'data' => $brand
+            'data' => $brand,
         ]);
     }
 
@@ -71,16 +71,16 @@ class BrandEndpoint
     public function apiCreate()
     {
         $data = [
-            'name'        => trim($_POST['name'] ?? ''),
+            'name' => trim($_POST['name'] ?? ''),
             'description' => trim($_POST['description'] ?? ''),
-            'status'      => (int)($_POST['status'] ?? 1),
-            'logo'        => null
+            'status' => (int) ($_POST['status'] ?? 1),
+            'logo' => null,
         ];
 
         if ($data['name'] === '') {
             return Response::json([
                 'success' => false,
-                'message' => 'Tên thương hiệu không được để trống'
+                'message' => 'Tên thương hiệu không được để trống',
             ]);
         }
 
@@ -117,7 +117,7 @@ class BrandEndpoint
         return Response::json([
             'success' => $id > 0,
             'message' => $id ? 'Tạo thương hiệu thành công' : 'Tạo thất bại',
-            'id'      => $id
+            'id' => $id,
         ]);
     }
 
@@ -126,25 +126,25 @@ class BrandEndpoint
     // =========================
     public function apiUpdate()
     {
-        $id = (int)($_POST['id'] ?? 0);
+        $id = (int) ($_POST['id'] ?? 0);
 
         if ($id <= 0) {
             return Response::json([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
         }
 
         $data = [
-            'name'        => trim($_POST['name'] ?? ''),
+            'name' => trim($_POST['name'] ?? ''),
             'description' => trim($_POST['description'] ?? ''),
-            'status'      => (int)($_POST['status'] ?? 1),
+            'status' => (int) ($_POST['status'] ?? 1),
         ];
 
         if ($data['name'] === '') {
             return Response::json([
                 'success' => false,
-                'message' => 'Tên thương hiệu không được để trống'
+                'message' => 'Tên thương hiệu không được để trống',
             ]);
         }
 
@@ -180,7 +180,7 @@ class BrandEndpoint
 
         return Response::json([
             'success' => $updated > 0,
-            'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi'
+            'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
         ]);
     }
 
@@ -189,12 +189,12 @@ class BrandEndpoint
     // =========================
     public function apiDelete()
     {
-        $id = (int)($_POST['id'] ?? 0);
+        $id = (int) ($_POST['id'] ?? 0);
 
         if ($id <= 0) {
             return Response::json([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
         }
 
@@ -202,7 +202,7 @@ class BrandEndpoint
 
         return Response::json([
             'success' => $deleted > 0,
-            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy thương hiệu'
+            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy thương hiệu',
         ]);
     }
 }

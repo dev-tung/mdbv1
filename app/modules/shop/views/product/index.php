@@ -107,7 +107,7 @@
 <script>
 
 document.addEventListener("DOMContentLoaded", function () {
-  
+
     let currentPage = 1;
     let lastPage = 1;
     let prevPage = 1;
@@ -294,4 +294,4 @@ document.addEventListener("DOMContentLoaded", function () {
     })();
 });
 
-</script> 
+</script>

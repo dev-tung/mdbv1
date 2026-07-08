@@ -63,10 +63,14 @@ if (!function_exists('crawl_delete_directory')) {
 
     function crawl_delete_directory(string $dir): void
     {
-        if (!is_dir($dir)) return;
+        if (!is_dir($dir)) {
+            return;
+        }
 
         foreach (scandir($dir) as $item) {
-            if ($item === '.' || $item === '..') continue;
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
 
             $path = $dir . '/' . $item;
 

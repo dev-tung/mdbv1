@@ -11,8 +11,8 @@ class Database
     {
         if (self::$pdo === null) {
 
-            $host     = Env::get('DB_HOST');
-            $dbname   = Env::get('DB_NAME');
+            $host = Env::get('DB_HOST');
+            $dbname = Env::get('DB_NAME');
             $username = Env::get('DB_USER');
             $password = Env::get('DB_PASS');
 
@@ -23,10 +23,10 @@ class Database
                 $username,
                 $password,
                 [
-                    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES   => false,
-                ]
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ],
             );
         }
 

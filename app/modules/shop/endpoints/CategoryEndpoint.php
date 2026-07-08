@@ -17,7 +17,7 @@ class CategoryEndpoint
         $categories = $this->categoryRepository->getList();
 
         echo json_encode([
-            'data' => $categories
+            'data' => $categories,
         ]);
     }
 }

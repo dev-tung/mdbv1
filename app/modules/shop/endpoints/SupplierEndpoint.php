@@ -27,7 +27,7 @@ class SupplierEndpoint
         $suppliers = $this->supplierRepository->getList($filters);
 
         echo json_encode([
-            'data' => $suppliers
+            'data' => $suppliers,
         ]);
     }
 
@@ -41,7 +41,7 @@ class SupplierEndpoint
         if ($id <= 0) {
             echo json_encode([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
             return;
         }
@@ -51,14 +51,14 @@ class SupplierEndpoint
         if (!$supplier) {
             echo json_encode([
                 'success' => false,
-                'message' => 'Không tìm thấy nhà cung cấp'
+                'message' => 'Không tìm thấy nhà cung cấp',
             ]);
             return;
         }
 
         echo json_encode([
             'success' => true,
-            'data' => $supplier
+            'data' => $supplier,
         ]);
     }
 
@@ -70,19 +70,19 @@ class SupplierEndpoint
         header('Content-Type: application/json');
 
         $data = [
-            'name'        => trim($_POST['name'] ?? ''),
-            'phone'       => trim($_POST['phone'] ?? ''),
-            'email'       => trim($_POST['email'] ?? ''),
-            'address'     => trim($_POST['address'] ?? ''),
+            'name' => trim($_POST['name'] ?? ''),
+            'phone' => trim($_POST['phone'] ?? ''),
+            'email' => trim($_POST['email'] ?? ''),
+            'address' => trim($_POST['address'] ?? ''),
             'description' => trim($_POST['description'] ?? ''),
-            'created_at'  => date('Y-m-d H:i:s'),
-            'updated_at'  => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         if ($data['name'] === '') {
             echo json_encode([
                 'success' => false,
-                'message' => 'Tên nhà cung cấp không được để trống'
+                'message' => 'Tên nhà cung cấp không được để trống',
             ]);
             return;
         }
@@ -92,7 +92,7 @@ class SupplierEndpoint
         echo json_encode([
             'success' => $id > 0,
             'message' => $id ? 'Tạo nhà cung cấp thành công' : 'Tạo thất bại',
-            'id'      => $id
+            'id' => $id,
         ]);
     }
 
@@ -103,30 +103,30 @@ class SupplierEndpoint
     {
         header('Content-Type: application/json');
 
-        $id = (int)($_POST['id'] ?? 0);
+        $id = (int) ($_POST['id'] ?? 0);
 
         if ($id <= 0) {
             echo json_encode([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
             return;
         }
 
         $data = [
-            'name'        => trim($_POST['name'] ?? ''),
-            'phone'       => trim($_POST['phone'] ?? ''),
-            'email'       => trim($_POST['email'] ?? ''),
-            'address'     => trim($_POST['address'] ?? ''),
+            'name' => trim($_POST['name'] ?? ''),
+            'phone' => trim($_POST['phone'] ?? ''),
+            'email' => trim($_POST['email'] ?? ''),
+            'address' => trim($_POST['address'] ?? ''),
             'description' => trim($_POST['description'] ?? ''),
-            'updated_at'  => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         $updated = $this->supplierRepository->updateById($id, $data);
 
         echo json_encode([
             'success' => $updated > 0,
-            'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi'
+            'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
         ]);
     }
 
@@ -137,12 +137,12 @@ class SupplierEndpoint
     {
         header('Content-Type: application/json');
 
-        $id = (int)($_POST['id'] ?? 0);
+        $id = (int) ($_POST['id'] ?? 0);
 
         if ($id <= 0) {
             echo json_encode([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
             return;
         }
@@ -151,7 +151,7 @@ class SupplierEndpoint
 
         echo json_encode([
             'success' => $deleted > 0,
-            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy nhà cung cấp'
+            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy nhà cung cấp',
         ]);
     }
 }

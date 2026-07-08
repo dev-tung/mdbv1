@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Active menu theo URL hiện tại.
  */
@@ -23,4 +24,3 @@ function active_menu_exact(string $url): string
         ? 'active'
         : '';
 }
-

@@ -61,7 +61,7 @@ abstract class Repository
             'INSERT INTO %s (%s) VALUES %s',
             $this->table,
             implode(', ', $columns),
-            implode(', ', $placeholders)
+            implode(', ', $placeholders),
         );
 
         return Database::query($sql, $params)->rowCount();
@@ -86,9 +86,9 @@ abstract class Repository
 
         $sql = "
             UPDATE {$this->table}
-            SET " . implode(', ', $set) . "
+            SET " . implode(', ', $set) . '
             WHERE id = :id
-        ";
+        ';
 
         return Database::query($sql, $data)->rowCount();
     }
@@ -100,7 +100,7 @@ abstract class Repository
     {
         return Database::query(
             "DELETE FROM {$this->table} WHERE id = :id",
-            ['id' => $id]
+            ['id' => $id],
         )->rowCount();
     }
 
@@ -111,7 +111,7 @@ abstract class Repository
     {
         return Database::first(
             "SELECT * FROM {$this->table} WHERE id = :id",
-            ['id' => $id]
+            ['id' => $id],
         );
     }
 }

@@ -9,11 +9,11 @@ class ProductRepository extends Repository
     // =========================
     private function baseSelect(): string
     {
-        return "
+        return '
             SELECT p.*
             FROM products p
             WHERE 1=1
-        ";
+        ';
     }
 
     // =========================
@@ -23,30 +23,30 @@ class ProductRepository extends Repository
     {
         // keyword search
         if (!empty($conditions['keyword'])) {
-            $sql .= " AND p.name LIKE :keyword";
+            $sql .= ' AND p.name LIKE :keyword';
             $params['keyword'] = '%' . $conditions['keyword'] . '%';
         }
 
         // category
         if (!empty($conditions['category_id'])) {
-            $sql .= " AND p.category_id = :category_id";
+            $sql .= ' AND p.category_id = :category_id';
             $params['category_id'] = $conditions['category_id'];
         }
 
         // status
         if (isset($conditions['status']) && $conditions['status'] !== '') {
-            $sql .= " AND p.status = :status";
+            $sql .= ' AND p.status = :status';
             $params['status'] = $conditions['status'];
         }
 
         // price filter (optional range)
         if (!empty($conditions['price_min'])) {
-            $sql .= " AND p.price >= :price_min";
+            $sql .= ' AND p.price >= :price_min';
             $params['price_min'] = $conditions['price_min'];
         }
 
         if (!empty($conditions['price_max'])) {
-            $sql .= " AND p.price <= :price_max";
+            $sql .= ' AND p.price <= :price_max';
             $params['price_max'] = $conditions['price_max'];
         }
 
@@ -61,7 +61,7 @@ class ProductRepository extends Repository
             }
 
             if (!empty($placeholders)) {
-                $sql .= " AND p.brand_id IN (" . implode(',', $placeholders) . ")";
+                $sql .= ' AND p.brand_id IN (' . implode(',', $placeholders) . ')';
             }
         }
     }
@@ -76,7 +76,7 @@ class ProductRepository extends Repository
 
         $this->applyFilters($sql, $params, $conditions);
 
-        $sql .= " ORDER BY p.id DESC";
+        $sql .= ' ORDER BY p.id DESC';
 
         if ($limit > 0) {
             $sql .= " LIMIT {$limit} OFFSET {$offset}";
@@ -90,11 +90,11 @@ class ProductRepository extends Repository
     // =========================
     public function count(array $conditions = []): int
     {
-        $sql = "
+        $sql = '
             SELECT COUNT(*) AS total
             FROM products p
             WHERE 1=1
-        ";
+        ';
 
         $params = [];
 

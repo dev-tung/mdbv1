@@ -15,7 +15,7 @@ class HomeController
         $categories = $this->categoryRepository->getList();
 
         View::render('home/index', [
-            'categories'  => $categories
+            'categories' => $categories,
         ]);
     }
 }

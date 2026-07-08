@@ -14,7 +14,7 @@ class ShopProcedureCreator
             echo 'Sync: ' . basename($file) . PHP_EOL . '<br>';
 
             Database::raw(
-                file_get_contents($file)
+                file_get_contents($file),
             );
         }
 

@@ -17,7 +17,7 @@ function request_all(): array
     // =========================
     // 1. JSON BODY
     // =========================
-    $json = json_decode(file_get_contents("php://input"), true);
+    $json = json_decode(file_get_contents('php://input'), true);
 
     $data = [];
 
@@ -74,7 +74,7 @@ function request_id(string $key = 'id'): int
 {
     $data = request_all();
 
-    if (!empty($data[$key]) && (int)$data[$key] > 0) {
+    if (!empty($data[$key]) && (int) $data[$key] > 0) {
         return (int) $data[$key];
     }
 

@@ -1,23 +1,24 @@
 <?php
+
 Router::get(
     '/login',
-    'WebsiteController@login'
+    'WebsiteController@login',
 );
 
 Router::get(
     '/register',
-    'WebsiteController@register'
+    'WebsiteController@register',
 );
 
 Router::get(
     '/forgot-password',
-    'WebsiteController@forgotPassword'
+    'WebsiteController@forgotPassword',
 );
 
 Router::post(
     '/logout',
     'WebsiteController@logout',
-    ['auth']
+    ['auth'],
 );
 
 // =========================
@@ -26,12 +27,10 @@ Router::post(
 
 Router::get(
     '/admin/login',
-    'AdminController@login'
+    'AdminController@login',
 );
 
 Router::get(
     '/admin/logout',
-    'AdminController@logout'
+    'AdminController@logout',
 );
-
-

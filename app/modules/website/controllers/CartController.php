@@ -27,6 +27,8 @@ class CartController
     }
 
     public function add(): void {}
+
     public function update(): void {}
+
     public function remove(): void {}
 }

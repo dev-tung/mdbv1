@@ -15,7 +15,7 @@ class CategoryController
     public function edit($id): void
     {
         View::render('category/edit', [
-            'id' => $id
+            'id' => $id,
         ]);
     }
 }

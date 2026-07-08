@@ -26,7 +26,7 @@
                                 Tất cả danh mục
                             </option>
 
-                            <?php foreach($categories as $cat): ?>
+                            <?php foreach ($categories as $cat): ?>
                                 <option value="<?= $cat['id'] ?>">
                                     <?= $cat['name'] ?>
                                 </option>
@@ -44,7 +44,7 @@
                             Thương hiệu
                         </label>
 
-                        <?php foreach($brands as $brand): ?>
+                        <?php foreach ($brands as $brand): ?>
                             <div class="form-check small mb-1">
 
                                 <input class="form-check-input"

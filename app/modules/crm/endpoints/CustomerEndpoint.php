@@ -14,7 +14,7 @@ class CustomerEndpoint
     // =========================
     public function apiList()
     {
-        $page  = max(1, (int)($_GET['page'] ?? 1));
+        $page = max(1, (int) ($_GET['page'] ?? 1));
         $limit = Config::get('pagination', 'default_per_page');
 
         $filters = request_filters(['keyword', 'group_id']);
@@ -22,7 +22,7 @@ class CustomerEndpoint
         $data = $this->customerRepository->getList(
             $filters,
             $limit,
-            ($page - 1) * $limit
+            ($page - 1) * $limit,
         );
 
         $total = $this->customerRepository->count($filters);
@@ -31,11 +31,11 @@ class CustomerEndpoint
             'success' => true,
             'data' => $data,
             'meta' => [
-                'page'       => $page,
-                'total'      => $total,
+                'page' => $page,
+                'total' => $total,
                 'totalPages' => ceil($total / $limit),
-                'perPage'    => $limit
-            ]
+                'perPage' => $limit,
+            ],
         ]);
     }
 
@@ -44,12 +44,12 @@ class CustomerEndpoint
     // =========================
     public function apiShow($id)
     {
-        $id = (int)$id;
+        $id = (int) $id;
 
         if ($id <= 0) {
             return Response::json([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
         }
 
@@ -58,13 +58,13 @@ class CustomerEndpoint
         if (!$customer) {
             return Response::json([
                 'success' => false,
-                'message' => 'Không tìm thấy khách hàng'
+                'message' => 'Không tìm thấy khách hàng',
             ]);
         }
 
         return Response::json([
             'success' => true,
-            'data' => $customer
+            'data' => $customer,
         ]);
     }
 
@@ -73,35 +73,35 @@ class CustomerEndpoint
     // =========================
     public function apiCreate()
     {
-        $input = json_decode(file_get_contents("php://input"), true);
+        $input = json_decode(file_get_contents('php://input'), true);
 
-        $name   = trim($input['name'] ?? '');
-        $phone  = trim($input['phone'] ?? '');
-        $email  = trim($input['email'] ?? '');
-        $group  = (int)($input['group_id'] ?? 0);
+        $name = trim($input['name'] ?? '');
+        $phone = trim($input['phone'] ?? '');
+        $email = trim($input['email'] ?? '');
+        $group = (int) ($input['group_id'] ?? 0);
         $address = trim($input['address'] ?? '');
         $description = trim($input['description'] ?? '');
 
         if ($name === '') {
             return Response::json([
                 'success' => false,
-                'message' => 'Tên khách hàng không hợp lệ'
+                'message' => 'Tên khách hàng không hợp lệ',
             ]);
         }
 
         $id = $this->customerRepository->create([
-            'name'        => $name,
-            'phone'       => $phone,
-            'email'       => $email,
-            'group_id'    => $group,
-            'address'     => $address,
-            'description' => $description
+            'name' => $name,
+            'phone' => $phone,
+            'email' => $email,
+            'group_id' => $group,
+            'address' => $address,
+            'description' => $description,
         ]);
 
         return Response::json([
             'success' => true,
             'message' => 'Tạo khách hàng thành công',
-            'id'      => $id
+            'id' => $id,
         ]);
     }
 
@@ -110,32 +110,32 @@ class CustomerEndpoint
     // =========================
     public function apiUpdate()
     {
-        $input = json_decode(file_get_contents("php://input"), true);
+        $input = json_decode(file_get_contents('php://input'), true);
 
-        $id = (int)($input['id'] ?? 0);
+        $id = (int) ($input['id'] ?? 0);
 
         if ($id <= 0) {
             return Response::json([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
         }
 
         $data = [
-            'name'        => trim($input['name'] ?? ''),
-            'phone'       => trim($input['phone'] ?? ''),
-            'email'       => trim($input['email'] ?? ''),
-            'group_id'    => (int)($input['group_id'] ?? 0),
-            'address'     => trim($input['address'] ?? ''),
+            'name' => trim($input['name'] ?? ''),
+            'phone' => trim($input['phone'] ?? ''),
+            'email' => trim($input['email'] ?? ''),
+            'group_id' => (int) ($input['group_id'] ?? 0),
+            'address' => trim($input['address'] ?? ''),
             'description' => trim($input['description'] ?? ''),
-            'updated_at'  => date('Y-m-d H:i:s')
+            'updated_at' => date('Y-m-d H:i:s'),
         ];
 
         $updated = $this->customerRepository->updateById($id, $data);
 
         return Response::json([
             'success' => $updated > 0,
-            'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không tìm thấy khách hàng'
+            'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không tìm thấy khách hàng',
         ]);
     }
 
@@ -144,12 +144,12 @@ class CustomerEndpoint
     // =========================
     public function apiDelete()
     {
-        $id = (int)($_POST['id'] ?? 0);
+        $id = (int) ($_POST['id'] ?? 0);
 
         if ($id <= 0) {
             return Response::json([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
         }
 
@@ -157,7 +157,7 @@ class CustomerEndpoint
 
         return Response::json([
             'success' => $deleted > 0,
-            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy khách hàng'
+            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy khách hàng',
         ]);
     }
 }

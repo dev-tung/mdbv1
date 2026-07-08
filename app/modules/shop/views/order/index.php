@@ -19,15 +19,13 @@
             </div>
 
             <div class="col-auto">
-                <select
+
+                <input
+                    type="search"
                     id="filter-customer"
-                    class="form-select form-select-sm">
+                    class="form-control form-control-sm"
+                    placeholder="Tìm khách hàng...">
 
-                    <option value="">
-                        Khách hàng
-                    </option>
-
-                </select>
             </div>
 
             <div class="col-auto">

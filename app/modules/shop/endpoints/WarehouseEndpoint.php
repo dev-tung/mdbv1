@@ -27,7 +27,7 @@ class WarehouseEndpoint
         $warehouses = $this->warehouseRepository->getList($filters);
 
         echo json_encode([
-            'data' => $warehouses
+            'data' => $warehouses,
         ]);
     }
 
@@ -41,7 +41,7 @@ class WarehouseEndpoint
         if ($id <= 0) {
             echo json_encode([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
             return;
         }
@@ -51,14 +51,14 @@ class WarehouseEndpoint
         if (!$warehouse) {
             echo json_encode([
                 'success' => false,
-                'message' => 'Không tìm thấy kho'
+                'message' => 'Không tìm thấy kho',
             ]);
             return;
         }
 
         echo json_encode([
             'success' => true,
-            'data' => $warehouse
+            'data' => $warehouse,
         ]);
     }
 
@@ -70,9 +70,9 @@ class WarehouseEndpoint
         header('Content-Type: application/json');
 
         $data = [
-            'name'       => trim($_POST['name'] ?? ''),
-            'address'    => trim($_POST['address'] ?? ''),
-            'status'     => $_POST['status'] ?? 1,
+            'name' => trim($_POST['name'] ?? ''),
+            'address' => trim($_POST['address'] ?? ''),
+            'status' => $_POST['status'] ?? 1,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -80,7 +80,7 @@ class WarehouseEndpoint
         if ($data['name'] === '') {
             echo json_encode([
                 'success' => false,
-                'message' => 'Tên kho không được để trống'
+                'message' => 'Tên kho không được để trống',
             ]);
             return;
         }
@@ -90,7 +90,7 @@ class WarehouseEndpoint
         echo json_encode([
             'success' => $id > 0,
             'message' => $id ? 'Tạo kho thành công' : 'Tạo thất bại',
-            'id'      => $id
+            'id' => $id,
         ]);
     }
 
@@ -101,20 +101,20 @@ class WarehouseEndpoint
     {
         header('Content-Type: application/json');
 
-        $id = (int)($_POST['id'] ?? 0);
+        $id = (int) ($_POST['id'] ?? 0);
 
         if ($id <= 0) {
             echo json_encode([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
             return;
         }
 
         $data = [
-            'name'       => trim($_POST['name'] ?? ''),
-            'address'    => trim($_POST['address'] ?? ''),
-            'status'     => $_POST['status'] ?? 1,
+            'name' => trim($_POST['name'] ?? ''),
+            'address' => trim($_POST['address'] ?? ''),
+            'status' => $_POST['status'] ?? 1,
             'updated_at' => date('Y-m-d H:i:s'),
         ];
 
@@ -122,7 +122,7 @@ class WarehouseEndpoint
 
         echo json_encode([
             'success' => $updated > 0,
-            'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi'
+            'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
         ]);
     }
 
@@ -133,12 +133,12 @@ class WarehouseEndpoint
     {
         header('Content-Type: application/json');
 
-        $id = (int)($_POST['id'] ?? 0);
+        $id = (int) ($_POST['id'] ?? 0);
 
         if ($id <= 0) {
             echo json_encode([
                 'success' => false,
-                'message' => 'ID không hợp lệ'
+                'message' => 'ID không hợp lệ',
             ]);
             return;
         }
@@ -147,7 +147,7 @@ class WarehouseEndpoint
 
         echo json_encode([
             'success' => $deleted > 0,
-            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy kho'
+            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy kho',
         ]);
     }
 }

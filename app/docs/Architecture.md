@@ -4,36 +4,33 @@ app/
 
 ├── modules/
 
-│   ├── shop/
-│   │   ├── routes/
-│   │   ├── controllers/
-│   │   ├── endpoints/
-│   │   ├── repositorys/
-│   │   ├── validators/
-│   │   └── views/
+│ ├── shop/
+│ │ ├── routes/
+│ │ ├── controllers/
+│ │ ├── endpoints/
+│ │ ├── repositorys/
+│ │ ├── validators/
+│ │ └── views/
 
-
-│   ├── crm/
-│   ├── booking/
-│   ├── academy/
-│   ├── staff/
-│   ├── location/
-│   ├── payment/
-│   ├── report/
-│   ├── notification/
-│   ├── audit/
-│   ├── crawler/
-│   └── website/
-
+│ ├── crm/
+│ ├── booking/
+│ ├── academy/
+│ ├── staff/
+│ ├── location/
+│ ├── payment/
+│ ├── report/
+│ ├── notification/
+│ ├── audit/
+│ ├── crawler/
+│ └── website/
 
 ├── common/
 
-│   ├── tools/
-│   ├── helpers/
-│   ├── cache/
-│   ├── mail/
-│   └── partials/
-
+│ ├── tools/
+│ ├── helpers/
+│ ├── cache/
+│ ├── mail/
+│ └── partials/
 
 └── public/
 

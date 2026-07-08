@@ -3,21 +3,23 @@
 class YonexProductDetailCrawler
 {
     protected string $inputFile;
+
     protected string $outputFile;
+
     protected string $imageDir;
 
     public function __construct()
     {
-        $this->inputFile  = PATH_ROOT . '/public/craw/json/yonex_product.json';
+        $this->inputFile = PATH_ROOT . '/public/craw/json/yonex_product.json';
         $this->outputFile = PATH_ROOT . '/public/craw/json/yonex_product_detail.json';
-        $this->imageDir   = rtrim(PATH_ROOT, '/') . '/public/craw/image/yonex_product_detail';
+        $this->imageDir = rtrim(PATH_ROOT, '/') . '/public/craw/image/yonex_product_detail';
     }
 
     public function run(): void
     {
         set_time_limit(0);
 
-        crawl_log("START CRAWL PRODUCT DETAIL");
+        crawl_log('START CRAWL PRODUCT DETAIL');
 
         /**
          * ENSURE OUTPUT DIR
@@ -38,13 +40,13 @@ class YonexProductDetailCrawler
          * LOAD INPUT PRODUCTS
          */
         if (!file_exists($this->inputFile)) {
-            throw new RuntimeException("Missing input file: " . $this->inputFile);
+            throw new RuntimeException('Missing input file: ' . $this->inputFile);
         }
 
         $products = json_decode(file_get_contents($this->inputFile), true);
 
         if (!is_array($products)) {
-            throw new RuntimeException("Invalid input JSON format");
+            throw new RuntimeException('Invalid input JSON format');
         }
 
         /**
@@ -54,7 +56,7 @@ class YonexProductDetailCrawler
 
         foreach ($products as $i => $product) {
 
-            $url  = $product['url'] ?? '';
+            $url = $product['url'] ?? '';
             $slug = $product['slug'] ?? '';
 
             if (!$url || !$slug) {
@@ -75,19 +77,19 @@ class YonexProductDetailCrawler
             $res = $this->fetchHtml($url);
 
             if ($res['code'] !== 200 || !$res['html']) {
-                crawl_log("SKIP HTTP ERROR: " . $res['code']);
+                crawl_log('SKIP HTTP ERROR: ' . $res['code']);
                 continue;
             }
 
             $detail = $this->parseDetail($res['html']);
 
-            crawl_log("IMAGES FOUND: " . count($detail['images']));
+            crawl_log('IMAGES FOUND: ' . count($detail['images']));
 
             $localImages = $this->downloadImages($slug, $detail['images']);
 
             $item = array_merge($product, $detail, [
-                'detail_url'   => $url,
-                'local_images' => $localImages
+                'detail_url' => $url,
+                'local_images' => $localImages,
             ]);
 
             $results[$slug] = $item;
@@ -102,11 +104,11 @@ class YonexProductDetailCrawler
             sleep(1);
         }
 
-        crawl_log("================================");
-        crawl_log("DONE ALL");
-        crawl_log("TOTAL: " . count($results));
-        crawl_log("OUTPUT: " . $this->outputFile);
-        crawl_log("================================");
+        crawl_log('================================');
+        crawl_log('DONE ALL');
+        crawl_log('TOTAL: ' . count($results));
+        crawl_log('OUTPUT: ' . $this->outputFile);
+        crawl_log('================================');
     }
 
     /**
@@ -121,8 +123,8 @@ class YonexProductDetailCrawler
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_TIMEOUT        => 20,
-            CURLOPT_USERAGENT      => 'Mozilla/5.0'
+            CURLOPT_TIMEOUT => 20,
+            CURLOPT_USERAGENT => 'Mozilla/5.0',
         ]);
 
         $html = curl_exec($ch);
@@ -132,7 +134,7 @@ class YonexProductDetailCrawler
 
         return [
             'html' => $html ?: '',
-            'code' => $code
+            'code' => $code,
         ];
     }
 
@@ -151,10 +153,10 @@ class YonexProductDetailCrawler
         $xpath = new DOMXPath($dom);
 
         $data = [
-            'title'       => null,
+            'title' => null,
             'description' => null,
-            'specs'       => [],
-            'images'      => []
+            'specs' => [],
+            'images' => [],
         ];
 
         $h1 = $xpath->query('//h1')->item(0);
@@ -171,7 +173,9 @@ class YonexProductDetailCrawler
 
             $cols = $xpath->query('.//td|./th', $row);
 
-            if ($cols->length < 2) continue;
+            if ($cols->length < 2) {
+                continue;
+            }
 
             $k = trim($cols->item(0)->textContent);
             $v = trim($cols->item(1)->textContent);
@@ -259,10 +263,14 @@ class YonexProductDetailCrawler
 
         foreach ($images as $i => $url) {
 
-            if (!$url) continue;
+            if (!$url) {
+                continue;
+            }
 
             $ext = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
-            if (!$ext) $ext = 'jpg';
+            if (!$ext) {
+                $ext = 'jpg';
+            }
 
             $file = ($i + 1) . '.' . $ext;
             $path = $dir . '/' . $file;
@@ -290,7 +298,9 @@ class YonexProductDetailCrawler
 
         $old = json_decode(file_get_contents($this->outputFile), true);
 
-        if (!is_array($old)) return [];
+        if (!is_array($old)) {
+            return [];
+        }
 
         $map = [];
 
@@ -314,10 +324,10 @@ class YonexProductDetailCrawler
             $this->outputFile,
             json_encode(
                 array_values($data),
-                JSON_PRETTY_PRINT |
-                JSON_UNESCAPED_UNICODE |
-                JSON_UNESCAPED_SLASHES
-            )
+                JSON_PRETTY_PRINT
+                | JSON_UNESCAPED_UNICODE
+                | JSON_UNESCAPED_SLASHES,
+            ),
         );
     }
 

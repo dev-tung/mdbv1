@@ -14,17 +14,16 @@ class SupplierRepository
 
         // KEYWORD SEARCH
         if (!empty($conditions['keyword'])) {
-            $sql .= " AND (
+            $sql .= ' AND (
                 name LIKE :keyword
-            )";
+            )';
             $params['keyword'] = '%' . $conditions['keyword'] . '%';
         }
 
-        $sql .= " ORDER BY id DESC";
+        $sql .= ' ORDER BY id DESC';
 
         return Database::get($sql, $params);
     }
-
 
     /**
      * Đếm supplier (pagination)
@@ -35,11 +34,11 @@ class SupplierRepository
         $params = [];
 
         if (!empty($conditions['keyword'])) {
-            $sql .= " AND (
+            $sql .= ' AND (
                 name LIKE :keyword
                 OR phone LIKE :keyword
                 OR email LIKE :keyword
-            )";
+            )';
 
             $params['keyword'] = '%' . $conditions['keyword'] . '%';
         }

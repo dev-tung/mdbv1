@@ -10,7 +10,7 @@ class PurchaseController
     public function form($id = null): void
     {
         View::render('purchase/form', [
-            'id' => $id
+            'id' => $id,
         ]);
     }
 }

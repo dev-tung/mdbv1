@@ -3,22 +3,25 @@
 class YonexProductImporter
 {
     protected string $categoryFile;
+
     protected string $productFile;
 
     protected array $categoryMap = [];
+
     protected int $brandId = 0;
+
     protected array $insertedSlugs = [];
 
     public function __construct()
     {
         $this->categoryFile = PATH_ROOT . '/public/craw/json/yonex_category.json';
-        $this->productFile  = PATH_ROOT . '/public/craw/json/yonex_product_detail.json';
+        $this->productFile = PATH_ROOT . '/public/craw/json/yonex_product_detail.json';
     }
 
     public function run(): void
     {
         $categories = $this->loadJson($this->categoryFile);
-        $products   = $this->loadJson($this->productFile);
+        $products = $this->loadJson($this->productFile);
 
         $this->resetData();
 
@@ -37,10 +40,10 @@ class YonexProductImporter
 
             echo "<pre style='color:red'>";
             echo "❌ IMPORT FAILED\n\n";
-            echo "Message: " . $e->getMessage() . "\n";
-            echo "File: " . $e->getFile() . "\n";
-            echo "Line: " . $e->getLine() . "\n";
-            echo "</pre>";
+            echo 'Message: ' . $e->getMessage() . "\n";
+            echo 'File: ' . $e->getFile() . "\n";
+            echo 'Line: ' . $e->getLine() . "\n";
+            echo '</pre>';
 
             exit;
         }
@@ -69,14 +72,14 @@ class YonexProductImporter
      * ========================= */
     protected function resetData(): void
     {
-        Database::query("SET FOREIGN_KEY_CHECKS = 0");
+        Database::query('SET FOREIGN_KEY_CHECKS = 0');
 
-        Database::query("TRUNCATE TABLE product_images");
-        Database::query("TRUNCATE TABLE product_attributes");
-        Database::query("TRUNCATE TABLE products");
-        Database::query("TRUNCATE TABLE categories");
+        Database::query('TRUNCATE TABLE product_images');
+        Database::query('TRUNCATE TABLE product_attributes');
+        Database::query('TRUNCATE TABLE products');
+        Database::query('TRUNCATE TABLE categories');
 
-        Database::query("SET FOREIGN_KEY_CHECKS = 1");
+        Database::query('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     /* =========================
@@ -88,9 +91,9 @@ class YonexProductImporter
 
         $seriesMap = [
             'nanoflare' => 'racquets',
-            'astrox'    => 'racquets',
-            'arcsaber'  => 'racquets',
-            'duora'     => 'racquets',
+            'astrox' => 'racquets',
+            'arcsaber' => 'racquets',
+            'duora' => 'racquets',
         ];
 
         /* STEP 1: build image map */
@@ -102,12 +105,14 @@ class YonexProductImporter
                 $cat = $seriesMap[$cat];
             }
 
-            if ($cat === '' || isset($firstImageByCategory[$cat])) continue;
+            if ($cat === '' || isset($firstImageByCategory[$cat])) {
+                continue;
+            }
 
             $imgs = $p['local_images'] ?? [];
-            $img  = null;
+            $img = null;
 
-            foreach ((array)$imgs as $i) {
+            foreach ((array) $imgs as $i) {
                 if (is_array($i)) {
                     $i = $i[0] ?? null;
                 }
@@ -126,7 +131,9 @@ class YonexProductImporter
         foreach ($categories as $item) {
 
             $slug = $this->cleanSlug($item['slug'] ?? '');
-            if ($slug === '') continue;
+            if ($slug === '') {
+                continue;
+            }
 
             $thumbnail = null;
 
@@ -149,13 +156,13 @@ class YonexProductImporter
             }
 
             Database::insert(
-                "INSERT INTO categories (name, slug, thumbnail)
-                 VALUES (:name, :slug, :thumbnail)",
+                'INSERT INTO categories (name, slug, thumbnail)
+                 VALUES (:name, :slug, :thumbnail)',
                 [
-                    'name'      => $this->categoryNameVi($slug, $item['name'] ?? ''),
-                    'slug'      => $slug,
-                    'thumbnail' => $thumbnail
-                ]
+                    'name' => $this->categoryNameVi($slug, $item['name'] ?? ''),
+                    'slug' => $slug,
+                    'thumbnail' => $thumbnail,
+                ],
             );
         }
 
@@ -164,11 +171,11 @@ class YonexProductImporter
 
     protected function getCategoryMap(): array
     {
-        $rows = Database::get("SELECT id, slug FROM categories");
+        $rows = Database::get('SELECT id, slug FROM categories');
 
         $map = [];
         foreach ($rows as $row) {
-            $map[trim($row['slug'])] = (int)$row['id'];
+            $map[trim($row['slug'])] = (int) $row['id'];
         }
 
         return $map;
@@ -180,9 +187,9 @@ class YonexProductImporter
 
         $seriesMap = [
             'nanoflare' => 'racquets',
-            'astrox'    => 'racquets',
-            'arcsaber'  => 'racquets',
-            'duora'     => 'racquets',
+            'astrox' => 'racquets',
+            'arcsaber' => 'racquets',
+            'duora' => 'racquets',
         ];
 
         if (isset($seriesMap[$catSlug])) {
@@ -203,30 +210,30 @@ class YonexProductImporter
     protected function categoryNameVi(string $slug, string $name = ''): string
     {
         return match ($slug) {
-            'racquets'           => 'Vợt cầu lông',
-            'strings'            => 'Cước cầu lông',
+            'racquets' => 'Vợt cầu lông',
+            'strings' => 'Cước cầu lông',
             'stringing-machines' => 'Máy đan vợt',
-            'shuttlecocks'       => 'Quả cầu lông',
-            'apparel'            => 'Quần áo cầu lông',
-            'footwear'           => 'Giày cầu lông',
-            'bags'               => 'Túi cầu lông',
-            'accessories'        => 'Phụ kiện cầu lông',
-            default              => $name ?: ucfirst(str_replace('-', ' ', $slug))
+            'shuttlecocks' => 'Quả cầu lông',
+            'apparel' => 'Quần áo cầu lông',
+            'footwear' => 'Giày cầu lông',
+            'bags' => 'Túi cầu lông',
+            'accessories' => 'Phụ kiện cầu lông',
+            default => $name ?: ucfirst(str_replace('-', ' ', $slug)),
         };
     }
 
     protected function productPrefix(string $slug): string
     {
         return match ($slug) {
-            'racquets'           => 'Vợt cầu lông ',
-            'strings'            => 'Cước cầu lông ',
+            'racquets' => 'Vợt cầu lông ',
+            'strings' => 'Cước cầu lông ',
             'stringing-machines' => 'Máy đan vợt ',
-            'shuttlecocks'       => 'Quả cầu lông ',
-            'apparel'            => 'Quần áo cầu lông ',
-            'footwear'           => 'Giày cầu lông ',
-            'bags'               => 'Túi cầu lông ',
-            'accessories'        => 'Phụ kiện cầu lông ',
-            default              => ''
+            'shuttlecocks' => 'Quả cầu lông ',
+            'apparel' => 'Quần áo cầu lông ',
+            'footwear' => 'Giày cầu lông ',
+            'bags' => 'Túi cầu lông ',
+            'accessories' => 'Phụ kiện cầu lông ',
+            default => '',
         };
     }
 
@@ -243,10 +250,12 @@ class YonexProductImporter
             $name = $item['name'] ?? $item['title'] ?? '';
 
             if ($slug === '' || $name === '') {
-                throw new Exception("Missing slug or name");
+                throw new Exception('Missing slug or name');
             }
 
-            if (isset($this->insertedSlugs[$slug])) continue;
+            if (isset($this->insertedSlugs[$slug])) {
+                continue;
+            }
             $this->insertedSlugs[$slug] = true;
 
             $catSlug = $item['category'] ?? '';
@@ -263,22 +272,22 @@ class YonexProductImporter
             }
 
             $productId = Database::insert(
-                "INSERT INTO products
+                'INSERT INTO products
                 (category_id, brand_id, name, slug, thumbnail, description, price, status)
                 VALUES
-                (:category_id, :brand_id, :name, :slug, :thumbnail, :description, :price, :status)",
+                (:category_id, :brand_id, :name, :slug, :thumbnail, :description, :price, :status)',
                 [
                     'category_id' => $categoryId,
-                    'brand_id'    => $this->brandId,
-                    'name'        => $name,
-                    'slug'        => $slug,
-                    'thumbnail'   => isset($item['image_file'])
+                    'brand_id' => $this->brandId,
+                    'name' => $name,
+                    'slug' => $slug,
+                    'thumbnail' => isset($item['image_file'])
                         ? 'uploads/' . ltrim($item['image_file'], '/')
                         : null,
                     'description' => $item['description'] ?? null,
-                    'price'       => 0,
-                    'status'      => 1
-                ]
+                    'price' => 0,
+                    'status' => 1,
+                ],
             );
 
             $this->importImages($productId, $item['local_images'] ?? []);
@@ -288,16 +297,16 @@ class YonexProductImporter
 
     protected function getBrandId(): int
     {
-        $row = Database::first("SELECT id FROM brands WHERE id = 1");
+        $row = Database::first('SELECT id FROM brands WHERE id = 1');
 
         if (!$row) {
             return Database::insert(
                 "INSERT INTO brands (id, name, slug)
-                 VALUES (1, 'Yonex', 'yonex')"
+                 VALUES (1, 'Yonex', 'yonex')",
             );
         }
 
-        return (int)$row['id'];
+        return (int) $row['id'];
     }
 
     /* =========================
@@ -307,21 +316,23 @@ class YonexProductImporter
     {
         foreach ($specs as $key => $value) {
 
-            $key = trim((string)$key);
-            $value = trim((string)$value);
+            $key = trim((string) $key);
+            $value = trim((string) $value);
 
-            if ($key === '' || $value === '') continue;
+            if ($key === '' || $value === '') {
+                continue;
+            }
 
             Database::insert(
-                "INSERT INTO product_attributes
+                'INSERT INTO product_attributes
                 (product_id, attribute_name, attribute_value)
                 VALUES
-                (:product_id, :attribute_name, :attribute_value)",
+                (:product_id, :attribute_name, :attribute_value)',
                 [
-                    'product_id'      => $productId,
-                    'attribute_name'  => $this->specKeyVi($key),
-                    'attribute_value' => $value
-                ]
+                    'product_id' => $productId,
+                    'attribute_name' => $this->specKeyVi($key),
+                    'attribute_value' => $value,
+                ],
             );
         }
     }
@@ -337,19 +348,21 @@ class YonexProductImporter
                 $image = $image[0] ?? '';
             }
 
-            $image = trim((string)$image);
-            if ($image === '') continue;
+            $image = trim((string) $image);
+            if ($image === '') {
+                continue;
+            }
 
             Database::insert(
-                "INSERT INTO product_images
+                'INSERT INTO product_images
                 (product_id, image, sort_order)
                 VALUES
-                (:product_id, :image, :sort_order)",
+                (:product_id, :image, :sort_order)',
                 [
                     'product_id' => $productId,
-                    'image'      => 'uploads/' . ltrim($image, '/'),
-                    'sort_order' => $index + 1
-                ]
+                    'image' => 'uploads/' . ltrim($image, '/'),
+                    'sort_order' => $index + 1,
+                ],
             );
         }
     }

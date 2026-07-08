@@ -3,14 +3,16 @@
 class ShopController
 {
     protected ProductRepository $productRepository;
+
     protected BrandRepository $brandRepository;
+
     protected CategoryRepository $categoryRepository;
 
     public function __construct()
     {
-        $this->productRepository   = new ProductRepository();
-        $this->brandRepository   = new BrandRepository();
-        $this->categoryRepository  = new CategoryRepository();
+        $this->productRepository = new ProductRepository();
+        $this->brandRepository = new BrandRepository();
+        $this->categoryRepository = new CategoryRepository();
     }
 
     public function index(): void
@@ -20,7 +22,7 @@ class ShopController
 
         View::render('shop/index', [
             'categories' => $categories,
-            'brands' => $brands
+            'brands' => $brands,
         ]);
     }
 

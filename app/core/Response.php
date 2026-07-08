@@ -4,19 +4,18 @@ class Response
 {
     public static function json(
         mixed $data,
-        int $status = 200
-    ): void
-    {
+        int $status = 200,
+    ): void {
         http_response_code($status);
 
         header(
-            'Content-Type: application/json; charset=utf-8'
+            'Content-Type: application/json; charset=utf-8',
         );
 
         echo json_encode(
             $data,
             JSON_UNESCAPED_UNICODE
-            | JSON_UNESCAPED_SLASHES
+            | JSON_UNESCAPED_SLASHES,
         );
 
         exit;
@@ -24,33 +23,30 @@ class Response
 
     public static function success(
         mixed $data = [],
-        string $message = 'Success'
-    ): void
-    {
+        string $message = 'Success',
+    ): void {
         self::json([
             'success' => true,
             'message' => $message,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
     public static function error(
         string $message = 'Error',
-        int $status = 400
-    ): void
-    {
+        int $status = 400,
+    ): void {
         self::json([
             'success' => false,
-            'message' => $message
+            'message' => $message,
         ], $status);
     }
 
     public static function redirect(
-        string $url
-    ): void
-    {
+        string $url,
+    ): void {
         header(
-            "Location: {$url}"
+            "Location: {$url}",
         );
 
         exit;
@@ -66,9 +62,8 @@ class Response
 
     public static function abort(
         int $code = 404,
-        string $message = ''
-    ): void
-    {
+        string $message = '',
+    ): void {
         http_response_code($code);
 
         if ($message) {
@@ -80,13 +75,12 @@ class Response
 
     public static function download(
         string $file,
-        ?string $filename = null
-    ): void
-    {
+        ?string $filename = null,
+    ): void {
         if (!file_exists($file)) {
             self::abort(
                 404,
-                'File not found'
+                'File not found',
             );
         }
 
@@ -94,13 +88,13 @@ class Response
             basename($file);
 
         header(
-            'Content-Type: application/octet-stream'
+            'Content-Type: application/octet-stream',
         );
 
         header(
-            'Content-Disposition: attachment; filename="' .
-            $filename .
-            '"'
+            'Content-Disposition: attachment; filename="'
+            . $filename
+            . '"',
         );
 
         readfile($file);
@@ -110,12 +104,11 @@ class Response
 
     public static function view(
         string $view,
-        array $data = []
-    ): void
-    {
+        array $data = [],
+    ): void {
         View::render(
             $view,
-            $data
+            $data,
         );
     }
 }

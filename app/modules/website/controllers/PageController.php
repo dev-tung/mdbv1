@@ -18,7 +18,10 @@ class PageController
     }
 
     public function contact(): void {}
+
     public function warrantyPolicy(): void {}
+
     public function shippingPolicy(): void {}
+
     public function returnPolicy(): void {}
 }

@@ -10,7 +10,7 @@ class App
 
         Router::dispatch(
             Request::method(),
-            Request::path()
+            Request::path(),
         );
     }
 
@@ -41,7 +41,7 @@ class App
 
             echo Response::json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         });
     }

@@ -20,29 +20,29 @@ class ReportEndpoint
         try {
 
             $dateFrom = $_GET['date_from'] ?? null;
-            $dateTo   = $_GET['date_to'] ?? null;
+            $dateTo = $_GET['date_to'] ?? null;
 
-            $page    = max(1, (int)($_GET['page'] ?? 1));
+            $page = max(1, (int) ($_GET['page'] ?? 1));
             $perPage = 10;
-            $offset  = ($page - 1) * $perPage;
+            $offset = ($page - 1) * $perPage;
 
             // DATA
             $data = $this->orderRepository->getRevenueReport(
                 $dateFrom,
                 $dateTo,
                 $perPage,
-                $offset
+                $offset,
             );
 
             // TOTAL (for pagination)
             $total = $this->orderRepository->countRevenueReport(
                 $dateFrom,
-                $dateTo
+                $dateTo,
             );
 
             $monthProfit = $this->orderRepository->sumRevenueReport(
                 date('Y-m-01'),
-                date('Y-m-t')
+                date('Y-m-t'),
             );
 
             $totalPages = (int) ceil($total / $perPage);
@@ -54,11 +54,11 @@ class ReportEndpoint
                     'page' => $page,
                     'perPage' => $perPage,
                     'total' => $total,
-                    'totalPages' => $totalPages
+                    'totalPages' => $totalPages,
                 ],
                 'summary' => [
-                    'profit' => (float)$monthProfit
-                ]
+                    'profit' => (float) $monthProfit,
+                ],
             ]);
 
         } catch (\Throwable $e) {
@@ -67,7 +67,7 @@ class ReportEndpoint
 
             echo json_encode([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ]);
         }
     }

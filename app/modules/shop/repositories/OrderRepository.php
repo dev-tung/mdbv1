@@ -2,10 +2,7 @@
 
 class OrderRepository extends Repository
 {
-
     protected string $table = 'orders';
-
-
 
     /* =================================================
        LIST
@@ -14,34 +11,22 @@ class OrderRepository extends Repository
     public function getList(array $filters = []): array
     {
         return Database::get(
-
-            "CALL sp_order_list(
+            'CALL sp_order_list(
                 :date_from,
                 :date_to,
-                :customer_id,
+                :customer,
                 :payment,
                 :status
-            )",
-
+            )',
             [
-
-                'date_from'   => $filters['date_from'] ?: null,
-
-                'date_to'     => $filters['date_to'] ?: null,
-
-                'customer_id' => $filters['customer_id'] ?: null,
-
-                'payment'     => $filters['payment'] ?: null,
-
-                'status'      => $filters['status'] ?: null,
-
+                'date_from' => $filters['date_from'] ?: null,
+                'date_to'   => $filters['date_to'] ?: null,
+                'customer'  => $filters['customer'] ?: null,
+                'payment'   => $filters['payment'] ?: null,
+                'status'    => $filters['status'] ?: null,
             ]
-
         );
     }
-
-
-
 
     /* =================================================
        SHOW
@@ -51,22 +36,15 @@ class OrderRepository extends Repository
     {
 
         return Database::call(
-
-            "CALL sp_order_show(:id)",
-
+            'CALL sp_order_show(:id)',
             [
 
-                'id' => $id
+                'id' => $id,
 
-            ]
-
+            ],
         );
 
     }
-
-
-
-
 
     /* =================================================
     CREATE
@@ -75,11 +53,9 @@ class OrderRepository extends Repository
     public function create(array $data): int
     {
         Database::query(
-
-            "CALL sp_order_create(
+            'CALL sp_order_create(
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-            )",
-
+            )',
             [
 
                 // CUSTOMER
@@ -118,19 +94,14 @@ class OrderRepository extends Repository
                 // ITEMS
                 json_encode(
                     $data['items'] ?? [],
-                    JSON_UNESCAPED_UNICODE
-                )
+                    JSON_UNESCAPED_UNICODE,
+                ),
 
-            ]
-
+            ],
         );
 
         return Database::lastInsertId();
     }
-
-
-
-
 
     /* =================================================
     UPDATE
@@ -140,11 +111,9 @@ class OrderRepository extends Repository
     {
 
         Database::query(
-
-            "CALL sp_order_update(
+            'CALL sp_order_update(
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-            )",
-
+            )',
             [
 
                 // ID
@@ -181,18 +150,13 @@ class OrderRepository extends Repository
                 // ITEMS
                 json_encode(
                     $data['items'] ?? [],
-                    JSON_UNESCAPED_UNICODE
-                )
+                    JSON_UNESCAPED_UNICODE,
+                ),
 
-            ]
-
+            ],
         );
 
     }
-
-
-
-
 
     /* =================================================
        PAYMENT
@@ -202,30 +166,22 @@ class OrderRepository extends Repository
     {
 
         $result = Database::first(
-
-            "CALL sp_order_payment(
+            'CALL sp_order_payment(
                 :id,
                 :payment
-            )",
-
+            )',
             [
 
-                'id'      => $id,
+                'id' => $id,
 
-                'payment' => $payment
+                'payment' => $payment,
 
-            ]
-
+            ],
         );
-
 
         return (int) ($result['affected_rows'] ?? 0);
 
     }
-
-
-
-
 
     /* =================================================
        DELETE
@@ -235,18 +191,13 @@ class OrderRepository extends Repository
     {
 
         Database::query(
-
-            "CALL sp_order_delete(?)",
-
+            'CALL sp_order_delete(?)',
             [
 
-                $id
+                $id,
 
-            ]
-
+            ],
         );
 
     }
-
-
 }

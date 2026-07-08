@@ -38,8 +38,8 @@ function dd_sql(string $sql, array $params = []): string
 
         $sql = preg_replace(
             '/:' . preg_quote($key, '/') . '\b/',
-            (string)$value,
-            $sql
+            (string) $value,
+            $sql,
         );
     }
 

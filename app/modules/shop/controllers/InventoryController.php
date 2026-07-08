@@ -15,7 +15,7 @@ class InventoryController
     public function edit($id): void
     {
         View::render('inventory/edit', [
-            'id' => $id
+            'id' => $id,
         ]);
     }
 }

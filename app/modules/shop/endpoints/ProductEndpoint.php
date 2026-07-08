@@ -20,7 +20,7 @@ class ProductEndpoint
 
         return Response::json([
             'success' => true,
-            'data'    => $result
+            'data' => $result,
         ]);
     }
 
@@ -36,13 +36,13 @@ class ProductEndpoint
         if (!$data) {
             return Response::json([
                 'success' => false,
-                'message' => 'Product not found'
+                'message' => 'Product not found',
             ]);
         }
 
         return Response::json([
             'success' => true,
-            'data'    => $data
+            'data' => $data,
         ]);
     }
 
@@ -58,7 +58,7 @@ class ProductEndpoint
         if ($error) {
             return Response::json([
                 'success' => false,
-                'message' => $error
+                'message' => $error,
             ]);
         }
 
@@ -67,7 +67,7 @@ class ProductEndpoint
         return Response::json([
             'success' => true,
             'message' => 'Create success',
-            'id'      => $id
+            'id' => $id,
         ]);
     }
 
@@ -83,19 +83,19 @@ class ProductEndpoint
         if ($error) {
             return Response::json([
                 'success' => false,
-                'message' => $error
+                'message' => $error,
             ]);
         }
 
         $this->productRepository->update(
-            (int)($input['id'] ?? 0),
+            (int) ($input['id'] ?? 0),
             $input,
-            $_FILES['thumbnail'] ?? []
+            $_FILES['thumbnail'] ?? [],
         );
 
         return Response::json([
             'success' => true,
-            'message' => 'Update success'
+            'message' => 'Update success',
         ]);
     }
 
@@ -110,7 +110,7 @@ class ProductEndpoint
 
         return Response::json([
             'success' => true,
-            'message' => 'Delete success'
+            'message' => 'Delete success',
         ]);
     }
 }

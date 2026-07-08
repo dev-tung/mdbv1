@@ -6,7 +6,9 @@ class Env
 
     public static function init(string $path = null): void
     {
-        if (self::$loaded) return;
+        if (self::$loaded) {
+            return;
+        }
 
         $path = $path ?? BASE_PATH . '/.env';
 

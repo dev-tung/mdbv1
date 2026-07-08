@@ -24,11 +24,11 @@ class CustomerRepository
 
             $keyword = '%' . trim($keyword) . '%';
 
-            $sql .= " AND (
+            $sql .= ' AND (
                         name LIKE :kw1
                         OR phone LIKE :kw2
                         OR email LIKE :kw3
-                    )";
+                    )';
 
             $params['kw1'] = $keyword;
             $params['kw2'] = $keyword;
@@ -40,11 +40,11 @@ class CustomerRepository
         // =========================
         if (!empty($conditions['group_id'])) {
 
-            $sql .= " AND group_id = :group_id";
-            $params['group_id'] = (int)$conditions['group_id'];
+            $sql .= ' AND group_id = :group_id';
+            $params['group_id'] = (int) $conditions['group_id'];
         }
 
-        $sql .= " ORDER BY id DESC";
+        $sql .= ' ORDER BY id DESC';
 
         if ($limit > 0) {
             $sql .= " LIMIT {$limit} OFFSET {$offset}";
@@ -63,7 +63,7 @@ class CustomerRepository
              FROM {$this->table}
              WHERE id = :id
              LIMIT 1",
-            ['id' => $id]
+            ['id' => $id],
         );
     }
 
@@ -80,7 +80,7 @@ class CustomerRepository
             'description',
             'email',
             'created_at',
-            'updated_at'
+            'updated_at',
         ];
 
         $data = array_intersect_key($data, array_flip($allowed));
@@ -121,7 +121,7 @@ class CustomerRepository
             'address',
             'description',
             'email',
-            'updated_at'
+            'updated_at',
         ];
 
         $data = array_intersect_key($data, array_flip($allowed));
@@ -147,8 +147,8 @@ class CustomerRepository
         $clean['id'] = $id;
 
         $sql = "UPDATE {$this->table}
-                SET " . implode(', ', $set) . "
-                WHERE id = :id";
+                SET " . implode(', ', $set) . '
+                WHERE id = :id';
 
         return Database::update($sql, $clean);
     }
@@ -161,7 +161,7 @@ class CustomerRepository
         return Database::delete(
             "DELETE FROM {$this->table}
              WHERE id = :id",
-            ['id' => $id]
+            ['id' => $id],
         );
     }
 
@@ -182,11 +182,11 @@ class CustomerRepository
 
             $keyword = '%' . trim($keyword) . '%';
 
-            $sql .= " AND (
+            $sql .= ' AND (
                         name LIKE :kw1
                         OR phone LIKE :kw2
                         OR email LIKE :kw3
-                    )";
+                    )';
 
             $params['kw1'] = $keyword;
             $params['kw2'] = $keyword;
@@ -195,12 +195,12 @@ class CustomerRepository
 
         if (!empty($conditions['group_id'])) {
 
-            $sql .= " AND group_id = :group_id";
-            $params['group_id'] = (int)$conditions['group_id'];
+            $sql .= ' AND group_id = :group_id';
+            $params['group_id'] = (int) $conditions['group_id'];
         }
 
         $row = Database::first($sql, $params);
 
-        return (int)($row['total'] ?? 0);
+        return (int) ($row['total'] ?? 0);
     }
 }

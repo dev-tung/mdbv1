@@ -29,7 +29,7 @@ class Request
     {
         return json_decode(
             file_get_contents('php://input'),
-            true
+            true,
         ) ?? [];
     }
 
@@ -38,9 +38,8 @@ class Request
     // =========================
     public static function input(
         string $key,
-        $default = null
-    )
-    {
+        $default = null,
+    ) {
         $data = self::json();
 
         return $data[$key] ?? $_POST[$key] ?? $_GET[$key] ?? $default;
@@ -54,7 +53,7 @@ class Request
         return array_merge(
             $_GET,
             $_POST,
-            self::json()
+            self::json(),
         );
     }
 

@@ -3,12 +3,13 @@
 class ProductController
 {
     protected ProductRepository $productRepository;
+
     protected CategoryRepository $categoryRepository;
 
     public function __construct()
     {
-        $this->productRepository   = new ProductRepository();
-        $this->categoryRepository  = new CategoryRepository();
+        $this->productRepository = new ProductRepository();
+        $this->categoryRepository = new CategoryRepository();
     }
 
     /**
@@ -19,7 +20,7 @@ class ProductController
         $categories = $this->categoryRepository->getList();
 
         View::render('product/index', [
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 
@@ -30,7 +31,7 @@ class ProductController
 
     public function edit($id): void
     {
-        $product = $this->productRepository->findById((int)$id)
+        $product = $this->productRepository->findById((int) $id)
             or die('Product not found');
 
         View::render('product/edit', compact('id', 'product'));

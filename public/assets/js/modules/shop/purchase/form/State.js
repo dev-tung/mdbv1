@@ -1,12 +1,11 @@
 const State = {
-
     /* =================================================
        SUPPLIER SEARCH
     ================================================= */
 
     supplier: {
         keyword: '',
-        suggestions: []
+        suggestions: [],
     },
 
     /* =================================================
@@ -15,7 +14,7 @@ const State = {
 
     product: {
         keyword: '',
-        suggestions: []
+        suggestions: [],
     },
 
     /* =================================================
@@ -23,7 +22,7 @@ const State = {
     ================================================= */
 
     warehouse: {
-        list: []
+        list: [],
     },
 
     /* =================================================
@@ -31,7 +30,6 @@ const State = {
     ================================================= */
 
     purchase: {
-
         id: null,
 
         supplier_id: null,
@@ -75,8 +73,7 @@ const State = {
                 total_amount_with_vat: 1080000
             }
             */
-        ]
-
+        ],
     },
 
     /* =================================================
@@ -84,23 +81,21 @@ const State = {
     ================================================= */
 
     reset() {
-
         this.supplier = {
             keyword: '',
-            suggestions: []
+            suggestions: [],
         };
 
         this.product = {
             keyword: '',
-            suggestions: []
+            suggestions: [],
         };
 
         this.warehouse = {
-            list: []
+            list: [],
         };
 
         this.purchase = {
-
             id: null,
 
             supplier_id: null,
@@ -124,12 +119,9 @@ const State = {
             paid_amount: 0,
             debt_amount: 0,
 
-            items: []
-
+            items: [],
         };
-
-    }
-
+    },
 };
 
 State.reset();

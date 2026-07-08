@@ -2,7 +2,7 @@
 
 function config($key)
 {
-    
+
     static $cache = [];
 
     if (isset($cache[$key])) {
@@ -16,7 +16,6 @@ function config($key)
     $file = array_shift($parts);   // option
 
     $path = BASE_PATH . "/app/modules/{$module}/config/{$file}.php";
-
 
     if (!file_exists($path)) {
         return null;

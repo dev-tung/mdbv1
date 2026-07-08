@@ -11,39 +11,39 @@ class UserRepository extends Repository
     public function findById(int $id): ?array
     {
         return Database::first(
-            "SELECT *
+            'SELECT *
              FROM users
              WHERE id = :id
-             LIMIT 1",
+             LIMIT 1',
             [
-                'id' => $id
-            ]
+                'id' => $id,
+            ],
         );
     }
 
     public function findByUsername(string $username): ?array
     {
         return Database::first(
-            "SELECT *
+            'SELECT *
              FROM users
              WHERE username = :username
-             LIMIT 1",
+             LIMIT 1',
             [
-                'username' => $username
-            ]
+                'username' => $username,
+            ],
         );
     }
 
     public function findByEmail(string $email): ?array
     {
         return Database::first(
-            "SELECT *
+            'SELECT *
              FROM users
              WHERE email = :email
-             LIMIT 1",
+             LIMIT 1',
             [
-                'email' => $email
-            ]
+                'email' => $email,
+            ],
         );
     }
 }
