@@ -70,6 +70,7 @@ CREATE ORDER ITEMS
 INSERT INTO
     order_items (
         order_id,
+        purchase_id,
         product_id,
         product_name,
         quantity,
@@ -84,6 +85,7 @@ INSERT INTO
     )
 SELECT
     v_order_id,
+    purchase_id,
     product_id,
     product_name,
     quantity,
@@ -99,6 +101,7 @@ FROM
     JSON_TABLE (
         p_items,
         '$[*]' COLUMNS (
+            purchase_id INT PATH '$.purchase_id',
             product_id INT PATH '$.product_id',
             product_name VARCHAR(255) PATH '$.product_name',
             quantity INT PATH '$.quantity',
@@ -118,19 +121,18 @@ UPDATE INVENTORY
 TRỪ TỒN KHO
 ===================================== */
 UPDATE inventories i
-JOIN JSON_TABLE (
+INNER JOIN JSON_TABLE (
     p_items,
     '$[*]' COLUMNS (
+        purchase_id INT PATH '$.purchase_id',
         product_id INT PATH '$.product_id',
         quantity INT PATH '$.quantity'
     )
-) jt ON i.product_id = jt.product_id
+) jt ON i.purchase_id = jt.purchase_id
+AND i.product_id = jt.product_id
 SET
     i.quantity = i.quantity - jt.quantity;
 
 COMMIT;
 
-SELECT
-    v_order_id AS id;
-
-END
+END;

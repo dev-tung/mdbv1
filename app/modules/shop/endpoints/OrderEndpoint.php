@@ -70,7 +70,6 @@ class OrderEndpoint
         if ($error) {
             return Response::json([
                 'success' => false,
-
                 'message' => $error,
             ]);
         }

@@ -98,6 +98,8 @@ const Service = {
             State.order.items.push({
                 product_id: product.product_id,
 
+                purchase_id: product.purchase_id,
+
                 product_name: product.product_name,
 
                 quantity: 1,

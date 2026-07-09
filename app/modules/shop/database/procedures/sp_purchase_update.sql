@@ -24,6 +24,38 @@ END;
 START TRANSACTION;
 
 /* =====================================
+CHECK PURCHASE
+===================================== */
+IF NOT EXISTS (
+    SELECT
+        1
+    FROM
+        purchases
+    WHERE
+        id = p_id
+) THEN SIGNAL SQLSTATE '45000'
+SET
+    MESSAGE_TEXT = 'Phiếu nhập không tồn tại';
+
+END IF;
+
+/* =====================================
+CHECK EXPORTED
+===================================== */
+IF EXISTS (
+    SELECT
+        1
+    FROM
+        order_items
+    WHERE
+        purchase_id = p_id
+) THEN SIGNAL SQLSTATE '45000'
+SET
+    MESSAGE_TEXT = 'Phiếu nhập đã được xuất kho, không thể cập nhật';
+
+END IF;
+
+/* =====================================
 UPDATE PURCHASE
 ===================================== */
 UPDATE purchases

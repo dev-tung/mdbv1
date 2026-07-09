@@ -14,15 +14,15 @@ const http = {
     async post(url, data = {}) {
         const response = await fetch(url, {
             method: 'POST',
-
             headers: {
                 'Content-Type': 'application/json',
             },
-
             body: JSON.stringify(data),
         });
 
-        return await response.json();
+        const result = await response.json();
+
+        return result;
     },
 
     async put(url, data = {}) {

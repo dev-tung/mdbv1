@@ -39,7 +39,7 @@ const Renderer = {
         wrapper.classList.toggle(
             'd-none',
 
-            !['partial', 'credit'].includes(State.order.payment)
+            !['partial', 'credit'].includes(State.order.payment),
         );
     },
 
@@ -60,7 +60,7 @@ const Renderer = {
             return;
         }
 
-        State.customer.suggestions.forEach(item => {
+        State.customer.suggestions.forEach((item) => {
             box.insertAdjacentHTML(
                 'beforeend',
                 `
@@ -74,7 +74,7 @@ const Renderer = {
 
                 </button>
 
-            `
+            `,
             );
         });
 
@@ -98,7 +98,7 @@ const Renderer = {
             return;
         }
 
-        State.product.suggestions.forEach(item => {
+        State.product.suggestions.forEach((item) => {
             box.insertAdjacentHTML(
                 'beforeend',
                 `
@@ -110,7 +110,7 @@ const Renderer = {
                     ${item.product_name} ${Number(item.vat_rate) > 0 ? '(VAT)' : ''}
 
                 </button>
-                `
+                `,
             );
         });
 
@@ -139,7 +139,11 @@ const Renderer = {
 
                   <td>
 
-                      ${item.product_name}
+                    ${item.product_name}
+                    <input
+                        type="hidden"
+                        class="purchase-id"
+                        value="${item.purchase_id ?? ''}">
 
                   </td>
 
@@ -227,7 +231,7 @@ const Renderer = {
 
               </tr>
 
-          `
+          `,
             );
         });
     },
@@ -272,7 +276,7 @@ const Renderer = {
         wrapper.classList.toggle(
             'd-none',
 
-            !['partial', 'credit'].includes(State.order.payment)
+            !['partial', 'credit'].includes(State.order.payment),
         );
     },
 

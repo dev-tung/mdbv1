@@ -26,24 +26,57 @@ SET
 
 END IF;
 
+/* =====================================
+CHECK STATUS
+===================================== */
+IF p_status NOT IN ('draft', 'confirmed', 'received') THEN SIGNAL SQLSTATE '45000'
+SET
+    MESSAGE_TEXT = 'Trạng thái không hợp lệ';
+
+END IF;
+
+/* =====================================
+LOCK PURCHASE
+===================================== */
 SELECT
     status INTO v_old_status
 FROM
     purchases
 WHERE
-    id = p_id;
+    id = p_id FOR
+UPDATE;
 
 /* =====================================
-UPDATE STATUS
+STATUS NOT CHANGED
 ===================================== */
-UPDATE purchases
+IF v_old_status = p_status THEN COMMIT;
+
+SELECT
+    TRUE AS success,
+    p_id AS id,
+    p_status AS status,
+    'Trạng thái không thay đổi' AS message;
+
+ELSE
+/* =====================================
+CHECK EXPORTED
+===================================== */
+IF EXISTS (
+    SELECT
+        1
+    FROM
+        order_items
+    WHERE
+        purchase_id = p_id
+    LIMIT
+        1
+) THEN SIGNAL SQLSTATE '45000'
 SET
-    status = p_status
-WHERE
-    id = p_id;
+    MESSAGE_TEXT = 'Phiếu nhập đã được xuất kho, không thể thay đổi trạng thái';
+
+END IF;
 
 /* =====================================
-REMOVE INVENTORY
 RECEIVED -> OTHER
 ===================================== */
 IF v_old_status = 'received'
@@ -55,11 +88,14 @@ WHERE
 END IF;
 
 /* =====================================
-CREATE INVENTORY
 OTHER -> RECEIVED
 ===================================== */
 IF v_old_status <> 'received'
 AND p_status = 'received' THEN
+DELETE FROM inventories
+WHERE
+    purchase_id = p_id;
+
 INSERT INTO
     inventories (
         purchase_id,
@@ -92,10 +128,23 @@ WHERE
 
 END IF;
 
+/* =====================================
+UPDATE STATUS
+===================================== */
+UPDATE purchases
+SET
+    status = p_status
+WHERE
+    id = p_id;
+
 COMMIT;
 
 SELECT
+    TRUE AS success,
     p_id AS id,
-    p_status AS status;
+    p_status AS status,
+    'Cập nhật trạng thái thành công' AS message;
+
+END IF;
 
 END;

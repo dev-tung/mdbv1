@@ -35,21 +35,33 @@ const Service = {
     },
 
     async status(id, status) {
-        await Api.status(id, status);
+        const result = await Api.status(id, status);
 
-        await this.loadOrders();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result;
     },
 
     async payment(id, payment) {
-        await Api.payment(id, payment);
+        const result = await Api.payment(id, payment);
 
-        await this.loadOrders();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result;
     },
 
     async deleteOrder(id) {
-        await Api.deleteOrder(id);
+        const result = await Api.deleteOrder(id);
 
-        await this.loadOrders();
+        if (!result.success) {
+            throw new Error(result.message);
+        }
+
+        return result;
     },
 };
 

@@ -8,6 +8,22 @@ END;
 
 START TRANSACTION;
 
+/* =====================================
+CHECK EXPORTED
+===================================== */
+IF EXISTS (
+    SELECT
+        1
+    FROM
+        order_items
+    WHERE
+        purchase_id = p_id
+) THEN SIGNAL SQLSTATE '45000'
+SET
+    MESSAGE_TEXT = 'Phiếu nhập đã được xuất kho, không thể xóa';
+
+END IF;
+
 /* ================================
 DELETE ORDERS
 ================================ */

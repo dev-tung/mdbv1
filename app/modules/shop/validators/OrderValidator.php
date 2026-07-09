@@ -7,10 +7,7 @@ class OrderValidator
      */
     public static function create(array $data): ?string
     {
-        // customer_id
-        // Có thể cho phép khách lẻ nên không bắt buộc
-
-        if (isset($data['customer_id']) && (int) $data['customer_id'] < 0) {
+        if (empty($data['customer_id'])) {
             return 'Khách hàng không hợp lệ';
         }
 

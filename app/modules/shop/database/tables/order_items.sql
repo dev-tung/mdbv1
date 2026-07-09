@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS order_items;
 CREATE TABLE order_items (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     order_id INT NOT NULL,
+    purchase_id INT NOT NULL,
     product_id INT UNSIGNED NOT NULL,
     product_name VARCHAR(255) NOT NULL,
     quantity INT UNSIGNED NOT NULL DEFAULT 1,
@@ -18,7 +19,9 @@ CREATE TABLE order_items (
     updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     INDEX idx_order (order_id),
+    INDEX idx_purchase (purchase_id),
     INDEX idx_product (product_id),
     CONSTRAINT fk_order_item_order FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE,
+    CONSTRAINT fk_order_item_purchase FOREIGN KEY (purchase_id) REFERENCES purchases (id),
     CONSTRAINT fk_order_item_product FOREIGN KEY (product_id) REFERENCES products (id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;

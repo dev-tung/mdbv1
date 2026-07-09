@@ -125,24 +125,34 @@ class PurchaseEndpoint
     // =========================
     public function apiStatus()
     {
-        $input = request_all();
+        try {
+            $input = request_all();
 
-        if (empty($input['id']) || !isset($input['status'])) {
+            if (empty($input['id']) || !isset($input['status'])) {
+                return Response::json([
+                    'success' => false,
+                    'message' => 'Thiếu dữ liệu trạng thái',
+                ]);
+            }
+
+            $updated = $this->purchaseRepository->status((int) $input['id'], $input['status']);
+
             return Response::json([
-                'success' => false,
-                'message' => 'Thiếu dữ liệu trạng thái',
+                'success' => true,
+                'message' => 'Cập nhật trạng thái thành công',
+                'data' => [
+                    'affected_rows' => $updated,
+                ],
             ]);
+        } catch (Throwable $e) {
+            return Response::json(
+                [
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                ],
+                400,
+            );
         }
-
-        $updated = $this->purchaseRepository->status((int) $input['id'], $input['status']);
-
-        return Response::json([
-            'success' => true,
-            'message' => 'Cập nhật trạng thái thành công',
-            'data' => [
-                'affected_rows' => $updated,
-            ],
-        ]);
     }
 
     // =========================

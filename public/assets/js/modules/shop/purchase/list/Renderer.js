@@ -39,7 +39,7 @@ const Renderer = {
 
             ${(State.suppliers || [])
                 .map(
-                    item => `
+                    (item) => `
 
                     <option
                         value="${item.id}"
@@ -48,7 +48,7 @@ const Renderer = {
                         ${item.name}
                     </option>
 
-                `
+                `,
                 )
                 .join('')}
 
@@ -252,9 +252,29 @@ const Renderer = {
 
                     >
 
-                        View
+                        Sửa
 
                     </a>
+
+                    <button
+
+                        type="button"
+
+                        class="
+                            btn
+                            btn-sm
+                            btn-outline-danger
+                            btn-delete-purchase
+                        "
+
+                        data-id="${purchase.id}"
+
+                    >
+
+                        Xóa
+
+                    </button>
+
 
 
                 </td>
@@ -264,7 +284,7 @@ const Renderer = {
             </tr>
 
 
-        `
+        `,
             )
             .join('');
     },
@@ -293,7 +313,7 @@ const Renderer = {
                 </option>
 
 
-            `
+            `,
             )
 
             .join('');

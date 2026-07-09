@@ -43,19 +43,37 @@ const Service = {
     async status(id, status) {
         const response = await Api.status(id, status);
 
+        if (!response.success) {
+            throw new Error(response.message);
+        }
+
         await this.loadPurchases();
+
+        return response;
     },
 
     async payment(id, payment) {
         const response = await Api.payment(id, payment);
 
+        if (!response.success) {
+            throw new Error(response.message);
+        }
+
         await this.loadPurchases();
+
+        return response;
     },
 
     async deletePurchase(id) {
         const response = await Api.deletePurchase(id);
 
+        if (!response.success) {
+            throw new Error(response.message);
+        }
+
         await this.loadPurchases();
+
+        return response;
     },
 };
 

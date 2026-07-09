@@ -24,11 +24,28 @@ END;
 START TRANSACTION;
 
 /* =====================================
+CHECK ORDER
+===================================== */
+IF NOT EXISTS (
+    SELECT
+        1
+    FROM
+        orders
+    WHERE
+        id = p_id
+) THEN SIGNAL SQLSTATE '45000'
+SET
+    MESSAGE_TEXT = 'Đơn hàng không tồn tại';
+
+END IF;
+
+/* =====================================
 RESTORE INVENTORY
 CỘNG LẠI TỒN KHO ĐƠN CŨ
 ===================================== */
 UPDATE inventories i
-JOIN order_items oi ON oi.product_id = i.product_id
+INNER JOIN order_items oi ON oi.purchase_id = i.purchase_id
+AND oi.product_id = i.product_id
 SET
     i.quantity = i.quantity + oi.quantity
 WHERE
@@ -67,6 +84,7 @@ INSERT NEW ITEMS
 INSERT INTO
     order_items (
         order_id,
+        purchase_id,
         product_id,
         product_name,
         quantity,
@@ -81,6 +99,7 @@ INSERT INTO
     )
 SELECT
     p_id,
+    purchase_id,
     product_id,
     product_name,
     quantity,
@@ -96,6 +115,7 @@ FROM
     JSON_TABLE (
         p_items,
         '$[*]' COLUMNS (
+            purchase_id INT PATH '$.purchase_id',
             product_id INT PATH '$.product_id',
             product_name VARCHAR(255) PATH '$.product_name',
             quantity INT PATH '$.quantity',
@@ -111,17 +131,44 @@ FROM
     ) jt;
 
 /* =====================================
+CHECK INVENTORY
+===================================== */
+IF EXISTS (
+    SELECT
+        1
+    FROM
+        inventories i
+        INNER JOIN JSON_TABLE (
+            p_items,
+            '$[*]' COLUMNS (
+                purchase_id INT PATH '$.purchase_id',
+                product_id INT PATH '$.product_id',
+                quantity INT PATH '$.quantity'
+            )
+        ) jt ON i.purchase_id = jt.purchase_id
+        AND i.product_id = jt.product_id
+    WHERE
+        i.quantity < jt.quantity
+) THEN SIGNAL SQLSTATE '45000'
+SET
+    MESSAGE_TEXT = 'Số lượng tồn kho không đủ';
+
+END IF;
+
+/* =====================================
 UPDATE INVENTORY
 TRỪ TỒN KHO MỚI
 ===================================== */
 UPDATE inventories i
-JOIN JSON_TABLE (
+INNER JOIN JSON_TABLE (
     p_items,
     '$[*]' COLUMNS (
+        purchase_id INT PATH '$.purchase_id',
         product_id INT PATH '$.product_id',
         quantity INT PATH '$.quantity'
     )
-) jt ON i.product_id = jt.product_id
+) jt ON i.purchase_id = jt.purchase_id
+AND i.product_id = jt.product_id
 SET
     i.quantity = i.quantity - jt.quantity;
 
@@ -130,4 +177,4 @@ COMMIT;
 SELECT
     p_id AS id;
 
-END
+END;
