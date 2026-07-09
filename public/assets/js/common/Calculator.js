@@ -1,4 +1,5 @@
 const Calculator = {
+
 	amount(quantity, price) {
 		return (Number(quantity) || 0) * (Number(price) || 0);
 	},
@@ -36,6 +37,46 @@ const Calculator = {
 
 		return Math.round((Number(value) || 0) * factor) / factor;
 	},
+
+	// =================================================
+	// NEW
+	// =================================================
+
+	min(a, b) {
+		return Math.min(Number(a) || 0, Number(b) || 0);
+	},
+
+	max(a, b) {
+		return Math.max(Number(a) || 0, Number(b) || 0);
+	},
+
+	add(a, b) {
+		return (Number(a) || 0) + (Number(b) || 0);
+	},
+
+	subtract(a, b) {
+		return (Number(a) || 0) - (Number(b) || 0);
+	},
+
+	multiply(a, b) {
+		return (Number(a) || 0) * (Number(b) || 0);
+	},
+
+	divide(a, b) {
+		b = Number(b) || 0;
+
+		if (b === 0) {
+			return 0;
+		}
+
+		return (Number(a) || 0) / b;
+	},
+
+	clamp(value, min, max) {
+		value = Number(value) || 0;
+
+		return Math.min(Math.max(value, min), max);
+	}
 };
 
 export default Calculator;

@@ -16,7 +16,7 @@ const Service = {
 
 		State.purchase.items = items || [];
 
-		this.setMoneyOverall();
+		this.calculate();
 	},
 
 	async searchSuppliers() {
@@ -69,13 +69,13 @@ const Service = {
 	setVatRate(rate) {
 		State.purchase.vat_rate = Number(rate) || 0;
 
-		this.setMoneyOverall();
+		this.calculate();
 	},
 
 	setPaidAmount(amount) {
 		State.purchase.paid_amount = Number(amount) || 0;
 
-		this.setMoneyOverall();
+		this.calculate();
 	},
 
 	/* =================================================
@@ -107,13 +107,13 @@ const Service = {
 			});
 		}
 
-		this.setMoneyOverall();
+		this.calculate();
 	},
 
 	removeProduct(index) {
 		State.purchase.items.splice(index, 1);
 
-		this.setMoneyOverall();
+		this.calculate();
 	},
 
 	setQuantity(index, quantity) {
@@ -123,7 +123,7 @@ const Service = {
 
 		item.quantity = Number(quantity) || 0;
 
-		this.setMoneyOverall();
+		this.calculate();
 	},
 
 	setPurchasePrice(index, price) {
@@ -133,7 +133,7 @@ const Service = {
 
 		item.purchase_price = Number(price) || 0;
 
-		this.setMoneyOverall();
+		this.calculate();
 	},
 
 	setSellingPrice(index, price) {
@@ -148,7 +148,7 @@ const Service = {
        CALCULATE
     ================================================= */
 
-	setMoneyOverall() {
+	calculate() {
 		let subtotalAmount = 0;
 		let vatAmount = 0;
 		let totalAmount = 0;
@@ -181,7 +181,7 @@ const Service = {
     ================================================= */
 
 	async save() {
-		this.setMoneyOverall();
+		this.calculate();
 
 		if (State.purchase.id) {
 			return await Api.updatePurchase(State.purchase.id, State.purchase);

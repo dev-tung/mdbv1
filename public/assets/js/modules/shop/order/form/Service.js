@@ -1,6 +1,7 @@
 import State from './State.js';
 import Api from './Api.js';
 import Renderer from './Renderer.js';
+import Calculator from '/assets/js/common/Calculator.js';
 
 const Service = {
 	/* =================================================
@@ -245,74 +246,86 @@ const Service = {
 		this.calculate();
 	},
 
-	/* =================================================
-       CALCULATE
-    ================================================= */
+/* =================================================
+   CALCULATE
+================================================= */
 
-	calculate() {
-		let subtotal = 0;
+calculate() {
 
-		let vat = 0;
+	let subtotal = 0;
 
-		let total = 0;
+	let discount = 0;
 
-		let discount = 0;
+	let vat = 0;
 
-		State.order.items.forEach((item) => {
-			if (item.is_gift) {
-				item.subtotal_amount = 0;
-				item.discount_amount = 0;
-				item.vat_amount = 0;
-				item.total_amount = 0;
-			} else {
-				const amount = Number(item.quantity || 0) * Number(item.selling_price || 0);
+	let total = 0;
 
-				item.subtotal_amount = amount;
+	State.order.items.forEach((item) => {
 
-				item.discount_amount = Number(item.discount_amount || 0);
+		if (item.is_gift) {
 
-				if (item.discount_amount > item.subtotal_amount) {
-					item.discount_amount = item.subtotal_amount;
-				}
+			item.subtotal_amount = 0;
+			item.discount_amount = 0;
+			item.vat_amount = 0;
+			item.total_amount = 0;
 
-				const taxable = item.subtotal_amount - item.discount_amount;
+		} else {
 
-				item.vat_amount = (taxable * Number(item.vat_rate || 0)) / 100;
+			item.subtotal_amount = Calculator.amount(
+				item.quantity,
+				item.selling_price
+			);
 
-				item.total_amount = taxable + item.vat_amount;
-			}
+			item.discount_amount = Calculator.min(
+				item.discount_amount,
+				item.subtotal_amount
+			);
 
-			subtotal += item.subtotal_amount;
+			const taxable = Calculator.discount(
+				item.subtotal_amount,
+				item.discount_amount
+			);
 
-			discount += item.discount_amount;
+			item.vat_amount = Calculator.vat(
+				taxable,
+				item.vat_rate
+			);
 
-			vat += item.vat_amount;
+			item.total_amount = Calculator.total(
+				taxable,
+				item.vat_amount
+			);
 
-			total += item.total_amount;
-		});
-
-		State.order.subtotal_amount = subtotal;
-
-		State.order.discount_amount = discount;
-
-		State.order.vat_amount = vat;
-
-		State.order.total_amount = total;
-
-		this.calculateDebt();
-	},
-
-	/* =================================================
-       DEBT
-    ================================================= */
-
-	calculateDebt() {
-		State.order.debt_amount = Number(State.order.total_amount || 0) - Number(State.order.paid_amount || 0);
-
-		if (State.order.debt_amount < 0) {
-			State.order.debt_amount = 0;
 		}
-	},
+
+		subtotal += item.subtotal_amount;
+		discount += item.discount_amount;
+		vat += item.vat_amount;
+		total += item.total_amount;
+
+	});
+
+	State.order.subtotal_amount = subtotal;
+	State.order.discount_amount = discount;
+	State.order.vat_amount = vat;
+	State.order.total_amount = total;
+
+	this.calculateDebt();
+
+},
+
+/* =================================================
+   DEBT
+================================================= */
+
+calculateDebt() {
+
+	State.order.debt_amount = Calculator.debt(
+		State.order.total_amount,
+		State.order.paid_amount
+	);
+
+},
 
 	/* =================================================
        SAVE
