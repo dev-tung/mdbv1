@@ -35,13 +35,6 @@ const Renderer = {
         const wrapper = document.querySelector('#paid_amount_wrapper');
 
         wrapper.classList.toggle('d-none', State.purchase.payment !== 'partial');
-
-        // Ẩn nút submit nếu là form sửa
-        const submitButton = document.querySelector('#btn-submit');
-
-        if (submitButton) {
-            submitButton.classList.toggle('d-none', !!State.purchase.id);
-        }
     },
 
     /* =================================================
