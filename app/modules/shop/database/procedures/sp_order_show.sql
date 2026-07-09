@@ -19,6 +19,7 @@ ORDER ITEMS
 SELECT
     oi.id,
     oi.order_id,
+    oi.purchase_id,
     oi.product_id,
     oi.product_name,
     oi.quantity,
