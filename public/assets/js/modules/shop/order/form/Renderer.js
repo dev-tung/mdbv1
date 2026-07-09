@@ -243,6 +243,8 @@ const Renderer = {
 
 		const item = State.order.items[index];
 
+		row.querySelector(".quantity").value = item.quantity;
+
 		row.querySelector('.subtotal-amount').textContent = this.money(item.subtotal_amount);
 
 		row.querySelector('.item-vat').textContent = this.money(item.vat_amount);

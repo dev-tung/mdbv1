@@ -69,7 +69,6 @@ const Event = {
 		});
 
 		suggestions?.addEventListener('click', (e) => {
-			console.log('CLICK PRODUCT');
 
 			const button = e.target.closest('.product-item');
 
@@ -81,7 +80,13 @@ const Event = {
 
 			if (!product) return;
 
-			Service.addProduct(product);
+			const result = Service.addProduct(product);
+
+			if (!result.success) {
+					alert(result.message);
+					return;
+			}
+
 
 			Service.calculate();
 
@@ -155,10 +160,18 @@ const Event = {
 
 			const classList = e.target.classList;
 
-			if (classList.contains('quantity')) {
-				Service.setQuantity(index, value);
+			if (classList.contains("quantity")) {
 
-				Service.calculate();
+					const result = Service.setQuantity(index, value);
+
+					Renderer.productsUpdate(index);
+
+					Renderer.summary();
+
+					if (!result.success) {
+							alert(result.message);
+					}
+					return;
 			} else if (classList.contains('selling-price')) {
 				Service.setSellingPrice(index, value);
 

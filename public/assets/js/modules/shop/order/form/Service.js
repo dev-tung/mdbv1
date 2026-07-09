@@ -90,39 +90,70 @@ const Service = {
     ================================================= */
 
 	addProduct(product) {
-		const exists = State.order.items.find((item) => item.product_id == product.product_id);
 
-		if (exists) {
-			exists.quantity++;
-		} else {
-			State.order.items.push({
-				product_id: product.product_id,
+			const exists = State.order.items.find(item =>
+					item.product_id == product.product_id &&
+					item.purchase_id == product.purchase_id
+			);
 
-				purchase_id: product.purchase_id,
+			if (Number(product.quantity) <= 0) {
+					return {
+							success: false,
+							message: "Sản phẩm đã hết hàng."
+					};
+			}
 
-				product_name: product.product_name,
+			if (exists) {
 
-				quantity: 1,
+					if (exists.quantity >= Number(product.quantity)) {
+							return {
+									success: false,
+									message: "Số lượng vượt quá tồn kho."
+							};
+					}
 
-				purchase_price: Number(product.purchase_price || 0),
+					exists.quantity++;
 
-				selling_price: Number(product.selling_price || 0),
+			} else {
 
-				discount_amount: 0,
+					State.order.items.push({
 
-				is_gift: false,
+							product_id: product.product_id,
 
-				subtotal_amount: 0,
+							purchase_id: product.purchase_id,
 
-				vat_rate: Number(State.order.vat_rate || 0),
+							product_name: product.product_name,
 
-				vat_amount: 0,
+							stock_quantity: Number(product.quantity),
 
-				total_amount: 0,
-			});
-		}
+							quantity: 1,
 
-		this.calculate();
+							purchase_price: Number(product.purchase_price || 0),
+
+							selling_price: Number(product.selling_price || 0),
+
+							discount_amount: 0,
+
+							is_gift: false,
+
+							subtotal_amount: 0,
+
+							vat_rate: Number(State.order.vat_rate || 0),
+
+							vat_amount: 0,
+
+							total_amount: 0,
+
+					});
+
+			}
+
+			this.calculate();
+
+			return {
+					success: true
+			};
+
 	},
 
 	setDiscountAmount(index, value) {
@@ -176,9 +207,30 @@ const Service = {
 	},
 
 	setQuantity(index, value) {
-		State.order.items[index].quantity = Number(value || 0);
 
-		this.calculate();
+    const item = State.order.items[index];
+
+    const quantity = Number(value);
+
+    if (quantity > item.quantity) {
+
+        item.quantity = item.quantity;
+
+        this.calculate();
+
+        return {
+            success: false,
+            message: "Số lượng vượt quá tồn kho."
+        };
+    }
+
+    item.quantity = quantity;
+
+    this.calculate();
+
+    return {
+        success: true
+    };
 	},
 
 	setSellingPrice(index, value) {
