@@ -2,156 +2,156 @@
 
 class SupplierEndpoint
 {
-    protected SupplierRepository $supplierRepository;
+	protected SupplierRepository $supplierRepository;
 
-    public function __construct()
-    {
-        $this->supplierRepository = new SupplierRepository();
-    }
+	public function __construct()
+	{
+		$this->supplierRepository = new SupplierRepository();
+	}
 
-    // =========================
-    // LIST
-    // =========================
-    public function apiList()
-    {
-        header('Content-Type: application/json');
+	// =========================
+	// LIST
+	// =========================
+	public function apiList()
+	{
+		header('Content-Type: application/json');
 
-        $keyword = $_GET['keyword'] ?? '';
+		$keyword = $_GET['keyword'] ?? '';
 
-        $filters = [];
+		$filters = [];
 
-        if (!empty($keyword)) {
-            $filters['keyword'] = $keyword;
-        }
+		if (!empty($keyword)) {
+			$filters['keyword'] = $keyword;
+		}
 
-        $suppliers = $this->supplierRepository->getList($filters);
+		$suppliers = $this->supplierRepository->getList($filters);
 
-        echo json_encode([
-            'data' => $suppliers,
-        ]);
-    }
+		echo json_encode([
+			'data' => $suppliers,
+		]);
+	}
 
-    // =========================
-    // SHOW
-    // =========================
-    public function apiShow($id)
-    {
-        header('Content-Type: application/json');
+	// =========================
+	// SHOW
+	// =========================
+	public function apiShow($id)
+	{
+		header('Content-Type: application/json');
 
-        if ($id <= 0) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'ID không hợp lệ',
-            ]);
-            return;
-        }
+		if ($id <= 0) {
+			echo json_encode([
+				'success' => false,
+				'message' => 'ID không hợp lệ',
+			]);
+			return;
+		}
 
-        $supplier = $this->supplierRepository->findById($id);
+		$supplier = $this->supplierRepository->findById($id);
 
-        if (!$supplier) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Không tìm thấy nhà cung cấp',
-            ]);
-            return;
-        }
+		if (!$supplier) {
+			echo json_encode([
+				'success' => false,
+				'message' => 'Không tìm thấy nhà cung cấp',
+			]);
+			return;
+		}
 
-        echo json_encode([
-            'success' => true,
-            'data' => $supplier,
-        ]);
-    }
+		echo json_encode([
+			'success' => true,
+			'data' => $supplier,
+		]);
+	}
 
-    // =========================
-    // CREATE
-    // =========================
-    public function apiCreate()
-    {
-        header('Content-Type: application/json');
+	// =========================
+	// CREATE
+	// =========================
+	public function apiCreate()
+	{
+		header('Content-Type: application/json');
 
-        $data = [
-            'name' => trim($_POST['name'] ?? ''),
-            'phone' => trim($_POST['phone'] ?? ''),
-            'email' => trim($_POST['email'] ?? ''),
-            'address' => trim($_POST['address'] ?? ''),
-            'description' => trim($_POST['description'] ?? ''),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ];
+		$data = [
+			'name' => trim($_POST['name'] ?? ''),
+			'phone' => trim($_POST['phone'] ?? ''),
+			'email' => trim($_POST['email'] ?? ''),
+			'address' => trim($_POST['address'] ?? ''),
+			'description' => trim($_POST['description'] ?? ''),
+			'created_at' => date('Y-m-d H:i:s'),
+			'updated_at' => date('Y-m-d H:i:s'),
+		];
 
-        if ($data['name'] === '') {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Tên nhà cung cấp không được để trống',
-            ]);
-            return;
-        }
+		if ($data['name'] === '') {
+			echo json_encode([
+				'success' => false,
+				'message' => 'Tên nhà cung cấp không được để trống',
+			]);
+			return;
+		}
 
-        $id = $this->supplierRepository->create($data);
+		$id = $this->supplierRepository->create($data);
 
-        echo json_encode([
-            'success' => $id > 0,
-            'message' => $id ? 'Tạo nhà cung cấp thành công' : 'Tạo thất bại',
-            'id' => $id,
-        ]);
-    }
+		echo json_encode([
+			'success' => $id > 0,
+			'message' => $id ? 'Tạo nhà cung cấp thành công' : 'Tạo thất bại',
+			'id' => $id,
+		]);
+	}
 
-    // =========================
-    // UPDATE
-    // =========================
-    public function apiUpdate()
-    {
-        header('Content-Type: application/json');
+	// =========================
+	// UPDATE
+	// =========================
+	public function apiUpdate()
+	{
+		header('Content-Type: application/json');
 
-        $id = (int) ($_POST['id'] ?? 0);
+		$id = (int) ($_POST['id'] ?? 0);
 
-        if ($id <= 0) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'ID không hợp lệ',
-            ]);
-            return;
-        }
+		if ($id <= 0) {
+			echo json_encode([
+				'success' => false,
+				'message' => 'ID không hợp lệ',
+			]);
+			return;
+		}
 
-        $data = [
-            'name' => trim($_POST['name'] ?? ''),
-            'phone' => trim($_POST['phone'] ?? ''),
-            'email' => trim($_POST['email'] ?? ''),
-            'address' => trim($_POST['address'] ?? ''),
-            'description' => trim($_POST['description'] ?? ''),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ];
+		$data = [
+			'name' => trim($_POST['name'] ?? ''),
+			'phone' => trim($_POST['phone'] ?? ''),
+			'email' => trim($_POST['email'] ?? ''),
+			'address' => trim($_POST['address'] ?? ''),
+			'description' => trim($_POST['description'] ?? ''),
+			'updated_at' => date('Y-m-d H:i:s'),
+		];
 
-        $updated = $this->supplierRepository->updateById($id, $data);
+		$updated = $this->supplierRepository->updateById($id, $data);
 
-        echo json_encode([
-            'success' => $updated > 0,
-            'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
-        ]);
-    }
+		echo json_encode([
+			'success' => $updated > 0,
+			'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
+		]);
+	}
 
-    // =========================
-    // DELETE
-    // =========================
-    public function apiDelete()
-    {
-        header('Content-Type: application/json');
+	// =========================
+	// DELETE
+	// =========================
+	public function apiDelete()
+	{
+		header('Content-Type: application/json');
 
-        $id = (int) ($_POST['id'] ?? 0);
+		$id = (int) ($_POST['id'] ?? 0);
 
-        if ($id <= 0) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'ID không hợp lệ',
-            ]);
-            return;
-        }
+		if ($id <= 0) {
+			echo json_encode([
+				'success' => false,
+				'message' => 'ID không hợp lệ',
+			]);
+			return;
+		}
 
-        $deleted = $this->supplierRepository->deleteById($id);
+		$deleted = $this->supplierRepository->deleteById($id);
 
-        echo json_encode([
-            'success' => $deleted > 0,
-            'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy nhà cung cấp',
-        ]);
-    }
+		echo json_encode([
+			'success' => $deleted > 0,
+			'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy nhà cung cấp',
+		]);
+	}
 }

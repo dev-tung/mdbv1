@@ -2,15 +2,15 @@
 
 class PurchaseController
 {
-    public function index(): void
-    {
-        View::render('purchase/index');
-    }
+	public function index(): void
+	{
+		View::render('purchase/index');
+	}
 
-    public function form($id = null): void
-    {
-        View::render('purchase/form', [
-            'id' => $id,
-        ]);
-    }
+	public function form($id = null): void
+	{
+		View::render('purchase/form', [
+			'id' => $id,
+		]);
+	}
 }

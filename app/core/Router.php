@@ -2,138 +2,138 @@
 
 class Router
 {
-    protected static array $routes = [];
+	protected static array $routes = [];
 
-    // =========================
-    // REGISTER GET
-    // =========================
-    public static function get(string $uri, string $handler, array $middleware = []): void
-    {
-        self::$routes['GET'][] = [
-            'uri' => $uri,
-            'handler' => $handler,
-            'middleware' => $middleware,
-        ];
-    }
+	// =========================
+	// REGISTER GET
+	// =========================
+	public static function get(string $uri, string $handler, array $middleware = []): void
+	{
+		self::$routes['GET'][] = [
+			'uri' => $uri,
+			'handler' => $handler,
+			'middleware' => $middleware,
+		];
+	}
 
-    // =========================
-    // REGISTER POST
-    // =========================
-    public static function post(string $uri, string $handler, array $middleware = []): void
-    {
-        self::$routes['POST'][] = [
-            'uri' => $uri,
-            'handler' => $handler,
-            'middleware' => $middleware,
-        ];
-    }
+	// =========================
+	// REGISTER POST
+	// =========================
+	public static function post(string $uri, string $handler, array $middleware = []): void
+	{
+		self::$routes['POST'][] = [
+			'uri' => $uri,
+			'handler' => $handler,
+			'middleware' => $middleware,
+		];
+	}
 
-    // =========================
-    // DISPATCH
-    // =========================
-    public static function dispatch(string $method, string $uri): void
-    {
-        $method = strtoupper($method);
+	// =========================
+	// DISPATCH
+	// =========================
+	public static function dispatch(string $method, string $uri): void
+	{
+		$method = strtoupper($method);
 
-        foreach (self::$routes[$method] ?? [] as $route) {
-            $pattern = self::convertUriToRegex($route['uri']);
+		foreach (self::$routes[$method] ?? [] as $route) {
+			$pattern = self::convertUriToRegex($route['uri']);
 
-            if (!preg_match($pattern, $uri, $matches)) {
-                continue;
-            }
+			if (!preg_match($pattern, $uri, $matches)) {
+				continue;
+			}
 
-            array_shift($matches);
+			array_shift($matches);
 
-            // resolve controller file
-            $controllerFile = self::resolveControllerFile($route['handler']);
+			// resolve controller file
+			$controllerFile = self::resolveControllerFile($route['handler']);
 
-            if (!$controllerFile) {
-                die("Controller not found: {$route['handler']}");
-            }
+			if (!$controllerFile) {
+				die("Controller not found: {$route['handler']}");
+			}
 
-            // detect module
-            $module = self::detectModuleFromPath($controllerFile);
+			// detect module
+			$module = self::detectModuleFromPath($controllerFile);
 
-            // set view module
-            View::setModule($module);
+			// set view module
+			View::setModule($module);
 
-            // middleware
-            Middleware::handle($route['middleware'] ?? []);
+			// middleware
+			Middleware::handle($route['middleware'] ?? []);
 
-            // controller action
-            self::callAction($route['handler'], $controllerFile, $matches);
+			// controller action
+			self::callAction($route['handler'], $controllerFile, $matches);
 
-            return;
-        }
+			return;
+		}
 
-        http_response_code(404);
+		http_response_code(404);
 
-        echo "404 NOT FOUND: {$uri}";
-    }
+		echo "404 NOT FOUND: {$uri}";
+	}
 
-    // =========================
-    // CONVERT ROUTE PARAMS
-    // =========================
-    protected static function convertUriToRegex(string $uri): string
-    {
-        $pattern = preg_replace_callback('#\{([a-zA-Z_]+)\}#', fn() => '([a-zA-Z0-9_-]+)', $uri);
+	// =========================
+	// CONVERT ROUTE PARAMS
+	// =========================
+	protected static function convertUriToRegex(string $uri): string
+	{
+		$pattern = preg_replace_callback('#\{([a-zA-Z_]+)\}#', fn() => '([a-zA-Z0-9_-]+)', $uri);
 
-        return "#^{$pattern}$#";
-    }
+		return "#^{$pattern}$#";
+	}
 
-    // =========================
-    // CALL ACTION
-    // =========================
-    protected static function callAction(string $handler, string $file, array $params = []): void
-    {
-        [$controller, $action] = explode('@', $handler);
+	// =========================
+	// CALL ACTION
+	// =========================
+	protected static function callAction(string $handler, string $file, array $params = []): void
+	{
+		[$controller, $action] = explode('@', $handler);
 
-        require_once $file;
+		require_once $file;
 
-        if (!class_exists($controller)) {
-            die("Class not found: {$controller}");
-        }
+		if (!class_exists($controller)) {
+			die("Class not found: {$controller}");
+		}
 
-        $instance = new $controller();
+		$instance = new $controller();
 
-        if (!method_exists($instance, $action)) {
-            die("Method not found: {$controller}@{$action}");
-        }
+		if (!method_exists($instance, $action)) {
+			die("Method not found: {$controller}@{$action}");
+		}
 
-        call_user_func_array([$instance, $action], $params);
-    }
+		call_user_func_array([$instance, $action], $params);
+	}
 
-    // =========================
-    // RESOLVE CONTROLLER FILE
-    // =========================
-    protected static function resolveControllerFile(string $handler): ?string
-    {
-        [$controller] = explode('@', $handler);
+	// =========================
+	// RESOLVE CONTROLLER FILE
+	// =========================
+	protected static function resolveControllerFile(string $handler): ?string
+	{
+		[$controller] = explode('@', $handler);
 
-        $modules = glob(BASE_PATH . '/app/modules/*', GLOB_ONLYDIR);
+		$modules = glob(BASE_PATH . '/app/modules/*', GLOB_ONLYDIR);
 
-        foreach ($modules as $module) {
-            $paths = [$module . "/controllers/{$controller}.php", $module . "/endpoints/{$controller}.php"];
+		foreach ($modules as $module) {
+			$paths = [$module . "/controllers/{$controller}.php", $module . "/endpoints/{$controller}.php"];
 
-            foreach ($paths as $path) {
-                if (file_exists($path)) {
-                    return $path;
-                }
-            }
-        }
+			foreach ($paths as $path) {
+				if (file_exists($path)) {
+					return $path;
+				}
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    // =========================
-    // DETECT MODULE
-    // =========================
-    protected static function detectModuleFromPath(string $file): string
-    {
-        $parts = explode('/modules/', $file);
+	// =========================
+	// DETECT MODULE
+	// =========================
+	protected static function detectModuleFromPath(string $file): string
+	{
+		$parts = explode('/modules/', $file);
 
-        $sub = explode('/', $parts[1] ?? '');
+		$sub = explode('/', $parts[1] ?? '');
 
-        return $sub[0] ?? 'website';
-    }
+		return $sub[0] ?? 'website';
+	}
 }

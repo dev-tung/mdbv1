@@ -2,65 +2,65 @@
 
 class OrderValidator
 {
-    /**
-     * Validate khi CREATE
-     */
-    public static function create(array $data): ?string
-    {
-        if (empty($data['customer_id'])) {
-            return 'Khách hàng không hợp lệ';
-        }
+	/**
+	 * Validate khi CREATE
+	 */
+	public static function create(array $data): ?string
+	{
+		if (empty($data['customer_id'])) {
+			return 'Khách hàng không hợp lệ';
+		}
 
-        // items
+		// items
 
-        if (empty($data['items']) || !is_array($data['items'])) {
-            return 'Danh sách sản phẩm không hợp lệ';
-        }
+		if (empty($data['items']) || !is_array($data['items'])) {
+			return 'Danh sách sản phẩm không hợp lệ';
+		}
 
-        if (count($data['items']) === 0) {
-            return 'Phải có ít nhất 1 sản phẩm';
-        }
+		if (count($data['items']) === 0) {
+			return 'Phải có ít nhất 1 sản phẩm';
+		}
 
-        foreach ($data['items'] as $product) {
-            // product_id
+		foreach ($data['items'] as $product) {
+			// product_id
 
-            if (empty($product['product_id']) || (int) $product['product_id'] <= 0) {
-                return 'Sản phẩm không hợp lệ';
-            }
+			if (empty($product['product_id']) || (int) $product['product_id'] <= 0) {
+				return 'Sản phẩm không hợp lệ';
+			}
 
-            // quantity
+			// quantity
 
-            if (!isset($product['quantity']) || (int) $product['quantity'] <= 0) {
-                return 'Số lượng sản phẩm không hợp lệ';
-            }
+			if (!isset($product['quantity']) || (int) $product['quantity'] <= 0) {
+				return 'Số lượng sản phẩm không hợp lệ';
+			}
 
-            // selling_price
+			// selling_price
 
-            if (!isset($product['selling_price']) || (float) $product['selling_price'] < 0) {
-                return 'Giá bán sản phẩm không hợp lệ';
-            }
-        }
+			if (!isset($product['selling_price']) || (float) $product['selling_price'] < 0) {
+				return 'Giá bán sản phẩm không hợp lệ';
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Validate khi UPDATE
-     */
-    public static function update(array $data): ?string
-    {
-        // ID
+	/**
+	 * Validate khi UPDATE
+	 */
+	public static function update(array $data): ?string
+	{
+		// ID
 
-        if (!isset($data['id']) || (int) $data['id'] <= 0) {
-            return 'ID không hợp lệ';
-        }
+		if (!isset($data['id']) || (int) $data['id'] <= 0) {
+			return 'ID không hợp lệ';
+		}
 
-        // customer
+		// customer
 
-        if (!empty($data['customer_id']) && (int) $data['customer_id'] <= 0) {
-            return 'Khách hàng không hợp lệ';
-        }
+		if (!empty($data['customer_id']) && (int) $data['customer_id'] <= 0) {
+			return 'Khách hàng không hợp lệ';
+		}
 
-        return null;
-    }
+		return null;
+	}
 }

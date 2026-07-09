@@ -1,60 +1,60 @@
 const State = {
-    /* =================================================
+	/* =================================================
        SUPPLIER SEARCH
     ================================================= */
 
-    supplier: {
-        keyword: '',
-        suggestions: [],
-    },
+	supplier: {
+		keyword: '',
+		suggestions: [],
+	},
 
-    /* =================================================
+	/* =================================================
        PRODUCT SEARCH
     ================================================= */
 
-    product: {
-        keyword: '',
-        suggestions: [],
-    },
+	product: {
+		keyword: '',
+		suggestions: [],
+	},
 
-    /* =================================================
+	/* =================================================
        WAREHOUSE
     ================================================= */
 
-    warehouse: {
-        list: [],
-    },
+	warehouse: {
+		list: [],
+	},
 
-    /* =================================================
+	/* =================================================
        PURCHASE
     ================================================= */
 
-    purchase: {
-        id: null,
+	purchase: {
+		id: null,
 
-        supplier_id: null,
-        supplier_name: '',
+		supplier_id: null,
+		supplier_name: '',
 
-        warehouse_id: null,
+		warehouse_id: null,
 
-        description: '',
-        note: '',
+		description: '',
+		note: '',
 
-        status: 'draft',
-        payment: 'unpaid',
+		status: 'draft',
+		payment: 'unpaid',
 
-        subtotal_amount: 0,
+		subtotal_amount: 0,
 
-        vat_rate: 0,
-        vat_amount: 0,
+		vat_rate: 0,
+		vat_amount: 0,
 
-        total_amount: 0,
+		total_amount: 0,
 
-        paid_amount: 0,
-        debt_amount: 0,
+		paid_amount: 0,
+		debt_amount: 0,
 
-        items: [
-            /*
+		items: [
+			/*
             {
                 product_id: 1,
                 product_name: 'Yonex 88D Pro',
@@ -73,55 +73,55 @@ const State = {
                 total_amount_with_vat: 1080000
             }
             */
-        ],
-    },
+		],
+	},
 
-    /* =================================================
+	/* =================================================
        RESET
     ================================================= */
 
-    reset() {
-        this.supplier = {
-            keyword: '',
-            suggestions: [],
-        };
+	reset() {
+		this.supplier = {
+			keyword: '',
+			suggestions: [],
+		};
 
-        this.product = {
-            keyword: '',
-            suggestions: [],
-        };
+		this.product = {
+			keyword: '',
+			suggestions: [],
+		};
 
-        this.warehouse = {
-            list: [],
-        };
+		this.warehouse = {
+			list: [],
+		};
 
-        this.purchase = {
-            id: null,
+		this.purchase = {
+			id: null,
 
-            supplier_id: null,
-            supplier_name: '',
+			supplier_id: null,
+			supplier_name: '',
 
-            warehouse_id: null,
+			warehouse_id: null,
 
-            description: '',
-            note: '',
+			description: '',
+			note: '',
 
-            status: 'draft',
-            payment: 'unpaid',
+			status: 'draft',
+			payment: 'unpaid',
 
-            subtotal_amount: 0,
+			subtotal_amount: 0,
 
-            vat_rate: 0,
-            vat_amount: 0,
+			vat_rate: 0,
+			vat_amount: 0,
 
-            total_amount: 0,
+			total_amount: 0,
 
-            paid_amount: 0,
-            debt_amount: 0,
+			paid_amount: 0,
+			debt_amount: 0,
 
-            items: [],
-        };
-    },
+			items: [],
+		};
+	},
 };
 
 State.reset();

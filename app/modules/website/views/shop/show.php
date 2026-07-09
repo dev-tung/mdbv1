@@ -4,15 +4,16 @@
 // normalize image url
 // normalize image url
     // normalize image url
+    // normalize image url
     function img_url($img)
     {
-        if (!$img) {
-            return 'https://placehold.co/600x600';
-        }
-        if (str_starts_with($img, 'http')) {
-            return $img;
-        }
-        return '/' . ltrim($img, '/');
+    	if (!$img) {
+    		return 'https://placehold.co/600x600';
+    	}
+    	if (str_starts_with($img, 'http')) {
+    		return $img;
+    	}
+    	return '/' . ltrim($img, '/');
     } ?>
 
     <div class="row g-5">

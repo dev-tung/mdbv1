@@ -3,219 +3,219 @@ import Service from './Service.js';
 import Renderer from './Renderer.js';
 
 const Event = {
-    bind() {
-        this.customer();
+	bind() {
+		this.customer();
 
-        this.product();
+		this.product();
 
-        this.order();
+		this.order();
 
-        this.items();
+		this.items();
 
-        this.submit();
-    },
+		this.submit();
+	},
 
-    /* =================================================
+	/* =================================================
        CUSTOMER
     ================================================= */
 
-    customer() {
-        const input = document.querySelector('#customer_search');
+	customer() {
+		const input = document.querySelector('#customer_search');
 
-        const suggestions = document.querySelector('#customer_suggestions');
+		const suggestions = document.querySelector('#customer_suggestions');
 
-        input?.addEventListener('input', async (e) => {
-            State.customer.keyword = e.target.value.trim();
+		input?.addEventListener('input', async (e) => {
+			State.customer.keyword = e.target.value.trim();
 
-            await Service.searchCustomers();
+			await Service.searchCustomers();
 
-            Renderer.customerSuggestions();
-        });
+			Renderer.customerSuggestions();
+		});
 
-        suggestions?.addEventListener('click', (e) => {
-            const button = e.target.closest('.customer-item');
+		suggestions?.addEventListener('click', (e) => {
+			const button = e.target.closest('.customer-item');
 
-            if (!button) return;
+			if (!button) return;
 
-            const customer = State.customer.suggestions.find((item) => item.id == button.dataset.id);
+			const customer = State.customer.suggestions.find((item) => item.id == button.dataset.id);
 
-            if (!customer) return;
+			if (!customer) return;
 
-            Service.setCustomer(customer);
+			Service.setCustomer(customer);
 
-            input.value = customer.name;
+			input.value = customer.name;
 
-            State.customer.suggestions = [];
+			State.customer.suggestions = [];
 
-            Renderer.customerSuggestions();
-        });
-    },
+			Renderer.customerSuggestions();
+		});
+	},
 
-    /* =================================================
+	/* =================================================
        PRODUCT
     ================================================= */
 
-    product() {
-        const input = document.querySelector('#product_search');
+	product() {
+		const input = document.querySelector('#product_search');
 
-        const suggestions = document.querySelector('#product_suggestions');
+		const suggestions = document.querySelector('#product_suggestions');
 
-        input?.addEventListener('input', async (e) => {
-            State.product.keyword = e.target.value.trim();
+		input?.addEventListener('input', async (e) => {
+			State.product.keyword = e.target.value.trim();
 
-            await Service.searchProducts();
+			await Service.searchProducts();
 
-            Renderer.productSuggestions();
-        });
+			Renderer.productSuggestions();
+		});
 
-        suggestions?.addEventListener('click', (e) => {
-            console.log('CLICK PRODUCT');
+		suggestions?.addEventListener('click', (e) => {
+			console.log('CLICK PRODUCT');
 
-            const button = e.target.closest('.product-item');
+			const button = e.target.closest('.product-item');
 
-            console.log(button);
+			console.log(button);
 
-            if (!button) return;
+			if (!button) return;
 
-            const product = State.product.suggestions.find((item) => item.product_id == button.dataset.id);
+			const product = State.product.suggestions.find((item) => item.product_id == button.dataset.id);
 
-            if (!product) return;
+			if (!product) return;
 
-            Service.addProduct(product);
+			Service.addProduct(product);
 
-            Service.calculate();
+			Service.calculate();
 
-            Renderer.products();
+			Renderer.products();
 
-            Renderer.summary();
+			Renderer.summary();
 
-            input.value = '';
+			input.value = '';
 
-            suggestions.classList.add('d-none');
-        });
-    },
+			suggestions.classList.add('d-none');
+		});
+	},
 
-    /* =================================================
+	/* =================================================
        ORDER
     ================================================= */
 
-    order() {
-        document.querySelector('#description')?.addEventListener('input', (e) => {
-            Service.setDescription(e.target.value);
-        });
+	order() {
+		document.querySelector('#description')?.addEventListener('input', (e) => {
+			Service.setDescription(e.target.value);
+		});
 
-        document.querySelector('#status')?.addEventListener('change', (e) => {
-            Service.setStatus(e.target.value);
-        });
+		document.querySelector('#status')?.addEventListener('change', (e) => {
+			Service.setStatus(e.target.value);
+		});
 
-        document.querySelector('#payment')?.addEventListener('change', (e) => {
-            Service.setPayment(e.target.value);
+		document.querySelector('#payment')?.addEventListener('change', (e) => {
+			Service.setPayment(e.target.value);
 
-            Renderer.payment();
-        });
+			Renderer.payment();
+		});
 
-        document.querySelector('#paid_amount')?.addEventListener('input', (e) => {
-            Service.setPaidAmount(e.target.value);
+		document.querySelector('#paid_amount')?.addEventListener('input', (e) => {
+			Service.setPaidAmount(e.target.value);
 
-            Renderer.summary();
-        });
+			Renderer.summary();
+		});
 
-        document.querySelector('#vat_rate')?.addEventListener('input', (e) => {
-            Service.setVatRate(e.target.value);
+		document.querySelector('#vat_rate')?.addEventListener('input', (e) => {
+			Service.setVatRate(e.target.value);
 
-            Service.calculate();
+			Service.calculate();
 
-            Renderer.products();
+			Renderer.products();
 
-            Renderer.summary();
-        });
+			Renderer.summary();
+		});
 
-        document.querySelector('#note')?.addEventListener('input', (e) => {
-            Service.setNote(e.target.value);
-        });
-    },
+		document.querySelector('#note')?.addEventListener('input', (e) => {
+			Service.setNote(e.target.value);
+		});
+	},
 
-    /* =================================================
+	/* =================================================
        ITEMS
     ================================================= */
 
-    items() {
-        const table = document.querySelector('#selected_products');
+	items() {
+		const table = document.querySelector('#selected_products');
 
-        if (!table) return;
+		if (!table) return;
 
-        table.addEventListener('input', (e) => {
-            const row = e.target.closest('tr');
+		table.addEventListener('input', (e) => {
+			const row = e.target.closest('tr');
 
-            if (!row) return;
+			if (!row) return;
 
-            const index = Number(row.dataset.index);
+			const index = Number(row.dataset.index);
 
-            const value = e.target.value;
+			const value = e.target.value;
 
-            const classList = e.target.classList;
+			const classList = e.target.classList;
 
-            if (classList.contains('quantity')) {
-                Service.setQuantity(index, value);
+			if (classList.contains('quantity')) {
+				Service.setQuantity(index, value);
 
-                Service.calculate();
-            } else if (classList.contains('selling-price')) {
-                Service.setSellingPrice(index, value);
+				Service.calculate();
+			} else if (classList.contains('selling-price')) {
+				Service.setSellingPrice(index, value);
 
-                Service.calculate();
-            } else if (classList.contains('is-gift')) {
-                Service.setGift(index, e.target.checked);
+				Service.calculate();
+			} else if (classList.contains('is-gift')) {
+				Service.setGift(index, e.target.checked);
 
-                Renderer.products();
+				Renderer.products();
 
-                Renderer.summary();
+				Renderer.summary();
 
-                return;
-            }
+				return;
+			}
 
-            Renderer.productsUpdate(index);
+			Renderer.productsUpdate(index);
 
-            Renderer.summary();
-        });
+			Renderer.summary();
+		});
 
-        table.addEventListener('click', (e) => {
-            const button = e.target.closest('.btn-remove');
+		table.addEventListener('click', (e) => {
+			const button = e.target.closest('.btn-remove');
 
-            if (!button) return;
+			if (!button) return;
 
-            const row = button.closest('tr');
+			const row = button.closest('tr');
 
-            if (!row) return;
+			if (!row) return;
 
-            const index = Number(row.dataset.index);
+			const index = Number(row.dataset.index);
 
-            Service.removeProduct(index);
+			Service.removeProduct(index);
 
-            Service.calculate();
+			Service.calculate();
 
-            Renderer.products();
+			Renderer.products();
 
-            Renderer.summary();
-        });
-    },
+			Renderer.summary();
+		});
+	},
 
-    /* =================================================
+	/* =================================================
        SUBMIT
     ================================================= */
 
-    submit() {
-        document.querySelector('#order-form')?.addEventListener('submit', async (e) => {
-            e.preventDefault();
+	submit() {
+		document.querySelector('#order-form')?.addEventListener('submit', async (e) => {
+			e.preventDefault();
 
-            const response = await Service.save();
+			const response = await Service.save();
 
-            alert(response.message);
+			alert(response.message);
 
-            if (response.success) {
-                window.location.href = response.redirect;
-            }
-        });
-    },
+			if (response.success) {
+				window.location.href = response.redirect;
+			}
+		});
+	},
 };
 
 export default Event;

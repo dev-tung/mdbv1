@@ -5,9 +5,9 @@
  */
 function active_menu(string $keyword): string
 {
-    $current = $_SERVER['REQUEST_URI'] ?? '';
+	$current = $_SERVER['REQUEST_URI'] ?? '';
 
-    return str_contains($current, $keyword) ? 'active' : '';
+	return str_contains($current, $keyword) ? 'active' : '';
 }
 
 /**
@@ -15,8 +15,8 @@ function active_menu(string $keyword): string
  */
 function active_menu_exact(string $url): string
 {
-    $current = rtrim($_SERVER['REQUEST_URI'] ?? '/', '/');
-    $url = rtrim($url, '/');
+	$current = rtrim($_SERVER['REQUEST_URI'] ?? '/', '/');
+	$url = rtrim($url, '/');
 
-    return $current === $url ? 'active' : '';
+	return $current === $url ? 'active' : '';
 }

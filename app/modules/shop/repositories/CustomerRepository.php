@@ -2,14 +2,14 @@
 
 class CustomerRepository
 {
-    protected string $table = 'customers';
+	protected string $table = 'customers';
 
-    /**
-     * Lấy danh sách customer
-     */
-    public function getList(array $conditions = []): array
-    {
-        $sql = '
+	/**
+	 * Lấy danh sách customer
+	 */
+	public function getList(array $conditions = []): array
+	{
+		$sql = '
             SELECT
                 c.*,
                 g.name AS group_name
@@ -19,11 +19,11 @@ class CustomerRepository
             WHERE 1=1
         ';
 
-        $params = [];
+		$params = [];
 
-        // KEYWORD SEARCH
-        if (!empty($conditions['keyword'])) {
-            $sql .= '
+		// KEYWORD SEARCH
+		if (!empty($conditions['keyword'])) {
+			$sql .= '
                 AND (
                     c.name LIKE :name
                     OR c.phone LIKE :phone
@@ -31,24 +31,24 @@ class CustomerRepository
                 )
             ';
 
-            $keyword = '%' . $conditions['keyword'] . '%';
+			$keyword = '%' . $conditions['keyword'] . '%';
 
-            $params['name'] = $keyword;
-            $params['phone'] = $keyword;
-            $params['email'] = $keyword;
-        }
+			$params['name'] = $keyword;
+			$params['phone'] = $keyword;
+			$params['email'] = $keyword;
+		}
 
-        $sql .= ' ORDER BY c.id DESC';
+		$sql .= ' ORDER BY c.id DESC';
 
-        return Database::get($sql, $params);
-    }
+		return Database::get($sql, $params);
+	}
 
-    /**
-     * Đếm customer (pagination)
-     */
-    public function count(array $conditions = []): int
-    {
-        $sql = '
+	/**
+	 * Đếm customer (pagination)
+	 */
+	public function count(array $conditions = []): int
+	{
+		$sql = '
             SELECT COUNT(*) AS total
             FROM customers c
             LEFT JOIN customer_groups g
@@ -56,11 +56,11 @@ class CustomerRepository
             WHERE 1=1
         ';
 
-        $params = [];
+		$params = [];
 
-        // KEYWORD SEARCH
-        if (!empty($conditions['keyword'])) {
-            $sql .= '
+		// KEYWORD SEARCH
+		if (!empty($conditions['keyword'])) {
+			$sql .= '
                 AND (
                     c.name LIKE :name
                     OR c.phone LIKE :phone
@@ -68,15 +68,15 @@ class CustomerRepository
                 )
             ';
 
-            $keyword = '%' . $conditions['keyword'] . '%';
+			$keyword = '%' . $conditions['keyword'] . '%';
 
-            $params['name'] = $keyword;
-            $params['phone'] = $keyword;
-            $params['email'] = $keyword;
-        }
+			$params['name'] = $keyword;
+			$params['phone'] = $keyword;
+			$params['email'] = $keyword;
+		}
 
-        $row = Database::first($sql, $params);
+		$row = Database::first($sql, $params);
 
-        return (int) ($row['total'] ?? 0);
-    }
+		return (int) ($row['total'] ?? 0);
+	}
 }

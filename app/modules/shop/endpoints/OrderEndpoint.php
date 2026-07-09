@@ -2,200 +2,200 @@
 
 class OrderEndpoint
 {
-    private OrderRepository $orderRepository;
+	private OrderRepository $orderRepository;
 
-    public function __construct()
-    {
-        $this->orderRepository = new OrderRepository();
-    }
+	public function __construct()
+	{
+		$this->orderRepository = new OrderRepository();
+	}
 
-    // =========================
-    // LIST
-    // =========================
+	// =========================
+	// LIST
+	// =========================
 
-    public function apiList()
-    {
-        $filters = request_all();
+	public function apiList()
+	{
+		$filters = request_all();
 
-        $result = $this->orderRepository->getList($filters);
+		$result = $this->orderRepository->getList($filters);
 
-        return Response::json([
-            'success' => true,
+		return Response::json([
+			'success' => true,
 
-            'message' => 'Lấy danh sách đơn hàng thành công',
+			'message' => 'Lấy danh sách đơn hàng thành công',
 
-            'data' => $result,
-        ]);
-    }
+			'data' => $result,
+		]);
+	}
 
-    // =========================
-    // SHOW
-    // =========================
+	// =========================
+	// SHOW
+	// =========================
 
-    public function apiShow()
-    {
-        $id = request_id();
+	public function apiShow()
+	{
+		$id = request_id();
 
-        $data = $this->orderRepository->show($id);
+		$data = $this->orderRepository->show($id);
 
-        if (!$data) {
-            return Response::json([
-                'success' => false,
+		if (!$data) {
+			return Response::json([
+				'success' => false,
 
-                'message' => 'Không tìm thấy đơn hàng',
+				'message' => 'Không tìm thấy đơn hàng',
 
-                'data' => null,
-            ]);
-        }
+				'data' => null,
+			]);
+		}
 
-        return Response::json([
-            'success' => true,
+		return Response::json([
+			'success' => true,
 
-            'message' => 'Lấy chi tiết đơn hàng thành công',
+			'message' => 'Lấy chi tiết đơn hàng thành công',
 
-            'data' => $data,
-        ]);
-    }
+			'data' => $data,
+		]);
+	}
 
-    // =========================
-    // CREATE
-    // =========================
+	// =========================
+	// CREATE
+	// =========================
 
-    public function apiCreate()
-    {
-        $input = request_all();
+	public function apiCreate()
+	{
+		$input = request_all();
 
-        $error = OrderValidator::create($input);
+		$error = OrderValidator::create($input);
 
-        if ($error) {
-            return Response::json([
-                'success' => false,
-                'message' => $error,
-            ]);
-        }
+		if ($error) {
+			return Response::json([
+				'success' => false,
+				'message' => $error,
+			]);
+		}
 
-        $input['created_by'] = Auth::id();
+		$input['created_by'] = Auth::id();
 
-        $id = $this->orderRepository->create($input);
+		$id = $this->orderRepository->create($input);
 
-        return Response::json([
-            'success' => true,
+		return Response::json([
+			'success' => true,
 
-            'message' => 'Tạo đơn hàng thành công',
+			'message' => 'Tạo đơn hàng thành công',
 
-            'data' => [
-                'id' => $id,
-            ],
+			'data' => [
+				'id' => $id,
+			],
 
-            'redirect' => '/admin/orders',
-        ]);
-    }
+			'redirect' => '/admin/orders',
+		]);
+	}
 
-    // =========================
-    // UPDATE
-    // =========================
+	// =========================
+	// UPDATE
+	// =========================
 
-    public function apiUpdate()
-    {
-        $input = request_all();
+	public function apiUpdate()
+	{
+		$input = request_all();
 
-        $error = OrderValidator::update($input);
+		$error = OrderValidator::update($input);
 
-        if ($error) {
-            return Response::json([
-                'success' => false,
+		if ($error) {
+			return Response::json([
+				'success' => false,
 
-                'message' => $error,
-            ]);
-        }
+				'message' => $error,
+			]);
+		}
 
-        $input['updated_by'] = Auth::id();
+		$input['updated_by'] = Auth::id();
 
-        $this->orderRepository->update($input);
+		$this->orderRepository->update($input);
 
-        return Response::json([
-            'success' => true,
+		return Response::json([
+			'success' => true,
 
-            'message' => 'Cập nhật đơn hàng thành công',
+			'message' => 'Cập nhật đơn hàng thành công',
 
-            'redirect' => '/admin/orders',
-        ]);
-    }
+			'redirect' => '/admin/orders',
+		]);
+	}
 
-    // =========================
-    // DELETE
-    // =========================
+	// =========================
+	// DELETE
+	// =========================
 
-    public function apiDelete()
-    {
-        $id = request_id();
+	public function apiDelete()
+	{
+		$id = request_id();
 
-        $this->orderRepository->delete($id);
+		$this->orderRepository->delete($id);
 
-        return Response::json([
-            'success' => true,
+		return Response::json([
+			'success' => true,
 
-            'message' => 'Xoá đơn hàng thành công',
-        ]);
-    }
+			'message' => 'Xoá đơn hàng thành công',
+		]);
+	}
 
-    // =========================
-    // STATUS
-    // =========================
+	// =========================
+	// STATUS
+	// =========================
 
-    public function apiStatus()
-    {
-        $input = request_all();
+	public function apiStatus()
+	{
+		$input = request_all();
 
-        if (empty($input['id']) || !isset($input['status'])) {
-            return Response::json([
-                'success' => false,
+		if (empty($input['id']) || !isset($input['status'])) {
+			return Response::json([
+				'success' => false,
 
-                'message' => 'Thiếu dữ liệu trạng thái',
-            ]);
-        }
+				'message' => 'Thiếu dữ liệu trạng thái',
+			]);
+		}
 
-        $updated = $this->orderRepository->updateById((int) $input['id'], [
-            'status' => $input['status'],
-        ]);
+		$updated = $this->orderRepository->updateById((int) $input['id'], [
+			'status' => $input['status'],
+		]);
 
-        return Response::json([
-            'success' => true,
+		return Response::json([
+			'success' => true,
 
-            'message' => 'Cập nhật trạng thái thành công',
+			'message' => 'Cập nhật trạng thái thành công',
 
-            'data' => [
-                'affected_rows' => $updated,
-            ],
-        ]);
-    }
+			'data' => [
+				'affected_rows' => $updated,
+			],
+		]);
+	}
 
-    // =========================
-    // PAYMENT
-    // =========================
+	// =========================
+	// PAYMENT
+	// =========================
 
-    public function apiPayment()
-    {
-        $input = request_all();
+	public function apiPayment()
+	{
+		$input = request_all();
 
-        if (empty($input['id']) || !isset($input['payment'])) {
-            return Response::json([
-                'success' => false,
+		if (empty($input['id']) || !isset($input['payment'])) {
+			return Response::json([
+				'success' => false,
 
-                'message' => 'Thiếu dữ liệu thanh toán',
-            ]);
-        }
+				'message' => 'Thiếu dữ liệu thanh toán',
+			]);
+		}
 
-        $updated = $this->orderRepository->payment((int) $input['id'], $input['payment']);
+		$updated = $this->orderRepository->payment((int) $input['id'], $input['payment']);
 
-        return Response::json([
-            'success' => true,
+		return Response::json([
+			'success' => true,
 
-            'message' => 'Cập nhật thanh toán thành công',
+			'message' => 'Cập nhật thanh toán thành công',
 
-            'data' => [
-                'affected_rows' => $updated,
-            ],
-        ]);
-    }
+			'data' => [
+				'affected_rows' => $updated,
+			],
+		]);
+	}
 }

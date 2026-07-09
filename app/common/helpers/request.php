@@ -5,7 +5,7 @@
  */
 function request_input(string $key, mixed $default = null): mixed
 {
-    return $_POST[$key] ?? ($_GET[$key] ?? $default);
+	return $_POST[$key] ?? ($_GET[$key] ?? $default);
 }
 
 /**
@@ -14,38 +14,38 @@ function request_input(string $key, mixed $default = null): mixed
  */
 function request_all(): array
 {
-    // =========================
-    // 1. JSON BODY
-    // =========================
-    $json = json_decode(file_get_contents('php://input'), true);
+	// =========================
+	// 1. JSON BODY
+	// =========================
+	$json = json_decode(file_get_contents('php://input'), true);
 
-    $data = [];
+	$data = [];
 
-    if (is_array($json)) {
-        $data = $json;
-    } else {
-        // =========================
-        // 2. FORM / QUERY
-        // =========================
-        $data = $_POST + $_GET;
-    }
+	if (is_array($json)) {
+		$data = $json;
+	} else {
+		// =========================
+		// 2. FORM / QUERY
+		// =========================
+		$data = $_POST + $_GET;
+	}
 
-    // =========================
-    // 3. AUTO GET ID FROM URL
-    // =========================
-    $uri = $_SERVER['REQUEST_URI'] ?? '';
-    $uri = parse_url($uri, PHP_URL_PATH);
+	// =========================
+	// 3. AUTO GET ID FROM URL
+	// =========================
+	$uri = $_SERVER['REQUEST_URI'] ?? '';
+	$uri = parse_url($uri, PHP_URL_PATH);
 
-    $segments = explode('/', trim($uri, '/'));
-    $lastSegment = end($segments);
+	$segments = explode('/', trim($uri, '/'));
+	$lastSegment = end($segments);
 
-    if (is_numeric($lastSegment)) {
-        if (!isset($data['id'])) {
-            $data['id'] = (int) $lastSegment;
-        }
-    }
+	if (is_numeric($lastSegment)) {
+		if (!isset($data['id'])) {
+			$data['id'] = (int) $lastSegment;
+		}
+	}
 
-    return $data;
+	return $data;
 }
 
 /**
@@ -53,18 +53,18 @@ function request_all(): array
  */
 function request_filters(array $keys): array
 {
-    $data = request_all();
-    $filters = [];
+	$data = request_all();
+	$filters = [];
 
-    foreach ($keys as $key) {
-        $value = $data[$key] ?? null;
+	foreach ($keys as $key) {
+		$value = $data[$key] ?? null;
 
-        if ($value !== null && $value !== '') {
-            $filters[$key] = $value;
-        }
-    }
+		if ($value !== null && $value !== '') {
+			$filters[$key] = $value;
+		}
+	}
 
-    return $filters;
+	return $filters;
 }
 
 /**
@@ -72,13 +72,13 @@ function request_filters(array $keys): array
  */
 function request_id(string $key = 'id'): int
 {
-    $data = request_all();
+	$data = request_all();
 
-    if (!empty($data[$key]) && (int) $data[$key] > 0) {
-        return (int) $data[$key];
-    }
+	if (!empty($data[$key]) && (int) $data[$key] > 0) {
+		return (int) $data[$key];
+	}
 
-    throw new InvalidArgumentException('ID không hợp lệ');
+	throw new InvalidArgumentException('ID không hợp lệ');
 }
 
 /**
@@ -86,7 +86,7 @@ function request_id(string $key = 'id'): int
  */
 function request_method(): string
 {
-    return $_SERVER['REQUEST_METHOD'] ?? 'GET';
+	return $_SERVER['REQUEST_METHOD'] ?? 'GET';
 }
 
 /**
@@ -94,7 +94,7 @@ function request_method(): string
  */
 function is_post(): bool
 {
-    return request_method() === 'POST';
+	return request_method() === 'POST';
 }
 
 /**
@@ -102,5 +102,5 @@ function is_post(): bool
  */
 function is_get(): bool
 {
-    return request_method() === 'GET';
+	return request_method() === 'GET';
 }

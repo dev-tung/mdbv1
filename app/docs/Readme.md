@@ -552,13 +552,13 @@ Example:
 
 ```sql
 SELECT
-    *
+	*
 FROM
-    products
+	products
 WHERE
-    status = 1
+	status = 1
 ORDER BY
-    id DESC
+	id DESC
 ```
 
 ---
@@ -569,12 +569,12 @@ Example:
 
 ```sql
 SELECT
-    id,
-    name,
-    price,
-    status
+	id,
+	name,
+	price,
+	status
 FROM
-    products;
+	products;
 ```
 
 ---
@@ -583,9 +583,9 @@ FROM
 
 ```sql
 INSERT INTO
-    products (name, sku, price)
+	products (name, sku, price)
 VALUES
-    ('Astrox 100ZZ', 'AX100ZZ', 5200000);
+	('Astrox 100ZZ', 'AX100ZZ', 5200000);
 ```
 
 ---
@@ -594,24 +594,24 @@ VALUES
 
 ```sql
 CREATE TABLE products (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    category_id BIGINT UNSIGNED NOT NULL,
-    brand_id BIGINT UNSIGNED NULL,
-    name VARCHAR(255) NOT NULL,
-    slug VARCHAR(255) NOT NULL UNIQUE,
-    sku VARCHAR(100) UNIQUE,
-    price DECIMAL(15, 2) DEFAULT 0,
-    stock_quantity INT DEFAULT 0,
-    image VARCHAR(255) NULL,
-    description TEXT NULL,
-    status TINYINT DEFAULT 1,
-    created_at DATETIME NULL,
-    updated_at DATETIME NULL,
-    INDEX idx_name (name),
-    INDEX idx_slug (slug),
-    INDEX idx_category_id (category_id),
-    CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories (id),
-    CONSTRAINT fk_products_brand FOREIGN KEY (brand_id) REFERENCES brands (id)
+	id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	category_id BIGINT UNSIGNED NOT NULL,
+	brand_id BIGINT UNSIGNED NULL,
+	name VARCHAR(255) NOT NULL,
+	slug VARCHAR(255) NOT NULL UNIQUE,
+	sku VARCHAR(100) UNIQUE,
+	price DECIMAL(15, 2) DEFAULT 0,
+	stock_quantity INT DEFAULT 0,
+	image VARCHAR(255) NULL,
+	description TEXT NULL,
+	status TINYINT DEFAULT 1,
+	created_at DATETIME NULL,
+	updated_at DATETIME NULL,
+	INDEX idx_name (name),
+	INDEX idx_slug (slug),
+	INDEX idx_category_id (category_id),
+	CONSTRAINT fk_products_category FOREIGN KEY (category_id) REFERENCES categories (id),
+	CONSTRAINT fk_products_brand FOREIGN KEY (brand_id) REFERENCES brands (id)
 );
 ```
 

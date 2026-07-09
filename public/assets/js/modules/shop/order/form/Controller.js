@@ -10,19 +10,19 @@ import Event from './Event.js';
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
-    try {
-        State.reset();
+	try {
+		State.reset();
 
-        const orderId = getOrderId();
+		const orderId = getOrderId();
 
-        await loadData(orderId);
+		await loadData(orderId);
 
-        Renderer.init();
+		Renderer.init();
 
-        Event.bind();
-    } catch (error) {
-        console.error(error);
-    }
+		Event.bind();
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 /* =================================================
@@ -30,13 +30,13 @@ async function init() {
 ================================================= */
 
 async function loadData(orderId) {
-    const tasks = [];
+	const tasks = [];
 
-    if (orderId) {
-        tasks.push(Service.loadOrder(orderId));
-    }
+	if (orderId) {
+		tasks.push(Service.loadOrder(orderId));
+	}
 
-    await Promise.all(tasks);
+	await Promise.all(tasks);
 }
 
 /* =================================================
@@ -44,7 +44,7 @@ async function loadData(orderId) {
 ================================================= */
 
 function getOrderId() {
-    const orderId = document.querySelector('#order_id').value;
+	const orderId = document.querySelector('#order_id').value;
 
-    return orderId ? parseInt(orderId) : null;
+	return orderId ? parseInt(orderId) : null;
 }

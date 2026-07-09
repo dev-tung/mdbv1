@@ -10,18 +10,18 @@ import Event from './Event.js';
 document.addEventListener('DOMContentLoaded', init);
 
 async function init() {
-    try {
-        State.reset();
+	try {
+		State.reset();
 
-        const purchaseId = getPurchaseId();
+		const purchaseId = getPurchaseId();
 
-        await loadData(purchaseId);
+		await loadData(purchaseId);
 
-        Renderer.init();
-        Event.bind();
-    } catch (error) {
-        console.error(error);
-    }
+		Renderer.init();
+		Event.bind();
+	} catch (error) {
+		console.error(error);
+	}
 }
 
 /* =================================================
@@ -29,13 +29,13 @@ async function init() {
 ================================================= */
 
 async function loadData(purchaseId) {
-    const tasks = [Service.loadWarehouses()];
+	const tasks = [Service.loadWarehouses()];
 
-    if (purchaseId) {
-        tasks.push(Service.loadPurchase(purchaseId));
-    }
+	if (purchaseId) {
+		tasks.push(Service.loadPurchase(purchaseId));
+	}
 
-    await Promise.all(tasks);
+	await Promise.all(tasks);
 }
 
 /* =================================================
@@ -43,6 +43,6 @@ async function loadData(purchaseId) {
 ================================================= */
 
 function getPurchaseId() {
-    const purchaseId = document.querySelector('#purchase_id').value;
-    return purchaseId ? parseInt(purchaseId) : null;
+	const purchaseId = document.querySelector('#purchase_id').value;
+	return purchaseId ? parseInt(purchaseId) : null;
 }

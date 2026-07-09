@@ -1,44 +1,44 @@
 import State from './State.js';
 
 const Renderer = {
-    /* =================================================
+	/* =================================================
        MAIN
     ================================================= */
 
-    render() {
-        this.renderFilters();
+	render() {
+		this.renderFilters();
 
-        this.renderSummary();
+		this.renderSummary();
 
-        this.renderTable();
+		this.renderTable();
 
-        this.renderPagination();
-    },
+		this.renderPagination();
+	},
 
-    /* =================================================
+	/* =================================================
        FILTER
     ================================================= */
 
-    renderFilters() {
-        this.renderCustomers();
+	renderFilters() {
+		this.renderCustomers();
 
-        this.renderPayments();
-    },
+		this.renderPayments();
+	},
 
-    renderCustomers() {
-        const select = document.querySelector('#filter-customer');
+	renderCustomers() {
+		const select = document.querySelector('#filter-customer');
 
-        if (!select) return;
+		if (!select) return;
 
-        select.innerHTML = `
+		select.innerHTML = `
 
             <option value="">
                 Khách hàng
             </option>
 
             ${(State.customers || [])
-                .map(
-                    (item) => `
+				.map(
+					(item) => `
 
                     <option
                         value="${item.id}"
@@ -48,18 +48,18 @@ const Renderer = {
                     </option>
 
                 `,
-                )
-                .join('')}
+				)
+				.join('')}
 
         `;
-    },
+	},
 
-    renderPayments() {
-        const select = document.querySelector('#filter-payment');
+	renderPayments() {
+		const select = document.querySelector('#filter-payment');
 
-        if (!select) return;
+		if (!select) return;
 
-        select.innerHTML = `
+		select.innerHTML = `
 
             <option value="">
                 Thanh toán
@@ -68,45 +68,45 @@ const Renderer = {
             ${this.renderOptions(State.options?.payments || {}, State.filter.payment)}
 
         `;
-    },
+	},
 
-    /* =================================================
+	/* =================================================
        SUMMARY
     ================================================= */
 
-    renderSummary() {
-        const summary = State.summary || {};
+	renderSummary() {
+		const summary = State.summary || {};
 
-        const total = document.querySelector('#sum-total-amount');
+		const total = document.querySelector('#sum-total-amount');
 
-        if (total) {
-            total.textContent = this.money(summary.total_amount);
-        }
+		if (total) {
+			total.textContent = this.money(summary.total_amount);
+		}
 
-        const paid = document.querySelector('#sum-paid-amount');
+		const paid = document.querySelector('#sum-paid-amount');
 
-        if (paid) {
-            paid.textContent = this.money(summary.paid_amount);
-        }
+		if (paid) {
+			paid.textContent = this.money(summary.paid_amount);
+		}
 
-        const debt = document.querySelector('#sum-debt-amount');
+		const debt = document.querySelector('#sum-debt-amount');
 
-        if (debt) {
-            debt.textContent = this.money(summary.debt_amount);
-        }
-    },
+		if (debt) {
+			debt.textContent = this.money(summary.debt_amount);
+		}
+	},
 
-    /* =================================================
+	/* =================================================
        TABLE
     ================================================= */
 
-    renderTable() {
-        const tbody = document.querySelector('#order-table-body');
+	renderTable() {
+		const tbody = document.querySelector('#order-table-body');
 
-        if (!tbody) return;
+		if (!tbody) return;
 
-        if (!State.orders?.length) {
-            tbody.innerHTML = `
+		if (!State.orders?.length) {
+			tbody.innerHTML = `
 
                 <tr>
 
@@ -123,12 +123,12 @@ const Renderer = {
 
             `;
 
-            return;
-        }
+			return;
+		}
 
-        tbody.innerHTML = State.orders
-            .map(
-                (order, index) => `
+		tbody.innerHTML = State.orders
+			.map(
+				(order, index) => `
 
                 <tr>
 
@@ -244,19 +244,19 @@ const Renderer = {
                 </tr>
 
             `,
-            )
-            .join('');
-    },
+			)
+			.join('');
+	},
 
-    /* =================================================
+	/* =================================================
        OPTIONS
     ================================================= */
 
-    renderOptions(data = {}, selected) {
-        return Object.entries(data)
+	renderOptions(data = {}, selected) {
+		return Object.entries(data)
 
-            .map(
-                ([value, item]) => `
+			.map(
+				([value, item]) => `
 
                 <option
 
@@ -271,30 +271,30 @@ const Renderer = {
                 </option>
 
             `,
-            )
+			)
 
-            .join('');
-    },
+			.join('');
+	},
 
-    getColor(data = {}, value) {
-        return data?.[value]?.color || '';
-    },
+	getColor(data = {}, value) {
+		return data?.[value]?.color || '';
+	},
 
-    /* =================================================
+	/* =================================================
        PAGINATION
     ================================================= */
 
-    renderPagination() {
-        // làm sau
-    },
+	renderPagination() {
+		// làm sau
+	},
 
-    /* =================================================
+	/* =================================================
        MONEY
     ================================================= */
 
-    money(value) {
-        return Number(value || 0).toLocaleString('vi-VN');
-    },
+	money(value) {
+		return Number(value || 0).toLocaleString('vi-VN');
+	},
 };
 
 export default Renderer;
