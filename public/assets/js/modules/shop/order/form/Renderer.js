@@ -236,14 +236,14 @@ const Renderer = {
 		});
 	},
 
-	productsUpdate(index) {
+	amount(index) {
 		const row = document.querySelector(`tr[data-index="${index}"]`);
 
 		if (!row) return;
 
 		const item = State.order.items[index];
 
-		row.querySelector(".quantity").value = item.quantity;
+		row.querySelector('.quantity').value = item.quantity;
 
 		row.querySelector('.subtotal-amount').textContent = this.money(item.subtotal_amount);
 

@@ -1,5 +1,4 @@
 const Calculator = {
-
 	amount(quantity, price) {
 		return (Number(quantity) || 0) * (Number(price) || 0);
 	},
@@ -76,7 +75,7 @@ const Calculator = {
 		value = Number(value) || 0;
 
 		return Math.min(Math.max(value, min), max);
-	}
+	},
 };
 
 export default Calculator;

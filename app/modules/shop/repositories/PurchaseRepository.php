@@ -11,22 +11,18 @@ class PurchaseRepository extends Repository
 	public function getList(array $filters = []): array
 	{
 		return Database::get(
-			'CALL sp_purchase_list(
-                :date_from,
-                :date_to,
-                :supplier_id,
-                :payment,
-                :page,
-                :per_page
-            )',
-			[
-				'date_from' => $filters['date_from'] ?: null,
-				'date_to' => $filters['date_to'] ?: null,
-				'supplier_id' => $filters['supplier_id'] ?: null,
-				'payment' => $filters['payment'] ?: null,
-				'page' => $filters['page'] ?? 1,
-				'per_page' => $filters['per_page'] ?? 20,
-			],
+			'CALL sp_purchase_list(?, ?, ?, ?, ?, ?)',
+			array_params(
+				[
+					'date_from',
+					'date_to',
+					'supplier_id',
+					'payment',
+					'page',
+					'per_page',
+				],
+				$filters
+			),
 		);
 	}
 

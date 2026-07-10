@@ -21,11 +21,11 @@ class OrderRepository extends Repository
         ';
 
 		$params = [
-				'date_from' => $filters['date_from'] ?: null,
-				'date_to'   => $filters['date_to'] ?: null,
-				'customer'  => $filters['customer'] ?: null,
-				'payment'   => $filters['payment'] ?: null,
-				'status'    => $filters['status'] ?: null,
+			'date_from' => $filters['date_from'] ?: null,
+			'date_to' => $filters['date_to'] ?: null,
+			'customer' => $filters['customer'] ?: null,
+			'payment' => $filters['payment'] ?: null,
+			'status' => $filters['status'] ?: null,
 		];
 
 		return Database::get($sql, $params);

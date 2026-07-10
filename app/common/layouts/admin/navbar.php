@@ -1,4 +1,28 @@
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<style>
+    /* =================================================
+       NAVBAR DROPDOWN
+    ================================================= */
+
+    @media (min-width: 992px) {
+        .navbar .dropdown-menu {
+            display: none;
+            margin-top: 0;
+        }
+
+        .navbar .dropdown:hover > .dropdown-menu {
+            display: block;
+        }
+
+        .navbar .dropdown-toggle::after {
+            transition: transform .2s ease;
+        }
+
+        .navbar .dropdown:hover > .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
 
         <div class="collapse navbar-collapse d-flex align-items-center" id="navbarNav">
@@ -152,4 +176,4 @@
 
         </div>
     </div>
-    </nav>
+</nav>

@@ -153,7 +153,7 @@ const Event = {
 				Service.setSellingPrice(index, value);
 			}
 
-			Renderer.productsUpdate(index);
+			Renderer.amount(index);
 			Renderer.summary();
 		});
 
