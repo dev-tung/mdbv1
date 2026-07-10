@@ -22,12 +22,12 @@ public/
 │ └── confirm.js // Hộp thoại xác nhận.
 │
 └── modules/
-└── shop/
-└── purchases/
-├── index.js // Điểm khởi chạy của module.
-├── state.js // Quản lý trạng thái (State) của module.
-├── api.js // Giao tiếp API của phiếu nhập.
-├── service.js // Xử lý nghiệp vụ và cập nhật State.
-├── controller.js // Điều phối luồng giữa Event, Service và Renderer.
-├── renderer.js // Hiển thị dữ liệu và cập nhật giao diện.
-└── event.js // Đăng ký và xử lý các sự kiện người dùng.
+    └── shop/
+    └── purchases/
+    ├── index.js // Điểm khởi chạy của module.
+    ├── state.js // Quản lý trạng thái (State) của module.
+    ├── api.js // Giao tiếp API của phiếu nhập.
+    ├── service.js // Xử lý nghiệp vụ và cập nhật State.
+    ├── controller.js // Điều phối luồng giữa Event, Service và Renderer.
+    ├── renderer.js // Hiển thị dữ liệu và cập nhật giao diện.
+    └── event.js // Đăng ký và xử lý các sự kiện người dùng.
