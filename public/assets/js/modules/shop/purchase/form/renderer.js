@@ -1,15 +1,25 @@
 import State from './State.js';
 
 import Dom from '../../../helpers/dom.js';
-
 import Formatter from '../../../helpers/formatter.js';
 
+import Option from '../../../components/option.js';
+import Table from '../../../components/table.js';
+
 const Renderer = {
+	/* ===============================
+	   RENDER
+	=============================== */
+
 	init() {
 		this.purchase();
+
 		this.warehouses();
+
 		this.products();
+
 		this.summary();
+
 		this.payment();
 	},
 
@@ -56,20 +66,12 @@ const Renderer = {
 			<option value="">
 				-- Chọn kho --
 			</option>
-		`;
 
-		State.warehouse.list.forEach((warehouse) => {
-			select.insertAdjacentHTML(
-				'beforeend',
-				`
-				<option 
-					value="${warehouse.id}"
-					${warehouse.id == State.purchase.warehouse_id ? 'selected' : ''}>
-					${warehouse.name}
-				</option>
-				`,
-			);
-		});
+			${Option.render({
+				data: State.warehouse.list,
+				selected: State.purchase.warehouse_id,
+			})}
+		`;
 	},
 
 	/* ===============================
@@ -77,18 +79,15 @@ const Renderer = {
 	=============================== */
 
 	products() {
-		const tbody = Dom.query('#selected_products');
+		Table.init({
+			element: Dom.query('#selected_products'),
 
-		if (!tbody) return;
+			data: State.purchase.items,
 
-		tbody.innerHTML = State.purchase.items
-			.map(
-				(item, index) => `
+			columns: 8,
 
-			<tr data-index="${index}">
-
+			cells: (item, index) => `
 				<td>${item.product_name}</td>
-
 
 				<td width="80">
 					<input
@@ -98,14 +97,12 @@ const Renderer = {
 						min="1">
 				</td>
 
-
 				<td width="140">
 					<input
 						type="number"
 						class="form-control purchase-price"
 						value="${item.purchase_price ?? 0}">
 				</td>
-
 
 				<td width="140">
 					<input
@@ -114,21 +111,17 @@ const Renderer = {
 						value="${item.selling_price ?? 0}">
 				</td>
 
-
 				<td class="subtotal-amount">
 					${Formatter.money(item.subtotal_amount)}
 				</td>
-
 
 				<td class="item-vat">
 					${Formatter.money(item.vat_amount)}
 				</td>
 
-
 				<td class="item-total">
 					${Formatter.money(item.total_amount_with_vat)}
 				</td>
-
 
 				<td>
 					<button
@@ -137,12 +130,12 @@ const Renderer = {
 						Xóa
 					</button>
 				</td>
+			`,
 
-			</tr>
-
-		`,
-			)
-			.join('');
+			attributes: (item, index) => `
+				data-index="${index}"
+			`,
+		});
 	},
 
 	amount(index) {
