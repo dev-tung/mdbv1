@@ -1,29 +1,41 @@
 const Dom = {
-	query(selector) {
-		return document.querySelector(selector);
+	query(selector, parent = document) {
+		return parent.querySelector(selector);
 	},
 
-	setValue(selector, value) {
-		const element = this.query(selector);
+	queryAll(selector, parent = document) {
+		return [...parent.querySelectorAll(selector)];
+	},
+
+	setValue(selector, value, parent = document) {
+		const element = this.query(selector, parent);
 
 		if (element) {
 			element.value = value ?? '';
 		}
 	},
 
-	setText(selector, value) {
-		const element = this.query(selector);
+	setText(selector, value, parent = document) {
+		const element = this.query(selector, parent);
 
 		if (element) {
 			element.textContent = value ?? '';
 		}
 	},
 
-	html(selector, html) {
-		const element = this.query(selector);
+	html(selector, html, parent = document) {
+		const element = this.query(selector, parent);
 
 		if (element) {
 			element.innerHTML = html;
+		}
+	},
+
+	append(selector, html, parent = document) {
+		const element = this.query(selector, parent);
+
+		if (element) {
+			element.insertAdjacentHTML('beforeend', html);
 		}
 	},
 

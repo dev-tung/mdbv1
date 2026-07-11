@@ -12,6 +12,8 @@ const Table = {
 
 		this.cells = options.cells;
 
+		this.attributes = options.attributes;
+
 		this.render();
 	},
 
@@ -31,11 +33,32 @@ const Table = {
 		this.element.innerHTML = this.data
 			.map(
 				(item, index) => `
-					<tr>
-						${this.cells(item, index)}
-					</tr>
-				`,
+				<tr ${this.attributes?.(item, index) ?? ''}>
+					${this.renderCells(item, index)}
+				</tr>
+			`,
 			)
+			.join('');
+	},
+
+	renderCells(item, index) {
+		return this.cells(item, index)
+			.map((cell) => {
+				if (typeof cell !== 'object') {
+					cell = {
+						content: cell,
+					};
+				}
+
+				return `
+					<td
+						class="${cell.class ?? ''}"
+						${cell.width ? `width="${cell.width}"` : ''}
+					>
+						${cell.content ?? ''}
+					</td>
+				`;
+			})
 			.join('');
 	},
 };

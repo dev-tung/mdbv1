@@ -62,16 +62,19 @@ const Renderer = {
 
 		if (!select) return;
 
-		select.innerHTML = `
-			<option value="">
-				-- Chọn kho --
-			</option>
+		Dom.html(
+			'#warehouse_id',
+			`
+				<option value="">
+					-- Chọn kho --
+				</option>
 
-			${Option.render({
-				data: State.warehouse.list,
-				selected: State.purchase.warehouse_id,
-			})}
-		`;
+				${Option.render({
+					data: State.warehouse.list,
+					selected: State.purchase.warehouse_id,
+				})}
+			`,
+		);
 	},
 
 	/* ===============================
@@ -86,55 +89,69 @@ const Renderer = {
 
 			columns: 8,
 
-			cells: (item, index) => `
-				<td>${item.product_name}</td>
-
-				<td width="80">
-					<input
-						type="number"
-						class="form-control quantity"
-						value="${item.quantity ?? 0}"
-						min="1">
-				</td>
-
-				<td width="140">
-					<input
-						type="number"
-						class="form-control purchase-price"
-						value="${item.purchase_price ?? 0}">
-				</td>
-
-				<td width="140">
-					<input
-						type="number"
-						class="form-control selling_price"
-						value="${item.selling_price ?? 0}">
-				</td>
-
-				<td class="subtotal-amount">
-					${Formatter.money(item.subtotal_amount)}
-				</td>
-
-				<td class="item-vat">
-					${Formatter.money(item.vat_amount)}
-				</td>
-
-				<td class="item-total">
-					${Formatter.money(item.total_amount_with_vat)}
-				</td>
-
-				<td>
-					<button
-						type="button"
-						class="btn btn-sm btn-outline-danger btn-remove">
-						Xóa
-					</button>
-				</td>
-			`,
-
 			attributes: (item, index) => `
 				data-index="${index}"
 			`,
+
+			cells: (item) => [
+				item.product_name,
+
+				{
+					content: `
+						<input
+							type="number"
+							class="form-control quantity"
+							value="${item.quantity ?? 0}"
+							min="1">
+					`,
+					width: 80,
+				},
+
+				{
+					content: `
+						<input
+							type="number"
+							class="form-control purchase-price"
+							value="${item.purchase_price ?? 0}">
+					`,
+					width: 140,
+				},
+
+				{
+					content: `
+						<input
+							type="number"
+							class="form-control selling_price"
+							value="${item.selling_price ?? 0}">
+					`,
+					width: 140,
+				},
+
+				{
+					content: Formatter.money(item.subtotal_amount),
+					class: 'subtotal-amount',
+				},
+
+				{
+					content: Formatter.money(item.vat_amount),
+					class: 'item-vat',
+				},
+
+				{
+					content: Formatter.money(item.total_amount_with_vat),
+					class: 'item-total',
+				},
+
+				{
+					content: `
+						<button
+							type="button"
+							class="btn btn-sm btn-outline-danger btn-remove">
+							Xóa
+						</button>
+					`,
+				},
+			],
 		});
 	},
 
@@ -145,11 +162,11 @@ const Renderer = {
 
 		const item = State.purchase.items[index];
 
-		row.querySelector('.subtotal-amount').textContent = Formatter.money(item.subtotal_amount);
+		Dom.setText('.subtotal-amount', Formatter.money(item.subtotal_amount), row);
 
-		row.querySelector('.item-vat').textContent = Formatter.money(item.vat_amount);
+		Dom.setText('.item-vat', Formatter.money(item.vat_amount), row);
 
-		row.querySelector('.item-total').textContent = Formatter.money(item.total_amount_with_vat);
+		Dom.setText('.item-total', Formatter.money(item.total_amount_with_vat), row);
 	},
 
 	/* ===============================

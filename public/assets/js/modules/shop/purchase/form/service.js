@@ -160,25 +160,29 @@ const Service = {
 	=============================== */
 
 	calculateItem(item) {
-		item.subtotal_amount = item.quantity * item.purchase_price;
+		const purchase = State.purchase;
 
-		item.vat_amount = (item.subtotal_amount * State.purchase.vat_rate) / 100;
+		item.subtotal_amount = Calculator.multiply(item.quantity, item.purchase_price);
 
-		item.total_amount_with_vat = item.subtotal_amount + item.vat_amount;
+		item.vat_amount = Calculator.percent(item.subtotal_amount, purchase.vat_rate);
+
+		item.total_amount_with_vat = Calculator.add(item.subtotal_amount, item.vat_amount);
 
 		this.calculate();
 	},
 
 	calculate() {
-		const items = State.purchase.items;
+		const purchase = State.purchase;
 
-		State.purchase.subtotal_amount = items.reduce((sum, item) => sum + Number(item.subtotal_amount || 0), 0);
+		const items = purchase.items;
 
-		State.purchase.vat_amount = items.reduce((sum, item) => sum + Number(item.vat_amount || 0), 0);
+		purchase.subtotal_amount = Calculator.sum(items, 'subtotal_amount');
 
-		State.purchase.total_amount = State.purchase.subtotal_amount + State.purchase.vat_amount;
+		purchase.vat_amount = Calculator.sum(items, 'vat_amount');
 
-		State.purchase.debt_amount = State.purchase.total_amount - State.purchase.paid_amount;
+		purchase.total_amount = Calculator.add(purchase.subtotal_amount, purchase.vat_amount);
+
+		purchase.debt_amount = Calculator.subtract(purchase.total_amount, purchase.paid_amount);
 	},
 
 	/* ===============================
