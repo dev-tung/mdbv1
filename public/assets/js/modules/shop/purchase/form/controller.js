@@ -7,17 +7,19 @@ import State from './state.js';
 import Renderer from './renderer.js';
 import Service from './service.js';
 
-const Event = {
+const Controller = {
 	/* =================================================
        PUBLIC
     ================================================= */
 
-	bind() {
+	init() {
+    Renderer.render();
 		this.bindSupplier();
 		this.bindProduct();
 		this.bindPurchase();
 		this.bindItems();
 		this.bindSubmit();
+
 	},
 
 	/* =================================================
@@ -151,4 +153,8 @@ const Event = {
 	},
 };
 
-export default Event;
+export default Controller;
+
+document.addEventListener('DOMContentLoaded', () => {
+    Controller.init();
+});
