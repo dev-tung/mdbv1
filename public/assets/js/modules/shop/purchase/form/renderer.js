@@ -1,92 +1,147 @@
 import State from './state.js';
 
-const $ = (selector) => document.querySelector(selector);
+import Dom from '../../../../helpers/dom.js';
+import Formatter from '../../../../helpers/formatter.js';
 
-const format = (number) =>
-    Number(number).toLocaleString('vi-VN');
+import Pricing from '../../shared/pricing.js';
 
 const Renderer = {
 
+    /* =================================================
+       PUBLIC
+    ================================================= */
+
     render() {
+        this.renderPurchase();
+        this.renderProducts();
+    },
+
+    /* =================================================
+       PURCHASE
+    ================================================= */
+
+    renderPurchase() {
 
         const purchase = State.purchase;
 
-        $('#purchase_id').value = purchase.id;
-
-        $('#supplier_id').value = purchase.supplier_id;
-        $('#supplier_search').value = purchase.supplier_name;
-
-        $('#description').value = purchase.description;
-
-        $('#status').value = purchase.status;
-
-        $('#warehouse_id').value = purchase.warehouse_id;
-
-        $('#vat_rate').value = purchase.vat_rate;
-
-        $('#payment').value = purchase.payment;
-
-        $('#paid_amount').value = purchase.paid_amount;
-
-        this.renderProducts();
+        Dom.value('#purchase_id', purchase.id);
+        Dom.value('#supplier_id', purchase.supplier_id);
+        Dom.value('#supplier_search', purchase.supplier_name);
+        Dom.value('#description', purchase.description);
+        Dom.value('#status', purchase.status);
+        Dom.value('#warehouse_id', purchase.warehouse_id);
+        Dom.value('#vat_rate', purchase.vat_rate);
+        Dom.value('#payment', purchase.payment);
+        Dom.value('#paid_amount', purchase.paid_amount);
 
     },
 
+    /* =================================================
+       PRODUCTS
+    ================================================= */
+
     renderProducts() {
 
-        const tbody = $('#selected_products');
+        const tbody = Dom.find('#selected_products');
 
-        tbody.innerHTML = '';
+        Dom.clear('#selected_products');
 
-        let subtotal = 0;
-        let vat = 0;
-        let total = 0;
+        const summary = {
+            subtotal: 0,
+            tax: 0,
+            total: 0,
+        };
 
         State.items.forEach((item, index) => {
 
-            const row = document
-                .getElementById('purchase-item-template')
-                .content
-                .cloneNode(true);
+            const subtotal = Pricing.subtotal(
+                item.quantity,
+                item.purchase_price
+            );
 
-            const tr = row.querySelector('tr');
+            const tax = Pricing.tax(
+                subtotal,
+                State.purchase.vat_rate
+            );
 
-            tr.dataset.index = index;
+            const total = Pricing.total(
+                subtotal,
+                tax
+            );
 
-            const money = item.quantity * item.purchase_price;
-            const vatMoney = money * State.purchase.vat_rate / 100;
-            const totalMoney = money + vatMoney;
+            summary.subtotal += subtotal;
+            summary.tax += tax;
+            summary.total += total;
 
-            subtotal += money;
-            vat += vatMoney;
-            total += totalMoney;
-
-            tr.querySelector('.product-name').textContent = item.name;
-
-            tr.querySelector('.quantity').value = item.quantity;
-
-            tr.querySelector('.purchase-price').value = item.purchase_price;
-
-            tr.querySelector('.selling-price').value = item.selling_price;
-
-            tr.querySelector('.subtotal').textContent = format(money);
-
-            tr.querySelector('.vat').textContent = format(vatMoney);
-
-            tr.querySelector('.total').textContent = format(totalMoney);
-
-            tbody.appendChild(row);
+            tbody.appendChild(
+                this.createProductRow(
+                    item,
+                    index,
+                    subtotal,
+                    tax,
+                    total
+                )
+            );
 
         });
 
-        $('#subtotal_amount').textContent = format(subtotal);
+        this.renderSummary(summary);
 
-        $('#vat_amount').textContent = format(vat);
+    },
 
-        $('#total_amount').textContent = format(total);
+    createProductRow(item, index, subtotal, tax, total) {
 
-        $('#debt_amount').textContent = format(
-            total - State.purchase.paid_amount
+        const fragment = document
+            .getElementById('purchase-item-template')
+            .content
+            .cloneNode(true);
+
+        const row = fragment.querySelector('tr');
+
+        row.dataset.index = index;
+
+        Dom.text('.product-name', item.name, row);
+        Dom.value('.quantity', item.quantity, row);
+        Dom.value('.purchase-price', item.purchase_price, row);
+        Dom.value('.selling-price', item.selling_price, row);
+
+        Dom.text('.subtotal', Formatter.money(subtotal), row);
+        Dom.text('.vat', Formatter.money(tax), row);
+        Dom.text('.total', Formatter.money(total), row);
+
+        return fragment;
+
+    },
+
+    /* =================================================
+       SUMMARY
+    ================================================= */
+
+    renderSummary(summary) {
+
+        Dom.text(
+            '#subtotal_amount',
+            Formatter.money(summary.subtotal)
+        );
+
+        Dom.text(
+            '#vat_amount',
+            Formatter.money(summary.tax)
+        );
+
+        Dom.text(
+            '#total_amount',
+            Formatter.money(summary.total)
+        );
+
+        Dom.text(
+            '#debt_amount',
+            Formatter.money(
+                Pricing.debt(
+                    summary.total,
+                    State.purchase.paid_amount
+                )
+            )
         );
 
     }
