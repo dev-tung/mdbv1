@@ -1,144 +1,58 @@
-import State from './state.js';
-import Api from './api.js';
-
 const Service = {
-
-    /* =================================================
-       SUPPLIER
-    ================================================= */
-
-    async searchSupplier(keyword) {
-
-        return await Api.searchSupplier(keyword);
-
-    },
-
-    selectSupplier(supplier) {
-
-        State.purchase.supplier_id = supplier.id;
-        State.purchase.supplier_name = supplier.name;
-
-    },
-
-    /* =================================================
+	/* =================================================
        PRODUCT
     ================================================= */
 
-    async searchProduct(keyword) {
+	selectProduct(items, product) {
+		const index = items.findIndex((item) => item.product_id === product.id);
 
-        return await Api.searchProduct(keyword);
+		if (index !== -1) {
+			const newItems = [...items];
 
-    },
+			newItems[index] = {
+				...newItems[index],
+				quantity: newItems[index].quantity + 1,
+			};
 
-    addProduct(product) {
+			return newItems;
+		}
 
-        const item = State.items.find(
-            item => item.product_id === product.id
-        );
+		return [
+			...items,
 
-        if (item) {
+			{
+				product_id: product.id,
+				code: product.code,
+				name: product.name,
 
-            item.quantity++;
+				quantity: 1,
 
-            return;
+				purchase_price: product.purchase_price ?? 0,
+				selling_price: product.selling_price ?? 0,
+			},
+		];
+	},
 
-        }
-
-        State.items.push({
-
-            product_id: product.id,
-            code: product.code,
-            name: product.name,
-
-            quantity: 1,
-
-            purchase_price: product.purchase_price ?? 0,
-            selling_price: product.selling_price ?? 0
-
-        });
-
-    },
-
-    /* =================================================
+	/* =================================================
        ITEMS
     ================================================= */
 
-    changeItem(e) {
+	changeItem(items, index, field, value) {
+		return items.map((item, i) => {
+			if (i !== index) {
+				return item;
+			}
 
-        const row = e.target.closest('tr');
+			return {
+				...item,
+				[field]: Number(value),
+			};
+		});
+	},
 
-        if (!row) {
-            return;
-        }
-
-        const index = Number(row.dataset.index);
-
-        const item = State.items[index];
-
-        if (!item) {
-            return;
-        }
-
-        if (e.target.classList.contains('quantity')) {
-
-            item.quantity = Number(e.target.value);
-
-        }
-
-        if (e.target.classList.contains('purchase-price')) {
-
-            item.purchase_price = Number(e.target.value);
-
-        }
-
-        if (e.target.classList.contains('selling-price')) {
-
-            item.selling_price = Number(e.target.value);
-
-        }
-
-    },
-
-    removeItem(e) {
-
-        const row = e.target.closest('tr');
-
-        if (!row) {
-            return;
-        }
-
-        const index = Number(row.dataset.index);
-
-        State.items.splice(index, 1);
-
-    },
-
-    /* =================================================
-       PURCHASE
-    ================================================= */
-
-    changeVat(value) {
-
-        State.purchase.vat_rate = Number(value);
-
-    },
-
-    changePayment(value) {
-
-        State.purchase.paid_amount = Number(value);
-
-    },
-
-    /* =================================================
-       SAVE
-    ================================================= */
-
-    async save() {
-
-        return await Api.save(State);
-
-    }
-
+	removeItem(items, index) {
+		return items.filter((_, i) => i !== index);
+	},
 };
 
 export default Service;

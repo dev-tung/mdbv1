@@ -1,151 +1,135 @@
 const Dom = {
-
-    /* =================================================
+	/* =================================================
        FIND
     ================================================= */
 
-    find(selector, parent = document) {
-        return parent.querySelector(selector);
-    },
+	find(selector, parent = document) {
+		return parent.querySelector(selector);
+	},
 
-    findAll(selector, parent = document) {
-        return [...parent.querySelectorAll(selector)];
-    },
+	findAll(selector, parent = document) {
+		return [...parent.querySelectorAll(selector)];
+	},
 
-    /* =================================================
+	template(selector) {
+		return this.find(selector).content.cloneNode(true);
+	},
+
+	/* =================================================
        VALUE
     ================================================= */
 
-    value(selector, value, parent = document) {
+	value(selector, value, parent = document) {
+		const element = this.find(selector, parent);
 
-        const element = this.find(selector, parent);
+		if (!element) return;
 
-        if (!element) return;
+		if (arguments.length < 2) {
+			return element.value;
+		}
 
-        if (arguments.length < 2) {
-            return element.value;
-        }
+		element.value = value ?? '';
+	},
 
-        element.value = value ?? '';
+	text(selector, value, parent = document) {
+		const element = this.find(selector, parent);
 
-    },
+		if (!element) return;
 
-    text(selector, value, parent = document) {
+		if (arguments.length < 2) {
+			return element.textContent;
+		}
 
-        const element = this.find(selector, parent);
+		element.textContent = value ?? '';
+	},
 
-        if (!element) return;
+	html(selector, value, parent = document) {
+		const element = this.find(selector, parent);
 
-        if (arguments.length < 2) {
-            return element.textContent;
-        }
+		if (!element) return;
 
-        element.textContent = value ?? '';
+		if (arguments.length < 2) {
+			return element.innerHTML;
+		}
 
-    },
+		element.innerHTML = value ?? '';
+	},
 
-    html(selector, value, parent = document) {
-
-        const element = this.find(selector, parent);
-
-        if (!element) return;
-
-        if (arguments.length < 2) {
-            return element.innerHTML;
-        }
-
-        element.innerHTML = value ?? '';
-
-    },
-
-    /* =================================================
+	/* =================================================
        ELEMENT
     ================================================= */
 
-    clear(selector, parent = document) {
+	clear(selector, parent = document) {
+		const element = this.find(selector, parent);
 
-        const element = this.find(selector, parent);
+		if (element) {
+			element.innerHTML = '';
+		}
+	},
 
-        if (element) {
-            element.innerHTML = '';
-        }
+	append(selector, child, parent = document) {
+		const element = this.find(selector, parent);
 
-    },
+		if (element) {
+			element.appendChild(child);
+		}
+	},
 
-    append(selector, child, parent = document) {
+	remove(selector, parent = document) {
+		const element = this.find(selector, parent);
 
-        const element = this.find(selector, parent);
+		if (element) {
+			element.remove();
+		}
+	},
 
-        if (element) {
-            element.appendChild(child);
-        }
-
-    },
-
-    remove(selector, parent = document) {
-
-        const element = this.find(selector, parent);
-
-        if (element) {
-            element.remove();
-        }
-
-    },
-
-    /* =================================================
+	/* =================================================
        DISPLAY
     ================================================= */
 
-    show(selector, parent = document) {
+	show(selector, parent = document) {
+		const element = this.find(selector, parent);
 
-        const element = this.find(selector, parent);
+		if (element) {
+			element.hidden = false;
+		}
+	},
 
-        if (element) {
-            element.hidden = false;
-        }
+	hide(selector, parent = document) {
+		const element = this.find(selector, parent);
 
-    },
+		if (element) {
+			element.hidden = true;
+		}
+	},
 
-    hide(selector, parent = document) {
+	toggle(selector, parent = document) {
+		const element = this.find(selector, parent);
 
-        const element = this.find(selector, parent);
+		if (element) {
+			element.hidden = !element.hidden;
+		}
+	},
 
-        if (element) {
-            element.hidden = true;
-        }
-
-    },
-
-    toggle(selector, parent = document) {
-
-        const element = this.find(selector, parent);
-
-        if (element) {
-            element.hidden = !element.hidden;
-        }
-
-    },
-
-    /* =================================================
+	/* =================================================
        CLASS
     ================================================= */
 
-    addClass(selector, className, parent = document) {
-        this.find(selector, parent)?.classList.add(className);
-    },
+	addClass(selector, className, parent = document) {
+		this.find(selector, parent)?.classList.add(className);
+	},
 
-    removeClass(selector, className, parent = document) {
-        this.find(selector, parent)?.classList.remove(className);
-    },
+	removeClass(selector, className, parent = document) {
+		this.find(selector, parent)?.classList.remove(className);
+	},
 
-    toggleClass(selector, className, parent = document) {
-        this.find(selector, parent)?.classList.toggle(className);
-    },
+	toggleClass(selector, className, parent = document) {
+		this.find(selector, parent)?.classList.toggle(className);
+	},
 
-    hasClass(selector, className, parent = document) {
-        return this.find(selector, parent)?.classList.contains(className);
-    }
-
+	hasClass(selector, className, parent = document) {
+		return this.find(selector, parent)?.classList.contains(className);
+	},
 };
 
 export default Dom;

@@ -1,121 +1,95 @@
 const Autocomplete = {
-
-    /* =================================================
+	/* =================================================
        PUBLIC
     ================================================= */
 
-    init(options) {
+	init(options) {
+		const element = document.querySelector(options.element);
 
-        const element = document.querySelector(options.element);
+		if (!element) {
+			return;
+		}
 
-        if (!element) {
-            return;
-        }
+		const dropdown = this.createDropdown(element);
 
-        const dropdown = this.createDropdown(element);
+		let timer;
 
-        let timer;
+		element.addEventListener('input', () => {
+			clearTimeout(timer);
 
-        element.addEventListener('input', () => {
+			const keyword = element.value.trim();
 
-            clearTimeout(timer);
+			if (!keyword) {
+				this.close(dropdown);
+				return;
+			}
 
-            const keyword = element.value.trim();
+			timer = setTimeout(async () => {
+				const items = await options.source(keyword);
 
-            if (!keyword) {
-                this.close(dropdown);
-                return;
-            }
+				this.render(dropdown, items, options.render, options.select);
+			}, options.delay ?? 300);
+		});
 
-            timer = setTimeout(async () => {
+		document.addEventListener('click', (e) => {
+			if (!element.contains(e.target) && !dropdown.contains(e.target)) {
+				this.close(dropdown);
+			}
+		});
+	},
 
-                const items = await options.source(keyword);
-
-                this.render(
-                    dropdown,
-                    items,
-                    options.render,
-                    options.select
-                );
-
-            }, options.delay ?? 300);
-
-        });
-
-        document.addEventListener('click', (e) => {
-
-            if (
-                !element.contains(e.target) &&
-                !dropdown.contains(e.target)
-            ) {
-                this.close(dropdown);
-            }
-
-        });
-
-    },
-
-    /* =================================================
+	/* =================================================
        RENDER
     ================================================= */
 
-    render(dropdown, items, render, select) {
+	render(dropdown, items, render, select) {
+		dropdown.innerHTML = '';
 
-        dropdown.innerHTML = '';
+		if (!items.length) {
+			this.close(dropdown);
+			return;
+		}
 
-        if (!items.length) {
-            this.close(dropdown);
-            return;
-        }
+		items.forEach((item) => {
+			const option = document.createElement('div');
 
-        items.forEach(item => {
+			option.className = 'autocomplete-item';
 
-            const option = document.createElement('div');
+			option.innerHTML = render(item);
 
-            option.className = 'autocomplete-item';
+			option.addEventListener('click', () => {
+				select(item);
 
-            option.innerHTML = render(item);
+				this.close(dropdown);
+			});
 
-            option.addEventListener('click', () => {
+			dropdown.appendChild(option);
+		});
 
-                select(item);
+		this.open(dropdown);
+	},
 
-                this.close(dropdown);
-
-            });
-
-            dropdown.appendChild(option);
-
-        });
-
-        this.open(dropdown);
-
-    },
-
-    /* =================================================
+	/* =================================================
        DROPDOWN
     ================================================= */
 
-    createDropdown(element) {
+	createDropdown(element) {
+		const dropdown = document.createElement('div');
 
-        const dropdown = document.createElement('div');
+		dropdown.className = 'autocomplete-dropdown';
 
-        dropdown.className = 'autocomplete-dropdown';
+		element.parentNode.appendChild(dropdown);
 
-        element.parentNode.appendChild(dropdown);
+		return dropdown;
+	},
 
-        return dropdown;
+	open(dropdown) {
+		dropdown.style.display = 'block';
+	},
 
-    },
-
-    open(dropdown) {
-        dropdown.style.display = 'block';
-    },
-
-    close(dropdown) {
-        dropdown.style.display = 'none';
-    }
-
+	close(dropdown) {
+		dropdown.style.display = 'none';
+	},
 };
 
 export default Autocomplete;

@@ -2,132 +2,153 @@ import Dom from '../../../../helpers/dom.js';
 
 import Autocomplete from '../../../../components/autocomplete.js';
 
+import Api from './api.js';
+import State from './state.js';
+import Renderer from './renderer.js';
 import Service from './service.js';
-import Controller from './controller.js';
 
 const Event = {
-
-    /* =================================================
+	/* =================================================
        PUBLIC
     ================================================= */
 
-    bind() {
+	bind() {
+		this.bindSupplier();
+		this.bindProduct();
+		this.bindPurchase();
+		this.bindItems();
+		this.bindSubmit();
+	},
 
-        this.bindSupplier();
-        this.bindProduct();
-        this.bindPurchase();
-        this.bindItems();
-        this.bindSubmit();
-
-    },
-
-    /* =================================================
+	/* =================================================
        SUPPLIER
     ================================================= */
 
-    bindSupplier() {
+	bindSupplier() {
+		Autocomplete.init({
+			element: '#supplier_search',
 
-        Autocomplete.init({
+			source: Api.searchSupplier,
 
-            element: '#supplier_search',
+			render: Renderer.renderSupplierOption,
 
-            source: Service.searchSupplier,
+			select(supplier) {
+				State.setSupplier(supplier);
 
-            render(item) {
+				Renderer.render();
+			},
+		});
+	},
 
-                return `
-                    <strong>${item.name}</strong>
-                    <div class="text-muted small">
-                        ${item.phone ?? ''}
-                    </div>
-                `;
-
-            },
-
-            select: Controller.selectSupplier
-
-        });
-
-    },
-
-    /* =================================================
+	/* =================================================
        PRODUCT
     ================================================= */
 
-    bindProduct() {
+	bindProduct() {
+		Autocomplete.init({
+			element: '#product_search',
 
-        Autocomplete.init({
+			source: Api.searchProduct,
 
-            element: '#product_search',
+			render: Renderer.renderProductOption,
 
-            source: Service.searchProduct,
+			select(product) {
+				State.items = Service.selectProduct(State.items, product);
 
-            render(item) {
+				Renderer.render();
+			},
+		});
+	},
 
-                return `
-                    <strong>${item.name}</strong>
-                    <div class="text-muted small">
-                        ${item.code ?? ''}
-                    </div>
-                `;
-
-            },
-
-            select: Controller.selectProduct
-
-        });
-
-    },
-
-    /* =================================================
+	/* =================================================
        PURCHASE
     ================================================= */
 
-    bindPurchase() {
+	bindPurchase() {
+		Dom.find('#vat_rate').addEventListener('change', (e) => {
+			State.purchase.vat_rate = Number(e.target.value);
 
-        Dom.find('#vat_rate')
-            ?.addEventListener('change', Controller.changeVat);
+			Renderer.render();
+		});
 
-        Dom.find('#paid_amount')
-            ?.addEventListener('input', Controller.changePayment);
+		Dom.find('#paid_amount').addEventListener('input', (e) => {
+			State.purchase.paid_amount = Number(e.target.value);
 
-    },
+			Renderer.render();
+		});
+	},
 
-    /* =================================================
+	/* =================================================
        ITEMS
     ================================================= */
 
-    bindItems() {
+	bindItems() {
+		const table = Dom.find('#selected_products');
 
-        const table = Dom.find('#selected_products');
+		if (!table) {
+			return;
+		}
 
-        if (!table) {
-            return;
-        }
+		table.addEventListener('input', (e) => {
+			const row = e.target.closest('tr');
 
-        table.addEventListener('input', Controller.changeItem);
+			if (!row) {
+				return;
+			}
 
-        table.addEventListener('click', (e) => {
+			const index = Number(row.dataset.index);
 
-            if (e.target.matches('.btn-remove-item')) {
-                Controller.removeItem(e);
-            }
+			let field = null;
 
-        });
+			if (e.target.classList.contains('quantity')) {
+				field = 'quantity';
+			}
 
-    },
+			if (e.target.classList.contains('purchase-price')) {
+				field = 'purchase_price';
+			}
 
-    /* =================================================
+			if (e.target.classList.contains('selling-price')) {
+				field = 'selling_price';
+			}
+
+			if (!field) {
+				return;
+			}
+
+			State.items = Service.changeItem(State.items, index, field, e.target.value);
+
+			Renderer.render();
+		});
+
+		table.addEventListener('click', (e) => {
+			if (!e.target.matches('.btn-remove-item')) {
+				return;
+			}
+
+			const row = e.target.closest('tr');
+
+			if (!row) {
+				return;
+			}
+
+			State.items = Service.removeItem(State.items, Number(row.dataset.index));
+
+			Renderer.render();
+		});
+	},
+
+	/* =================================================
        SUBMIT
     ================================================= */
 
-    bindSubmit() {
+	bindSubmit() {
+		Dom.find('#purchase-form').addEventListener('submit', async (e) => {
+			e.preventDefault();
 
-        Dom.find('#purchase-form')
-            ?.addEventListener('submit', Controller.submit);
-
-    }
-
+			await Api.save(State);
+		});
+	},
 };
 
 export default Event;

@@ -6,146 +6,128 @@ import Formatter from '../../../../helpers/formatter.js';
 import Pricing from '../../shared/pricing.js';
 
 const Renderer = {
-
-    /* =================================================
+	/* =================================================
        PUBLIC
     ================================================= */
 
-    render() {
-        this.renderPurchase();
-        this.renderProducts();
-    },
+	render() {
+		this.renderPurchase();
+		this.renderProducts();
+	},
 
-    /* =================================================
+	/* =================================================
+       SUPPLIER
+    ================================================= */
+	renderSupplierOption(item) {
+		const fragment = Dom.template('#supplier-item-template');
+		const element = fragment.querySelector('.supplier-item');
+
+		element.dataset.id = item.id;
+
+		Dom.text('.supplier-name', item.name, element);
+		Dom.text('.supplier-phone', item.phone ?? '', element);
+
+		return fragment;
+	},
+
+	/* =================================================
        PURCHASE
     ================================================= */
 
-    renderPurchase() {
+	renderPurchase() {
+		const purchase = State.purchase;
 
-        const purchase = State.purchase;
+		Dom.value('#purchase_id', purchase.id);
+		Dom.value('#supplier_id', purchase.supplier_id);
+		Dom.value('#supplier_search', purchase.supplier_name);
+		Dom.value('#description', purchase.description);
+		Dom.value('#status', purchase.status);
+		Dom.value('#warehouse_id', purchase.warehouse_id);
+		Dom.value('#vat_rate', purchase.vat_rate);
+		Dom.value('#payment', purchase.payment);
+		Dom.value('#paid_amount', purchase.paid_amount);
+	},
 
-        Dom.value('#purchase_id', purchase.id);
-        Dom.value('#supplier_id', purchase.supplier_id);
-        Dom.value('#supplier_search', purchase.supplier_name);
-        Dom.value('#description', purchase.description);
-        Dom.value('#status', purchase.status);
-        Dom.value('#warehouse_id', purchase.warehouse_id);
-        Dom.value('#vat_rate', purchase.vat_rate);
-        Dom.value('#payment', purchase.payment);
-        Dom.value('#paid_amount', purchase.paid_amount);
-
-    },
-
-    /* =================================================
+	/* =================================================
        PRODUCTS
     ================================================= */
 
-    renderProducts() {
+	renderProducts() {
+		const tbody = Dom.find('#selected_products');
 
-        const tbody = Dom.find('#selected_products');
+		Dom.clear('#selected_products');
 
-        Dom.clear('#selected_products');
+		const summary = {
+			subtotal: 0,
+			tax: 0,
+			total: 0,
+		};
 
-        const summary = {
-            subtotal: 0,
-            tax: 0,
-            total: 0,
-        };
+		State.items.forEach((item, index) => {
+			const subtotal = Pricing.subtotal(item.quantity, item.purchase_price);
 
-        State.items.forEach((item, index) => {
+			const tax = Pricing.tax(subtotal, State.purchase.vat_rate);
 
-            const subtotal = Pricing.subtotal(
-                item.quantity,
-                item.purchase_price
-            );
+			const total = Pricing.total(subtotal, tax);
 
-            const tax = Pricing.tax(
-                subtotal,
-                State.purchase.vat_rate
-            );
+			summary.subtotal += subtotal;
+			summary.tax += tax;
+			summary.total += total;
 
-            const total = Pricing.total(
-                subtotal,
-                tax
-            );
+			tbody.appendChild(this.createProductRow(item, index, subtotal, tax, total));
+		});
 
-            summary.subtotal += subtotal;
-            summary.tax += tax;
-            summary.total += total;
+		this.renderSummary(summary);
+	},
 
-            tbody.appendChild(
-                this.createProductRow(
-                    item,
-                    index,
-                    subtotal,
-                    tax,
-                    total
-                )
-            );
+	createProductRow(item, index, subtotal, tax, total) {
+		const fragment = document.getElementById('purchase-item-template').content.cloneNode(true);
 
-        });
+		const row = fragment.querySelector('tr');
 
-        this.renderSummary(summary);
+		row.dataset.index = index;
 
-    },
+		Dom.text('.product-name', item.name, row);
+		Dom.value('.quantity', item.quantity, row);
+		Dom.value('.purchase-price', item.purchase_price, row);
+		Dom.value('.selling-price', item.selling_price, row);
 
-    createProductRow(item, index, subtotal, tax, total) {
+		Dom.text('.subtotal', Formatter.money(subtotal), row);
+		Dom.text('.vat', Formatter.money(tax), row);
+		Dom.text('.total', Formatter.money(total), row);
 
-        const fragment = document
-            .getElementById('purchase-item-template')
-            .content
-            .cloneNode(true);
+		return fragment;
+	},
 
-        const row = fragment.querySelector('tr');
+	/* =================================================
+      PRODUCT
+    ================================================= */
 
-        row.dataset.index = index;
+	renderProductOption(item) {
+		const fragment = Dom.template('#product-item-template');
+		const element = fragment.querySelector('.product-item');
 
-        Dom.text('.product-name', item.name, row);
-        Dom.value('.quantity', item.quantity, row);
-        Dom.value('.purchase-price', item.purchase_price, row);
-        Dom.value('.selling-price', item.selling_price, row);
+		element.dataset.id = item.id;
 
-        Dom.text('.subtotal', Formatter.money(subtotal), row);
-        Dom.text('.vat', Formatter.money(tax), row);
-        Dom.text('.total', Formatter.money(total), row);
+		Dom.text('.product-name', item.name, element);
+		Dom.text('.product-code', item.code ?? '', element);
 
-        return fragment;
+		return fragment;
+	},
 
-    },
-
-    /* =================================================
+	/* =================================================
        SUMMARY
     ================================================= */
 
-    renderSummary(summary) {
+	renderSummary(summary) {
+		Dom.text('#subtotal_amount', Formatter.money(summary.subtotal));
 
-        Dom.text(
-            '#subtotal_amount',
-            Formatter.money(summary.subtotal)
-        );
+		Dom.text('#vat_amount', Formatter.money(summary.tax));
 
-        Dom.text(
-            '#vat_amount',
-            Formatter.money(summary.tax)
-        );
+		Dom.text('#total_amount', Formatter.money(summary.total));
 
-        Dom.text(
-            '#total_amount',
-            Formatter.money(summary.total)
-        );
-
-        Dom.text(
-            '#debt_amount',
-            Formatter.money(
-                Pricing.debt(
-                    summary.total,
-                    State.purchase.paid_amount
-                )
-            )
-        );
-
-    }
-
+		Dom.text('#debt_amount', Formatter.money(Pricing.debt(summary.total, State.purchase.paid_amount)));
+	},
 };
 
 export default Renderer;
