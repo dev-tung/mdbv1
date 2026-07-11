@@ -14,7 +14,7 @@ const Option = {
         },
     },
 
-    order: {
+    process: {
         pending: {
             label: 'Chờ xử lý',
             color: 'warning',
@@ -23,13 +23,6 @@ const Option = {
             label: 'Đã hoàn thành',
             color: 'success',
         },
-    },
-
-    price: {
-        under1  : 'Dưới 1 triệu',
-        fro1To3 : '1 - 3 triệu',
-        fro3To5 : '3 - 5 triệu',
-        over5   : 'Trên 5 triệu'
     }
 };
 
