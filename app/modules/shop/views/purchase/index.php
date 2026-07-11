@@ -75,39 +75,5 @@
 
     </table>
   </div>
-
-  <nav class="mt-3">
-    <ul class="pagination pagination-sm" id="pagination">
-
-      <li class="page-item">
-        <a class="page-link text-secondary" href="javascript:void(0)" onclick="goToPage(1)">Đầu</a>
-      </li>
-
-      <li class="page-item">
-        <a class="page-link text-secondary" href="javascript:void(0)" onclick="goToPage(prevPage)">Trước</a>
-      </li>
-
-      <li class="page-item d-flex" id="pagination-pages"></li>
-
-      <li class="page-item">
-        <a class="page-link text-secondary" href="javascript:void(0)" onclick="goToPage(nextPage)">Sau</a>
-      </li>
-
-      <li class="page-item">
-        <a class="page-link text-secondary" href="javascript:void(0)" onclick="goToPage(lastPage)">Cuối</a>
-      </li>
-
-    </ul>
-  </nav>
 </div>
-
-<script>
-    window.PurchaseConfig = {
-        options: {
-            statuses: <?= json_encode(config('shop.option.purchase_status')) ?>,
-            payments: <?= json_encode(config('shop.option.payment')) ?>
-        }
-    };
-</script>
-
 <script type="module" src="<?= asset('js/modules/shop/purchase/list/Controller.js') ?>"></script>

@@ -68,18 +68,7 @@
                 </label>
 
 
-                <select id="status"
-                        class="form-select">
-
-                    <?php foreach (config('shop.option.order_status') as $key => $status): ?>
-
-                        <option value="<?= $key ?>">
-                            <?= $status['label'] ?>
-                        </option>
-
-                    <?php endforeach; ?>
-
-                </select>
+                <select id="status" class="form-select"></select>
 
             </div>
 
@@ -112,20 +101,7 @@
                 </label>
 
 
-                <select id="payment"
-                        class="form-select">
-
-
-                    <?php foreach (config('shop.option.payment') as $key => $payment): ?>
-
-                        <option value="<?= $key ?>">
-                            <?= $payment['label'] ?>
-                        </option>
-
-                    <?php endforeach; ?>
-
-
-                </select>
+                <select id="payment" class="form-select"></select>
 
 
             </div>

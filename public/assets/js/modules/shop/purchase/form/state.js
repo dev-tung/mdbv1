@@ -1,75 +1,34 @@
 const State = {
-	/* ===============================
-	   PURCHASE
-	=============================== */
 
-	purchase: {
-		id: null,
+    purchase: {
+        id: 1,
+        supplier_id: 2,
+        supplier_name: 'Công ty TNHH Yonex Việt Nam',
+        description: 'Nhập hàng tháng 07',
+        status: 'draft',
+        warehouse_id: 1,
+        vat_rate: 8,
+        payment: 'partial',
+        paid_amount: 5000000,
+    },
 
-		supplier_id: null,
+    items: [
+        {
+            id: 1,
+            name: 'Yonex Astrox 100ZZ',
+            quantity: 2,
+            purchase_price: 4200000,
+            selling_price: 4900000,
+        },
+        {
+            id: 2,
+            name: 'Lining Axforce 90',
+            quantity: 3,
+            purchase_price: 3100000,
+            selling_price: 3600000,
+        }
+    ]
 
-		supplier_name: '',
-
-		warehouse_id: null,
-
-		description: '',
-
-		status: 'draft',
-
-		payment: 'unpaid',
-
-		paid_amount: 0,
-
-		vat_rate: 0,
-
-		items: [],
-
-		subtotal_amount: 0,
-
-		vat_amount: 0,
-
-		total_amount: 0,
-
-		debt_amount: 0,
-	},
-
-	/* ===============================
-	   SUPPLIER
-	=============================== */
-
-	supplier: {
-		keyword: '',
-
-		suggestions: [],
-	},
-
-	/* ===============================
-	   PRODUCT
-	=============================== */
-
-	product: {
-		keyword: '',
-
-		suggestions: [],
-	},
-
-	/* ===============================
-	   WAREHOUSE
-	=============================== */
-
-	warehouse: {
-		list: [],
-	},
-
-	/* ===============================
-	   UI
-	=============================== */
-
-	ui: {
-		loading: false,
-
-		mode: 'create',
-	},
 };
 
 export default State;

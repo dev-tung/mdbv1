@@ -4,6 +4,8 @@ class View
 {
 	protected static string $module = 'website';
 
+	protected static string $js = '';
+
 	public static function setModule(string $module): void
 	{
 		self::$module = $module;
@@ -14,10 +16,15 @@ class View
 		return self::$module;
 	}
 
-	public static function render(string $view, array $data = [], $menu = true): void
+	public static function js(): string
+	{
+		return self::$js;
+	}
+
+	public static function render(string $path, array $data = [], $menu = true): void
 	{
 		$header = self::getHeader();
-		$content = self::getContent($view);
+		$content = self::getContent($path);
 		$footer = self::getFooter();
 
 		if (!file_exists($header)) {
@@ -34,6 +41,8 @@ class View
 			self::fail("Footer not found: {$footer}");
 			return;
 		}
+
+		self::$js = self::getJs($path);
 
 		extract($data);
 
@@ -64,6 +73,15 @@ class View
 		$layout = self::getLayout();
 
 		return BASE_PATH . "/app/common/layouts/{$layout}/footer.php";
+	}
+
+	protected static function getJs(string $view): string
+	{
+		$path = 'js/modules/' . self::$module . '/' . $view . '/controller.js';
+
+		return file_exists(BASE_PATH . '/public/assets/' . $path)
+			? asset($path)
+			: '';
 	}
 
 	protected static function fail(string $message): void

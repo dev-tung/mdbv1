@@ -7,7 +7,6 @@ class Autoload
 		spl_autoload_register(function ($class) {
 			$paths = [
 				BASE_PATH . '/app/core/' . $class . '.php',
-				BASE_PATH . '/app/config/' . $class . '.php',
 				BASE_PATH . '/app/modules/*/validators/' . $class . '.php',
 				BASE_PATH . '/app/modules/*/repositories/' . $class . '.php',
 				BASE_PATH . '/app/modules/*/controllers/' . $class . '.php',
