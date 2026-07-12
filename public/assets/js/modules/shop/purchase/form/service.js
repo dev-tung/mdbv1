@@ -132,18 +132,20 @@ const Service = {
 		};
 	},
 	removeItem(items, event) {
-		if (!event.target.matches('.btn-remove-item')) {
-			return items;
-		}
+			const button = event.target.closest('.remove-item');
 
-		const row = event.target.closest('tr');
+			if (!button) {
+					return items;
+			}
 
-		if (!row) {
-			return items;
-		}
+			const row = button.closest('tr');
 
-		return items.filter((_, index) => index !== Number(row.dataset.index));
-	},
+			if (!row) {
+					return items;
+			}
+
+			return items.filter((_, index) => index !== Number(row.dataset.index));
+	}
 };
 
 export default Service;

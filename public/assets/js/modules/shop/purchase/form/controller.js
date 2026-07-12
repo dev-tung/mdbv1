@@ -113,6 +113,7 @@ const Controller = {
 
 		table.addEventListener('click', (e) => {
 			State.items = Service.removeItem(State.items, e);
+			Renderer.renderProducts();
 			this.renderSummary();
 		});
 	},
