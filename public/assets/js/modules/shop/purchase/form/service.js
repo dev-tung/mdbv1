@@ -12,17 +12,13 @@ const Service = {
 			products,
 		] = await Promise.all([
 			id ? Api.show(id) : null,
-			Api.getWarehouses(),
-			Api.getSuppliers(),
-			Api.getProducts(),
+			Api.getWarehouses()
 		]);
 
 		return {
 			purchase: purchase?.purchase ?? {},
 			items: purchase?.items ?? [],
-			warehouses,
-			suppliers,
-			products,
+			warehouses
 		};
 
 	},

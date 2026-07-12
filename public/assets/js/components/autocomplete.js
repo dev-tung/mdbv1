@@ -1,95 +1,183 @@
 const Autocomplete = {
+
 	/* =================================================
-       PUBLIC
-    ================================================= */
+	   PUBLIC
+	================================================= */
 
 	init(options) {
+
 		const element = document.querySelector(options.element);
 
 		if (!element) {
 			return;
 		}
 
+
 		const dropdown = this.createDropdown(element);
+
 
 		let timer;
 
+
 		element.addEventListener('input', () => {
+
 			clearTimeout(timer);
+
 
 			const keyword = element.value.trim();
 
+
 			if (!keyword) {
+
 				this.close(dropdown);
+
 				return;
 			}
 
+
 			timer = setTimeout(async () => {
+
 				const items = await options.source(keyword);
 
-				this.render(dropdown, items, options.render, options.select);
+
+				this.render(
+					dropdown,
+					items,
+					options.select
+				);
+
+
 			}, options.delay ?? 300);
+
+
 		});
 
-		document.addEventListener('click', (e) => {
-			if (!element.contains(e.target) && !dropdown.contains(e.target)) {
+
+		document.addEventListener('click', (event) => {
+
+			if (
+				!element.contains(event.target) &&
+				!dropdown.contains(event.target)
+			) {
 				this.close(dropdown);
 			}
+
 		});
+
 	},
 
-	/* =================================================
-       RENDER
-    ================================================= */
 
-	render(dropdown, items, render, select) {
+	/* =================================================
+	   RENDER
+	================================================= */
+
+	render(dropdown, items, select) {
+
 		dropdown.innerHTML = '';
 
-		if (!items.length) {
+
+		if (!items || !items.length) {
+
 			this.close(dropdown);
+
 			return;
 		}
 
-		items.forEach((item) => {
-			const option = document.createElement('div');
 
-			option.className = 'autocomplete-item';
+		items.forEach(item => {
 
-			option.innerHTML = render(item);
+			const option = this.createItem(
+				item,
+				select,
+				dropdown
+			);
 
-			option.addEventListener('click', () => {
-				select(item);
-
-				this.close(dropdown);
-			});
 
 			dropdown.appendChild(option);
+
 		});
 
+
 		this.open(dropdown);
+
 	},
 
+
+
+	createItem(item, select, dropdown) {
+
+		const button = document.createElement('button');
+
+
+		button.type = 'button';
+
+		button.className =
+			'list-group-item list-group-item-action';
+
+
+
+		button.textContent =
+			item.label ?? item.name;
+
+
+
+		button.addEventListener('click', () => {
+
+			select(item);
+
+			this.close(dropdown);
+
+		});
+
+
+		return button;
+
+	},
+
+
+
 	/* =================================================
-       DROPDOWN
-    ================================================= */
+	   DROPDOWN
+	================================================= */
 
 	createDropdown(element) {
+
 		const dropdown = document.createElement('div');
 
-		dropdown.className = 'autocomplete-dropdown';
+		dropdown.className = 'list-group position-absolute w-100';
+
+		dropdown.style.maxHeight = '220px';
+
+		dropdown.style.overflowY = 'auto';
+
+		dropdown.style.zIndex = '1050';
 
 		element.parentNode.appendChild(dropdown);
 
+		this.close(dropdown);
+
 		return dropdown;
+
 	},
+
+
 
 	open(dropdown) {
+
 		dropdown.style.display = 'block';
+
 	},
 
+
+
 	close(dropdown) {
+
 		dropdown.style.display = 'none';
+
 	},
+
+
 };
+
 
 export default Autocomplete;

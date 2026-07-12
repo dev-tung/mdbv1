@@ -83,20 +83,6 @@
   </form>
 </div>
 
-<template id="supplier-item-template">
-    <div class="supplier-item">
-        <strong class="supplier-name"></strong>
-        <div class="supplier-phone text-muted small"></div>
-    </div>
-</template>
-
-<template id="product-item-template">
-    <div class="product-item">
-        <strong class="product-name"></strong>
-        <div class="product-code text-muted small"></div>
-    </div>
-</template>
-
 <template id="purchase-item-template">
   <tr>
     <td class="product-name"></td>

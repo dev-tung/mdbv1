@@ -43,7 +43,7 @@ const State = {
         },
     ],
 
-    summary: {
+    summary : {
         subtotal: 17700000,
         tax: 1416000,
         total: 19116000,
@@ -63,7 +63,6 @@ const State = {
         this.purchase = data.purchase;
         this.warehouses = this.setWarehouses(data.warehouses);
         this.items = data.items;
-        this.summary = data.summary;
     }
 };
 

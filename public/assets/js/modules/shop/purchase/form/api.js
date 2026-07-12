@@ -25,7 +25,7 @@ const Api = {
        PRODUCT
     ================================================= */
 
-	async getProducts(keyword = '') {
+	async searchProduct(keyword = '') {
 		return await Http.get('/api/products', {
 			keyword,
 		});
@@ -35,7 +35,7 @@ const Api = {
        SUPPLIER
     ================================================= */
 
-	async getSuppliers(keyword = '') {
+	async searchSupplier(keyword = '') {
 		return await Http.get('/api/suppliers', {
 			keyword,
 		});

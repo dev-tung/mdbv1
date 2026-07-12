@@ -11,14 +11,14 @@ const Controller = {
 
 	async init() {
 		await this.setDefault();
+		
+		Renderer.render();
 
 		this.bindSupplier();
 		this.bindProduct();
 		this.bindPurchase();
 		this.bindItems();
 		this.bindSubmit();
-
-		Renderer.render();
 	},
 
 	async setDefault(){
@@ -34,19 +34,19 @@ const Controller = {
     ================================================= */
 
 	bindSupplier() {
-		Autocomplete.init({
-			element: '#supplier_search',
+			Autocomplete.init({
+					element: '#supplier_search',
 
-			source: Api.searchSupplier,
+					async source(keyword) {
+							const suppliers = await Api.searchSupplier(keyword);
+							return suppliers.data;
+					},
 
-			render: Renderer.renderSupplierOption,
-
-			select(supplier) {
-				State.setSupplier(supplier);
-
-				Renderer.render();
-			},
-		});
+					select(supplier) {
+							State.setSupplier(supplier);
+							Renderer.render();
+					},
+			});
 	},
 
 	/* =================================================
@@ -57,13 +57,13 @@ const Controller = {
 		Autocomplete.init({
 			element: '#product_search',
 
-			source: Api.searchProduct,
-
-			render: Renderer.renderProductOption,
+			async source(keyword) {
+					const products = await Api.searchProduct(keyword);
+					return products.data;
+			},
 
 			select(product) {
 				State.items = Service.selectProduct(State.items, product);
-
 				Renderer.render();
 			},
 		});
