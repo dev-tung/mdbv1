@@ -132,13 +132,7 @@ const Service = {
 		};
 	},
 	removeItem(items, event) {
-			const button = event.target.closest('.remove-item');
-
-			if (!button) {
-					return items;
-			}
-
-			const row = button.closest('tr');
+			const row = event.target.closest('tr');
 
 			if (!row) {
 					return items;

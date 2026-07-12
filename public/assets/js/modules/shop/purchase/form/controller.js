@@ -132,10 +132,13 @@ const Controller = {
 			this.renderSummary();
 		});
 
-		table.addEventListener('click', (e) => {
-			State.items = Service.removeItem(State.items, e);
-			Renderer.renderProducts();
-			this.renderSummary();
+		table.addEventListener('click', (event) => {
+				if (event.target.matches('.remove-item')) {
+						State.items = Service.removeItem(State.items, event);
+
+						Renderer.renderProducts();
+						this.renderSummary();
+				}
 		});
 	},
 
