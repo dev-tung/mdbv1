@@ -30,7 +30,7 @@ const Controller = {
 		this.renderSummary();
 	},
 
-	renderSummary(){
+	renderSummary() {
 		State.setSummary();
 		Renderer.renderSummary();
 	},
@@ -82,19 +82,17 @@ const Controller = {
 	bindPurchase() {
 		Dom.find('#vat_rate').addEventListener('input', (e) => {
 			State.purchase.vat_rate = Number(e.target.value);
-			
-			State.items = State.items.map(item =>
-					Service.calculateItem(item, State.purchase.vat_rate)
-			);
+
+			State.items = State.items.map((item) => Service.calculateItem(item, State.purchase.vat_rate));
 
 			State.setSummary();
 			Renderer.renderCaculation();
 		});
 
-    Dom.find('#paid_amount').addEventListener('input', (e) => {
-        State.purchase.paid_amount = Number(e.target.value);
-        this.renderSummary();
-    });
+		Dom.find('#paid_amount').addEventListener('input', (e) => {
+			State.purchase.paid_amount = Number(e.target.value);
+			this.renderSummary();
+		});
 	},
 
 	/* =================================================
