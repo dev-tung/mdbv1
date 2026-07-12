@@ -89,6 +89,27 @@ const Controller = {
 			Renderer.renderCaculation();
 		});
 
+		Dom.find('#payment').addEventListener('change', (e) => {
+				State.purchase.payment = e.target.value;
+
+				switch (State.purchase.payment) {
+						case 'paid':
+								State.purchase.paid_amount = State.summary.grand_total;
+								break;
+
+						case 'unpaid':
+								State.purchase.paid_amount = 0;
+								break;
+				}
+
+				Dom.find('#paid_amount_wrapper').classList.toggle(
+						'd-none',
+						State.purchase.payment !== 'partial'
+				);
+
+				this.renderSummary();
+		});
+
 		Dom.find('#paid_amount').addEventListener('input', (e) => {
 			State.purchase.paid_amount = Number(e.target.value);
 			this.renderSummary();

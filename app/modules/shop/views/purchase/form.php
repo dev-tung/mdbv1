@@ -36,7 +36,7 @@
         <select id="payment" class="form-select"></select>
       </div>
       <!-- Paid -->
-      <div class="col-md-3" id="paid_amount_wrapper">
+      <div class="col-md-3 d-none" id="paid_amount_wrapper">
         <label class="form-label">Đã thanh toán</label>
         <input type="number" id="paid_amount" class="form-control" min="0">
       </div>
