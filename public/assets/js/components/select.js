@@ -1,27 +1,21 @@
 import Dom from '../helpers/dom.js';
 
 const Select = {
+	render(selector, options, selected = null) {
+		const select = Dom.find(selector);
 
-    render(selector, options, selected = null) {
+		select.innerHTML = '';
 
-        const select = Dom.find(selector);
+		Object.entries(options).forEach(([value, option]) => {
+			const element = document.createElement('option');
 
-        select.innerHTML = '';
+			element.value = value;
+			element.textContent = option.label;
+			element.selected = value === selected;
 
-        Object.entries(options).forEach(([value, option]) => {
-
-            const element = document.createElement('option');
-
-            element.value = value;
-            element.textContent = option.label;
-            element.selected = value === selected;
-
-            select.appendChild(element);
-
-        });
-
-    },
-
+			select.appendChild(element);
+		});
+	},
 };
 
 export default Select;

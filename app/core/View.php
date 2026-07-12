@@ -79,9 +79,7 @@ class View
 	{
 		$path = 'js/modules/' . self::$module . '/' . $view . '/controller.js';
 
-		return file_exists(BASE_PATH . '/public/assets/' . $path)
-			? asset($path)
-			: '';
+		return file_exists(BASE_PATH . '/public/assets/' . $path) ? asset($path) : '';
 	}
 
 	protected static function fail(string $message): void

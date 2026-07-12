@@ -8,116 +8,110 @@ import Option from '../../../../shared/option.js';
 import Select from '../../../../components/select.js';
 
 const Renderer = {
-    /* =================================================
+	/* =================================================
        PUBLIC
     ================================================= */
 
-    render() {
-        this.renderOptions();
-        this.renderPurchase();
-        this.renderProducts();
-    },
+	render() {
+		this.renderOptions();
+		this.renderPurchase();
+		this.renderProducts();
+	},
 
-    /* =================================================
+	/* =================================================
        OPTIONS
     ================================================= */
 
-    renderOptions() {
-        Select.render(
-            '#status',
-            Option.process,
-            State.purchase.status
-        );
+	renderOptions() {
+		Select.render('#status', Option.process, State.purchase.status);
 
-        Select.render(
-            '#payment',
-            Option.payment,
-            State.purchase.payment
-        );
+		Select.render('#payment', Option.payment, State.purchase.payment);
 
-        Select.render(
-            '#warehouse_id',
-            State.warehouses,
-            State.purchase.warehouse_id
-        );
-    },
+		Select.render('#warehouse_id', State.warehouses, State.purchase.warehouse_id);
+	},
 
-    /* =================================================
+	/* =================================================
        PURCHASE
     ================================================= */
 
-    renderPurchase() {
-        const purchase = State.purchase;
+	renderPurchase() {
+		const purchase = State.purchase;
 
-        Dom.value('#purchase_id', purchase.id);
-        Dom.value('#supplier_id', purchase.supplier_id);
-        Dom.value('#supplier_search', purchase.supplier_name);
-        Dom.value('#description', purchase.description);
-        Dom.value('#vat_rate', purchase.vat_rate);
-        Dom.value('#paid_amount', purchase.paid_amount);
-    },
+		Dom.value('#purchase_id', purchase.id);
+		Dom.value('#supplier_id', purchase.supplier_id);
+		Dom.value('#supplier_search', purchase.supplier_name);
+		Dom.value('#description', purchase.description);
+		Dom.value('#vat_rate', purchase.vat_rate);
+		Dom.value('#paid_amount', purchase.paid_amount);
+	},
 
-    /* =================================================
+	/* =================================================
        PRODUCTS
     ================================================= */
 
-    renderProducts() {
-        const tbody = Dom.find('#selected_products');
+	renderProducts() {
+		const tbody = Dom.find('#selected_products');
 
-        Dom.clear('#selected_products');
+		Dom.clear('#selected_products');
 
-        State.items.forEach((item, index) => {
+		State.items.forEach((item, index) => {
+			const fragment = Dom.template('#purchase-item-template');
 
-            const fragment = Dom.template('#purchase-item-template');
+			const row = fragment.querySelector('tr');
 
-            const row = fragment.querySelector('tr');
+			row.dataset.index = index;
 
-            row.dataset.index = index;
+			Dom.text('.product-name', item.name, row);
 
-            Dom.text('.product-name', item.name, row);
+			Dom.value('.quantity', item.quantity, row);
+			Dom.value('.purchase-price', item.purchase_price, row);
+			Dom.value('.selling-price', item.selling_price, row);
 
-            Dom.value('.quantity', item.quantity, row);
-            Dom.value('.purchase-price', item.purchase_price, row);
-            Dom.value('.selling-price', item.selling_price, row);
+			Dom.text('.subtotal', Formatter.money(item.subtotal), row);
+			Dom.text('.vat', Formatter.money(item.tax), row);
+			Dom.text('.total', Formatter.money(item.total), row);
 
-            Dom.text('.subtotal', Formatter.money(item.subtotal), row);
-            Dom.text('.vat', Formatter.money(item.tax), row);
-            Dom.text('.total', Formatter.money(item.total), row);
+			tbody.appendChild(fragment);
+		});
 
-            tbody.appendChild(fragment);
+		this.renderSummary();
+	},
 
-        });
+	renderCaculation() {
+		const rows = Dom.find('#selected_products').rows;
 
-        this.renderSummary();
-    },
+		State.items.forEach((item, index) => {
+			const row = rows[index];
 
-    /* =================================================
+			if (!row) {
+				return;
+			}
+
+			Dom.text('.subtotal', Formatter.money(item.subtotal), row);
+
+			Dom.text('.vat', Formatter.money(item.tax), row);
+
+			Dom.text('.total', Formatter.money(item.total), row);
+		});
+
+		this.renderSummary();
+	},
+
+	/* =================================================
        SUMMARY
     ================================================= */
 
-    renderSummary() {
-        const summary = State.summary;
+	renderSummary() {
+		const summary = State.summary;
 
-        Dom.text(
-            '#subtotal_amount',
-            Formatter.money(summary.subtotal)
-        );
+		Dom.text('#subtotal_amount', Formatter.money(summary.subtotal));
 
-        Dom.text(
-            '#vat_amount',
-            Formatter.money(summary.tax)
-        );
+		Dom.text('#vat_amount', Formatter.money(summary.tax));
 
-        Dom.text(
-            '#total_amount',
-            Formatter.money(summary.total)
-        );
+		Dom.text('#total_amount', Formatter.money(summary.total));
 
-        Dom.text(
-            '#debt_amount',
-            Formatter.money(summary.debt)
-        );
-    },
+		Dom.text('#debt_amount', Formatter.money(summary.debt));
+	},
 };
 
 export default Renderer;

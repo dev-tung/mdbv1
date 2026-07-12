@@ -8,10 +8,9 @@ import Renderer from './renderer.js';
 import Service from './service.js';
 
 const Controller = {
-
 	async init() {
 		await this.setDefault();
-		
+
 		Renderer.render();
 
 		this.bindSupplier();
@@ -21,12 +20,19 @@ const Controller = {
 		this.bindSubmit();
 	},
 
-	async setDefault(){
+	async setDefault() {
 		const id = Dom.find('#purchase_id').value;
 
 		const data = await Service.getDefault(id);
 
 		State.setDefault(data);
+
+		this.renderSummary();
+	},
+
+	renderSummary(){
+		State.setSummary();
+		Renderer.renderSummary();
 	},
 
 	/* =================================================
@@ -34,19 +40,19 @@ const Controller = {
     ================================================= */
 
 	bindSupplier() {
-			Autocomplete.init({
-					element: '#supplier_search',
+		Autocomplete.init({
+			element: '#supplier_search',
 
-					async source(keyword) {
-							const suppliers = await Api.searchSupplier(keyword);
-							return suppliers.data;
-					},
+			async source(keyword) {
+				const suppliers = await Api.searchSupplier(keyword);
+				return suppliers.data;
+			},
 
-					select(supplier) {
-							State.setSupplier(supplier);
-							Renderer.render();
-					},
-			});
+			select(supplier) {
+				State.setSupplier(supplier);
+				Renderer.render();
+			},
+		});
 	},
 
 	/* =================================================
@@ -58,8 +64,8 @@ const Controller = {
 			element: '#product_search',
 
 			async source(keyword) {
-					const products = await Api.searchProduct(keyword);
-					return products.data;
+				const products = await Api.searchProduct(keyword);
+				return products.data;
 			},
 
 			select(product) {
@@ -74,17 +80,21 @@ const Controller = {
     ================================================= */
 
 	bindPurchase() {
-		Dom.find('#vat_rate').addEventListener('change', (e) => {
+		Dom.find('#vat_rate').addEventListener('input', (e) => {
 			State.purchase.vat_rate = Number(e.target.value);
+			
+			State.items = State.items.map(item =>
+					Service.calculateItem(item, State.purchase.vat_rate)
+			);
 
-			Renderer.render();
+			State.setSummary();
+			Renderer.renderCaculation();
 		});
 
-		Dom.find('#paid_amount').addEventListener('input', (e) => {
-			State.purchase.paid_amount = Number(e.target.value);
-
-			Renderer.render();
-		});
+    Dom.find('#paid_amount').addEventListener('input', (e) => {
+        State.purchase.paid_amount = Number(e.target.value);
+        this.renderSummary();
+    });
 	},
 
 	/* =================================================
@@ -99,51 +109,13 @@ const Controller = {
 		}
 
 		table.addEventListener('input', (e) => {
-			const row = e.target.closest('tr');
-
-			if (!row) {
-				return;
-			}
-
-			const index = Number(row.dataset.index);
-
-			let field = null;
-
-			if (e.target.classList.contains('quantity')) {
-				field = 'quantity';
-			}
-
-			if (e.target.classList.contains('purchase-price')) {
-				field = 'purchase_price';
-			}
-
-			if (e.target.classList.contains('selling-price')) {
-				field = 'selling_price';
-			}
-
-			if (!field) {
-				return;
-			}
-
-			State.items = Service.changeItem(State.items, index, field, e.target.value);
-
-			Renderer.render();
+			State.items = Service.changeItem(State.items, e, State.purchase.vat_rate);
+			this.renderSummary();
 		});
 
 		table.addEventListener('click', (e) => {
-			if (!e.target.matches('.btn-remove-item')) {
-				return;
-			}
-
-			const row = e.target.closest('tr');
-
-			if (!row) {
-				return;
-			}
-
-			State.items = Service.removeItem(State.items, Number(row.dataset.index));
-
-			Renderer.render();
+			State.items = Service.removeItem(State.items, e);
+			this.renderSummary();
 		});
 	},
 
@@ -163,5 +135,5 @@ const Controller = {
 export default Controller;
 
 document.addEventListener('DOMContentLoaded', () => {
-    Controller.init();
+	Controller.init();
 });

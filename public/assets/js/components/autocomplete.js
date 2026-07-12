@@ -1,147 +1,89 @@
 const Autocomplete = {
-
 	/* =================================================
 	   PUBLIC
 	================================================= */
 
 	init(options) {
-
 		const element = document.querySelector(options.element);
 
 		if (!element) {
 			return;
 		}
 
-
 		const dropdown = this.createDropdown(element);
-
 
 		let timer;
 
-
 		element.addEventListener('input', () => {
-
 			clearTimeout(timer);
-
 
 			const keyword = element.value.trim();
 
-
 			if (!keyword) {
-
 				this.close(dropdown);
 
 				return;
 			}
 
-
 			timer = setTimeout(async () => {
-
 				const items = await options.source(keyword);
 
-
-				this.render(
-					dropdown,
-					items,
-					options.select
-				);
-
-
+				this.render(dropdown, items, options.select);
 			}, options.delay ?? 300);
-
-
 		});
-
 
 		document.addEventListener('click', (event) => {
-
-			if (
-				!element.contains(event.target) &&
-				!dropdown.contains(event.target)
-			) {
+			if (!element.contains(event.target) && !dropdown.contains(event.target)) {
 				this.close(dropdown);
 			}
-
 		});
-
 	},
-
 
 	/* =================================================
 	   RENDER
 	================================================= */
 
 	render(dropdown, items, select) {
-
 		dropdown.innerHTML = '';
 
-
 		if (!items || !items.length) {
-
 			this.close(dropdown);
 
 			return;
 		}
 
-
-		items.forEach(item => {
-
-			const option = this.createItem(
-				item,
-				select,
-				dropdown
-			);
-
+		items.forEach((item) => {
+			const option = this.createItem(item, select, dropdown);
 
 			dropdown.appendChild(option);
-
 		});
 
-
 		this.open(dropdown);
-
 	},
 
-
-
 	createItem(item, select, dropdown) {
-
 		const button = document.createElement('button');
-
 
 		button.type = 'button';
 
-		button.className =
-			'list-group-item list-group-item-action';
+		button.className = 'list-group-item list-group-item-action';
 
-
-
-		button.textContent =
-			item.label ?? item.name;
-
-
+		button.textContent = item.label ?? item.name;
 
 		button.addEventListener('click', () => {
-
 			select(item);
 
 			this.close(dropdown);
-
 		});
 
-
 		return button;
-
 	},
-
-
 
 	/* =================================================
 	   DROPDOWN
 	================================================= */
 
 	createDropdown(element) {
-
 		const dropdown = document.createElement('div');
 
 		dropdown.className = 'list-group position-absolute w-100';
@@ -157,27 +99,15 @@ const Autocomplete = {
 		this.close(dropdown);
 
 		return dropdown;
-
 	},
-
-
 
 	open(dropdown) {
-
 		dropdown.style.display = 'block';
-
 	},
-
-
 
 	close(dropdown) {
-
 		dropdown.style.display = 'none';
-
 	},
-
-
 };
-
 
 export default Autocomplete;
