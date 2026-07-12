@@ -8,18 +8,25 @@ import Renderer from './renderer.js';
 import Service from './service.js';
 
 const Controller = {
-	/* =================================================
-       PUBLIC
-    ================================================= */
 
-	init() {
-    Renderer.render();
+	async init() {
+		await this.setDefault();
+
 		this.bindSupplier();
 		this.bindProduct();
 		this.bindPurchase();
 		this.bindItems();
 		this.bindSubmit();
 
+		Renderer.render();
+	},
+
+	async setDefault(){
+		const id = Dom.find('#purchase_id').value;
+
+		const data = await Service.getDefault(id);
+
+		State.setDefault(data);
 	},
 
 	/* =================================================

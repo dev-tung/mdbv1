@@ -1,8 +1,8 @@
 // =========================================================
-// helpers/api.js
+// helpers/http.js
 // =========================================================
 
-const Api = {
+const http = {
 	async get(url, params = {}) {
 		const query = new URLSearchParams(params).toString();
 
@@ -62,4 +62,4 @@ const Api = {
 	},
 };
 
-export default Api;
+export default http;

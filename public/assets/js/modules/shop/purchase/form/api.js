@@ -1,4 +1,4 @@
-import api from '/assets/js/helpers/api.js';
+import Http from '/assets/js/helpers/http.js';
 
 const Api = {
 	/* =================================================
@@ -25,7 +25,7 @@ const Api = {
        PRODUCT
     ================================================= */
 
-	async searchProducts(keyword = '') {
+	async getProducts(keyword = '') {
 		return await Http.get('/api/products', {
 			keyword,
 		});
@@ -35,7 +35,7 @@ const Api = {
        SUPPLIER
     ================================================= */
 
-	async searchSuppliers(keyword = '') {
+	async getSuppliers(keyword = '') {
 		return await Http.get('/api/suppliers', {
 			keyword,
 		});

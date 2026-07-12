@@ -1,6 +1,32 @@
 import Calculator from '../../../../helpers/calculator.js';
+import Api from './api.js';
 
 const Service = {
+
+	async getDefault(id = null) {
+
+		const [
+			purchase,
+			warehouses,
+			suppliers,
+			products,
+		] = await Promise.all([
+			id ? Api.show(id) : null,
+			Api.getWarehouses(),
+			Api.getSuppliers(),
+			Api.getProducts(),
+		]);
+
+		return {
+			purchase: purchase?.purchase ?? {},
+			items: purchase?.items ?? [],
+			warehouses,
+			suppliers,
+			products,
+		};
+
+	},
+
 	/* =================================================
        PRODUCT
     ================================================= */
