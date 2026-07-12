@@ -23,7 +23,7 @@ const Option = {
 			label: 'Đã hoàn thành',
 			color: 'success',
 		},
-	},
+	}
 };
 
 export default Option;
