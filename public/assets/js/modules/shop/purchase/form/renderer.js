@@ -23,11 +23,26 @@ const Renderer = {
     ================================================= */
 
 	renderOptions() {
-		Select.render('#status', Option.process, State.purchase.status);
+			Select.render(
+					'#status',
+					Option.process,
+					State.purchase.status,
+					'-- Chọn trạng thái --'
+			);
 
-		Select.render('#payment', Option.payment, State.purchase.payment);
+			Select.render(
+					'#payment',
+					Option.payment,
+					State.purchase.payment,
+					'-- Chọn thanh toán --'
+			);
 
-		Select.render('#warehouse_id', State.warehouses, State.purchase.warehouse_id);
+			Select.render(
+					'#warehouse_id',
+					State.warehouses,
+					State.purchase.warehouse_id,
+					'-- Chọn kho --'
+			);
 	},
 
 	/* =================================================

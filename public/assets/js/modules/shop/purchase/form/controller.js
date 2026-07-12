@@ -114,6 +114,10 @@ const Controller = {
 			State.purchase.paid_amount = Number(e.target.value);
 			this.renderSummary();
 		});
+
+    Dom.find('#warehouse_id').addEventListener('change', (e) => {
+        State.purchase.warehouse_id = Number(e.target.value);
+    });
 	},
 
 	/* =================================================
@@ -147,11 +151,21 @@ const Controller = {
     ================================================= */
 
 	bindSubmit() {
-		Dom.find('#purchase-form').addEventListener('submit', async (e) => {
-			e.preventDefault();
+			Dom.find('#purchase-form').addEventListener('submit', async (e) => {
+					e.preventDefault();
 
-			await Api.save(State);
-		});
+					const payload = Service.payload(
+							State.purchase,
+							State.summary,
+							State.items,
+					);
+
+					console.log(State);
+
+					const response = await Api.createPurchase(payload);
+
+					alert(response.message);
+			});
 	},
 };
 

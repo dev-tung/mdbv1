@@ -139,7 +139,31 @@ const Service = {
 			}
 
 			return items.filter((_, index) => index !== Number(row.dataset.index));
-	}
+	},
+	payload(purchase, summary, items) {
+			return {
+					supplier_id: purchase.supplier_id,
+					warehouse_id: purchase.warehouse_id,
+
+					description: purchase.description,
+					note: purchase.note,
+
+					status: purchase.status,
+					payment: purchase.payment,
+
+					subtotal_amount: summary.subtotal,
+					vat_rate: purchase.vat_rate,
+					vat_amount: summary.tax,
+					total_amount: summary.grand_total,
+
+					paid_amount: purchase.paid_amount,
+					debt_amount: summary.grand_total - purchase.paid_amount,
+
+					created_by: purchase.created_by,
+
+					items,
+			};
+	},
 };
 
 export default Service;
