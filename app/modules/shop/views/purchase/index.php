@@ -76,4 +76,18 @@
     </table>
   </div>
 </div>
-<script type="module" src="<?= asset('js/modules/shop/purchase/list/Controller.js') ?>"></script>
+
+<template id="purchase-row-template">
+    <tr>
+        <td class="index"></td>
+        <td class="supplier-name"></td>
+        <td class="warehouse-name"></td>
+        <td class="total-amount text-end"></td>
+        <td class="paid-amount text-end"></td>
+        <td class="debt-amount text-end"></td>
+        <td class="status"></td>
+        <td class="payment"></td>
+        <td class="created-at"></td>
+        <td class="action"></td>
+    </tr>
+</template>
