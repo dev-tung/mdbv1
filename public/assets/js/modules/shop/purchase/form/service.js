@@ -51,7 +51,7 @@ const Service = {
 
 			code: product.code,
 
-			name: product.name,
+			product_name: product.name,
 
 			quantity: 1,
 
@@ -118,17 +118,17 @@ const Service = {
 	},
 
 	calculateItem(item, vatRate) {
-		const subtotal = Calculator.multiply(item.quantity, item.purchase_price);
+		const subtotal_amount = Calculator.multiply(item.quantity, item.purchase_price);
 
-		const tax = Calculator.multiply(subtotal, vatRate / 100);
+		const vat_amount = Calculator.multiply(subtotal_amount, vatRate / 100);
 
-		const total = Calculator.add(subtotal, tax);
+		const total_amount = Calculator.add(subtotal_amount, vat_amount);
 
 		return {
 			...item,
-			subtotal,
-			tax,
-			total,
+			subtotal_amount,
+			vat_amount,
+			total_amount,
 		};
 	},
 	removeItem(items, event) {
@@ -140,30 +140,30 @@ const Service = {
 
 			return items.filter((_, index) => index !== Number(row.dataset.index));
 	},
-	payload(purchase, summary, items) {
-			return {
-					supplier_id: purchase.supplier_id,
-					warehouse_id: purchase.warehouse_id,
+	payload(purchase = {}, summary = {}, items = []) {
+		return {
+			supplier_id: purchase.supplier_id ?? null,
+			warehouse_id: purchase.warehouse_id ?? null,
 
-					description: purchase.description,
-					note: purchase.note,
+			description: purchase.description ?? '',
+			note: purchase.note ?? '',
 
-					status: purchase.status,
-					payment: purchase.payment,
+			status: purchase.status ?? 'pending',
+			payment: purchase.payment ?? 'unpaid',
 
-					subtotal_amount: summary.subtotal,
-					vat_rate: purchase.vat_rate,
-					vat_amount: summary.tax,
-					total_amount: summary.grand_total,
+			subtotal_amount: summary.subtotal ?? 0,
+			vat_rate: purchase.vat_rate ?? 0,
+			vat_amount: summary.tax ?? 0,
+			total_amount: summary.grand_total ?? 0,
 
-					paid_amount: purchase.paid_amount,
-					debt_amount: summary.grand_total - purchase.paid_amount,
+			paid_amount: purchase.paid_amount ?? 0,
+			debt_amount: (summary.grand_total ?? 0) - (purchase.paid_amount ?? 0),
 
-					created_by: purchase.created_by,
+			created_by: purchase.created_by ?? null,
 
-					items,
-			};
-	},
+			items: items ?? [],
+		};
+	}
 };
 
 export default Service;

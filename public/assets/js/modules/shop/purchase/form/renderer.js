@@ -76,15 +76,15 @@ const Renderer = {
 
 			row.dataset.index = index;
 
-			Dom.text('.product-name', item.name, row);
+			Dom.text('.product-name', item.product_name, row);
 
 			Dom.value('.quantity', item.quantity, row);
 			Dom.value('.purchase-price', item.purchase_price, row);
 			Dom.value('.selling-price', item.selling_price, row);
 
-			Dom.text('.subtotal', Formatter.money(item.subtotal), row);
-			Dom.text('.vat', Formatter.money(item.tax), row);
-			Dom.text('.total', Formatter.money(item.total), row);
+			Dom.text('.subtotal_amount', Formatter.money(item.subtotal_amount), row);
+			Dom.text('.vat_amount', Formatter.money(item.vat_amount), row);
+			Dom.text('.total_amount', Formatter.money(item.total_amount), row);
 
 			tbody.appendChild(fragment);
 		});
@@ -102,11 +102,11 @@ const Renderer = {
 				return;
 			}
 
-			Dom.text('.subtotal', Formatter.money(item.subtotal), row);
+			Dom.text('.subtotal_amount', Formatter.money(item.subtotal_amount), row);
 
-			Dom.text('.vat', Formatter.money(item.tax), row);
+			Dom.text('.vat_amount', Formatter.money(item.vat_amount), row);
 
-			Dom.text('.total', Formatter.money(item.total), row);
+			Dom.text('.total_amount', Formatter.money(item.total_amount), row);
 		});
 
 		this.renderSummary();
@@ -119,13 +119,13 @@ const Renderer = {
 	renderSummary() {
 		const summary = State.summary;
 
-		Dom.text('#subtotal_amount', Formatter.money(summary.subtotal));
+		Dom.text('#subtotal_amount', Formatter.money(summary.subtotal_amount));
 
-		Dom.text('#vat_amount', Formatter.money(summary.tax));
+		Dom.text('#vat_amount', Formatter.money(summary.vat_amount));
 
-		Dom.text('#total_amount', Formatter.money(summary.total));
+		Dom.text('#total_amount', Formatter.money(summary.total_amount));
 
-		Dom.text('#debt_amount', Formatter.money(summary.debt));
+		Dom.text('#debt_amount', Formatter.money(summary.debt_amount));
 	},
 };
 

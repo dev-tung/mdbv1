@@ -33,6 +33,7 @@ class PurchaseRepository extends Repository
 
 	public function create(array $data): int
 	{
+
 		Database::query(
 			'CALL sp_purchase_create(
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?

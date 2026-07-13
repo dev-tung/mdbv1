@@ -23,7 +23,7 @@ const State = {
 	items: [
 		{
 			id: 1,
-			name: 'Yonex Astrox 100ZZ',
+			product_name: 'Yonex Astrox 100ZZ',
 			quantity: 2,
 			purchase_price: 4200000,
 			selling_price: 4900000,
@@ -33,7 +33,7 @@ const State = {
 		},
 		{
 			id: 2,
-			name: 'Lining Axforce 90',
+			product_name: 'Lining Axforce 90',
 			quantity: 3,
 			purchase_price: 3100000,
 			selling_price: 3600000,
@@ -44,10 +44,10 @@ const State = {
 	],
 
 	summary: {
-		subtotal: 17700000,
-		tax: 1416000,
-		total: 19116000,
-		debt: 14116000,
+		subtotal_amount: 17700000,
+		vat_amount: 1416000,
+		total_amount: 19116000,
+		debt_amount: 14116000,
 	},
 
 	setSupplier(supplier) {
@@ -63,15 +63,15 @@ const State = {
 		this.items = data.items;
 	},
 	setSummary() {
-		const subtotal = this.items.reduce((sum, item) => sum + Number(item.subtotal || 0), 0);
+		const subtotal_amount = this.items.reduce((sum, item) => sum + Number(item.subtotal_amount || 0), 0);
 
-		const tax = this.items.reduce((sum, item) => sum + Number(item.tax || 0), 0);
+		const vat_amount = this.items.reduce((sum, item) => sum + Number(item.vat_amount || 0), 0);
 
-		const total = this.items.reduce((sum, item) => sum + Number(item.total || 0), 0);
+		const total_amount = this.items.reduce((sum, item) => sum + Number(item.total_amount || 0), 0);
 
-		const debt = total - Number(this.purchase.paid_amount || 0);
+		const debt_amount = total_amount - Number(this.purchase.paid_amount || 0);
 
-		this.summary = { subtotal, tax, total, debt };
+		this.summary = { subtotal_amount, vat_amount, total_amount, debt_amount };
 	},
 };
 

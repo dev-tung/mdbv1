@@ -95,9 +95,9 @@
     <td>
       <input type="number" class="form-control form-control-sm selling-price">
     </td>
-    <td class="subtotal"></td>
-    <td class="vat"></td>
-    <td class="total"></td>
+    <td class="subtotal_amount"></td>
+    <td class="vat_amount"></td>
+    <td class="total_amount"></td>
     <td>
       <button type="button" class="btn btn-sm btn-outline-danger remove-item"> Xóa </button>
     </td>
