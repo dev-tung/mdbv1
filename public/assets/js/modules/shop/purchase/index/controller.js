@@ -10,6 +10,9 @@ const Controller = {
 	init() {
 		Table.init({
 			body: '#purchase-table-body',
+
+			pagination: true,
+
 			colspan: 10,
 
 			filters: {
@@ -27,6 +30,7 @@ const Controller = {
 
 				'#filter-supplier': {
 					event: 'input',
+
 					handler(value) {
 						State.filters.supplier = value.trim();
 					},
@@ -39,10 +43,20 @@ const Controller = {
 				},
 			},
 
-			async source() {
-				const data = await Service.getList(State.filters);
+			async source({ page, per_page }) {
+				const data = await Service.getList({
+					...State.filters,
+
+					page,
+
+					per_page,
+				});
+
+				console.log(data);
 
 				State.setDefault(data);
+
+				return data;
 			},
 
 			render: Renderer.renderTable,
@@ -58,6 +72,7 @@ const Controller = {
 			try {
 				if (target.classList.contains('status')) {
 					const id = target.dataset.id;
+
 					const status = target.value;
 
 					const response = await Api.updatePurchaseStatus(id, status);
@@ -67,6 +82,7 @@ const Controller = {
 
 				if (target.classList.contains('payment')) {
 					const id = target.dataset.id;
+
 					const payment = target.value;
 
 					const response = await Api.updatePurchasePayment(id, payment);
@@ -74,10 +90,17 @@ const Controller = {
 					alert(response.message);
 				}
 
-				const data = await Service.getList(State.filters);
-				State.setDefault(data);
-				Renderer.renderTable();
+				const data = await Service.getList({
+					...State.filters,
 
+					page: Table.config.page,
+
+					per_page: Table.config.per_page,
+				});
+
+				State.setDefault(data);
+
+				Renderer.render();
 			} catch (error) {
 				alert(error.message);
 			}

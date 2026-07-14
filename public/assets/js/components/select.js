@@ -2,10 +2,7 @@ import Dom from '../helpers/dom.js';
 
 const Select = {
 	render(target, options, selected = null, placeholder = null) {
-		const select =
-			typeof target === 'string'
-				? Dom.find(target)
-				: target;
+		const select = typeof target === 'string' ? Dom.find(target) : target;
 
 		if (!select) {
 			return;

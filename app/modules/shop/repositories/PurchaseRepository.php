@@ -10,9 +10,9 @@ class PurchaseRepository extends Repository
 
 	public function getList(array $filters = []): array
 	{
-		return Database::get(
+		return Database::call(
 			'CALL sp_purchase_list(?, ?, ?, ?, ?, ?)',
-			array_params(['date_from', 'date_to', 'supplier', 'payment', 'page', 'limit'], $filters),
+			array_params(['date_from', 'date_to', 'supplier', 'payment', 'page', 'per_page'], $filters),
 		);
 	}
 
@@ -33,7 +33,6 @@ class PurchaseRepository extends Repository
 
 	public function create(array $data): int
 	{
-
 		Database::query(
 			'CALL sp_purchase_create(
                 ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?

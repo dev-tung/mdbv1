@@ -2,14 +2,32 @@ import Api from './api.js';
 
 const Service = {
 	async getList(filters = {}) {
-		const [purchases] = await Promise.all([
-			Api.getPurchases(filters)
-		]);
+		const response = await Api.getPurchases(filters);
+
+		const purchases = response.data[0] || [];
+
+		const summary = response.data[1]?.[0] || {};
+
+		const page = Number(filters.page || 1);
+
+		const per_page = Number(filters.per_page || 10);
+
+		const total = Number(summary.total || 0);
 
 		return {
-			purchases: purchases.data,
-			summary: purchases.summary,
-			pagination: purchases.pagination,
+			purchases,
+
+			summary,
+
+			pagination: {
+				page,
+
+				per_page,
+
+				total,
+
+				last_page: Math.ceil(total / per_page),
+			},
 		};
 	},
 };

@@ -132,13 +132,13 @@ const Service = {
 		};
 	},
 	removeItem(items, event) {
-			const row = event.target.closest('tr');
+		const row = event.target.closest('tr');
 
-			if (!row) {
-					return items;
-			}
+		if (!row) {
+			return items;
+		}
 
-			return items.filter((_, index) => index !== Number(row.dataset.index));
+		return items.filter((_, index) => index !== Number(row.dataset.index));
 	},
 	payload(purchase = {}, summary = {}, items = []) {
 		return {
@@ -163,7 +163,7 @@ const Service = {
 
 			items: items ?? [],
 		};
-	}
+	},
 };
 
 export default Service;

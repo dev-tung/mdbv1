@@ -80,60 +80,54 @@ const Controller = {
     ================================================= */
 
 	bindPurchase() {
-			Dom.find('#supplier_id').addEventListener('change', (e) => {
-					State.purchase.supplier_id = Number(e.target.value);
-			});
+		Dom.find('#supplier_id').addEventListener('change', (e) => {
+			State.purchase.supplier_id = Number(e.target.value);
+		});
 
-			Dom.find('#warehouse_id').addEventListener('change', (e) => {
-					State.purchase.warehouse_id = Number(e.target.value);
-			});
+		Dom.find('#warehouse_id').addEventListener('change', (e) => {
+			State.purchase.warehouse_id = Number(e.target.value);
+		});
 
-			Dom.find('#status').addEventListener('change', (e) => {
-					State.purchase.status = e.target.value;
-			});
+		Dom.find('#status').addEventListener('change', (e) => {
+			State.purchase.status = e.target.value;
+		});
 
-			Dom.find('#vat_rate').addEventListener('input', (e) => {
-					State.purchase.vat_rate = Number(e.target.value);
+		Dom.find('#vat_rate').addEventListener('input', (e) => {
+			State.purchase.vat_rate = Number(e.target.value);
 
-					State.items = State.items.map(item =>
-							Service.calculateItem(item, State.purchase.vat_rate)
-					);
+			State.items = State.items.map((item) => Service.calculateItem(item, State.purchase.vat_rate));
 
-					State.setSummary();
-					Renderer.renderCaculation();
-			});
+			State.setSummary();
+			Renderer.renderCaculation();
+		});
 
-			Dom.find('#payment').addEventListener('change', (e) => {
-					State.purchase.payment = e.target.value;
+		Dom.find('#payment').addEventListener('change', (e) => {
+			State.purchase.payment = e.target.value;
 
-					switch (State.purchase.payment) {
-							case 'paid':
-									State.purchase.paid_amount = State.summary.grand_total;
-									break;
+			switch (State.purchase.payment) {
+				case 'paid':
+					State.purchase.paid_amount = State.summary.grand_total;
+					break;
 
-							case 'unpaid':
-									State.purchase.paid_amount = 0;
-									break;
-					}
+				case 'unpaid':
+					State.purchase.paid_amount = 0;
+					break;
+			}
 
-					Dom.find('#paid_amount_wrapper').classList.toggle(
-							'd-none',
-							State.purchase.payment !== 'partial'
-					);
+			Dom.find('#paid_amount_wrapper').classList.toggle('d-none', State.purchase.payment !== 'partial');
 
-					this.renderSummary();
-			});
+			this.renderSummary();
+		});
 
-			Dom.find('#paid_amount').addEventListener('input', (e) => {
-					State.purchase.paid_amount = Number(e.target.value);
+		Dom.find('#paid_amount').addEventListener('input', (e) => {
+			State.purchase.paid_amount = Number(e.target.value);
 
-					this.renderSummary();
-			});
+			this.renderSummary();
+		});
 
-			Dom.find('#description').addEventListener('input', (e) => {
-					State.purchase.description = e.target.value;
-			});
-
+		Dom.find('#description').addEventListener('input', (e) => {
+			State.purchase.description = e.target.value;
+		});
 	},
 
 	/* =================================================
@@ -154,12 +148,12 @@ const Controller = {
 		});
 
 		table.addEventListener('click', (event) => {
-				if (event.target.matches('.remove-item')) {
-						State.items = Service.removeItem(State.items, event);
+			if (event.target.matches('.remove-item')) {
+				State.items = Service.removeItem(State.items, event);
 
-						Renderer.renderProducts();
-						this.renderSummary();
-				}
+				Renderer.renderProducts();
+				this.renderSummary();
+			}
 		});
 	},
 
@@ -168,25 +162,21 @@ const Controller = {
     ================================================= */
 
 	bindSubmit() {
-			Dom.find('#purchase-form').addEventListener('submit', async (e) => {
-					e.preventDefault();
+		Dom.find('#purchase-form').addEventListener('submit', async (e) => {
+			e.preventDefault();
 
-					const payload = Service.payload(
-							State.purchase,
-							State.summary,
-							State.items,
-					);
+			const payload = Service.payload(State.purchase, State.summary, State.items);
 
-					console.log(payload);
+			console.log(payload);
 
-					const response = await Api.createPurchase(payload);
+			const response = await Api.createPurchase(payload);
 
-					alert(response.message);
+			alert(response.message);
 
-					if (response.redirect) {
-						window.location.href = response.redirect;
-					}
-			});
+			if (response.redirect) {
+				window.location.href = response.redirect;
+			}
+		});
 	},
 };
 

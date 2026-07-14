@@ -11381,20 +11381,20 @@ fieldset:disabled .btn {
 ================================================= */
 
 @media (min-width: 992px) {
-		.navbar .dropdown-menu {
-				display: none;
-				margin-top: 0;
-		}
+	.navbar .dropdown-menu {
+		display: none;
+		margin-top: 0;
+	}
 
-		.navbar .dropdown:hover > .dropdown-menu {
-				display: block;
-		}
+	.navbar .dropdown:hover > .dropdown-menu {
+		display: block;
+	}
 
-		.navbar .dropdown-toggle::after {
-				transition: transform .2s ease;
-		}
+	.navbar .dropdown-toggle::after {
+		transition: transform 0.2s ease;
+	}
 
-		.navbar .dropdown:hover > .dropdown-toggle::after {
-				transform: rotate(180deg);
-		}
+	.navbar .dropdown:hover > .dropdown-toggle::after {
+		transform: rotate(180deg);
+	}
 }

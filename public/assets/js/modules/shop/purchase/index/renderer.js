@@ -1,4 +1,3 @@
-
 import State from './state.js';
 
 import Dom from '../../../../helpers/dom.js';
@@ -25,19 +24,9 @@ const Renderer = {
     ================================================= */
 
 	renderOptions() {
-		Select.render(
-			'#filter-payment',
-			Option.payment,
-			State.filters.payment,
-			'-- Thanh toán --'
-		);
+		Select.render('#filter-payment', Option.payment, State.filters.payment, '-- Thanh toán --');
 
-		Select.render(
-			'#filter-supplier',
-			State.suppliers,
-			State.filters.supplier_id,
-			'-- Nhà cung cấp --'
-		);
+		Select.render('#filter-supplier', State.suppliers, State.filters.supplier_id, '-- Nhà cung cấp --');
 	},
 
 	/* =================================================
@@ -45,62 +34,39 @@ const Renderer = {
     ================================================= */
 
 	renderTable() {
-		Table.renderBody(
-			State.purchases,
-			(purchase, index) => {
-				const fragment = Dom.template('#purchase-row-template');
+		Table.renderBody(State.purchases, (purchase, index) => {
+			const fragment = Dom.template('#purchase-row-template');
 
-				const row = fragment.querySelector('tr');
+			const row = fragment.querySelector('tr');
 
-				row.dataset.id = purchase.id;
+			row.dataset.id = purchase.id;
 
-				Dom.text('.index', index + 1, row);
+			Dom.text('.index', index + 1, row);
 
-				Dom.text('.supplier-name', purchase.supplier_name, row);
+			Dom.text('.supplier-name', purchase.supplier_name, row);
 
-				Dom.text('.warehouse-name', purchase.warehouse_name, row);
+			Dom.text('.warehouse-name', purchase.warehouse_name, row);
 
-				Dom.text(
-					'.total-amount',
-					Formatter.money(purchase.total_amount),
-					row,
-				);
+			Dom.text('.total-amount', Formatter.money(purchase.total_amount), row);
 
-				Dom.text(
-					'.paid-amount',
-					Formatter.money(purchase.paid_amount),
-					row,
-				);
+			Dom.text('.paid-amount', Formatter.money(purchase.paid_amount), row);
 
-				Dom.text(
-					'.debt-amount',
-					Formatter.money(purchase.debt_amount),
-					row,
-				);
+			Dom.text('.debt-amount', Formatter.money(purchase.debt_amount), row);
 
-				Select.render(
-					row.querySelector('.status'),
-					Option.process,
-					purchase.status
-				);
+			Select.render(row.querySelector('.status'), Option.process, purchase.status);
 
-				Select.render(
-					row.querySelector('.payment'),
-					Option.payment,
-					purchase.payment
-				);
+			Select.render(row.querySelector('.payment'), Option.payment, purchase.payment);
 
-				row.querySelector('.status').dataset.id = purchase.id;
-				row.querySelector('.payment').dataset.id = purchase.id;
+			row.querySelector('.status').dataset.id = purchase.id;
+			row.querySelector('.payment').dataset.id = purchase.id;
 
-				Dom.text('.created-at', purchase.created_at, row);
+			Dom.text('.created-at', purchase.created_at, row);
 
-				row.querySelector('.edit-item').dataset.id = purchase.id;
-				row.querySelector('.delete-item').dataset.id = purchase.id;
+			row.querySelector('.edit-item').dataset.id = purchase.id;
+			row.querySelector('.delete-item').dataset.id = purchase.id;
 
-				return fragment;
-			},
-		);
+			return fragment;
+		});
 	},
 
 	/* =================================================
@@ -108,20 +74,11 @@ const Renderer = {
     ================================================= */
 
 	renderSummary() {
-		Dom.text(
-			'#sum-total-amount',
-			Formatter.money(State.summary.total_amount)
-		);
+		Dom.text('#sum-total-amount', Formatter.money(State.summary.total_amount));
 
-		Dom.text(
-			'#sum-paid-amount',
-			Formatter.money(State.summary.paid_amount)
-		);
+		Dom.text('#sum-paid-amount', Formatter.money(State.summary.paid_amount));
 
-		Dom.text(
-			'#sum-debt-amount',
-			Formatter.money(State.summary.debt_amount)
-		);
+		Dom.text('#sum-debt-amount', Formatter.money(State.summary.debt_amount));
 	},
 };
 
