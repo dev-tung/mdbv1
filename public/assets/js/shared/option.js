@@ -6,22 +6,22 @@ const Option = {
 		},
 		partial: {
 			label: 'Thanh toán một phần',
-			color: 'warning',
+			color: 'danger',
 		},
 		paid: {
 			label: 'Đã thanh toán',
-			color: 'success',
+			color: 'default',
 		},
 	},
 
 	process: {
 		pending: {
 			label: 'Chờ xử lý',
-			color: 'warning',
+			color: 'danger',
 		},
 		completed: {
 			label: 'Đã hoàn thành',
-			color: 'success',
+			color: 'default',
 		},
 	},
 };

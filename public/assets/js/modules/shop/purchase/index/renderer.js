@@ -78,17 +78,20 @@ const Renderer = {
 					row,
 				);
 
-				Dom.text(
-					'.status',
-					Option.process[purchase.status]?.label ?? '',
-					row,
+				Select.render(
+					row.querySelector('.status'),
+					Option.process,
+					purchase.status
 				);
 
-				Dom.text(
-					'.payment',
-					Option.payment[purchase.payment]?.label ?? '',
-					row,
+				Select.render(
+					row.querySelector('.payment'),
+					Option.payment,
+					purchase.payment
 				);
+
+				row.querySelector('.status').dataset.id = purchase.id;
+				row.querySelector('.payment').dataset.id = purchase.id;
 
 				Dom.text('.created-at', purchase.created_at, row);
 

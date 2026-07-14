@@ -1,10 +1,20 @@
 import Dom from '../helpers/dom.js';
 
 const Select = {
-	render(selector, options, selected = null, placeholder = null) {
-		const select = Dom.find(selector);
+	render(target, options, selected = null, placeholder = null) {
+		const select =
+			typeof target === 'string'
+				? Dom.find(target)
+				: target;
+
+		if (!select) {
+			return;
+		}
 
 		select.innerHTML = '';
+
+		// Xóa class màu cũ
+		select.className = select.className.replace(/\btext-\S+\b/g, '');
 
 		if (placeholder) {
 			const option = document.createElement('option');
@@ -25,6 +35,11 @@ const Select = {
 
 			select.append(element);
 		});
+
+		// Thêm màu theo option đang chọn
+		if (options[selected]?.color) {
+			select.classList.add(`text-${options[selected].color}`);
+		}
 	},
 };
 

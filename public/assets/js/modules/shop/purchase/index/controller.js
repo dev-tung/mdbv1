@@ -1,5 +1,5 @@
 import Dom from '../../../../helpers/dom.js';
-
+import Api from './api.js';
 import Table from '../../../../components/table.js';
 
 import State from './state.js';
@@ -26,7 +26,7 @@ const Controller = {
 				},
 
 				'#filter-supplier': {
-					event: 'input', // hoặc keyup
+					event: 'input',
 					handler(value) {
 						State.filters.supplier = value.trim();
 					},
@@ -47,7 +47,42 @@ const Controller = {
 
 			render: Renderer.renderTable,
 		});
-	}
+
+		this.bindEvents();
+	},
+
+	bindEvents() {
+		Dom.find('#purchase-table-body').addEventListener('change', async (e) => {
+			const target = e.target;
+
+			try {
+				if (target.classList.contains('status')) {
+					const id = target.dataset.id;
+					const status = target.value;
+
+					const response = await Api.updatePurchaseStatus(id, status);
+
+					alert(response.message);
+				}
+
+				if (target.classList.contains('payment')) {
+					const id = target.dataset.id;
+					const payment = target.value;
+
+					const response = await Api.updatePurchasePayment(id, payment);
+
+					alert(response.message);
+				}
+
+				const data = await Service.getList(State.filters);
+				State.setDefault(data);
+				Renderer.renderTable();
+
+			} catch (error) {
+				alert(error.message);
+			}
+		});
+	},
 };
 
 export default Controller;

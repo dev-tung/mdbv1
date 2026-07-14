@@ -88,8 +88,15 @@
     <td class="total-amount"></td>
     <td class="paid-amount"></td>
     <td class="debt-amount"></td>
-    <td class="status"></td>
-    <td class="payment"></td>
+
+    <td>
+      <select class="form-select form-select-sm status"></select>
+    </td>
+
+    <td>
+      <select class="form-select form-select-sm payment"></select>
+    </td>
+
     <td class="created-at"></td>
 
     <td>

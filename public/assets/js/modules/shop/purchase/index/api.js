@@ -9,6 +9,20 @@ const Api = {
 		return await Http.get('/api/purchases', params);
 	},
 
+	async updatePurchaseStatus(id, status) {
+		return await Http.post('/api/purchases/status', {
+			id,
+			status,
+		});
+	},
+
+	async updatePurchasePayment(id, payment) {
+		return await Http.post('/api/purchases/payment', {
+			id,
+			payment,
+		});
+	},
+
 	/* =================================================
        SUPPLIER
     ================================================= */
