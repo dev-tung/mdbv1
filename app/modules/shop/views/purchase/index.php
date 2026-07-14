@@ -13,9 +13,12 @@
       </div>
 
       <div class="col-auto">
-        <select id="filter-supplier" class="form-select form-select-sm">
-          <option value="">Nhà cung cấp</option>
-        </select>
+        <input
+          type="text"
+          id="filter-supplier"
+          class="form-control form-control-sm"
+          placeholder="Nhà cung cấp"
+        >
       </div>
 
       <div class="col-auto">

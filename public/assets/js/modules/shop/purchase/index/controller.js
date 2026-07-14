@@ -40,8 +40,8 @@ const Controller = {
 			await Table.load(State.filters);
 		});
 
-		Dom.find('#filter-supplier').addEventListener('change', async (e) => {
-			State.filters.supplier_id = Number(e.target.value) || null;
+		Dom.find('#filter-supplier').addEventListener('input', async (e) => {
+			State.filters.supplier = e.target.value.trim();
 
 			await Table.load(State.filters);
 		});
