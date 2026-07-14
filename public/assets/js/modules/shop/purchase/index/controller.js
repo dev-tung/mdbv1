@@ -28,7 +28,6 @@ const Controller = {
 				'#filter-supplier': {
 					event: 'input', // hoặc keyup
 					handler(value) {
-						console.log(value);
 						State.filters.supplier = value.trim();
 					},
 				},

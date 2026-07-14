@@ -81,16 +81,25 @@
 </div>
 
 <template id="purchase-row-template">
-    <tr>
-        <td class="index"></td>
-        <td class="supplier-name"></td>
-        <td class="warehouse-name"></td>
-        <td class="total-amount text-end"></td>
-        <td class="paid-amount text-end"></td>
-        <td class="debt-amount text-end"></td>
-        <td class="status"></td>
-        <td class="payment"></td>
-        <td class="created-at"></td>
-        <td class="action"></td>
-    </tr>
+  <tr>
+    <td class="index"></td>
+    <td class="supplier-name"></td>
+    <td class="warehouse-name"></td>
+    <td class="total-amount"></td>
+    <td class="paid-amount"></td>
+    <td class="debt-amount"></td>
+    <td class="status"></td>
+    <td class="payment"></td>
+    <td class="created-at"></td>
+
+    <td>
+      <button type="button" class="btn btn-sm btn-outline-secondary edit-item">
+        Sửa
+      </button>
+
+      <button type="button" class="btn btn-sm btn-outline-danger delete-item">
+        Xóa
+      </button>
+    </td>
+  </tr>
 </template>

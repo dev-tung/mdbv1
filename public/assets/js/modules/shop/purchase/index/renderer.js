@@ -1,3 +1,4 @@
+
 import State from './state.js';
 
 import Dom from '../../../../helpers/dom.js';
@@ -90,6 +91,9 @@ const Renderer = {
 				);
 
 				Dom.text('.created-at', purchase.created_at, row);
+
+				row.querySelector('.edit-item').dataset.id = purchase.id;
+				row.querySelector('.delete-item').dataset.id = purchase.id;
 
 				return fragment;
 			},
