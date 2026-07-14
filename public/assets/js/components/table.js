@@ -5,6 +5,8 @@ const Table = {
 		body: '',
 		colspan: 1,
 
+		filters: {},
+
 		source: null,
 		render: null,
 	},
@@ -15,12 +17,34 @@ const Table = {
 			...config,
 		};
 
+		this.bindFilters();
+
 		await this.load();
 	},
 
-	async load(filters) {
+	bindFilters() {
+		Object.entries(this.config.filters).forEach(([selector, option]) => {
+			const element = Dom.find(selector);
+
+			if (!element) {
+				return;
+			}
+
+			const event = option.event || 'change';
+
+			element.addEventListener(event, async (e) => {
+				if (typeof option.handler === 'function') {
+					option.handler(e.target.value, e);
+				}
+
+				await this.load();
+			});
+		});
+	},
+
+	async load() {
 		if (typeof this.config.source === 'function') {
-			await this.config.source(filters);
+			await this.config.source();
 		}
 
 		if (typeof this.config.render === 'function') {

@@ -12,7 +12,7 @@ class PurchaseRepository extends Repository
 	{
 		return Database::get(
 			'CALL sp_purchase_list(?, ?, ?, ?, ?, ?)',
-			array_params(['date_from', 'date_to', 'supplier_id', 'payment', 'page', 'limit'], $filters),
+			array_params(['date_from', 'date_to', 'supplier', 'payment', 'page', 'limit'], $filters),
 		);
 	}
 
