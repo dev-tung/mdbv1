@@ -52,8 +52,6 @@ const Controller = {
 					per_page,
 				});
 
-				console.log(data);
-
 				State.setDefault(data);
 
 				return data;
