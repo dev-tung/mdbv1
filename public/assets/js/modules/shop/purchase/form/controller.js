@@ -9,7 +9,7 @@ import Service from './service.js';
 
 const Controller = {
 	async init() {
-		await this.setDefault();
+		await this.loadDefault();
 
 		Renderer.render();
 
@@ -20,7 +20,7 @@ const Controller = {
 		this.bindSubmit();
 	},
 
-	async setDefault() {
+	async loadDefault() {
 		const id = Dom.find('#purchase_id').value;
 
 		const data = await Service.getDefault(id);

@@ -7,75 +7,50 @@ import Renderer from './renderer.js';
 import Service from './service.js';
 
 const Controller = {
-  
-	async init() {
-		Table.init({
-			body: '#purchase-table-body',
-			pagination: '#purchase-pagination',
-			colspan: 10,
-
-			render: Renderer.renderTable.bind(Renderer),
-
-			onPage: this.changePage.bind(this),
-		});
-
-		await this.load();
-
-		Renderer.render();
+	init() {
+		this.bindTable();
 
 		this.bindFilters();
 	},
 
-	async load(page = 1) {
-		State.filters.page = page;
+	bindTable() {
+		Table.init({
+			body: '#purchase-table-body',
+			colspan: 10,
 
-		const data = await Service.getList(State.filters);
+			async source(filters = State.filters) {
+				const data = await Service.getList(filters);
+				State.setDefault(data);
+			},
 
-		State.setDefault(data);
+			render: Renderer.renderTable,
+		});
 	},
-
-	/* =================================================
-       FILTERS
-    ================================================= */
 
 	bindFilters() {
 		Dom.find('#filter-date-from').addEventListener('change', async (e) => {
 			State.filters.date_from = e.target.value;
 
-			await this.search();
+			await Table.load(State.filters);
 		});
 
 		Dom.find('#filter-date-to').addEventListener('change', async (e) => {
 			State.filters.date_to = e.target.value;
 
-			await this.search();
+			await Table.load(State.filters);
 		});
 
 		Dom.find('#filter-supplier').addEventListener('change', async (e) => {
-			State.filters.supplier_id = Number(e.target.value);
+			State.filters.supplier_id = Number(e.target.value) || null;
 
-			await this.search();
+			await Table.load(State.filters);
 		});
 
 		Dom.find('#filter-payment').addEventListener('change', async (e) => {
 			State.filters.payment = e.target.value;
 
-			await this.search();
+			await Table.load(State.filters);
 		});
-	},
-
-	async search() {
-		State.filters.page = 1;
-
-		await this.load();
-
-		Renderer.render();
-	},
-
-	async changePage(page) {
-		await this.load(page);
-
-		Renderer.render();
 	},
 };
 

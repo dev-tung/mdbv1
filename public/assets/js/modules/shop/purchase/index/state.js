@@ -25,20 +25,20 @@ const State = {
 		total_pages: 1,
 	},
 
-	setSuppliers(suppliers) {
+	setSuppliers(suppliers = []) {
 		return Object.fromEntries(
-			suppliers.data.map((item) => [
-				item.id,
+			suppliers.map(({ id, name }) => [
+				id,
 				{
-					label: item.name,
+					label: name,
 				},
 			]),
 		);
 	},
 
 	setDefault(data) {
-		this.suppliers = this.setSuppliers(data.suppliers);
-		this.purchases = data.purchases;
+		this.suppliers = this.setSuppliers(data.suppliers || []);
+		this.purchases = data.purchases || [];
 
 		this.pagination = {
 			...this.pagination,

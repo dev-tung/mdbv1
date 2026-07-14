@@ -62,40 +62,38 @@ const Renderer = {
 				Dom.text(
 					'.total-amount',
 					Formatter.money(purchase.total_amount),
-					row
+					row,
 				);
 
 				Dom.text(
 					'.paid-amount',
 					Formatter.money(purchase.paid_amount),
-					row
+					row,
 				);
 
 				Dom.text(
 					'.debt-amount',
 					Formatter.money(purchase.debt_amount),
-					row
+					row,
 				);
 
 				Dom.text(
 					'.status',
 					Option.process[purchase.status]?.label ?? '',
-					row
+					row,
 				);
 
 				Dom.text(
 					'.payment',
 					Option.payment[purchase.payment]?.label ?? '',
-					row
+					row,
 				);
 
 				Dom.text('.created-at', purchase.created_at, row);
 
 				return fragment;
-			}
+			},
 		);
-
-		Table.renderPagination(State.pagination);
 	},
 
 	/* =================================================
