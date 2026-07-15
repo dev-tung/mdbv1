@@ -62,7 +62,7 @@ const Renderer = {
 			Select.render(row.querySelector('.payment'), Option.payment, purchase.payment);
 			row.querySelector('.payment').dataset.id = purchase.id;
 
-			// Buttons
+			// Edit & delete
 			['.edit-item', '.delete-item'].forEach((selector) => {
 				row.querySelector(selector).dataset.id = purchase.id;
 			});
