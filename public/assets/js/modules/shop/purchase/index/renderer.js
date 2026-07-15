@@ -54,24 +54,13 @@ const Renderer = {
 				Dom.text(selector, value, row);
 			});
 
-			// Select
-			[
-				{
-					selector: '.status',
-					options: Option.process,
-					value: purchase.status,
-				},
-				{
-					selector: '.payment',
-					options: Option.payment,
-					value: purchase.payment,
-				},
-			].forEach(({ selector, options, value }) => {
-				const select = row.querySelector(selector);
+			// Status
+			Select.render(row.querySelector('.status'), Option.process, purchase.status);
+			row.querySelector('.status').dataset.id = purchase.id;
 
-				Select.render(select, options, value);
-				select.dataset.id = purchase.id;
-			});
+			// Payment
+			Select.render(row.querySelector('.payment'), Option.payment, purchase.payment);
+			row.querySelector('.payment').dataset.id = purchase.id;
 
 			// Buttons
 			['.edit-item', '.delete-item'].forEach((selector) => {
