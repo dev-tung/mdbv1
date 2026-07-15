@@ -25,7 +25,6 @@ const Renderer = {
 
 	renderOptions() {
 		Select.render('#filter-payment', Option.payment, State.filters.payment, '-- Thanh toán --');
-
 		Select.render('#filter-supplier', State.suppliers, State.filters.supplier_id, '-- Nhà cung cấp --');
 	},
 
@@ -36,36 +35,48 @@ const Renderer = {
 	renderTable() {
 		Table.renderBody(State.purchases, (purchase, index) => {
 			const fragment = Dom.template('#purchase-row-template');
-
 			const row = fragment.querySelector('tr');
 
 			row.dataset.id = purchase.id;
 
-			Dom.text('.index', index + 1, row);
+			// Text
+			const texts = {
+				'.index': index + 1,
+				'.supplier-name': purchase.supplier_name,
+				'.warehouse-name': purchase.warehouse_name,
+				'.total-amount': Formatter.money(purchase.total_amount),
+				'.paid-amount': Formatter.money(purchase.paid_amount),
+				'.debt-amount': Formatter.money(purchase.debt_amount),
+				'.created-at': purchase.created_at,
+			};
 
-			Dom.text('.supplier-name', purchase.supplier_name, row);
+			Object.entries(texts).forEach(([selector, value]) => {
+				Dom.text(selector, value, row);
+			});
 
-			Dom.text('.warehouse-name', purchase.warehouse_name, row);
+			// Select
+			[
+				{
+					selector: '.status',
+					options: Option.process,
+					value: purchase.status,
+				},
+				{
+					selector: '.payment',
+					options: Option.payment,
+					value: purchase.payment,
+				},
+			].forEach(({ selector, options, value }) => {
+				const select = row.querySelector(selector);
 
-			Dom.text('.total-amount', Formatter.money(purchase.total_amount), row);
+				Select.render(select, options, value);
+				select.dataset.id = purchase.id;
+			});
 
-			Dom.text('.paid-amount', Formatter.money(purchase.paid_amount), row);
-
-			Dom.text('.debt-amount', Formatter.money(purchase.debt_amount), row);
-
-			Select.render(row.querySelector('.status'), Option.process, purchase.status);
-
-			row.querySelector('.status').dataset.id = purchase.id;
-
-			Select.render(row.querySelector('.payment'), Option.payment, purchase.payment);
-
-			row.querySelector('.payment').dataset.id = purchase.id;
-
-			Dom.text('.created-at', purchase.created_at, row);
-
-			row.querySelector('.edit-item').dataset.id = purchase.id;
-			
-			row.querySelector('.delete-item').dataset.id = purchase.id;
+			// Buttons
+			['.edit-item', '.delete-item'].forEach((selector) => {
+				row.querySelector(selector).dataset.id = purchase.id;
+			});
 
 			return fragment;
 		});

@@ -56,20 +56,32 @@ const Renderer = {
 
 		State.items.forEach((item, index) => {
 			const fragment = Dom.template('#purchase-item-template');
-
 			const row = fragment.querySelector('tr');
 
 			row.dataset.index = index;
 
-			Dom.text('.product-name', item.product_name, row);
+			// Text
+			const texts = {
+				'.product-name': item.product_name,
+				'.subtotal_amount': Formatter.money(item.subtotal_amount),
+				'.vat_amount': Formatter.money(item.vat_amount),
+				'.total_amount': Formatter.money(item.total_amount),
+			};
 
-			Dom.value('.quantity', item.quantity, row);
-			Dom.value('.purchase-price', item.purchase_price, row);
-			Dom.value('.selling-price', item.selling_price, row);
+			Object.entries(texts).forEach(([selector, value]) => {
+				Dom.text(selector, value, row);
+			});
 
-			Dom.text('.subtotal_amount', Formatter.money(item.subtotal_amount), row);
-			Dom.text('.vat_amount', Formatter.money(item.vat_amount), row);
-			Dom.text('.total_amount', Formatter.money(item.total_amount), row);
+			// Input
+			const values = {
+				'.quantity': item.quantity,
+				'.purchase-price': item.purchase_price,
+				'.selling-price': item.selling_price,
+			};
+
+			Object.entries(values).forEach(([selector, value]) => {
+				Dom.value(selector, value, row);
+			});
 
 			tbody.appendChild(fragment);
 		});
