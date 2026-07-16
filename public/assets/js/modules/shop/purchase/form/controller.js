@@ -107,13 +107,16 @@ const Controller = {
 
 			switch (State.purchase.payment) {
 				case 'paid':
-					State.purchase.paid_amount = State.summary.grand_total;
+					State.purchase.paid_amount = State.summary.total_amount;
 					break;
 
 				case 'unpaid':
 					State.purchase.paid_amount = 0;
 					break;
 			}
+
+			State.purchase.debt_amount =
+				State.summary.total_amount - State.purchase.paid_amount;
 
 			Dom.find('#paid_amount_wrapper').classList.toggle(
 				'd-none',
