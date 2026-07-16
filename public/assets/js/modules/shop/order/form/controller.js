@@ -160,8 +160,8 @@ const Controller = {
 			const quantity = Number(e.target.value);
 
 			// Kiểm tra tồn kho
-			if (quantity > item.stock) {
-				alert(`Số lượng tồn chỉ còn ${item.stock}.`);
+			if (quantity > item.quantity) {
+				alert(`Số lượng tồn chỉ còn ${item.quantity}.`);
 
 				e.target.value = item.quantity;
 
