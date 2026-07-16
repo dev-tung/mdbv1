@@ -70,7 +70,6 @@ const Renderer = {
 		Dom.clear('#selected_products');
 
 		State.items.forEach((item, index) => {
-			
 			const fragment = Dom.template('#order-item-template');
 
 			const row = fragment.querySelector('tr');
@@ -81,11 +80,8 @@ const Renderer = {
 
 			const texts = {
 				'.product-name': item.product_name,
-
 				'.subtotal_amount': Formatter.money(item.subtotal_amount),
-
 				'.vat_amount': Formatter.money(item.vat_amount),
-
 				'.total_amount': Formatter.money(item.total_amount),
 			};
 
@@ -97,7 +93,6 @@ const Renderer = {
 
 			const values = {
 				'.quantity': item.quantity,
-
 				'.selling-price': item.selling_price,
 			};
 
@@ -110,7 +105,7 @@ const Renderer = {
 			const gift = row.querySelector('.is-gift');
 
 			if (gift) {
-				gift.checked = Boolean(item.is_gift);
+				gift.checked = Number(item.is_gift) === 1;
 			}
 
 			tbody.appendChild(fragment);
