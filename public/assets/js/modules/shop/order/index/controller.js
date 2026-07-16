@@ -51,7 +51,7 @@ const Controller = {
 				});
 
 				State.setDefault(data);
-
+				Renderer.renderSummary();
 				return data;
 			},
 
