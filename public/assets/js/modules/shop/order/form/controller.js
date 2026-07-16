@@ -152,20 +152,19 @@ const Controller = {
 			return;
 		}
 
-		const changeQuantity = (e) => {
-			const row = e.target.closest('tr');
-			const index = Number(row.dataset.index);
+		const changeItem = (e) => {
+			if (e.target.matches('.quantity')) {
+				const row = e.target.closest('tr');
+				const item = State.items[Number(row.dataset.index)];
+				const quantity = Number(e.target.value);
 
-			const item = State.items[index];
-			const quantity = Number(e.target.value);
+				if (quantity > item.quantity) {
+					alert(`Số lượng tồn chỉ còn ${item.quantity}.`);
 
-			// Kiểm tra tồn kho
-			if (quantity > item.quantity) {
-				alert(`Số lượng tồn chỉ còn ${item.quantity}.`);
+					e.target.value = item.quantity;
 
-				e.target.value = item.quantity;
-
-				return;
+					return;
+				}
 			}
 
 			State.items = Service.changeItem(
@@ -180,7 +179,10 @@ const Controller = {
 		};
 
 		const changeGift = (e) => {
-			State.items = Service.changeGift(State.items, e);
+			State.items = Service.changeGift(
+				State.items,
+				e,
+			);
 
 			Renderer.renderCaculation();
 
@@ -188,7 +190,10 @@ const Controller = {
 		};
 
 		const removeItem = (e) => {
-			State.items = Service.removeItem(State.items, e);
+			State.items = Service.removeItem(
+				State.items,
+				e,
+			);
 
 			Renderer.renderProducts();
 
@@ -196,26 +201,32 @@ const Controller = {
 		};
 
 		table.addEventListener('input', (e) => {
-			if (e.target.matches('.quantity')) {
-				changeQuantity(e);
-			}
-		});
-
-		table.addEventListener('change', (e) => {
-			if (e.target.matches('.quantity')) {
-				changeQuantity(e);
+			if (!e.target.matches('.quantity, .selling-price')) {
 				return;
 			}
 
-			if (e.target.matches('.is-gift')) {
-				changeGift(e);
+			changeItem(e);
+		});
+
+		table.addEventListener('change', (e) => {
+			if (e.target.matches('.quantity, .selling-price')) {
+				changeItem(e);
+				return;
 			}
+
+			if (!e.target.matches('.is-gift')) {
+				return;
+			}
+
+			changeGift(e);
 		});
 
 		table.addEventListener('click', (e) => {
-			if (e.target.matches('.remove-item')) {
-				removeItem(e);
+			if (!e.target.matches('.remove-item')) {
+				return;
 			}
+
+			removeItem(e);
 		});
 	},
 
