@@ -107,7 +107,7 @@ FROM
 /* =====================================
 CREATE INVENTORY
 ===================================== */
-IF p_status = 'received' THEN
+IF p_status = 'completed' THEN
 INSERT INTO
 	inventories (
 		purchase_id,

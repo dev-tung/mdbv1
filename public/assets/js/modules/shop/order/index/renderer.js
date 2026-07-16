@@ -10,8 +10,8 @@ import Table from '../../../../components/table.js';
 
 const Renderer = {
 	/* =================================================
-       PUBLIC
-    ================================================= */
+	   PUBLIC
+	================================================= */
 
 	render() {
 		this.renderOptions();
@@ -20,8 +20,8 @@ const Renderer = {
 	},
 
 	/* =================================================
-       OPTIONS
-    ================================================= */
+	   OPTIONS
+	================================================= */
 
 	renderOptions() {
 		Select.render(
@@ -30,35 +30,27 @@ const Renderer = {
 			State.filters.payment,
 			'-- Thanh toán --',
 		);
-
-		Select.render(
-			'#filter-supplier',
-			State.suppliers,
-			State.filters.supplier_id,
-			'-- Nhà cung cấp --',
-		);
 	},
 
 	/* =================================================
-       TABLE
-    ================================================= */
+	   TABLE
+	================================================= */
 
 	renderTable() {
-		Table.renderBody(State.purchases, (purchase, index) => {
-			const fragment = Dom.template('#purchase-row-template');
+		Table.renderBody(State.orders, (order, index) => {
+			const fragment = Dom.template('#order-row-template');
 			const row = fragment.querySelector('tr');
 
-			row.dataset.id = purchase.id;
+			row.dataset.id = order.id;
 
 			// Text
 			const texts = {
 				'.index': index + 1,
-				'.supplier-name': purchase.supplier_name,
-				'.warehouse-name': purchase.warehouse_name,
-				'.total-amount': Formatter.money(purchase.total_amount),
-				'.paid-amount': Formatter.money(purchase.paid_amount),
-				'.debt-amount': Formatter.money(purchase.debt_amount),
-				'.created-at': purchase.created_at,
+				'.customer-name': order.customer_name,
+				'.total-amount': Formatter.money(order.total_amount),
+				'.paid-amount': Formatter.money(order.paid_amount),
+				'.debt-amount': Formatter.money(order.debt_amount),
+				'.created-at': order.created_at,
 			};
 
 			Object.entries(texts).forEach(([selector, value]) => {
@@ -69,32 +61,35 @@ const Renderer = {
 			Select.render(
 				row.querySelector('.status'),
 				Option.process,
-				purchase.status,
+				order.status,
 			);
-			row.querySelector('.status').dataset.id = purchase.id;
+
+			row.querySelector('.status').dataset.id = order.id;
 
 			// Payment
 			Select.render(
 				row.querySelector('.payment'),
 				Option.payment,
-				purchase.payment,
+				order.payment,
 			);
-			row.querySelector('.payment').dataset.id = purchase.id;
+
+			row.querySelector('.payment').dataset.id = order.id;
 
 			// Edit
-			const edit = row.querySelector('.edit-item');
-			edit.href = `/admin/purchases/edit/${purchase.id}`;
+			row.querySelector(
+				'.edit-item',
+			).href = `/admin/orders/edit/${order.id}`;
 
 			// Delete
-			row.querySelector('.delete-item').dataset.id = purchase.id;
+			row.querySelector('.delete-item').dataset.id = order.id;
 
 			return fragment;
 		});
 	},
 
 	/* =================================================
-       SUMMARY
-    ================================================= */
+	   SUMMARY
+	================================================= */
 
 	renderSummary() {
 		Dom.text(

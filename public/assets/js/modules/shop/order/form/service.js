@@ -43,11 +43,11 @@ const Service = {
 		// Sản phẩm mới
 
 		const item = {
-			product_id: product.id,
+			product_id: product.product_id,
 
-			code: product.code,
+			purchase_id : product.purchase_id,
 
-			product_name: product.name,
+			product_name: product.product_name,
 
 			quantity: 1,
 

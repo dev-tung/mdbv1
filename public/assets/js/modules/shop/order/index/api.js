@@ -2,39 +2,29 @@ import Http from '/assets/js/helpers/http.js';
 
 const Api = {
 	/* =================================================
-       PURCHASE
-    ================================================= */
+	   ORDER
+	================================================= */
 
-	async getPurchases(params = {}) {
-		return await Http.get('/api/purchases', params);
+	async getOrders(params = {}) {
+		return await Http.get('/api/orders', params);
 	},
 
-	async updatePurchaseStatus(id, status) {
-		return await Http.post('/api/purchases/status', {
+	async updateOrderStatus(id, status) {
+		return await Http.post('/api/orders/status', {
 			id,
 			status,
 		});
 	},
 
-	async updatePurchasePayment(id, payment) {
-		return await Http.post('/api/purchases/payment', {
+	async updateOrderPayment(id, payment) {
+		return await Http.post('/api/orders/payment', {
 			id,
 			payment,
 		});
 	},
 
-	async deletePurchase(id) {
-		return await Http.post(`/api/purchases/delete/${id}`);
-	},
-
-	/* =================================================
-       SUPPLIER
-    ================================================= */
-
-	async getSuppliers(keyword = '') {
-		return await Http.get('/api/suppliers', {
-			keyword,
-		});
+	async deleteOrder(id) {
+		return await Http.post(`/api/orders/delete/${id}`);
 	},
 };
 

@@ -2,13 +2,11 @@ const State = {
 	filters: {
 		date_from: '',
 		date_to: '',
-		supplier_id: '',
+		customer: '',
 		payment: '',
 	},
 
-	suppliers: {},
-
-	purchases: [],
+	orders: [],
 
 	summary: {
 		total_amount: 0,
@@ -23,20 +21,8 @@ const State = {
 		total_pages: 1,
 	},
 
-	setSuppliers(suppliers = []) {
-		return Object.fromEntries(
-			suppliers.map(({ id, name }) => [
-				id,
-				{
-					label: name,
-				},
-			]),
-		);
-	},
-
 	setDefault(data) {
-		this.suppliers = this.setSuppliers(data.suppliers || []);
-		this.purchases = data.purchases || [];
+		this.orders = data.orders || [];
 
 		this.pagination = {
 			...this.pagination,
@@ -47,18 +33,18 @@ const State = {
 	},
 
 	setSummary() {
-		const total_amount = this.purchases.reduce(
-			(sum, purchase) => sum + Number(purchase.total_amount || 0),
+		const total_amount = this.orders.reduce(
+			(sum, order) => sum + Number(order.total_amount || 0),
 			0,
 		);
 
-		const paid_amount = this.purchases.reduce(
-			(sum, purchase) => sum + Number(purchase.paid_amount || 0),
+		const paid_amount = this.orders.reduce(
+			(sum, order) => sum + Number(order.paid_amount || 0),
 			0,
 		);
 
-		const debt_amount = this.purchases.reduce(
-			(sum, purchase) => sum + Number(purchase.debt_amount || 0),
+		const debt_amount = this.orders.reduce(
+			(sum, order) => sum + Number(order.debt_amount || 0),
 			0,
 		);
 

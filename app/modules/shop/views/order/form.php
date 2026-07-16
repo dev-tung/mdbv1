@@ -249,7 +249,7 @@
 
 
     <!-- Gift -->
-    <td class="text-center">
+    <td class="text-start">
 
       <input
         type="checkbox"

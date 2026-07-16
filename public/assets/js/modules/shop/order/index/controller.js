@@ -9,11 +9,11 @@ import Service from './service.js';
 const Controller = {
 	init() {
 		Table.init({
-			body: '#purchase-table-body',
+			body: '#order-table-body',
 
 			pagination: true,
 
-			colspan: 10,
+			colspan: 9,
 
 			filters: {
 				'#filter-date-from': {
@@ -28,11 +28,11 @@ const Controller = {
 					},
 				},
 
-				'#filter-supplier': {
+				'#filter-customer': {
 					event: 'input',
 
 					handler(value) {
-						State.filters.supplier = value.trim();
+						State.filters.customer = value.trim();
 					},
 				},
 
@@ -46,9 +46,7 @@ const Controller = {
 			async source({ page, per_page }) {
 				const data = await Service.getList({
 					...State.filters,
-
 					page,
-
 					per_page,
 				});
 
@@ -64,14 +62,14 @@ const Controller = {
 	},
 
 	bindEvents() {
-		const table = Dom.find('#purchase-table-body');
+		const table = Dom.find('#order-table-body');
 
 		table.addEventListener('change', async (e) => {
 			const target = e.target;
 
 			try {
 				if (target.classList.contains('status')) {
-					const response = await Api.updatePurchaseStatus(
+					const response = await Api.updateOrderStatus(
 						target.dataset.id,
 						target.value,
 					);
@@ -80,7 +78,7 @@ const Controller = {
 				}
 
 				if (target.classList.contains('payment')) {
-					const response = await Api.updatePurchasePayment(
+					const response = await Api.updateOrderPayment(
 						target.dataset.id,
 						target.value,
 					);
@@ -109,12 +107,12 @@ const Controller = {
 				return;
 			}
 
-			if (!confirm('Bạn có chắc chắn muốn xóa phiếu nhập này?')) {
+			if (!confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
 				return;
 			}
 
 			try {
-				const response = await Api.deletePurchase(button.dataset.id);
+				const response = await Api.deleteOrder(button.dataset.id);
 
 				alert(response.message);
 

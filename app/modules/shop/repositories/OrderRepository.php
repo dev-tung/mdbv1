@@ -11,15 +11,14 @@ class OrderRepository extends Repository
 	public function getList(array $filters = []): array
 	{
 		return Database::call(
-			'CALL sp_order_list(?, ?, ?, ?, ?, ?)',
+			'CALL sp_order_list(?, ?, ?, ?, ?)',
 			array_params(
 				[
 					'date_from',
 					'date_to',
 					'customer',
 					'payment',
-					'page',
-					'per_page',
+					'status',
 				],
 				$filters,
 			),
