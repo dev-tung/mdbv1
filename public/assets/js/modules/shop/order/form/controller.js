@@ -185,9 +185,9 @@ const Controller = {
 			);
 
 			State.order.paid_amount = 0;
-
+			
+			this.renderOrder();
 			Renderer.renderCaculation();
-
 			this.renderSummary();
 		};
 
