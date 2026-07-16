@@ -22,7 +22,6 @@ const Controller = {
 
 	async loadDefault() {
 		const order_id = Dom.find('#order_id').value;
-
 		const data = await Service.getDefault(order_id);
 
 		State.setDefault(data);

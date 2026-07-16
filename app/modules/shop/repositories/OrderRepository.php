@@ -83,25 +83,27 @@ class OrderRepository extends Repository
 				?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 			)',
 			[
-				$data['id'],
+					$data['id'],
 
-				$data['customer_id'],
+					$data['customer_id'],
 
-				$data['description'],
-				$data['note'],
+					$data['description'],
+					$data['note'],
 
-				$data['status'],
-				$data['payment'],
+					$data['status'],
+					$data['payment'],
 
-				$data['subtotal_amount'],
-				$data['vat_rate'],
-				$data['vat_amount'],
-				$data['total_amount'],
+					$data['subtotal_amount'],
 
-				$data['paid_amount'],
-				$data['debt_amount'],
+					$data['vat_rate'],
+					$data['vat_amount'],
 
-				json_encode($data['items']),
+					$data['total_amount'],
+
+					$data['paid_amount'],
+					$data['debt_amount'],
+
+					json_encode($data['items']),
 			],
 		);
 	}
