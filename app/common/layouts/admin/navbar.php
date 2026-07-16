@@ -129,15 +129,27 @@
                 <!-- ========================= -->
                 <!-- BÁO CÁO -->
                 <!-- ========================= -->
-                <li class="nav-item">
-                    <a class="nav-link <?= active_menu(
-                    	'/admin/reports/revenue',
-                    ) ?>"
-                        href="<?= route('/admin/reports/revenue') ?>">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= active_menu(
+                    	'/admin/reports',
+                    ) ?:
+                    	active_menu('/admin/reports/revenue') ?>"
+                        href="#"
+                        data-bs-toggle="dropdown">
 
-                        Báo cáo doanh thu
+                        Báo cáo
                     </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="<?= route(
+                        	'/admin/reports/revenue',
+                        ) ?>">Doanh thu</a></li>
+                        <li><a class="dropdown-item" href="<?= route(
+                        	'/admin/reports/inventory',
+                        ) ?>">Tồn kho</a></li>
+                    </ul>
                 </li>
+
 
             </ul>
 
