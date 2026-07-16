@@ -152,22 +152,20 @@ const Controller = {
 			return;
 		}
 
-		const updateItem = (e) => {
-			if (e.target.matches('.quantity')) {
-				const row = e.target.closest('tr');
-				const index = Number(row.dataset.index);
+		const changeQuantity = (e) => {
+			const row = e.target.closest('tr');
+			const index = Number(row.dataset.index);
 
-				const item = State.items[index];
+			const item = State.items[index];
+			const quantity = Number(e.target.value);
 
-				const quantity = Number(e.target.value);
+			// Kiểm tra tồn kho
+			if (quantity > item.stock) {
+				alert(`Số lượng tồn chỉ còn ${item.stock}.`);
 
-				if (quantity > Number(item.quantity)) {
-					alert(`Số lượng tồn chỉ còn ${item.quantity}.`);
+				e.target.value = item.quantity;
 
-					e.target.value = item.quantity;
-
-					return;
-				}
+				return;
 			}
 
 			State.items = Service.changeItem(
@@ -181,39 +179,48 @@ const Controller = {
 			this.renderSummary();
 		};
 
-		// INPUT
-		table.addEventListener('input', updateItem);
+		const changeGift = (e) => {
+			State.items = Service.changeGift(
+				State.items,
+				e,
+			);
 
-		// CHANGE
+			Renderer.renderCaculation();
+
+			this.renderSummary();
+		};
+
+		const removeItem = (e) => {
+			State.items = Service.removeItem(
+				State.items,
+				e,
+			);
+
+			Renderer.renderProducts();
+
+			this.renderSummary();
+		};
+
+		table.addEventListener('input', (e) => {
+			if (e.target.matches('.quantity')) {
+				changeQuantity(e);
+			}
+		});
+
 		table.addEventListener('change', (e) => {
 			if (e.target.matches('.quantity')) {
-				updateItem(e);
+				changeQuantity(e);
 				return;
 			}
 
 			if (e.target.matches('.is-gift')) {
-				State.items = Service.changeGift(
-					State.items,
-					e,
-				);
-
-				Renderer.renderCaculation();
-				
-				this.renderSummary();
+				changeGift(e);
 			}
 		});
 
-		// REMOVE
 		table.addEventListener('click', (e) => {
 			if (e.target.matches('.remove-item')) {
-				State.items = Service.removeItem(
-					State.items,
-					e,
-				);
-
-				Renderer.renderProducts();
-
-				this.renderSummary();
+				removeItem(e);
 			}
 		});
 	},
