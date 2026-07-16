@@ -5,35 +5,30 @@ class OrderRepository extends Repository
 	protected string $table = 'orders';
 
 	/* =================================================
-       LIST
-    ================================================= */
+	   LIST
+	================================================= */
 
 	public function getList(array $filters = []): array
 	{
-		$sql = '
-            CALL sp_order_list(
-                :date_from,
-                :date_to,
-                :customer,
-                :payment,
-                :status
-            )
-        ';
-
-		$params = [
-			'date_from' => $filters['date_from'] ?: null,
-			'date_to' => $filters['date_to'] ?: null,
-			'customer' => $filters['customer'] ?: null,
-			'payment' => $filters['payment'] ?: null,
-			'status' => $filters['status'] ?: null,
-		];
-
-		return Database::get($sql, $params);
+		return Database::call(
+			'CALL sp_order_list(?, ?, ?, ?, ?, ?)',
+			array_params(
+				[
+					'date_from',
+					'date_to',
+					'customer',
+					'payment',
+					'page',
+					'per_page',
+				],
+				$filters,
+			),
+		);
 	}
 
 	/* =================================================
-       SHOW
-    ================================================= */
+	   SHOW
+	================================================= */
 
 	public function show(int $id): array
 	{
@@ -43,51 +38,35 @@ class OrderRepository extends Repository
 	}
 
 	/* =================================================
-    CREATE
-    ================================================= */
+	   CREATE
+	================================================= */
 
 	public function create(array $data): int
 	{
 		Database::query(
 			'CALL sp_order_create(
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-            )',
+				?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+			)',
 			[
-				// CUSTOMER
-				$data['customer_id'] ?? null,
+				$data['customer_id'],
 
-				// DESCRIPTION
-				$data['description'] ?? null,
+				$data['description'],
+				$data['note'],
 
-				// NOTE
-				$data['note'] ?? null,
+				$data['status'],
+				$data['payment'],
 
-				// STATUS
-				$data['status'] ?? 'draft',
+				$data['subtotal_amount'],
+				$data['vat_rate'],
+				$data['vat_amount'],
+				$data['total_amount'],
 
-				// PAYMENT
-				$data['payment'] ?? 'unpaid',
+				$data['paid_amount'],
+				$data['debt_amount'],
 
-				// AMOUNTS
-				$data['subtotal_amount'] ?? 0,
-
-				$data['discount_amount'] ?? 0,
-
-				$data['vat_rate'] ?? 0,
-
-				$data['vat_amount'] ?? 0,
-
-				$data['total_amount'] ?? 0,
-
-				$data['paid_amount'] ?? 0,
-
-				$data['debt_amount'] ?? 0,
-
-				// CREATED BY
 				$data['created_by'],
 
-				// ITEMS
-				json_encode($data['items'] ?? [], JSON_UNESCAPED_UNICODE),
+				json_encode($data['items']),
 			],
 		);
 
@@ -95,64 +74,79 @@ class OrderRepository extends Repository
 	}
 
 	/* =================================================
-    UPDATE
-    ================================================= */
+	   UPDATE
+	================================================= */
 
 	public function update(array $data): void
 	{
 		Database::query(
 			'CALL sp_order_update(
-                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-            )',
+				?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+			)',
 			[
-				// ID
 				$data['id'],
 
-				// CUSTOMER
-				$data['customer_id'] ?? null,
+				$data['customer_id'],
 
-				// INFO
-				$data['description'] ?? null,
+				$data['description'],
+				$data['note'],
 
-				$data['note'] ?? null,
+				$data['status'],
+				$data['payment'],
 
-				// STATUS
-				$data['status'] ?? 'draft',
+				$data['subtotal_amount'],
+				$data['vat_rate'],
+				$data['vat_amount'],
+				$data['total_amount'],
 
-				$data['payment'] ?? 'unpaid',
+				$data['paid_amount'],
+				$data['debt_amount'],
 
-				// AMOUNT
-				$data['subtotal_amount'] ?? 0,
-
-				$data['discount_amount'] ?? 0,
-
-				$data['vat_rate'] ?? 0,
-
-				$data['vat_amount'] ?? 0,
-
-				$data['total_amount'] ?? 0,
-
-				$data['paid_amount'] ?? 0,
-
-				$data['debt_amount'] ?? 0,
-
-				// ITEMS
-				json_encode($data['items'] ?? [], JSON_UNESCAPED_UNICODE),
+				json_encode($data['items']),
 			],
 		);
 	}
 
 	/* =================================================
-       PAYMENT
-    ================================================= */
+	   STATUS
+	================================================= */
+
+	public function status(int $id, string $status): int
+	{
+		try {
+			$result = Database::first(
+				'CALL sp_order_status(
+						:id,
+						:status
+					)',
+				[
+					'id' => $id,
+
+					'status' => $status,
+				],
+			);
+		} catch (PDOException $e) {
+			throw new Exception(
+				$e->errorInfo[2] ?? $e->getMessage(),
+
+				(int) ($e->errorInfo[1] ?? 0),
+			);
+		}
+
+		return (int) ($result['affected_rows'] ?? 0);
+	}
+
+	/* =================================================
+	   PAYMENT
+	================================================= */
 
 	public function payment(int $id, string $payment): int
 	{
 		$result = Database::first(
 			'CALL sp_order_payment(
-                :id,
-                :payment
-            )',
+					:id,
+					:payment
+				)',
 			[
 				'id' => $id,
 
@@ -164,8 +158,8 @@ class OrderRepository extends Repository
 	}
 
 	/* =================================================
-       DELETE
-    ================================================= */
+	   DELETE
+	================================================= */
 
 	public function delete(int $id): void
 	{

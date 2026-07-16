@@ -21,9 +21,7 @@ class OrderEndpoint
 
 		return Response::json([
 			'success' => true,
-
 			'message' => 'Lấy danh sách đơn hàng thành công',
-
 			'data' => $result,
 		]);
 	}
@@ -41,18 +39,14 @@ class OrderEndpoint
 		if (!$data) {
 			return Response::json([
 				'success' => false,
-
 				'message' => 'Không tìm thấy đơn hàng',
-
 				'data' => null,
 			]);
 		}
 
 		return Response::json([
 			'success' => true,
-
 			'message' => 'Lấy chi tiết đơn hàng thành công',
-
 			'data' => $data,
 		]);
 	}
@@ -80,13 +74,10 @@ class OrderEndpoint
 
 		return Response::json([
 			'success' => true,
-
 			'message' => 'Tạo đơn hàng thành công',
-
 			'data' => [
 				'id' => $id,
 			],
-
 			'redirect' => '/admin/orders',
 		]);
 	}
@@ -104,7 +95,6 @@ class OrderEndpoint
 		if ($error) {
 			return Response::json([
 				'success' => false,
-
 				'message' => $error,
 			]);
 		}
@@ -115,9 +105,7 @@ class OrderEndpoint
 
 		return Response::json([
 			'success' => true,
-
 			'message' => 'Cập nhật đơn hàng thành công',
-
 			'redirect' => '/admin/orders',
 		]);
 	}
@@ -134,7 +122,6 @@ class OrderEndpoint
 
 		return Response::json([
 			'success' => true,
-
 			'message' => 'Xoá đơn hàng thành công',
 		]);
 	}
@@ -145,29 +132,37 @@ class OrderEndpoint
 
 	public function apiStatus()
 	{
-		$input = request_all();
+		try {
+			$input = request_all();
 
-		if (empty($input['id']) || !isset($input['status'])) {
+			if (empty($input['id']) || !isset($input['status'])) {
+				return Response::json([
+					'success' => false,
+					'message' => 'Thiếu dữ liệu trạng thái',
+				]);
+			}
+
+			$updated = $this->orderRepository->status(
+				(int) $input['id'],
+				$input['status'],
+			);
+
 			return Response::json([
-				'success' => false,
-
-				'message' => 'Thiếu dữ liệu trạng thái',
+				'success' => true,
+				'message' => 'Cập nhật trạng thái thành công',
+				'data' => [
+					'affected_rows' => $updated,
+				],
 			]);
+		} catch (Throwable $e) {
+			return Response::json(
+				[
+					'success' => false,
+					'message' => $e->getMessage(),
+				],
+				400,
+			);
 		}
-
-		$updated = $this->orderRepository->updateById((int) $input['id'], [
-			'status' => $input['status'],
-		]);
-
-		return Response::json([
-			'success' => true,
-
-			'message' => 'Cập nhật trạng thái thành công',
-
-			'data' => [
-				'affected_rows' => $updated,
-			],
-		]);
 	}
 
 	// =========================
@@ -181,7 +176,6 @@ class OrderEndpoint
 		if (empty($input['id']) || !isset($input['payment'])) {
 			return Response::json([
 				'success' => false,
-
 				'message' => 'Thiếu dữ liệu thanh toán',
 			]);
 		}
@@ -193,9 +187,7 @@ class OrderEndpoint
 
 		return Response::json([
 			'success' => true,
-
 			'message' => 'Cập nhật thanh toán thành công',
-
 			'data' => [
 				'affected_rows' => $updated,
 			],

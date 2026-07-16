@@ -7,7 +7,9 @@ class OrderValidator
 	 */
 	public static function create(array $data): ?string
 	{
-		if (empty($data['customer_id'])) {
+		// customer_id
+
+		if (empty($data['customer_id']) || (int) $data['customer_id'] <= 0) {
 			return 'Khách hàng không hợp lệ';
 		}
 
@@ -48,6 +50,15 @@ class OrderValidator
 			) {
 				return 'Giá bán sản phẩm không hợp lệ';
 			}
+
+			// is_gift
+
+			if (
+				isset($product['is_gift']) &&
+				!in_array($product['is_gift'], [0, 1], true)
+			) {
+				return 'Trạng thái quà tặng không hợp lệ';
+			}
 		}
 
 		return null;
@@ -64,7 +75,7 @@ class OrderValidator
 			return 'ID không hợp lệ';
 		}
 
-		// customer
+		// customer_id
 
 		if (!empty($data['customer_id']) && (int) $data['customer_id'] <= 0) {
 			return 'Khách hàng không hợp lệ';

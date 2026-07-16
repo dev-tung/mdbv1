@@ -10,8 +10,7 @@ SELECT
 	i.selling_price,
 	i.vat_rate,
 	i.vat_amount,
-	i.total_amount,
-	i.total_amount_with_vat
+	i.total_amount
 FROM
 	inventories i
 	INNER JOIN purchases pu ON pu.id = i.purchase_id

@@ -7,7 +7,6 @@ CREATE PROCEDURE sp_order_create (
 	IN p_status VARCHAR(20),
 	IN p_payment VARCHAR(20),
 	IN p_subtotal_amount DECIMAL(15, 2),
-	IN p_discount_amount DECIMAL(15, 2),
 	IN p_vat_rate DECIMAL(5, 2),
 	IN p_vat_amount DECIMAL(15, 2),
 	IN p_total_amount DECIMAL(15, 2),
@@ -36,7 +35,6 @@ INSERT INTO
 		status,
 		payment,
 		subtotal_amount,
-		discount_amount,
 		vat_rate,
 		vat_amount,
 		total_amount,
@@ -52,7 +50,6 @@ VALUES
 		p_status,
 		p_payment,
 		p_subtotal_amount,
-		p_discount_amount,
 		p_vat_rate,
 		p_vat_amount,
 		p_total_amount,
@@ -70,69 +67,43 @@ CREATE ORDER ITEMS
 INSERT INTO
 	order_items (
 		order_id,
-		purchase_id,
 		product_id,
 		product_name,
 		quantity,
-		purchase_price,
 		selling_price,
 		subtotal_amount,
-		discount_amount,
-		is_gift,
-		vat_rate,
 		vat_amount,
-		total_amount
+		total_amount,
+		is_gift
 	)
 SELECT
 	v_order_id,
-	purchase_id,
 	product_id,
 	product_name,
 	quantity,
-	purchase_price,
 	selling_price,
 	subtotal_amount,
-	discount_amount,
-	is_gift,
-	vat_rate,
 	vat_amount,
-	total_amount
+	total_amount,
+	is_gift
 FROM
 	JSON_TABLE (
 		p_items,
 		'$[*]' COLUMNS (
-			purchase_id INT PATH '$.purchase_id',
 			product_id INT PATH '$.product_id',
 			product_name VARCHAR(255) PATH '$.product_name',
 			quantity INT PATH '$.quantity',
-			purchase_price DECIMAL(15, 2) PATH '$.purchase_price',
 			selling_price DECIMAL(15, 2) PATH '$.selling_price',
 			subtotal_amount DECIMAL(15, 2) PATH '$.subtotal_amount',
-			discount_amount DECIMAL(15, 2) PATH '$.discount_amount',
-			is_gift TINYINT PATH '$.is_gift',
-			vat_rate DECIMAL(5, 2) PATH '$.vat_rate',
 			vat_amount DECIMAL(15, 2) PATH '$.vat_amount',
-			total_amount DECIMAL(15, 2) PATH '$.total_amount'
+			total_amount DECIMAL(15, 2) PATH '$.total_amount',
+			is_gift INT PATH '$.is_gift'
 		)
 	) jt;
 
-/* =====================================
-UPDATE INVENTORY
-TRỪ TỒN KHO
-===================================== */
-UPDATE inventories i
-INNER JOIN JSON_TABLE (
-	p_items,
-	'$[*]' COLUMNS (
-		purchase_id INT PATH '$.purchase_id',
-		product_id INT PATH '$.product_id',
-		quantity INT PATH '$.quantity'
-	)
-) jt ON i.purchase_id = jt.purchase_id
-AND i.product_id = jt.product_id
-SET
-	i.quantity = i.quantity - jt.quantity;
-
 COMMIT;
+
+SELECT
+	v_order_id AS id;
 
 END;

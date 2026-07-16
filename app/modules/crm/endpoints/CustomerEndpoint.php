@@ -2,7 +2,7 @@
 
 class CustomerEndpoint
 {
-	protected CustomerRepository $customerRepository;
+	private CustomerRepository $customerRepository;
 
 	public function __construct()
 	{
@@ -12,156 +12,127 @@ class CustomerEndpoint
 	// =========================
 	// LIST
 	// =========================
+
 	public function apiList()
 	{
-		$page = max(1, (int) ($_GET['page'] ?? 1));
-		$limit = Config::get('pagination', 'default_per_page');
+		$filters = request_all();
 
-		$filters = request_filters(['keyword', 'group_id']);
-
-		$data = $this->customerRepository->getList(
-			$filters,
-			$limit,
-			($page - 1) * $limit,
-		);
-
-		$total = $this->customerRepository->count($filters);
+		$result = $this->customerRepository->getList($filters);
 
 		return Response::json([
 			'success' => true,
-			'data' => $data,
-			'meta' => [
-				'page' => $page,
-				'total' => $total,
-				'totalPages' => ceil($total / $limit),
-				'perPage' => $limit,
-			],
+
+			'message' => 'Lấy danh sách khách hàng thành công',
+
+			'data' => $result,
 		]);
 	}
 
 	// =========================
 	// SHOW
 	// =========================
-	public function apiShow($id)
+
+	public function apiShow()
 	{
-		$id = (int) $id;
+		$id = request_id();
 
-		if ($id <= 0) {
+		$data = $this->customerRepository->findById($id);
+
+		if (!$data) {
 			return Response::json([
 				'success' => false,
-				'message' => 'ID không hợp lệ',
-			]);
-		}
 
-		$customer = $this->customerRepository->findById($id);
-
-		if (!$customer) {
-			return Response::json([
-				'success' => false,
 				'message' => 'Không tìm thấy khách hàng',
+
+				'data' => null,
 			]);
 		}
 
 		return Response::json([
 			'success' => true,
-			'data' => $customer,
+
+			'message' => 'Lấy thông tin khách hàng thành công',
+
+			'data' => $data,
 		]);
 	}
 
 	// =========================
 	// CREATE
 	// =========================
+
 	public function apiCreate()
 	{
-		$input = json_decode(file_get_contents('php://input'), true);
+		$input = request_all();
 
-		$name = trim($input['name'] ?? '');
-		$phone = trim($input['phone'] ?? '');
-		$email = trim($input['email'] ?? '');
-		$group = (int) ($input['group_id'] ?? 0);
-		$address = trim($input['address'] ?? '');
-		$description = trim($input['description'] ?? '');
+		$error = CustomerValidator::create($input);
 
-		if ($name === '') {
+		if ($error) {
 			return Response::json([
 				'success' => false,
-				'message' => 'Tên khách hàng không hợp lệ',
+
+				'message' => $error,
 			]);
 		}
 
-		$id = $this->customerRepository->create([
-			'name' => $name,
-			'phone' => $phone,
-			'email' => $email,
-			'group_id' => $group,
-			'address' => $address,
-			'description' => $description,
-		]);
+		$input['created_by'] = Auth::id();
+
+		$id = $this->customerRepository->create($input);
 
 		return Response::json([
 			'success' => true,
+
 			'message' => 'Tạo khách hàng thành công',
-			'id' => $id,
+
+			'data' => [
+				'id' => $id,
+			],
 		]);
 	}
 
 	// =========================
 	// UPDATE
 	// =========================
+
 	public function apiUpdate()
 	{
-		$input = json_decode(file_get_contents('php://input'), true);
+		$input = request_all();
 
-		$id = (int) ($input['id'] ?? 0);
+		$error = CustomerValidator::update($input);
 
-		if ($id <= 0) {
+		if ($error) {
 			return Response::json([
 				'success' => false,
-				'message' => 'ID không hợp lệ',
+
+				'message' => $error,
 			]);
 		}
 
-		$data = [
-			'name' => trim($input['name'] ?? ''),
-			'phone' => trim($input['phone'] ?? ''),
-			'email' => trim($input['email'] ?? ''),
-			'group_id' => (int) ($input['group_id'] ?? 0),
-			'address' => trim($input['address'] ?? ''),
-			'description' => trim($input['description'] ?? ''),
-			'updated_at' => date('Y-m-d H:i:s'),
-		];
+		$input['updated_by'] = Auth::id();
 
-		$updated = $this->customerRepository->updateById($id, $data);
+		$this->customerRepository->update($input);
 
 		return Response::json([
-			'success' => $updated > 0,
-			'message' =>
-				$updated > 0
-					? 'Cập nhật thành công'
-					: 'Không tìm thấy khách hàng',
+			'success' => true,
+
+			'message' => 'Cập nhật khách hàng thành công',
 		]);
 	}
 
 	// =========================
 	// DELETE
 	// =========================
+
 	public function apiDelete()
 	{
-		$id = (int) ($_POST['id'] ?? 0);
+		$id = request_id();
 
-		if ($id <= 0) {
-			return Response::json([
-				'success' => false,
-				'message' => 'ID không hợp lệ',
-			]);
-		}
-
-		$deleted = $this->customerRepository->deleteById($id);
+		$this->customerRepository->delete($id);
 
 		return Response::json([
-			'success' => $deleted > 0,
-			'message' =>
-				$deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy khách hàng',
+			'success' => true,
+
+			'message' => 'Xóa khách hàng thành công',
 		]);
 	}
 }

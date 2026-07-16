@@ -7,7 +7,7 @@ SELECT
 	COALESCE(SUM(i.quantity), 0) AS stock
 FROM
 	products p
-	LEFT JOIN inventories i ON i.product_id = p.id
+	JOIN inventories i ON i.product_id = p.id
 WHERE
 	p_keyword IS NULL
 	OR p_keyword = ''

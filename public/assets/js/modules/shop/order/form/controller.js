@@ -13,16 +13,17 @@ const Controller = {
 
 		Renderer.render();
 
-		this.bindSupplier();
+		this.bindCustomer();
 		this.bindProduct();
-		this.bindPurchase();
+		this.bindOrder();
 		this.bindItems();
 		this.bindSubmit();
 	},
 
 	async loadDefault() {
-		const purchase_id = Dom.find('#purchase_id').value;
-		const data = await Service.getDefault(purchase_id);
+		const order_id = Dom.find('#order_id').value;
+
+		const data = await Service.getDefault(order_id);
 
 		State.setDefault(data);
 
@@ -31,37 +32,40 @@ const Controller = {
 
 	renderSummary() {
 		State.setSummary();
+
 		Renderer.renderSummary();
 	},
 
 	/* =================================================
-       SUPPLIER
-    ================================================= */
+	   CUSTOMER
+	================================================= */
 
-	bindSupplier() {
+	bindCustomer() {
 		Autocomplete.init({
-			element: '#supplier_search',
+			element: '#customer_search',
 
 			async source(keyword) {
-				const suppliers = await Api.searchSupplier(keyword);
-				return suppliers.data;
+				const customers = await Api.searchCustomer(keyword);
+
+				return customers.data;
 			},
 
-			select(supplier) {
-				State.setSupplier(supplier);
+			select(customer) {
+				State.setCustomer(customer);
+
 				Renderer.render();
 			},
 		});
 	},
 
 	/* =================================================
-       PRODUCT
-    ================================================= */
+	   PRODUCT
+	================================================= */
 
 	bindProduct() {
 		Autocomplete.init({
 			element: '#product_search',
-
+			field: 'product_name',
 			async source(keyword) {
 				const products = await Api.searchProduct(keyword);
 				return products.data;
@@ -69,77 +73,77 @@ const Controller = {
 
 			select(product) {
 				State.items = Service.selectProduct(State.items, product);
+
 				Renderer.render();
 			},
 		});
 	},
 
 	/* =================================================
-       PURCHASE
-    ================================================= */
+	   ORDER
+	================================================= */
 
-	bindPurchase() {
-		Dom.find('#supplier_id').addEventListener('change', (e) => {
-			State.purchase.supplier_id = Number(e.target.value);
-		});
-
-		Dom.find('#warehouse_id').addEventListener('change', (e) => {
-			State.purchase.warehouse_id = Number(e.target.value);
+	bindOrder() {
+		Dom.find('#customer_id').addEventListener('change', (e) => {
+			State.order.customer_id = Number(e.target.value);
 		});
 
 		Dom.find('#status').addEventListener('change', (e) => {
-			State.purchase.status = e.target.value;
+			State.order.status = e.target.value;
 		});
 
 		Dom.find('#vat_rate').addEventListener('input', (e) => {
-			State.purchase.vat_rate = Number(e.target.value);
+			State.order.vat_rate = Number(e.target.value);
 
 			State.items = State.items.map((item) =>
-				Service.calculateItem(item, State.purchase.vat_rate),
+				Service.calculateItem(item, State.order.vat_rate),
 			);
 
 			State.setSummary();
+
 			Renderer.renderCaculation();
 		});
 
 		Dom.find('#payment').addEventListener('change', (e) => {
-			State.purchase.payment = e.target.value;
+			State.order.payment = e.target.value;
 
-			switch (State.purchase.payment) {
+			switch (State.order.payment) {
 				case 'paid':
-					State.purchase.paid_amount = State.summary.total_amount;
+					State.order.paid_amount = State.summary.total_amount;
+
 					break;
 
 				case 'unpaid':
-					State.purchase.paid_amount = 0;
+					State.order.paid_amount = 0;
+
 					break;
 			}
 
-			State.purchase.debt_amount =
-				State.summary.total_amount - State.purchase.paid_amount;
+			State.order.debt_amount =
+				State.summary.total_amount - State.order.paid_amount;
 
 			Dom.find('#paid_amount_wrapper').classList.toggle(
 				'd-none',
-				State.purchase.payment !== 'partial',
+				State.order.payment !== 'partial',
 			);
 
 			this.renderSummary();
 		});
 
 		Dom.find('#paid_amount').addEventListener('input', (e) => {
-			State.purchase.paid_amount = Number(e.target.value);
+			State.order.paid_amount = Number(e.target.value);
 
 			this.renderSummary();
 		});
 
 		Dom.find('#description').addEventListener('input', (e) => {
-			State.purchase.description = e.target.value;
+			State.order.description = e.target.value;
 		});
 	},
 
 	/* =================================================
-       ITEMS
-    ================================================= */
+	   ITEMS
+	================================================= */
 
 	bindItems() {
 		const table = Dom.find('#selected_products');
@@ -152,10 +156,22 @@ const Controller = {
 			State.items = Service.changeItem(
 				State.items,
 				e,
-				State.purchase.vat_rate,
+				State.order.vat_rate,
 			);
+
 			Renderer.renderCaculation();
+
 			this.renderSummary();
+		});
+
+		table.addEventListener('change', (e) => {
+			if (e.target.matches('.is-gift')) {
+				State.items = Service.changeGift(State.items, e);
+
+				Renderer.renderCaculation();
+
+				this.renderSummary();
+			}
 		});
 
 		table.addEventListener('click', (event) => {
@@ -163,17 +179,18 @@ const Controller = {
 				State.items = Service.removeItem(State.items, event);
 
 				Renderer.renderProducts();
+
 				this.renderSummary();
 			}
 		});
 	},
 
 	/* =================================================
-       SUBMIT
-    ================================================= */
+	   SUBMIT
+	================================================= */
 
 	bindSubmit() {
-		Dom.find('#purchase-form').addEventListener('submit', async (e) => {
+		Dom.find('#order-form').addEventListener('submit', async (e) => {
 			e.preventDefault();
 
 			if (!confirm('Bạn có muốn lưu không?')) {
@@ -181,14 +198,14 @@ const Controller = {
 			}
 
 			const payload = Service.payload(
-				State.purchase,
+				State.order,
 				State.summary,
 				State.items,
 			);
 
-			const response = State.purchase.id
-				? await Api.updatePurchase(State.purchase.id, payload)
-				: await Api.createPurchase(payload);
+			const response = State.order.id
+				? await Api.updateOrder(State.order.id, payload)
+				: await Api.createOrder(payload);
 
 			alert(response.message);
 
