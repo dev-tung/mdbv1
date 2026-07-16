@@ -72,8 +72,9 @@ const Controller = {
 
 			select(product) {
 				State.items = Service.selectProduct(State.items, product);
-
 				Renderer.render();
+				State.setSummary();
+				Renderer.renderSummary();
 			},
 		});
 	},
@@ -151,7 +152,24 @@ const Controller = {
 			return;
 		}
 
-		table.addEventListener('input', (e) => {
+		const updateItem = (e) => {
+			if (e.target.matches('.quantity')) {
+				const row = e.target.closest('tr');
+				const index = Number(row.dataset.index);
+
+				const item = State.items[index];
+
+				const quantity = Number(e.target.value);
+
+				if (quantity > Number(item.quantity)) {
+					alert(`Số lượng tồn chỉ còn ${item.quantity}.`);
+
+					e.target.value = item.quantity;
+
+					return;
+				}
+			}
+
 			State.items = Service.changeItem(
 				State.items,
 				e,
@@ -161,21 +179,37 @@ const Controller = {
 			Renderer.renderCaculation();
 
 			this.renderSummary();
-		});
+		};
 
+		// INPUT
+		table.addEventListener('input', updateItem);
+
+		// CHANGE
 		table.addEventListener('change', (e) => {
+			if (e.target.matches('.quantity')) {
+				updateItem(e);
+				return;
+			}
+
 			if (e.target.matches('.is-gift')) {
-				State.items = Service.changeGift(State.items, e);
+				State.items = Service.changeGift(
+					State.items,
+					e,
+				);
 
 				Renderer.renderCaculation();
-
+				
 				this.renderSummary();
 			}
 		});
 
-		table.addEventListener('click', (event) => {
-			if (event.target.matches('.remove-item')) {
-				State.items = Service.removeItem(State.items, event);
+		// REMOVE
+		table.addEventListener('click', (e) => {
+			if (e.target.matches('.remove-item')) {
+				State.items = Service.removeItem(
+					State.items,
+					e,
+				);
 
 				Renderer.renderProducts();
 

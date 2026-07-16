@@ -20,9 +20,11 @@ const Service = {
 	================================================= */
 
 	selectProduct(items, product) {
-		const index = items.findIndex((item) => item.product_id === product.id);
+		const index = items.findIndex(
+			(item) => item.purchase_id === product.purchase_id,
+		);
 
-		// Sản phẩm đã tồn tại
+		// Đã có trong danh sách
 
 		if (index !== -1) {
 			return items.map((item, i) => {
@@ -30,35 +32,32 @@ const Service = {
 					return item;
 				}
 
-				const newItem = {
-					...item,
-
-					quantity: item.quantity + 1,
-				};
-
-				return this.calculateItem(newItem, item.vat_rate ?? 0);
+				return this.calculateItem(
+					{
+						...item,
+						quantity: item.quantity + 1,
+					},
+					item.vat_rate ?? 0,
+				);
 			});
 		}
 
-		// Sản phẩm mới
+		// Thêm mới
 
 		const item = {
 			product_id: product.product_id,
-
-			purchase_id : product.purchase_id,
-
+			purchase_id: product.purchase_id,
 			product_name: product.product_name,
-
 			quantity: 1,
-
 			selling_price: product.selling_price ?? 0,
-
 			vat_rate: 0,
-
 			is_gift: 0,
 		};
 
-		return [...items, this.calculateItem(item, item.vat_rate)];
+		return [
+			...items,
+			this.calculateItem(item, item.vat_rate),
+		];
 	},
 
 	/* =================================================
@@ -204,7 +203,7 @@ const Service = {
 
 			items,
 		};
-	},
+	}
 };
 
 export default Service;

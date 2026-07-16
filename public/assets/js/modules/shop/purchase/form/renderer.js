@@ -100,8 +100,6 @@ const Renderer = {
 
 			tbody.appendChild(fragment);
 		});
-
-		this.renderSummary();
 	},
 
 	renderCaculation() {
@@ -124,8 +122,6 @@ const Renderer = {
 
 			Dom.text('.total_amount', Formatter.money(item.total_amount), row);
 		});
-
-		this.renderSummary();
 	},
 
 	/* =================================================

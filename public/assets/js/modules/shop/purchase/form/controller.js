@@ -70,6 +70,8 @@ const Controller = {
 			select(product) {
 				State.items = Service.selectProduct(State.items, product);
 				Renderer.render();
+				State.setSummary();
+				Renderer.renderSummary();
 			},
 		});
 	},
