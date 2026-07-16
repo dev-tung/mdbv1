@@ -27,15 +27,24 @@ class PurchaseValidator
 		}
 
 		foreach ($data['items'] as $product) {
-			if (empty($product['product_id']) || (int) $product['product_id'] <= 0) {
+			if (
+				empty($product['product_id']) ||
+				(int) $product['product_id'] <= 0
+			) {
 				return 'Sản phẩm không hợp lệ';
 			}
 
-			if (!isset($product['quantity']) || (int) $product['quantity'] <= 0) {
+			if (
+				!isset($product['quantity']) ||
+				(int) $product['quantity'] <= 0
+			) {
 				return 'Số lượng sản phẩm không hợp lệ';
 			}
 
-			if (!isset($product['purchase_price']) || (float) $product['purchase_price'] < 0) {
+			if (
+				!isset($product['purchase_price']) ||
+				(float) $product['purchase_price'] < 0
+			) {
 				return 'Giá sản phẩm không hợp lệ';
 			}
 		}

@@ -100,9 +100,9 @@
     <td class="created-at"></td>
 
     <td>
-      <button type="button" class="btn btn-sm btn-outline-secondary edit-item">
+      <a type="button" class="btn btn-sm btn-outline-secondary edit-item">
         Sửa
-      </button>
+      </a>
 
       <button type="button" class="btn btn-sm btn-outline-danger delete-item">
         Xóa

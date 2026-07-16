@@ -24,8 +24,19 @@ const Renderer = {
     ================================================= */
 
 	renderOptions() {
-		Select.render('#filter-payment', Option.payment, State.filters.payment, '-- Thanh toán --');
-		Select.render('#filter-supplier', State.suppliers, State.filters.supplier_id, '-- Nhà cung cấp --');
+		Select.render(
+			'#filter-payment',
+			Option.payment,
+			State.filters.payment,
+			'-- Thanh toán --',
+		);
+
+		Select.render(
+			'#filter-supplier',
+			State.suppliers,
+			State.filters.supplier_id,
+			'-- Nhà cung cấp --',
+		);
 	},
 
 	/* =================================================
@@ -55,17 +66,27 @@ const Renderer = {
 			});
 
 			// Status
-			Select.render(row.querySelector('.status'), Option.process, purchase.status);
+			Select.render(
+				row.querySelector('.status'),
+				Option.process,
+				purchase.status,
+			);
 			row.querySelector('.status').dataset.id = purchase.id;
 
 			// Payment
-			Select.render(row.querySelector('.payment'), Option.payment, purchase.payment);
+			Select.render(
+				row.querySelector('.payment'),
+				Option.payment,
+				purchase.payment,
+			);
 			row.querySelector('.payment').dataset.id = purchase.id;
 
-			// Edit & delete
-			['.edit-item', '.delete-item'].forEach((selector) => {
-				row.querySelector(selector).dataset.id = purchase.id;
-			});
+			// Edit
+			const edit = row.querySelector('.edit-item');
+			edit.href = `/admin/purchases/edit/${purchase.id}`;
+
+			// Delete
+			row.querySelector('.delete-item').dataset.id = purchase.id;
 
 			return fragment;
 		});
@@ -76,11 +97,20 @@ const Renderer = {
     ================================================= */
 
 	renderSummary() {
-		Dom.text('#sum-total-amount', Formatter.money(State.summary.total_amount));
+		Dom.text(
+			'#sum-total-amount',
+			Formatter.money(State.summary.total_amount),
+		);
 
-		Dom.text('#sum-paid-amount', Formatter.money(State.summary.paid_amount));
+		Dom.text(
+			'#sum-paid-amount',
+			Formatter.money(State.summary.paid_amount),
+		);
 
-		Dom.text('#sum-debt-amount', Formatter.money(State.summary.debt_amount));
+		Dom.text(
+			'#sum-debt-amount',
+			Formatter.money(State.summary.debt_amount),
+		);
 	},
 };
 

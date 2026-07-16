@@ -64,35 +64,33 @@ const Controller = {
 	},
 
 	bindEvents() {
-		Dom.find('#purchase-table-body').addEventListener('change', async (e) => {
+		const table = Dom.find('#purchase-table-body');
+
+		table.addEventListener('change', async (e) => {
 			const target = e.target;
 
 			try {
 				if (target.classList.contains('status')) {
-					const id = target.dataset.id;
-
-					const status = target.value;
-
-					const response = await Api.updatePurchaseStatus(id, status);
+					const response = await Api.updatePurchaseStatus(
+						target.dataset.id,
+						target.value,
+					);
 
 					alert(response.message);
 				}
 
 				if (target.classList.contains('payment')) {
-					const id = target.dataset.id;
-
-					const payment = target.value;
-
-					const response = await Api.updatePurchasePayment(id, payment);
+					const response = await Api.updatePurchasePayment(
+						target.dataset.id,
+						target.value,
+					);
 
 					alert(response.message);
 				}
 
 				const data = await Service.getList({
 					...State.filters,
-
 					page: Table.config.page,
-
 					per_page: Table.config.per_page,
 				});
 
@@ -103,7 +101,37 @@ const Controller = {
 				alert(error.message);
 			}
 		});
-	},
+
+		table.addEventListener('click', async (e) => {
+			const button = e.target.closest('.delete-item');
+
+			if (!button) {
+				return;
+			}
+
+			if (!confirm('Bạn có chắc chắn muốn xóa phiếu nhập này?')) {
+				return;
+			}
+
+			try {
+				const response = await Api.deletePurchase(button.dataset.id);
+
+				alert(response.message);
+
+				const data = await Service.getList({
+					...State.filters,
+					page: Table.config.page,
+					per_page: Table.config.per_page,
+				});
+
+				State.setDefault(data);
+
+				Renderer.render();
+			} catch (error) {
+				alert(error.message);
+			}
+		});
+	}
 };
 
 export default Controller;

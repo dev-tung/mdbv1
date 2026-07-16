@@ -339,4 +339,6 @@
 
 
 
-<script type="module" src="<?= asset('js/modules/shop/order/form/Controller.js') ?>"></script>
+<script type="module" src="<?= asset(
+	'js/modules/shop/order/form/Controller.js',
+) ?>"></script>

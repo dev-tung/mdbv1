@@ -70,7 +70,8 @@
                             Khoảng giá
                         </label>
 
-                        <?php $priceRanges = config('shop.option.price_range') ?? []; ?>
+                        <?php $priceRanges =
+                        	config('shop.option.price_range') ?? []; ?>
 
                         <?php foreach ($priceRanges as $key => $item): ?>
 

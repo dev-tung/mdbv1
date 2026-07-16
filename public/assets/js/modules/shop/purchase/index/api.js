@@ -23,6 +23,10 @@ const Api = {
 		});
 	},
 
+	async deletePurchase(id) {
+		return await Http.post(`/api/purchases/delete/${id}`);
+	},
+
 	/* =================================================
        SUPPLIER
     ================================================= */

@@ -19,7 +19,11 @@ class CustomerEndpoint
 
 		$filters = request_filters(['keyword', 'group_id']);
 
-		$data = $this->customerRepository->getList($filters, $limit, ($page - 1) * $limit);
+		$data = $this->customerRepository->getList(
+			$filters,
+			$limit,
+			($page - 1) * $limit,
+		);
 
 		$total = $this->customerRepository->count($filters);
 
@@ -131,7 +135,10 @@ class CustomerEndpoint
 
 		return Response::json([
 			'success' => $updated > 0,
-			'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không tìm thấy khách hàng',
+			'message' =>
+				$updated > 0
+					? 'Cập nhật thành công'
+					: 'Không tìm thấy khách hàng',
 		]);
 	}
 
@@ -153,7 +160,8 @@ class CustomerEndpoint
 
 		return Response::json([
 			'success' => $deleted > 0,
-			'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy khách hàng',
+			'message' =>
+				$deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy khách hàng',
 		]);
 	}
 }

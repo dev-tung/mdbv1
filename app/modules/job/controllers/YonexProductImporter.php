@@ -14,8 +14,10 @@ class YonexProductImporter
 
 	public function __construct()
 	{
-		$this->categoryFile = PATH_ROOT . '/public/craw/json/yonex_category.json';
-		$this->productFile = PATH_ROOT . '/public/craw/json/yonex_product_detail.json';
+		$this->categoryFile =
+			PATH_ROOT . '/public/craw/json/yonex_category.json';
+		$this->productFile =
+			PATH_ROOT . '/public/craw/json/yonex_product_detail.json';
 	}
 
 	public function run(): void
@@ -84,8 +86,10 @@ class YonexProductImporter
 	/* =========================
 	 * CATEGORIES
 	 * ========================= */
-	protected function importCategories(array $categories, array $products): void
-	{
+	protected function importCategories(
+		array $categories,
+		array $products,
+	): void {
 		$firstImageByCategory = [];
 
 		$seriesMap = [
@@ -257,7 +261,9 @@ class YonexProductImporter
 			$categoryId = $this->resolveCategoryId($catSlug);
 
 			if (!$categoryId) {
-				throw new Exception("Category not found: {$catSlug} | product: {$slug}");
+				throw new Exception(
+					"Category not found: {$catSlug} | product: {$slug}",
+				);
 			}
 
 			$prefix = $this->productPrefix($catSlug);
@@ -276,7 +282,9 @@ class YonexProductImporter
 					'brand_id' => $this->brandId,
 					'name' => $name,
 					'slug' => $slug,
-					'thumbnail' => isset($item['image_file']) ? 'uploads/' . ltrim($item['image_file'], '/') : null,
+					'thumbnail' => isset($item['image_file'])
+						? 'uploads/' . ltrim($item['image_file'], '/')
+						: null,
 					'description' => $item['description'] ?? null,
 					'price' => 0,
 					'status' => 1,

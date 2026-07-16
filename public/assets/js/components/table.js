@@ -168,7 +168,9 @@ const Table = {
 
 			button.dataset.page = page;
 
-			button.className = 'btn btn-sm ' + (active ? 'btn-secondary' : 'btn-outline-secondary');
+			button.className =
+				'btn btn-sm ' +
+				(active ? 'btn-secondary' : 'btn-outline-secondary');
 
 			button.textContent = text;
 

@@ -7,8 +7,11 @@ class CustomerRepository
 	// =========================
 	// LIST
 	// =========================
-	public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
-	{
+	public function getList(
+		array $conditions = [],
+		int $limit = 0,
+		int $offset = 0,
+	): array {
 		$sql = "SELECT *
                 FROM {$this->table}
                 WHERE 1=1";
@@ -70,7 +73,16 @@ class CustomerRepository
 	// =========================
 	public function create(array $data): int
 	{
-		$allowed = ['name', 'group_id', 'phone', 'address', 'description', 'email', 'created_at', 'updated_at'];
+		$allowed = [
+			'name',
+			'group_id',
+			'phone',
+			'address',
+			'description',
+			'email',
+			'created_at',
+			'updated_at',
+		];
 
 		$data = array_intersect_key($data, array_flip($allowed));
 
@@ -103,7 +115,15 @@ class CustomerRepository
 	// =========================
 	public function updateById(int $id, array $data): int
 	{
-		$allowed = ['name', 'group_id', 'phone', 'address', 'description', 'email', 'updated_at'];
+		$allowed = [
+			'name',
+			'group_id',
+			'phone',
+			'address',
+			'description',
+			'email',
+			'updated_at',
+		];
 
 		$data = array_intersect_key($data, array_flip($allowed));
 

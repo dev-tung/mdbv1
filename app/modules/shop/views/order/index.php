@@ -129,4 +129,6 @@
 
 <script>
 
-<script type="module" src="<?= asset('js/modules/shop/order/list/Controller.js') ?>"></script>
+<script type="module" src="<?= asset(
+	'js/modules/shop/order/list/Controller.js',
+) ?>"></script>

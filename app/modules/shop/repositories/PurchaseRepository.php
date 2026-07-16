@@ -12,7 +12,17 @@ class PurchaseRepository extends Repository
 	{
 		return Database::call(
 			'CALL sp_purchase_list(?, ?, ?, ?, ?, ?)',
-			array_params(['date_from', 'date_to', 'supplier', 'payment', 'page', 'per_page'], $filters),
+			array_params(
+				[
+					'date_from',
+					'date_to',
+					'supplier',
+					'payment',
+					'page',
+					'per_page',
+				],
+				$filters,
+			),
 		);
 	}
 
@@ -117,7 +127,10 @@ class PurchaseRepository extends Repository
 				],
 			);
 		} catch (PDOException $e) {
-			throw new Exception($e->errorInfo[2] ?? $e->getMessage(), (int) ($e->errorInfo[1] ?? 0));
+			throw new Exception(
+				$e->errorInfo[2] ?? $e->getMessage(),
+				(int) ($e->errorInfo[1] ?? 0),
+			);
 		}
 
 		return (int) ($result['affected_rows'] ?? 0);

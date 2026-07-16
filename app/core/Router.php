@@ -7,8 +7,11 @@ class Router
 	// =========================
 	// REGISTER GET
 	// =========================
-	public static function get(string $uri, string $handler, array $middleware = []): void
-	{
+	public static function get(
+		string $uri,
+		string $handler,
+		array $middleware = [],
+	): void {
 		self::$routes['GET'][] = [
 			'uri' => $uri,
 			'handler' => $handler,
@@ -19,8 +22,11 @@ class Router
 	// =========================
 	// REGISTER POST
 	// =========================
-	public static function post(string $uri, string $handler, array $middleware = []): void
-	{
+	public static function post(
+		string $uri,
+		string $handler,
+		array $middleware = [],
+	): void {
 		self::$routes['POST'][] = [
 			'uri' => $uri,
 			'handler' => $handler,
@@ -76,7 +82,11 @@ class Router
 	// =========================
 	protected static function convertUriToRegex(string $uri): string
 	{
-		$pattern = preg_replace_callback('#\{([a-zA-Z_]+)\}#', fn() => '([a-zA-Z0-9_-]+)', $uri);
+		$pattern = preg_replace_callback(
+			'#\{([a-zA-Z_]+)\}#',
+			fn() => '([a-zA-Z0-9_-]+)',
+			$uri,
+		);
 
 		return "#^{$pattern}$#";
 	}
@@ -84,8 +94,11 @@ class Router
 	// =========================
 	// CALL ACTION
 	// =========================
-	protected static function callAction(string $handler, string $file, array $params = []): void
-	{
+	protected static function callAction(
+		string $handler,
+		string $file,
+		array $params = [],
+	): void {
 		[$controller, $action] = explode('@', $handler);
 
 		require_once $file;
@@ -113,7 +126,10 @@ class Router
 		$modules = glob(BASE_PATH . '/app/modules/*', GLOB_ONLYDIR);
 
 		foreach ($modules as $module) {
-			$paths = [$module . "/controllers/{$controller}.php", $module . "/endpoints/{$controller}.php"];
+			$paths = [
+				$module . "/controllers/{$controller}.php",
+				$module . "/endpoints/{$controller}.php",
+			];
 
 			foreach ($paths as $path) {
 				if (file_exists($path)) {

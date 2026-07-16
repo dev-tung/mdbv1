@@ -19,8 +19,11 @@ class ProductRepository extends Repository
 	// =========================
 	// APPLY FILTERS (REUSE)
 	// =========================
-	private function applyFilters(string &$sql, array &$params, array $conditions): void
-	{
+	private function applyFilters(
+		string &$sql,
+		array &$params,
+		array $conditions,
+	): void {
 		// keyword search
 		if (!empty($conditions['keyword'])) {
 			$sql .= ' AND p.name LIKE :keyword';
@@ -61,7 +64,8 @@ class ProductRepository extends Repository
 			}
 
 			if (!empty($placeholders)) {
-				$sql .= ' AND p.brand_id IN (' . implode(',', $placeholders) . ')';
+				$sql .=
+					' AND p.brand_id IN (' . implode(',', $placeholders) . ')';
 			}
 		}
 	}
@@ -69,8 +73,11 @@ class ProductRepository extends Repository
 	// =========================
 	// LIST
 	// =========================
-	public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
-	{
+	public function getList(
+		array $conditions = [],
+		int $limit = 0,
+		int $offset = 0,
+	): array {
 		$sql = $this->baseSelect();
 		$params = [];
 

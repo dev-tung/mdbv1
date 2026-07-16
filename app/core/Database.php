@@ -35,7 +35,11 @@ class Database
 		try {
 			self::connect()->exec($sql);
 		} catch (PDOException $e) {
-			throw new Exception($e->errorInfo[2] ?? $e->getMessage(), (int) ($e->errorInfo[1] ?? 0), $e);
+			throw new Exception(
+				$e->errorInfo[2] ?? $e->getMessage(),
+				(int) ($e->errorInfo[1] ?? 0),
+				$e,
+			);
 		}
 	}
 
@@ -50,7 +54,11 @@ class Database
 
 			return $stmt;
 		} catch (PDOException $e) {
-			throw new Exception($e->errorInfo[2] ?? $e->getMessage(), (int) ($e->errorInfo[1] ?? 0), $e);
+			throw new Exception(
+				$e->errorInfo[2] ?? $e->getMessage(),
+				(int) ($e->errorInfo[1] ?? 0),
+				$e,
+			);
 		}
 	}
 

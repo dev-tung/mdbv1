@@ -19,7 +19,11 @@ class BrandEndpoint
 
 		$filters = request_filters(['keyword', 'status']);
 
-		$brands = $this->brandRepository->getList($filters, $limit, ($page - 1) * $limit);
+		$brands = $this->brandRepository->getList(
+			$filters,
+			$limit,
+			($page - 1) * $limit,
+		);
 
 		$total = $this->brandRepository->count($filters);
 
@@ -172,7 +176,8 @@ class BrandEndpoint
 
 		return Response::json([
 			'success' => $updated > 0,
-			'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
+			'message' =>
+				$updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
 		]);
 	}
 
@@ -194,7 +199,8 @@ class BrandEndpoint
 
 		return Response::json([
 			'success' => $deleted > 0,
-			'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy thương hiệu',
+			'message' =>
+				$deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy thương hiệu',
 		]);
 	}
 }

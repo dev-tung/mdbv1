@@ -9,8 +9,8 @@
 
 <body>
 
-<?php if ($menu) {
-	require BASE_PATH . '/app/common/layouts/admin/navbar.php';
-}
-
+<?php 
+    if ($menu) {
+        require BASE_PATH . '/app/common/layouts/admin/navbar.php';
+    }
 ?>

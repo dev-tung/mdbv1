@@ -23,7 +23,10 @@ class ProductValidator
 			return 'Giá sale không hợp lệ';
 		}
 
-		if (isset($input['status']) && !in_array((int) $input['status'], [0, 1])) {
+		if (
+			isset($input['status']) &&
+			!in_array((int) $input['status'], [0, 1])
+		) {
 			return 'Status không hợp lệ';
 		}
 

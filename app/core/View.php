@@ -21,8 +21,11 @@ class View
 		return self::$js;
 	}
 
-	public static function render(string $path, array $data = [], $menu = true): void
-	{
+	public static function render(
+		string $path,
+		array $data = [],
+		$menu = true,
+	): void {
 		$header = self::getHeader();
 		$content = self::getContent($path);
 		$footer = self::getFooter();
@@ -53,7 +56,12 @@ class View
 
 	protected static function getContent(string $view): string
 	{
-		return BASE_PATH . '/app/modules/' . self::$module . '/views/' . $view . '.php';
+		return BASE_PATH .
+			'/app/modules/' .
+			self::$module .
+			'/views/' .
+			$view .
+			'.php';
 	}
 
 	protected static function getLayout(): string
@@ -79,7 +87,9 @@ class View
 	{
 		$path = 'js/modules/' . self::$module . '/' . $view . '/controller.js';
 
-		return file_exists(BASE_PATH . '/public/assets/' . $path) ? asset($path) : '';
+		return file_exists(BASE_PATH . '/public/assets/' . $path)
+			? asset($path)
+			: '';
 	}
 
 	protected static function fail(string $message): void

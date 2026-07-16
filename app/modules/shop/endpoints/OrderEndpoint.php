@@ -186,7 +186,10 @@ class OrderEndpoint
 			]);
 		}
 
-		$updated = $this->orderRepository->payment((int) $input['id'], $input['payment']);
+		$updated = $this->orderRepository->payment(
+			(int) $input['id'],
+			$input['payment'],
+		);
 
 		return Response::json([
 			'success' => true,

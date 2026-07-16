@@ -23,11 +23,26 @@ const Renderer = {
     ================================================= */
 
 	renderOptions() {
-		Select.render('#status', Option.process, State.purchase.status, '-- Chọn trạng thái --');
+		Select.render(
+			'#status',
+			Option.process,
+			State.purchase.status,
+			'-- Chọn trạng thái --',
+		);
 
-		Select.render('#payment', Option.payment, State.purchase.payment, '-- Chọn thanh toán --');
+		Select.render(
+			'#payment',
+			Option.payment,
+			State.purchase.payment,
+			'-- Chọn thanh toán --',
+		);
 
-		Select.render('#warehouse_id', State.warehouses, State.purchase.warehouse_id, '-- Chọn kho --');
+		Select.render(
+			'#warehouse_id',
+			State.warehouses,
+			State.purchase.warehouse_id,
+			'-- Chọn kho --',
+		);
 	},
 
 	/* =================================================
@@ -99,7 +114,11 @@ const Renderer = {
 				return;
 			}
 
-			Dom.text('.subtotal_amount', Formatter.money(item.subtotal_amount), row);
+			Dom.text(
+				'.subtotal_amount',
+				Formatter.money(item.subtotal_amount),
+				row,
+			);
 
 			Dom.text('.vat_amount', Formatter.money(item.vat_amount), row);
 

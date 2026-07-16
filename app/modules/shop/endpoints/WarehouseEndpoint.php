@@ -122,7 +122,8 @@ class WarehouseEndpoint
 
 		echo json_encode([
 			'success' => $updated > 0,
-			'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
+			'message' =>
+				$updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
 		]);
 	}
 

@@ -42,10 +42,8 @@ SELECT
 	pi.purchase_price,
 	pi.selling_price,
 	pi.subtotal_amount,
-	pi.vat_rate,
 	pi.vat_amount,
-	pi.total_amount,
-	pi.total_amount_with_vat
+	pi.total_amount
 FROM
 	purchase_items pi
 	LEFT JOIN products pr ON pr.id = pi.product_id

@@ -35,7 +35,11 @@ function dd_sql(string $sql, array $params = []): string
 			$value = $value ? 1 : 0;
 		}
 
-		$sql = preg_replace('/:' . preg_quote($key, '/') . '\b/', (string) $value, $sql);
+		$sql = preg_replace(
+			'/:' . preg_quote($key, '/') . '\b/',
+			(string) $value,
+			$sql,
+		);
 	}
 
 	dd($sql);

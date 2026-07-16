@@ -2,15 +2,17 @@ import Calculator from '../../../../helpers/calculator.js';
 import Api from './api.js';
 
 const Service = {
-	async getDefault(id = null) {
-		const [purchase, warehouses, suppliers, products] = await Promise.all([
-			id ? Api.show(id) : null,
+	async getDefault(purchase_id = null) {
+		const [response, warehouses] = await Promise.all([
+			purchase_id ? Api.showPurchase(purchase_id) : null,
 			Api.getWarehouses(),
 		]);
 
+		const [purchase = [], items = []] = response?.data ?? [];
+
 		return {
-			purchase: purchase?.purchase ?? {},
-			items: purchase?.items ?? [],
+			purchase: purchase[0] ?? {},
+			items,
 			warehouses,
 		};
 	},
@@ -39,7 +41,10 @@ const Service = {
 				return {
 					...newItem,
 
-					amount: Calculator.multiply(newItem.quantity, newItem.purchase_price),
+					amount: Calculator.multiply(
+						newItem.quantity,
+						newItem.purchase_price,
+					),
 				};
 			});
 		}
@@ -118,7 +123,10 @@ const Service = {
 	},
 
 	calculateItem(item, vatRate) {
-		const subtotal_amount = Calculator.multiply(item.quantity, item.purchase_price);
+		const subtotal_amount = Calculator.multiply(
+			item.quantity,
+			item.purchase_price,
+		);
 
 		const vat_amount = Calculator.multiply(subtotal_amount, vatRate / 100);
 
@@ -151,17 +159,17 @@ const Service = {
 			status: purchase.status ?? 'pending',
 			payment: purchase.payment ?? 'unpaid',
 
-			subtotal_amount: summary.subtotal ?? 0,
+			subtotal_amount: summary.subtotal_amount ?? 0,
 			vat_rate: purchase.vat_rate ?? 0,
-			vat_amount: summary.tax ?? 0,
-			total_amount: summary.grand_total ?? 0,
+			vat_amount: summary.vat_amount ?? 0,
+			total_amount: summary.total_amount ?? 0,
 
 			paid_amount: purchase.paid_amount ?? 0,
-			debt_amount: (summary.grand_total ?? 0) - (purchase.paid_amount ?? 0),
+			debt_amount: summary.debt_amount ?? 0,
 
 			created_by: purchase.created_by ?? null,
 
-			items: items ?? [],
+			items,
 		};
 	},
 };

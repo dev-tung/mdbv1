@@ -41,7 +41,9 @@
 
     </div>
 
-    <a href="<?= route('/admin/products/create') ?>" class="btn btn-sm btn-outline-secondary">
+    <a href="<?= route(
+    	'/admin/products/create',
+    ) ?>" class="btn btn-sm btn-outline-secondary">
       Thêm sản phẩm
     </a>
 

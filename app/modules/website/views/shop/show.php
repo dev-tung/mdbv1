@@ -32,6 +32,10 @@
     // normalize image url
     // normalize image url
     // normalize image url
+    // normalize image url
+    // normalize image url
+    // normalize image url
+    // normalize image url
     function img_url($img)
     {
     	if (!$img) {
@@ -61,7 +65,10 @@
             </div>
 
             <!-- GALLERY -->
-            <?php if (!empty($product['gallery']) && is_array($product['gallery'])): ?>
+            <?php if (
+            	!empty($product['gallery']) &&
+            	is_array($product['gallery'])
+            ): ?>
                 <div class="d-flex gap-2 mt-3 flex-wrap justify-content-center">
 
                     <?php foreach ($product['gallery'] as $img): ?>
@@ -146,7 +153,9 @@
                         data-id="<?= $product['id'] ?>"
                         data-name="<?= urlencode($product['name']) ?>"
                         data-price="<?= $sale > 0 ? $sale : $price ?>"
-                        data-image="<?= urlencode($product['thumbnail'] ?? '') ?>"
+                        data-image="<?= urlencode(
+                        	$product['thumbnail'] ?? '',
+                        ) ?>"
                         data-stock="<?= $product['stock'] ?>"
                         onclick="handleBuy(this)"
                     >
@@ -165,7 +174,10 @@
             </div>
 
             <!-- ATTRIBUTES -->
-            <?php if (!empty($product['attributes']) && is_array($product['attributes'])): ?>
+            <?php if (
+            	!empty($product['attributes']) &&
+            	is_array($product['attributes'])
+            ): ?>
                 <div class="border rounded p-3 bg-light">
 
                     <div class="fw-bold mb-3">Đặc điểm chi tiết</div>
@@ -175,10 +187,14 @@
                         <?php foreach ($product['attributes'] as $attr): ?>
                             <tr>
                                 <th class="text-muted fw-normal">
-                                    <?= htmlspecialchars($attr['attribute_name']) ?>
+                                    <?= htmlspecialchars(
+                                    	$attr['attribute_name'],
+                                    ) ?>
                                 </th>
                                 <td class="fw-semibold">
-                                    <?= htmlspecialchars($attr['attribute_value']) ?>
+                                    <?= htmlspecialchars(
+                                    	$attr['attribute_value'],
+                                    ) ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

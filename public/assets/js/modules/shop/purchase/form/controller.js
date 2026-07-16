@@ -21,9 +21,8 @@ const Controller = {
 	},
 
 	async loadDefault() {
-		const id = Dom.find('#purchase_id').value;
-
-		const data = await Service.getDefault(id);
+		const purchase_id = Dom.find('#purchase_id').value;
+		const data = await Service.getDefault(purchase_id);
 
 		State.setDefault(data);
 
@@ -95,7 +94,9 @@ const Controller = {
 		Dom.find('#vat_rate').addEventListener('input', (e) => {
 			State.purchase.vat_rate = Number(e.target.value);
 
-			State.items = State.items.map((item) => Service.calculateItem(item, State.purchase.vat_rate));
+			State.items = State.items.map((item) =>
+				Service.calculateItem(item, State.purchase.vat_rate),
+			);
 
 			State.setSummary();
 			Renderer.renderCaculation();
@@ -114,7 +115,10 @@ const Controller = {
 					break;
 			}
 
-			Dom.find('#paid_amount_wrapper').classList.toggle('d-none', State.purchase.payment !== 'partial');
+			Dom.find('#paid_amount_wrapper').classList.toggle(
+				'd-none',
+				State.purchase.payment !== 'partial',
+			);
 
 			this.renderSummary();
 		});
@@ -142,7 +146,11 @@ const Controller = {
 		}
 
 		table.addEventListener('input', (e) => {
-			State.items = Service.changeItem(State.items, e, State.purchase.vat_rate);
+			State.items = Service.changeItem(
+				State.items,
+				e,
+				State.purchase.vat_rate,
+			);
 			Renderer.renderCaculation();
 			this.renderSummary();
 		});
@@ -165,11 +173,19 @@ const Controller = {
 		Dom.find('#purchase-form').addEventListener('submit', async (e) => {
 			e.preventDefault();
 
-			const payload = Service.payload(State.purchase, State.summary, State.items);
+			if (!confirm('Bạn có muốn lưu không?')) {
+				return;
+			}
 
-			console.log(payload);
+			const payload = Service.payload(
+				State.purchase,
+				State.summary,
+				State.items,
+			);
 
-			const response = await Api.createPurchase(payload);
+			const response = State.purchase.id
+				? await Api.updatePurchase(State.purchase.id, payload)
+				: await Api.createPurchase(payload);
 
 			alert(response.message);
 
@@ -177,7 +193,7 @@ const Controller = {
 				window.location.href = response.redirect;
 			}
 		});
-	},
+	}
 };
 
 export default Controller;
