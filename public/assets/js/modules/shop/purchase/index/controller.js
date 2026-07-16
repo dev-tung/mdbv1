@@ -8,8 +8,6 @@ import Service from './service.js';
 
 const Controller = {
 	init() {
-		
-
 		Table.init({
 			body: '#purchase-table-body',
 

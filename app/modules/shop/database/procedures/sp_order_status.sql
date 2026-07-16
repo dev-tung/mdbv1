@@ -1,84 +1,80 @@
 DROP PROCEDURE IF EXISTS sp_order_status;
 
-CREATE PROCEDURE sp_order_status(
-	IN p_id INT,
-	IN p_status VARCHAR(20)
-)
-BEGIN
-	DECLARE v_old_status VARCHAR(20);
+CREATE PROCEDURE sp_order_status (IN p_id INT, IN p_status VARCHAR(20)) BEGIN DECLARE v_old_status VARCHAR(20);
 
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	BEGIN
-		ROLLBACK;
-		RESIGNAL;
-	END;
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK;
 
-	START TRANSACTION;
+RESIGNAL;
 
-	/* =====================================
-	   CHECK ORDER
-	===================================== */
+END;
 
-	IF NOT EXISTS (
-		SELECT 1
-		FROM orders
-		WHERE id = p_id
-	) THEN
-		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = 'Đơn hàng không tồn tại';
-	END IF;
+START TRANSACTION;
 
-	/* =====================================
-	   CHECK STATUS
-	===================================== */
+/* =====================================
+CHECK ORDER
+===================================== */
+IF NOT EXISTS (
+	SELECT
+		1
+	FROM
+		orders
+	WHERE
+		id = p_id
+) THEN SIGNAL SQLSTATE '45000'
+SET
+	MESSAGE_TEXT = 'Đơn hàng không tồn tại';
 
-	IF p_status NOT IN ('pending', 'completed') THEN
-		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = 'Trạng thái không hợp lệ';
-	END IF;
+END IF;
 
-	/* =====================================
-	   LOCK ORDER
-	===================================== */
+/* =====================================
+CHECK STATUS
+===================================== */
+IF p_status NOT IN ('pending', 'completed') THEN SIGNAL SQLSTATE '45000'
+SET
+	MESSAGE_TEXT = 'Trạng thái không hợp lệ';
 
-	SELECT status
-	INTO v_old_status
-	FROM orders
-	WHERE id = p_id
-	FOR UPDATE;
+END IF;
 
-	/* =====================================
-	   STATUS NOT CHANGED
-	===================================== */
+/* =====================================
+LOCK ORDER
+===================================== */
+SELECT
+	status INTO v_old_status
+FROM
+	orders
+WHERE
+	id = p_id FOR
+UPDATE;
 
-	IF v_old_status = p_status THEN
+/* =====================================
+STATUS NOT CHANGED
+===================================== */
+IF v_old_status = p_status THEN COMMIT;
 
-		COMMIT;
+SELECT
+	TRUE AS success,
+	p_id AS id,
+	p_status AS status,
+	'Trạng thái không thay đổi' AS message;
 
-		SELECT
-			TRUE AS success,
-			p_id AS id,
-			p_status AS status,
-			'Trạng thái không thay đổi' AS message;
+ELSE
+/* =====================================
+UPDATE STATUS
+===================================== */
+UPDATE orders
+SET
+	status = p_status
+WHERE
+	id = p_id;
 
-	ELSE
+COMMIT;
 
-		/* =====================================
-		   UPDATE STATUS
-		===================================== */
+SELECT
+	TRUE AS success,
+	p_id AS id,
+	p_status AS status,
+	'Cập nhật trạng thái thành công' AS message;
 
-		UPDATE orders
-		SET status = p_status
-		WHERE id = p_id;
-
-		COMMIT;
-
-		SELECT
-			TRUE AS success,
-			p_id AS id,
-			p_status AS status,
-			'Cập nhật trạng thái thành công' AS message;
-
-	END IF;
+END IF;
 
 END;

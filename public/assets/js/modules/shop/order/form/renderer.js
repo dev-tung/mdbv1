@@ -110,7 +110,6 @@ const Renderer = {
 
 			tbody.appendChild(fragment);
 		});
-
 	},
 
 	renderCaculation() {

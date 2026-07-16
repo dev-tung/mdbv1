@@ -180,10 +180,7 @@ const Controller = {
 		};
 
 		const changeGift = (e) => {
-			State.items = Service.changeGift(
-				State.items,
-				e,
-			);
+			State.items = Service.changeGift(State.items, e);
 
 			Renderer.renderCaculation();
 
@@ -191,10 +188,7 @@ const Controller = {
 		};
 
 		const removeItem = (e) => {
-			State.items = Service.removeItem(
-				State.items,
-				e,
-			);
+			State.items = Service.removeItem(State.items, e);
 
 			Renderer.renderProducts();
 

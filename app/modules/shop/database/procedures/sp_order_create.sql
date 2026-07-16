@@ -6,34 +6,32 @@ CREATE PROCEDURE sp_order_create (
 	IN p_note TEXT,
 	IN p_status VARCHAR(20),
 	IN p_payment VARCHAR(20),
-	IN p_subtotal_amount DECIMAL(15,2),
-	IN p_vat_rate DECIMAL(5,2),
-	IN p_vat_amount DECIMAL(15,2),
-	IN p_total_amount DECIMAL(15,2),
-	IN p_paid_amount DECIMAL(15,2),
-	IN p_debt_amount DECIMAL(15,2),
+	IN p_subtotal_amount DECIMAL(15, 2),
+	IN p_vat_rate DECIMAL(5, 2),
+	IN p_vat_amount DECIMAL(15, 2),
+	IN p_total_amount DECIMAL(15, 2),
+	IN p_paid_amount DECIMAL(15, 2),
+	IN p_debt_amount DECIMAL(15, 2),
 	IN p_created_by INT,
 	IN p_items JSON
-)
-BEGIN
-	DECLARE v_order_id INT;
+) BEGIN DECLARE v_order_id INT;
 
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION
-	BEGIN
-		ROLLBACK;
-		RESIGNAL;
-	END;
+DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK;
 
-	START TRANSACTION;
+RESIGNAL;
 
-	/* =====================================
-	CHECK INVENTORIES
-	===================================== */
+END;
 
-	IF EXISTS (
-		SELECT
-			1
-		FROM JSON_TABLE(
+START TRANSACTION;
+
+/* =====================================
+CHECK INVENTORIES
+===================================== */
+IF EXISTS (
+	SELECT
+		1
+	FROM
+		JSON_TABLE (
 			p_items,
 			'$[*]' COLUMNS (
 				purchase_id INT PATH '$.purchase_id',
@@ -41,22 +39,22 @@ BEGIN
 				quantity INT PATH '$.quantity'
 			)
 		) jt
-		LEFT JOIN inventories i
-			ON i.purchase_id = jt.purchase_id
-			AND i.product_id = jt.product_id
-		WHERE
-			i.id IS NULL
-			OR i.quantity < jt.quantity
-	) THEN
-		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = 'Số lượng tồn kho không đủ';
-	END IF;
+		LEFT JOIN inventories i ON i.purchase_id = jt.purchase_id
+		AND i.product_id = jt.product_id
+	WHERE
+		i.id IS NULL
+		OR i.quantity < jt.quantity
+) THEN SIGNAL SQLSTATE '45000'
+SET
+	MESSAGE_TEXT = 'Số lượng tồn kho không đủ';
 
-	/* =====================================
-	CREATE ORDER
-	===================================== */
+END IF;
 
-	INSERT INTO orders (
+/* =====================================
+CREATE ORDER
+===================================== */
+INSERT INTO
+	orders (
 		customer_id,
 		description,
 		note,
@@ -70,7 +68,8 @@ BEGIN
 		debt_amount,
 		created_by
 	)
-	VALUES (
+VALUES
+	(
 		p_customer_id,
 		p_description,
 		p_note,
@@ -85,13 +84,14 @@ BEGIN
 		p_created_by
 	);
 
-	SET v_order_id = LAST_INSERT_ID();
+SET
+	v_order_id = LAST_INSERT_ID ();
 
-	/* =====================================
-	CREATE ORDER ITEMS
-	===================================== */
-
-	INSERT INTO order_items (
+/* =====================================
+CREATE ORDER ITEMS
+===================================== */
+INSERT INTO
+	order_items (
 		order_id,
 		purchase_id,
 		product_id,
@@ -103,56 +103,57 @@ BEGIN
 		total_amount,
 		is_gift
 	)
-	SELECT
-		v_order_id,
-		purchase_id,
-		product_id,
-		product_name,
-		quantity,
-		selling_price,
-		subtotal_amount,
-		vat_amount,
-		total_amount,
-		is_gift
-	FROM JSON_TABLE(
+SELECT
+	v_order_id,
+	purchase_id,
+	product_id,
+	product_name,
+	quantity,
+	selling_price,
+	subtotal_amount,
+	vat_amount,
+	total_amount,
+	is_gift
+FROM
+	JSON_TABLE (
 		p_items,
 		'$[*]' COLUMNS (
 			purchase_id INT PATH '$.purchase_id',
 			product_id INT PATH '$.product_id',
 			product_name VARCHAR(255) PATH '$.product_name',
 			quantity INT PATH '$.quantity',
-			selling_price DECIMAL(15,2) PATH '$.selling_price',
-			subtotal_amount DECIMAL(15,2) PATH '$.subtotal_amount',
-			vat_amount DECIMAL(15,2) PATH '$.vat_amount',
-			total_amount DECIMAL(15,2) PATH '$.total_amount',
+			selling_price DECIMAL(15, 2) PATH '$.selling_price',
+			subtotal_amount DECIMAL(15, 2) PATH '$.subtotal_amount',
+			vat_amount DECIMAL(15, 2) PATH '$.vat_amount',
+			total_amount DECIMAL(15, 2) PATH '$.total_amount',
 			is_gift TINYINT PATH '$.is_gift'
 		)
 	) jt;
 
-	/* =====================================
-	UPDATE INVENTORIES
-	===================================== */
-
-	UPDATE inventories i
-	INNER JOIN (
-		SELECT
-			purchase_id,
-			product_id,
-			SUM(quantity) AS quantity
-		FROM order_items
-		WHERE order_id = v_order_id
-		GROUP BY
-			purchase_id,
-			product_id
-	) oi
-		ON oi.purchase_id = i.purchase_id
-		AND oi.product_id = i.product_id
-	SET
-		i.quantity = i.quantity - oi.quantity;
-
-	COMMIT;
-
+/* =====================================
+UPDATE INVENTORIES
+===================================== */
+UPDATE inventories i
+INNER JOIN (
 	SELECT
-		v_order_id AS id;
+		purchase_id,
+		product_id,
+		SUM(quantity) AS quantity
+	FROM
+		order_items
+	WHERE
+		order_id = v_order_id
+	GROUP BY
+		purchase_id,
+		product_id
+) oi ON oi.purchase_id = i.purchase_id
+AND oi.product_id = i.product_id
+SET
+	i.quantity = i.quantity - oi.quantity;
+
+COMMIT;
+
+SELECT
+	v_order_id AS id;
 
 END;

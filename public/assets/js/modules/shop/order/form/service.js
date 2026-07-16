@@ -54,10 +54,7 @@ const Service = {
 			is_gift: 0,
 		};
 
-		return [
-			...items,
-			this.calculateItem(item, item.vat_rate),
-		];
+		return [...items, this.calculateItem(item, item.vat_rate)];
 	},
 
 	/* =================================================
@@ -203,7 +200,7 @@ const Service = {
 
 			items,
 		};
-	}
+	},
 };
 
 export default Service;

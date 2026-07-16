@@ -76,9 +76,8 @@ const Renderer = {
 			row.querySelector('.payment').dataset.id = order.id;
 
 			// Edit
-			row.querySelector(
-				'.edit-item',
-			).href = `/admin/orders/edit/${order.id}`;
+			row.querySelector('.edit-item').href =
+				`/admin/orders/edit/${order.id}`;
 
 			// Delete
 			row.querySelector('.delete-item').dataset.id = order.id;

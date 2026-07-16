@@ -13,13 +13,7 @@ class OrderRepository extends Repository
 		return Database::call(
 			'CALL sp_order_list(?, ?, ?, ?, ?)',
 			array_params(
-				[
-					'date_from',
-					'date_to',
-					'customer',
-					'payment',
-					'status',
-				],
+				['date_from', 'date_to', 'customer', 'payment', 'status'],
 				$filters,
 			),
 		);
@@ -83,27 +77,27 @@ class OrderRepository extends Repository
 				?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
 			)',
 			[
-					$data['id'],
+				$data['id'],
 
-					$data['customer_id'],
+				$data['customer_id'],
 
-					$data['description'],
-					$data['note'],
+				$data['description'],
+				$data['note'],
 
-					$data['status'],
-					$data['payment'],
+				$data['status'],
+				$data['payment'],
 
-					$data['subtotal_amount'],
+				$data['subtotal_amount'],
 
-					$data['vat_rate'],
-					$data['vat_amount'],
+				$data['vat_rate'],
+				$data['vat_amount'],
 
-					$data['total_amount'],
+				$data['total_amount'],
 
-					$data['paid_amount'],
-					$data['debt_amount'],
+				$data['paid_amount'],
+				$data['debt_amount'],
 
-					json_encode($data['items']),
+				json_encode($data['items']),
 			],
 		);
 	}
