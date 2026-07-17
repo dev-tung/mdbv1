@@ -113,10 +113,7 @@ class Router
 		$modules = glob(PATH_ROOT . '/app/modules/*', GLOB_ONLYDIR);
 
 		foreach ($modules as $module) {
-			$paths = [
-				$module . "/controllers/{$controller}.php",
-				$module . "/endpoints/{$controller}.php",
-			];
+			$paths = [$module . "/controllers/{$controller}.php", $module . "/endpoints/{$controller}.php"];
 
 			foreach ($paths as $path) {
 				if (file_exists($path)) {

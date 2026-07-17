@@ -63,17 +63,11 @@ const State = {
 		this.items = data.items;
 	},
 	setSummary() {
-		const subtotal_amount = this.items.reduce(
-			(sum, item) => sum + Number(item.subtotal_amount || 0),
-			0,
-		);
+		const subtotal_amount = this.items.reduce((sum, item) => sum + Number(item.subtotal_amount || 0), 0);
 
 		const vat_amount = this.items.reduce((sum, item) => sum + Number(item.vat_amount || 0), 0);
 
-		const total_amount = this.items.reduce(
-			(sum, item) => sum + Number(item.total_amount || 0),
-			0,
-		);
+		const total_amount = this.items.reduce((sum, item) => sum + Number(item.total_amount || 0), 0);
 
 		const debt_amount = total_amount - Number(this.purchase.paid_amount || 0);
 

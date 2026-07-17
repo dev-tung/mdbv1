@@ -71,19 +71,13 @@ const Controller = {
 
 			try {
 				if (target.classList.contains('status')) {
-					const response = await Api.updatePurchaseStatus(
-						target.dataset.id,
-						target.value,
-					);
+					const response = await Api.updatePurchaseStatus(target.dataset.id, target.value);
 
 					alert(response.message);
 				}
 
 				if (target.classList.contains('payment')) {
-					const response = await Api.updatePurchasePayment(
-						target.dataset.id,
-						target.value,
-					);
+					const response = await Api.updatePurchasePayment(target.dataset.id, target.value);
 
 					alert(response.message);
 				}

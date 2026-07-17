@@ -57,10 +57,7 @@ class YonexProductCrawler
 		 */
 		file_put_contents(
 			$this->jsonFile,
-			json_encode(
-				array_values($products),
-				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
-			),
+			json_encode(array_values($products), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
 		);
 
 		crawl_log('');
@@ -181,8 +178,7 @@ class YonexProductCrawler
 				crawl_log("Downloading: $name");
 
 				if (crawl_download_image($image, $savePath)) {
-					$product['image_file'] =
-						'image/yonex_product/' . $category['slug'] . '/' . $fileName;
+					$product['image_file'] = 'image/yonex_product/' . $category['slug'] . '/' . $fileName;
 				}
 			}
 

@@ -49,11 +49,7 @@ class YonexCategoryCrawler
 		/**
 		 * GET MENU IMAGES
 		 */
-		preg_match_all(
-			'#https://www\.yonex\.com/media/wysiwyg/submenu-icons/[^"\']+#i',
-			$html,
-			$matches,
-		);
+		preg_match_all('#https://www\.yonex\.com/media/wysiwyg/submenu-icons/[^"\']+#i', $html, $matches);
 
 		$images = array_values(array_unique($matches[0] ?? []));
 
@@ -113,10 +109,7 @@ class YonexCategoryCrawler
 		 */
 		file_put_contents(
 			$this->jsonFile,
-			json_encode(
-				array_values($categories),
-				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
-			),
+			json_encode(array_values($categories), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
 		);
 
 		/**

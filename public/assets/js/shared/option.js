@@ -24,7 +24,7 @@ const Option = {
 			color: 'default',
 		},
 	},
-	product_status: {
+	product: {
 		active: {
 			label: 'Đang bán',
 		},

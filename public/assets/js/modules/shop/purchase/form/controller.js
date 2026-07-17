@@ -96,9 +96,7 @@ const Controller = {
 		Dom.find('#vat_rate').addEventListener('input', (e) => {
 			State.purchase.vat_rate = Number(e.target.value);
 
-			State.items = State.items.map((item) =>
-				Service.calculateItem(item, State.purchase.vat_rate),
-			);
+			State.items = State.items.map((item) => Service.calculateItem(item, State.purchase.vat_rate));
 
 			State.setSummary();
 			Renderer.renderCaculation();
@@ -119,10 +117,7 @@ const Controller = {
 
 			State.purchase.debt_amount = State.summary.total_amount - State.purchase.paid_amount;
 
-			Dom.find('#paid_amount_wrapper').classList.toggle(
-				'd-none',
-				State.purchase.payment !== 'partial',
-			);
+			Dom.find('#paid_amount_wrapper').classList.toggle('d-none', State.purchase.payment !== 'partial');
 
 			this.renderSummary();
 		});

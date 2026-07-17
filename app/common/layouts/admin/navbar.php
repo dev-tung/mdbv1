@@ -19,9 +19,7 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/products',
-                        ) ?>">Danh sách sản phẩm</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/products') ?>">Danh sách sản phẩm</a></li>
                         <li><a class="dropdown-item" href="<?= route(
                         	'/admin/products/create',
                         ) ?>">Thêm sản phẩm</a></li>
@@ -107,12 +105,8 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/orders',
-                        ) ?>">Danh sách đơn hàng</a></li>
-                        <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/orders/create',
-                        ) ?>">Thêm đơn hàng</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/orders') ?>">Danh sách đơn hàng</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/orders/create') ?>">Thêm đơn hàng</a></li>
                     </ul>
                 </li>
 
@@ -129,12 +123,8 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/reports/revenue',
-                        ) ?>">Doanh thu</a></li>
-                        <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/reports/inventory',
-                        ) ?>">Tồn kho</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/reports/revenue') ?>">Doanh thu</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/reports/inventory') ?>">Tồn kho</a></li>
                     </ul>
                 </li>
 

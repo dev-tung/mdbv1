@@ -68,6 +68,7 @@ class ProductEndpoint
 			'success' => true,
 			'message' => 'Thêm sản phẩm thành công!',
 			'id' => $id,
+			'redirect' => '/admin/products',
 		]);
 	}
 
@@ -87,15 +88,12 @@ class ProductEndpoint
 			]);
 		}
 
-		$this->productRepository->update(
-			(int) ($input['id'] ?? 0),
-			$input,
-			$_FILES['thumbnail'] ?? [],
-		);
+		$this->productRepository->update((int) ($input['id'] ?? 0), $input, $_FILES['thumbnail'] ?? []);
 
 		return Response::json([
 			'success' => true,
 			'message' => 'Cập nhật sản phẩm thành công!',
+			'redirect' => '/admin/products',
 		]);
 	}
 

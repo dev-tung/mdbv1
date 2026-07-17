@@ -37,16 +37,7 @@ class CustomerRepository
 
 	public function create(array $data): int
 	{
-		$fields = [
-			'name',
-			'group_id',
-			'phone',
-			'address',
-			'description',
-			'email',
-			'created_at',
-			'updated_at',
-		];
+		$fields = ['name', 'group_id', 'phone', 'address', 'description', 'email', 'created_at', 'updated_at'];
 
 		$data = array_intersect_key($data, array_flip($fields));
 

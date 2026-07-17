@@ -47,20 +47,11 @@ const State = {
 	},
 
 	setSummary() {
-		const total_amount = this.purchases.reduce(
-			(sum, purchase) => sum + Number(purchase.total_amount || 0),
-			0,
-		);
+		const total_amount = this.purchases.reduce((sum, purchase) => sum + Number(purchase.total_amount || 0), 0);
 
-		const paid_amount = this.purchases.reduce(
-			(sum, purchase) => sum + Number(purchase.paid_amount || 0),
-			0,
-		);
+		const paid_amount = this.purchases.reduce((sum, purchase) => sum + Number(purchase.paid_amount || 0), 0);
 
-		const debt_amount = this.purchases.reduce(
-			(sum, purchase) => sum + Number(purchase.debt_amount || 0),
-			0,
-		);
+		const debt_amount = this.purchases.reduce((sum, purchase) => sum + Number(purchase.debt_amount || 0), 0);
 
 		this.summary = {
 			total_amount,

@@ -27,12 +27,7 @@ const Renderer = {
 
 		Select.render('#payment', Option.payment, State.purchase.payment, '-- Chọn thanh toán --');
 
-		Select.render(
-			'#warehouse_id',
-			State.warehouses,
-			State.purchase.warehouse_id,
-			'-- Chọn kho --',
-		);
+		Select.render('#warehouse_id', State.warehouses, State.purchase.warehouse_id, '-- Chọn kho --');
 	},
 
 	/* =================================================

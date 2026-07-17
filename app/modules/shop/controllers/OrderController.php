@@ -9,8 +9,6 @@ class OrderController
 
 	public function form($id = null): void
 	{
-		View::render('order/form', [
-			'id' => $id,
-		]);
+		View::render('order/form', compact('id'));
 	}
 }

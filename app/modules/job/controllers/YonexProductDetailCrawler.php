@@ -315,10 +315,7 @@ class YonexProductDetailCrawler
 	{
 		file_put_contents(
 			$this->outputFile,
-			json_encode(
-				array_values($data),
-				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
-			),
+			json_encode(array_values($data), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
 		);
 	}
 

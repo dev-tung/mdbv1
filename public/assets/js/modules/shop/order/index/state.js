@@ -33,20 +33,11 @@ const State = {
 	},
 
 	setSummary() {
-		const total_amount = this.orders.reduce(
-			(sum, order) => sum + Number(order.total_amount || 0),
-			0,
-		);
+		const total_amount = this.orders.reduce((sum, order) => sum + Number(order.total_amount || 0), 0);
 
-		const paid_amount = this.orders.reduce(
-			(sum, order) => sum + Number(order.paid_amount || 0),
-			0,
-		);
+		const paid_amount = this.orders.reduce((sum, order) => sum + Number(order.paid_amount || 0), 0);
 
-		const debt_amount = this.orders.reduce(
-			(sum, order) => sum + Number(order.debt_amount || 0),
-			0,
-		);
+		const debt_amount = this.orders.reduce((sum, order) => sum + Number(order.debt_amount || 0), 0);
 
 		this.summary = {
 			total_amount,

@@ -26,12 +26,7 @@ const Renderer = {
 	renderOptions() {
 		Select.render('#filter-payment', Option.payment, State.filters.payment, '-- Thanh toán --');
 
-		Select.render(
-			'#filter-supplier',
-			State.suppliers,
-			State.filters.supplier_id,
-			'-- Nhà cung cấp --',
-		);
+		Select.render('#filter-supplier', State.suppliers, State.filters.supplier_id, '-- Nhà cung cấp --');
 	},
 
 	/* =================================================

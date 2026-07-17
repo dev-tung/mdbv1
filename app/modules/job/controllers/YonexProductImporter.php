@@ -276,9 +276,7 @@ class YonexProductImporter
 					'brand_id' => $this->brandId,
 					'name' => $name,
 					'slug' => $slug,
-					'thumbnail' => isset($item['image_file'])
-						? 'uploads/' . ltrim($item['image_file'], '/')
-						: null,
+					'thumbnail' => isset($item['image_file']) ? 'uploads/' . ltrim($item['image_file'], '/') : null,
 					'description' => $item['description'] ?? null,
 					'price' => 0,
 					'status' => 1,

@@ -5,10 +5,10 @@
 // =========================
 
 Router::get('/admin/products', 'ProductController@index');
-Router::get('/admin/products/create', 'ProductController@create', [
+Router::get('/admin/products/create', 'ProductController@form', [
 	'auth' => 'admin',
 ]);
-Router::get('/admin/products/edit/{id}', 'ProductController@edit', [
+Router::get('/admin/products/edit/{id}', 'ProductController@form', [
 	'auth' => 'admin',
 ]);
 

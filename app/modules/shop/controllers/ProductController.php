@@ -10,13 +10,8 @@ class ProductController
 		View::render('product/index');
 	}
 
-	public function create(): void
+	public function form($id = null): void
 	{
-		View::render('product/create');
-	}
-
-	public function edit($id): void
-	{
-		View::render('product/edit', compact('id'));
+		View::render('product/form', compact('id'));
 	}
 }

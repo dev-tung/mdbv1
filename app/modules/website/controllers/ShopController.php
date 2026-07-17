@@ -39,9 +39,7 @@ class ShopController
 			exit('Product not found');
 		}
 
-		$category = $product['category_id']
-			? $this->categoryRepository->findById($product['category_id'])
-			: null;
+		$category = $product['category_id'] ? $this->categoryRepository->findById($product['category_id']) : null;
 
 		View::render('shop/show', compact('product', 'category'));
 	}

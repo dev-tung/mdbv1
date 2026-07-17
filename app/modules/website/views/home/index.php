@@ -62,9 +62,7 @@
             <?php foreach ($categories as $cat): ?>
                 <div class="col-6 col-md-4 col-lg-3">
 
-                    <a href="/product?category=<?= $cat[
-                    	'id'
-                    ] ?>" class="text-decoration-none text-dark">
+                    <a href="/product?category=<?= $cat['id'] ?>" class="text-decoration-none text-dark">
 
                         <div class="card border-0 shadow-sm h-100">
 
