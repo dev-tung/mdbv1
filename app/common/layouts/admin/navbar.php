@@ -10,9 +10,7 @@
                 <!-- SẢN PHẨM -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu(
-                    	'/admin/products',
-                    ) ?:
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/products') ?:
                     	active_menu('/admin/products/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
@@ -34,9 +32,7 @@
                 <!-- NHÀ CUNG CẤP -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu(
-                    	'/admin/suppliers',
-                    ) ?:
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/suppliers') ?:
                     	active_menu('/admin/suppliers/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
@@ -58,9 +54,7 @@
                 <!-- MUA HÀNG -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu(
-                    	'/admin/purchases',
-                    ) ?:
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/purchases') ?:
                     	active_menu('/admin/purchases/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
@@ -82,9 +76,7 @@
                 <!-- KHÁCH HÀNG -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu(
-                    	'/admin/customers',
-                    ) ?:
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/customers') ?:
                     	active_menu('/admin/customers/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
@@ -106,9 +98,7 @@
                 <!-- ĐƠN HÀNG -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu(
-                    	'/admin/orders',
-                    ) ?:
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/orders') ?:
                     	active_menu('/admin/orders/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
@@ -130,9 +120,7 @@
                 <!-- BÁO CÁO -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu(
-                    	'/admin/reports',
-                    ) ?:
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/reports') ?:
                     	active_menu('/admin/reports/revenue') ?>"
                         href="#"
                         data-bs-toggle="dropdown">

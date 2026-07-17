@@ -10,8 +10,7 @@ class YonexProductCrawler
 
 	public function __construct()
 	{
-		$this->categoryFile =
-			PATH_ROOT . '/public/craw/json/yonex_category.json';
+		$this->categoryFile = PATH_ROOT . '/public/craw/json/yonex_category.json';
 		$this->jsonFile = PATH_ROOT . '/public/craw/json/yonex_product.json';
 		$this->imgDir = PATH_ROOT . '/public/craw/image/yonex_product';
 	}
@@ -60,9 +59,7 @@ class YonexProductCrawler
 			$this->jsonFile,
 			json_encode(
 				array_values($products),
-				JSON_PRETTY_PRINT |
-					JSON_UNESCAPED_UNICODE |
-					JSON_UNESCAPED_SLASHES,
+				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
 			),
 		);
 
@@ -134,9 +131,7 @@ class YonexProductCrawler
 		$this->ensureDir($categoryImgDir);
 
 		foreach ($nodes as $node) {
-			$linkNode = $xpath
-				->query('.//a[contains(@class,"product-item-link")]', $node)
-				->item(0);
+			$linkNode = $xpath->query('.//a[contains(@class,"product-item-link")]', $node)->item(0);
 
 			if (!$linkNode) {
 				continue;
@@ -175,10 +170,7 @@ class YonexProductCrawler
 			 * DOWNLOAD IMAGE
 			 */
 			if ($image) {
-				$ext = pathinfo(
-					parse_url($image, PHP_URL_PATH),
-					PATHINFO_EXTENSION,
-				);
+				$ext = pathinfo(parse_url($image, PHP_URL_PATH), PATHINFO_EXTENSION);
 				if (!$ext) {
 					$ext = 'jpg';
 				}
@@ -190,10 +182,7 @@ class YonexProductCrawler
 
 				if (crawl_download_image($image, $savePath)) {
 					$product['image_file'] =
-						'image/yonex_product/' .
-						$category['slug'] .
-						'/' .
-						$fileName;
+						'image/yonex_product/' . $category['slug'] . '/' . $fileName;
 				}
 			}
 
@@ -217,9 +206,7 @@ class YonexProductCrawler
 
 		$xpath = new DOMXPath($dom);
 
-		$nodes = $xpath->query(
-			'//div[contains(@class,"pages")]//a[contains(@class,"page")]',
-		);
+		$nodes = $xpath->query('//div[contains(@class,"pages")]//a[contains(@class,"page")]');
 
 		$urls = [];
 

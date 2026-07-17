@@ -24,12 +24,7 @@ const Renderer = {
     ================================================= */
 
 	renderOptions() {
-		Select.render(
-			'#filter-payment',
-			Option.payment,
-			State.filters.payment,
-			'-- Thanh toán --',
-		);
+		Select.render('#filter-payment', Option.payment, State.filters.payment, '-- Thanh toán --');
 
 		Select.render(
 			'#filter-supplier',
@@ -66,19 +61,11 @@ const Renderer = {
 			});
 
 			// Status
-			Select.render(
-				row.querySelector('.status'),
-				Option.process,
-				purchase.status,
-			);
+			Select.render(row.querySelector('.status'), Option.process, purchase.status);
 			row.querySelector('.status').dataset.id = purchase.id;
 
 			// Payment
-			Select.render(
-				row.querySelector('.payment'),
-				Option.payment,
-				purchase.payment,
-			);
+			Select.render(row.querySelector('.payment'), Option.payment, purchase.payment);
 			row.querySelector('.payment').dataset.id = purchase.id;
 
 			// Edit
@@ -97,20 +84,11 @@ const Renderer = {
     ================================================= */
 
 	renderSummary() {
-		Dom.text(
-			'#sum-total-amount',
-			Formatter.money(State.summary.total_amount),
-		);
+		Dom.text('#sum-total-amount', Formatter.money(State.summary.total_amount));
 
-		Dom.text(
-			'#sum-paid-amount',
-			Formatter.money(State.summary.paid_amount),
-		);
+		Dom.text('#sum-paid-amount', Formatter.money(State.summary.paid_amount));
 
-		Dom.text(
-			'#sum-debt-amount',
-			Formatter.money(State.summary.debt_amount),
-		);
+		Dom.text('#sum-debt-amount', Formatter.money(State.summary.debt_amount));
 	},
 };
 

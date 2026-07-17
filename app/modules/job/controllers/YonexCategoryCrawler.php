@@ -104,8 +104,7 @@ class YonexCategoryCrawler
 
 			if (crawl_download_image($matchedImage, $savePath)) {
 				$categories[$key]['image'] = $matchedImage;
-				$categories[$key]['image_file'] =
-					'image/yonex_category/' . $fileName;
+				$categories[$key]['image_file'] = 'image/yonex_category/' . $fileName;
 			}
 		}
 
@@ -116,9 +115,7 @@ class YonexCategoryCrawler
 			$this->jsonFile,
 			json_encode(
 				array_values($categories),
-				JSON_PRETTY_PRINT |
-					JSON_UNESCAPED_UNICODE |
-					JSON_UNESCAPED_SLASHES,
+				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
 			),
 		);
 
@@ -175,9 +172,7 @@ class YonexCategoryCrawler
 				continue;
 			}
 
-			$url = str_starts_with($href, 'http')
-				? $href
-				: 'https://www.yonex.com' . $href;
+			$url = str_starts_with($href, 'http') ? $href : 'https://www.yonex.com' . $href;
 
 			$path = parse_url($url, PHP_URL_PATH);
 			$slug = basename(trim($path, '/'));

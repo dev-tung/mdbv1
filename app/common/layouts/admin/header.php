@@ -10,6 +10,6 @@
 <body>
 
 <?php if ($menu) {
-	require BASE_PATH . '/app/common/layouts/admin/navbar.php';
+	require PATH_ROOT . '/app/common/layouts/admin/navbar.php';
 }
 ?>

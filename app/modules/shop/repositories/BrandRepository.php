@@ -27,11 +27,8 @@ class BrandRepository
 	/**
 	 * GET LIST
 	 */
-	public function getList(
-		array $conditions = [],
-		int $limit = 0,
-		int $offset = 0,
-	): array {
+	public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
+	{
 		$params = [];
 
 		$sql = '

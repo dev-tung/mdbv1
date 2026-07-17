@@ -33,10 +33,7 @@ const Autocomplete = {
 		});
 
 		document.addEventListener('click', (event) => {
-			if (
-				!element.contains(event.target) &&
-				!dropdown.contains(event.target)
-			) {
+			if (!element.contains(event.target) && !dropdown.contains(event.target)) {
 				this.close(dropdown);
 			}
 		});

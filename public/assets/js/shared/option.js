@@ -24,6 +24,15 @@ const Option = {
 			color: 'default',
 		},
 	},
+	product_status: {
+		active: {
+			label: 'Đang bán',
+		},
+
+		inactive: {
+			label: 'Ngừng bán',
+		},
+	},
 };
 
 export default Option;

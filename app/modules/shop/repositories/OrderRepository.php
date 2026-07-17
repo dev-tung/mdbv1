@@ -12,10 +12,7 @@ class OrderRepository extends Repository
 	{
 		return Database::call(
 			'CALL sp_order_list(?, ?, ?, ?, ?)',
-			array_params(
-				['date_from', 'date_to', 'customer', 'payment', 'status'],
-				$filters,
-			),
+			array_params(['date_from', 'date_to', 'customer', 'payment', 'status'], $filters),
 		);
 	}
 

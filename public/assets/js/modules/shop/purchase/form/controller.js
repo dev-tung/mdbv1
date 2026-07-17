@@ -117,8 +117,7 @@ const Controller = {
 					break;
 			}
 
-			State.purchase.debt_amount =
-				State.summary.total_amount - State.purchase.paid_amount;
+			State.purchase.debt_amount = State.summary.total_amount - State.purchase.paid_amount;
 
 			Dom.find('#paid_amount_wrapper').classList.toggle(
 				'd-none',
@@ -151,11 +150,7 @@ const Controller = {
 		}
 
 		table.addEventListener('input', (e) => {
-			State.items = Service.changeItem(
-				State.items,
-				e,
-				State.purchase.vat_rate,
-			);
+			State.items = Service.changeItem(State.items, e, State.purchase.vat_rate);
 			Renderer.renderCaculation();
 			this.renderSummary();
 		});
@@ -182,11 +177,7 @@ const Controller = {
 				return;
 			}
 
-			const payload = Service.payload(
-				State.purchase,
-				State.summary,
-				State.items,
-			);
+			const payload = Service.payload(State.purchase, State.summary, State.items);
 
 			const response = State.purchase.id
 				? await Api.updatePurchase(State.purchase.id, payload)

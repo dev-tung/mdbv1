@@ -14,7 +14,7 @@ function config($key)
 	$module = array_shift($parts); // shop
 	$file = array_shift($parts); // option
 
-	$path = BASE_PATH . "/app/modules/{$module}/config/{$file}.php";
+	$path = PATH_ROOT . "/app/modules/{$module}/config/{$file}.php";
 
 	if (!file_exists($path)) {
 		return null;

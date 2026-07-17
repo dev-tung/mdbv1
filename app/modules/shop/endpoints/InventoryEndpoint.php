@@ -12,12 +12,7 @@ class InventoryEndpoint
 	// LIST
 	public function apiList()
 	{
-		$filters = request_filters([
-			'keyword',
-			'category_id',
-			'status',
-			'stock',
-		]);
+		$filters = request_filters(['keyword', 'category_id', 'status', 'stock']);
 
 		return Response::json([
 			'success' => true,

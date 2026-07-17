@@ -142,10 +142,7 @@ class OrderEndpoint
 				]);
 			}
 
-			$updated = $this->orderRepository->status(
-				(int) $input['id'],
-				$input['status'],
-			);
+			$updated = $this->orderRepository->status((int) $input['id'], $input['status']);
 
 			return Response::json([
 				'success' => true,
@@ -180,10 +177,7 @@ class OrderEndpoint
 			]);
 		}
 
-		$updated = $this->orderRepository->payment(
-			(int) $input['id'],
-			$input['payment'],
-		);
+		$updated = $this->orderRepository->payment((int) $input['id'], $input['payment']);
 
 		return Response::json([
 			'success' => true,

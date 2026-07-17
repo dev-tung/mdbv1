@@ -6,11 +6,11 @@ class Autoload
 	{
 		spl_autoload_register(function ($class) {
 			$paths = [
-				BASE_PATH . '/app/core/' . $class . '.php',
-				BASE_PATH . '/app/modules/*/validators/' . $class . '.php',
-				BASE_PATH . '/app/modules/*/repositories/' . $class . '.php',
-				BASE_PATH . '/app/modules/*/controllers/' . $class . '.php',
-				BASE_PATH . '/app/modules/*/endpoints/' . $class . '.php',
+				PATH_ROOT . '/app/core/' . $class . '.php',
+				PATH_ROOT . '/app/modules/*/validators/' . $class . '.php',
+				PATH_ROOT . '/app/modules/*/repositories/' . $class . '.php',
+				PATH_ROOT . '/app/modules/*/controllers/' . $class . '.php',
+				PATH_ROOT . '/app/modules/*/endpoints/' . $class . '.php',
 			];
 
 			foreach ($paths as $pattern) {

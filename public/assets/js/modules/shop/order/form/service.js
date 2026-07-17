@@ -20,9 +20,7 @@ const Service = {
 	================================================= */
 
 	selectProduct(items, product) {
-		const index = items.findIndex(
-			(item) => item.purchase_id === product.purchase_id,
-		);
+		const index = items.findIndex((item) => item.purchase_id === product.purchase_id);
 
 		// Đã có trong danh sách
 
@@ -138,10 +136,7 @@ const Service = {
 			};
 		}
 
-		const subtotal_amount = Calculator.multiply(
-			item.quantity,
-			item.selling_price,
-		);
+		const subtotal_amount = Calculator.multiply(item.quantity, item.selling_price);
 
 		const vat_amount = Calculator.multiply(subtotal_amount, vatRate / 100);
 

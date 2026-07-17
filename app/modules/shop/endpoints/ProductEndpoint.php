@@ -62,14 +62,11 @@ class ProductEndpoint
 			]);
 		}
 
-		$id = $this->productRepository->create(
-			$input,
-			$_FILES['thumbnail'] ?? [],
-		);
+		$id = $this->productRepository->create($input, $_FILES['thumbnail'] ?? []);
 
 		return Response::json([
 			'success' => true,
-			'message' => 'Create success',
+			'message' => 'Thêm sản phẩm thành công!',
 			'id' => $id,
 		]);
 	}
@@ -98,7 +95,7 @@ class ProductEndpoint
 
 		return Response::json([
 			'success' => true,
-			'message' => 'Update success',
+			'message' => 'Cập nhật sản phẩm thành công!',
 		]);
 	}
 
@@ -113,7 +110,7 @@ class ProductEndpoint
 
 		return Response::json([
 			'success' => true,
-			'message' => 'Delete success',
+			'message' => 'Xóa sản phẩm thành công!',
 		]);
 	}
 }

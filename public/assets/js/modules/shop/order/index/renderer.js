@@ -24,12 +24,7 @@ const Renderer = {
 	================================================= */
 
 	renderOptions() {
-		Select.render(
-			'#filter-payment',
-			Option.payment,
-			State.filters.payment,
-			'-- Thanh toán --',
-		);
+		Select.render('#filter-payment', Option.payment, State.filters.payment, '-- Thanh toán --');
 	},
 
 	/* =================================================
@@ -58,26 +53,17 @@ const Renderer = {
 			});
 
 			// Status
-			Select.render(
-				row.querySelector('.status'),
-				Option.process,
-				order.status,
-			);
+			Select.render(row.querySelector('.status'), Option.process, order.status);
 
 			row.querySelector('.status').dataset.id = order.id;
 
 			// Payment
-			Select.render(
-				row.querySelector('.payment'),
-				Option.payment,
-				order.payment,
-			);
+			Select.render(row.querySelector('.payment'), Option.payment, order.payment);
 
 			row.querySelector('.payment').dataset.id = order.id;
 
 			// Edit
-			row.querySelector('.edit-item').href =
-				`/admin/orders/edit/${order.id}`;
+			row.querySelector('.edit-item').href = `/admin/orders/edit/${order.id}`;
 
 			// Delete
 			row.querySelector('.delete-item').dataset.id = order.id;
@@ -91,20 +77,11 @@ const Renderer = {
 	================================================= */
 
 	renderSummary() {
-		Dom.text(
-			'#sum-total-amount',
-			Formatter.money(State.summary.total_amount),
-		);
+		Dom.text('#sum-total-amount', Formatter.money(State.summary.total_amount));
 
-		Dom.text(
-			'#sum-paid-amount',
-			Formatter.money(State.summary.paid_amount),
-		);
+		Dom.text('#sum-paid-amount', Formatter.money(State.summary.paid_amount));
 
-		Dom.text(
-			'#sum-debt-amount',
-			Formatter.money(State.summary.debt_amount),
-		);
+		Dom.text('#sum-debt-amount', Formatter.money(State.summary.debt_amount));
 	},
 };
 

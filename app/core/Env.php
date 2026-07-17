@@ -10,7 +10,7 @@ class Env
 			return;
 		}
 
-		$path = $path ?? BASE_PATH . '/.env';
+		$path = $path ?? PATH_ROOT . '/.env';
 
 		if (!file_exists($path)) {
 			return;

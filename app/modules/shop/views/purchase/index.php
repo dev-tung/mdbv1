@@ -72,7 +72,7 @@
 
       <tbody id="purchase-table-body">
         <tr>
-          <td colspan="9" class="text-center text-muted">Đang tải dữ liệu...</td>
+          <td colspan="10" class="text-center text-muted">Đang tải dữ liệu...</td>
         </tr>
       </tbody>
 

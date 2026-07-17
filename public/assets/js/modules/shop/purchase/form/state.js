@@ -55,9 +55,7 @@ const State = {
 		this.purchase.supplier_name = supplier.name;
 	},
 	setWarehouses(warehouse) {
-		return Object.fromEntries(
-			warehouse.data.map((item) => [item.id, { label: item.name }]),
-		);
+		return Object.fromEntries(warehouse.data.map((item) => [item.id, { label: item.name }]));
 	},
 	setDefault(data) {
 		this.purchase = data.purchase;
@@ -70,18 +68,14 @@ const State = {
 			0,
 		);
 
-		const vat_amount = this.items.reduce(
-			(sum, item) => sum + Number(item.vat_amount || 0),
-			0,
-		);
+		const vat_amount = this.items.reduce((sum, item) => sum + Number(item.vat_amount || 0), 0);
 
 		const total_amount = this.items.reduce(
 			(sum, item) => sum + Number(item.total_amount || 0),
 			0,
 		);
 
-		const debt_amount =
-			total_amount - Number(this.purchase.paid_amount || 0);
+		const debt_amount = total_amount - Number(this.purchase.paid_amount || 0);
 
 		this.summary = {
 			subtotal_amount,

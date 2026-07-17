@@ -19,11 +19,8 @@ class CategoryRepository extends Repository
 	// =========================
 	// APPLY FILTERS
 	// =========================
-	private function applyFilters(
-		string &$sql,
-		array &$params,
-		array $conditions,
-	): void {
+	private function applyFilters(string &$sql, array &$params, array $conditions): void
+	{
 		// keyword
 		if (!empty($conditions['keyword'])) {
 			$sql .= ' AND c.name LIKE :keyword';
@@ -34,11 +31,8 @@ class CategoryRepository extends Repository
 	// =========================
 	// LIST
 	// =========================
-	public function getList(
-		array $conditions = [],
-		int $limit = 0,
-		int $offset = 0,
-	): array {
+	public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
+	{
 		$sql = $this->baseSelect();
 		$params = [];
 

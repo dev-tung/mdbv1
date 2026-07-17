@@ -8,18 +8,13 @@ class Response
 
 		header('Content-Type: application/json; charset=utf-8');
 
-		echo json_encode(
-			$data,
-			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
-		);
+		echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 		exit();
 	}
 
-	public static function success(
-		mixed $data = [],
-		string $message = 'Success',
-	): void {
+	public static function success(mixed $data = [], string $message = 'Success'): void
+	{
 		self::json([
 			'success' => true,
 			'message' => $message,
@@ -27,10 +22,8 @@ class Response
 		]);
 	}
 
-	public static function error(
-		string $message = 'Error',
-		int $status = 400,
-	): void {
+	public static function error(string $message = 'Error', int $status = 400): void
+	{
 		self::json(
 			[
 				'success' => false,
@@ -65,10 +58,8 @@ class Response
 		exit();
 	}
 
-	public static function download(
-		string $file,
-		?string $filename = null,
-	): void {
+	public static function download(string $file, ?string $filename = null): void
+	{
 		if (!file_exists($file)) {
 			self::abort(404, 'File not found');
 		}

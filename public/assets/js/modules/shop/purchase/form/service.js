@@ -41,10 +41,7 @@ const Service = {
 				return {
 					...newItem,
 
-					amount: Calculator.multiply(
-						newItem.quantity,
-						newItem.purchase_price,
-					),
+					amount: Calculator.multiply(newItem.quantity, newItem.purchase_price),
 				};
 			});
 		}
@@ -123,10 +120,7 @@ const Service = {
 	},
 
 	calculateItem(item, vatRate) {
-		const subtotal_amount = Calculator.multiply(
-			item.quantity,
-			item.purchase_price,
-		);
+		const subtotal_amount = Calculator.multiply(item.quantity, item.purchase_price);
 
 		const vat_amount = Calculator.multiply(subtotal_amount, vatRate / 100);
 

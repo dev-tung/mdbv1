@@ -11,10 +11,8 @@ class YonexProductDetailCrawler
 	public function __construct()
 	{
 		$this->inputFile = PATH_ROOT . '/public/craw/json/yonex_product.json';
-		$this->outputFile =
-			PATH_ROOT . '/public/craw/json/yonex_product_detail.json';
-		$this->imageDir =
-			rtrim(PATH_ROOT, '/') . '/public/craw/image/yonex_product_detail';
+		$this->outputFile = PATH_ROOT . '/public/craw/json/yonex_product_detail.json';
+		$this->imageDir = rtrim(PATH_ROOT, '/') . '/public/craw/image/yonex_product_detail';
 	}
 
 	public function run(): void
@@ -42,9 +40,7 @@ class YonexProductDetailCrawler
 		 * LOAD INPUT PRODUCTS
 		 */
 		if (!file_exists($this->inputFile)) {
-			throw new RuntimeException(
-				'Missing input file: ' . $this->inputFile,
-			);
+			throw new RuntimeException('Missing input file: ' . $this->inputFile);
 		}
 
 		$products = json_decode(file_get_contents($this->inputFile), true);
@@ -212,9 +208,7 @@ class YonexProductDetailCrawler
 			@$dom2->loadHTML($html);
 			$xpath2 = new DOMXPath($dom2);
 
-			$frames = $xpath2->query(
-				'//div[contains(@class,"fotorama__stage__frame")]',
-			);
+			$frames = $xpath2->query('//div[contains(@class,"fotorama__stage__frame")]');
 
 			foreach ($frames as $frame) {
 				$href = $frame->getAttribute('href');
@@ -237,9 +231,7 @@ class YonexProductDetailCrawler
 			@$dom3->loadHTML($html);
 			$xpath3 = new DOMXPath($dom3);
 
-			$imgNodes = $xpath3->query(
-				'//img[contains(@src,"/media/catalog/product/")]',
-			);
+			$imgNodes = $xpath3->query('//img[contains(@src,"/media/catalog/product/")]');
 
 			foreach ($imgNodes as $img) {
 				$images[] = $this->normalizeImage($img->getAttribute('src'));
@@ -325,9 +317,7 @@ class YonexProductDetailCrawler
 			$this->outputFile,
 			json_encode(
 				array_values($data),
-				JSON_PRETTY_PRINT |
-					JSON_UNESCAPED_UNICODE |
-					JSON_UNESCAPED_SLASHES,
+				JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
 			),
 		);
 	}

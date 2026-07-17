@@ -126,8 +126,7 @@ class SupplierEndpoint
 
 		echo json_encode([
 			'success' => $updated > 0,
-			'message' =>
-				$updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
+			'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
 		]);
 	}
 
@@ -152,8 +151,7 @@ class SupplierEndpoint
 
 		echo json_encode([
 			'success' => $deleted > 0,
-			'message' =>
-				$deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy nhà cung cấp',
+			'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy nhà cung cấp',
 		]);
 	}
 }

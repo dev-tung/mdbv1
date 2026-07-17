@@ -13,7 +13,7 @@ class App
 
 	protected function loadHelpers(): void
 	{
-		foreach (glob(BASE_PATH . '/app/common/helpers/*.php') as $file) {
+		foreach (glob(PATH_ROOT . '/app/common/helpers/*.php') as $file) {
 			require_once $file;
 		}
 	}
@@ -21,12 +21,12 @@ class App
 	protected function loadRoutes(): void
 	{
 		// web routes modules
-		foreach (glob(BASE_PATH . '/app/modules/*/routes/web.php') as $file) {
+		foreach (glob(PATH_ROOT . '/app/modules/*/routes/web.php') as $file) {
 			require_once $file;
 		}
 
 		// api routes modules
-		foreach (glob(BASE_PATH . '/app/modules/*/routes/api.php') as $file) {
+		foreach (glob(PATH_ROOT . '/app/modules/*/routes/api.php') as $file) {
 			require_once $file;
 		}
 	}

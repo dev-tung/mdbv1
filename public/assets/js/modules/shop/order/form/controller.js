@@ -119,8 +119,7 @@ const Controller = {
 					break;
 			}
 
-			State.order.debt_amount =
-				State.summary.total_amount - State.order.paid_amount;
+			State.order.debt_amount = State.summary.total_amount - State.order.paid_amount;
 
 			Dom.find('#paid_amount_wrapper').classList.toggle(
 				'd-none',
@@ -167,11 +166,7 @@ const Controller = {
 				}
 			}
 
-			State.items = Service.changeItem(
-				State.items,
-				e,
-				State.order.vat_rate,
-			);
+			State.items = Service.changeItem(State.items, e, State.order.vat_rate);
 
 			Renderer.renderCaculation();
 
@@ -179,10 +174,7 @@ const Controller = {
 		};
 
 		const changeGift = (e) => {
-			State.items = Service.changeGift(
-				State.items,
-				e,
-			);
+			State.items = Service.changeGift(State.items, e);
 
 			State.order.paid_amount = 0;
 			Renderer.renderCaculation();
@@ -190,10 +182,7 @@ const Controller = {
 		};
 
 		const removeItem = (e) => {
-			State.items = Service.removeItem(
-				State.items,
-				e,
-			);
+			State.items = Service.removeItem(State.items, e);
 
 			Renderer.renderProducts();
 
@@ -242,11 +231,7 @@ const Controller = {
 				return;
 			}
 
-			const payload = Service.payload(
-				State.order,
-				State.summary,
-				State.items,
-			);
+			const payload = Service.payload(State.order, State.summary, State.items);
 
 			const response = State.order.id
 				? await Api.updateOrder(State.order.id, payload)

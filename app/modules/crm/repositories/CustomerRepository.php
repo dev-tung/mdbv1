@@ -8,11 +8,8 @@ class CustomerRepository
 	// LIST
 	// =========================
 
-	public function getList(
-		array $conditions = [],
-		int $limit = 0,
-		int $offset = 0,
-	): array {
+	public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
+	{
 		$sql = "
 			SELECT *
 			FROM {$this->table}
@@ -58,10 +55,7 @@ class CustomerRepository
 
 		$columns = implode(', ', array_keys($data));
 
-		$placeholders = implode(
-			', ',
-			array_map(fn($key) => ":{$key}", array_keys($data)),
-		);
+		$placeholders = implode(', ', array_map(fn($key) => ":{$key}", array_keys($data)));
 
 		return Database::insert(
 			"
@@ -84,15 +78,7 @@ class CustomerRepository
 
 	public function updateById(int $id, array $data): int
 	{
-		$fields = [
-			'name',
-			'group_id',
-			'phone',
-			'address',
-			'description',
-			'email',
-			'updated_at',
-		];
+		$fields = ['name', 'group_id', 'phone', 'address', 'description', 'email', 'updated_at'];
 
 		$data = array_intersect_key($data, array_flip($fields));
 
@@ -146,11 +132,8 @@ class CustomerRepository
 	// FILTER BUILDER
 	// =========================
 
-	private function applyFilters(
-		string &$sql,
-		array &$params,
-		array $conditions,
-	): void {
+	private function applyFilters(string &$sql, array &$params, array $conditions): void
+	{
 		$keyword = $conditions['keyword'] ?? null;
 
 		if (is_string($keyword) && trim($keyword) !== '') {

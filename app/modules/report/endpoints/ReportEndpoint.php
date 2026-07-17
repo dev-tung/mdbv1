@@ -26,23 +26,12 @@ class ReportEndpoint
 			$offset = ($page - 1) * $perPage;
 
 			// DATA
-			$data = $this->orderRepository->getRevenueReport(
-				$dateFrom,
-				$dateTo,
-				$perPage,
-				$offset,
-			);
+			$data = $this->orderRepository->getRevenueReport($dateFrom, $dateTo, $perPage, $offset);
 
 			// TOTAL (for pagination)
-			$total = $this->orderRepository->countRevenueReport(
-				$dateFrom,
-				$dateTo,
-			);
+			$total = $this->orderRepository->countRevenueReport($dateFrom, $dateTo);
 
-			$monthProfit = $this->orderRepository->sumRevenueReport(
-				date('Y-m-01'),
-				date('Y-m-t'),
-			);
+			$monthProfit = $this->orderRepository->sumRevenueReport(date('Y-m-01'), date('Y-m-t'));
 
 			$totalPages = (int) ceil($total / $perPage);
 

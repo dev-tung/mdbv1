@@ -2,22 +2,26 @@
 
 class CategoryEndpoint
 {
-	protected CategoryRepository $categoryRepository;
+	private CategoryRepository $categoryRepository;
 
 	public function __construct()
 	{
 		$this->categoryRepository = new CategoryRepository();
 	}
 
+	// =========================
+	// LIST
+	// =========================
 	public function apiList()
 	{
-		header('Content-Type: application/json');
+		$filters = request_all();
 
-		// Lấy tất cả category (thường dùng cho dropdown filter)
-		$categories = $this->categoryRepository->getList();
+		$result = $this->categoryRepository->getList($filters);
 
-		echo json_encode([
-			'data' => $categories,
+		return Response::json([
+			'success' => true,
+			'message' => 'Lấy danh sách danh mục thành công',
+			'data' => $result,
 		]);
 	}
 }
