@@ -9,8 +9,12 @@ const Api = {
 		return await Http.post('/api/products', data);
 	},
 
+	async updateProduct(data) {
+		return await Http.post(`/api/products/update/${data.id}`, data);
+	},
+
 	async getProduct(id) {
-		return await Http.get(`/api/products/${id}`);
+		return await Http.get(`/api/products/show/${id}`);
 	},
 
 	/* =================================================

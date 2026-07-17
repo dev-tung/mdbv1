@@ -1,7 +1,7 @@
 <div class="container-fluid py-4 mt-5">
-  <h3 class="mb-4"> Thêm sản phẩm </h3>
+  <h3 class="mb-4"> Sản phẩm </h3>
   <form id="product-form" enctype="multipart/form-data" novalidate>
-    <input type="hidden" id="id" name="id" value="<?= $id ?>">
+    <input type="hidden" id="product_id" value="<?= $id ?>">
     <div class="row">
       <!-- LEFT -->
       <div class="col-lg-6">
@@ -13,13 +13,13 @@
           </div>
           <!-- PRICE -->
           <div class="col-md-6">
-            <label class="form-label"> Giá nhập </label>
-            <input type="number" id="price" class="form-control" min="0" placeholder="Nhập giá nhập">
+            <label class="form-label"> Giá gốc </label>
+            <input type="number" id="price" class="form-control" min="0" placeholder="Nhập giá gốc">
           </div>
           <!-- SALE PRICE -->
           <div class="col-md-6">
-            <label class="form-label"> Giá bán </label>
-            <input type="number" id="sale_price" class="form-control" min="0" placeholder="Nhập giá bán">
+            <label class="form-label"> Giá khuyến mãi </label>
+            <input type="number" id="sale_price" class="form-control" min="0" placeholder="Nhập giá khuyến mãi">
           </div>
           <!-- DESCRIPTION -->
           <div class="col-12">
@@ -63,6 +63,6 @@
       </div>
     </div>
     <!-- BUTTON -->
-    <button type="submit" class="btn btn-outline-secondary mt-4"> Thêm sản phẩm </button>
+    <button type="submit" class="btn btn-outline-secondary mt-4"> Lưu sản phẩm </button>
   </form>
 </div>

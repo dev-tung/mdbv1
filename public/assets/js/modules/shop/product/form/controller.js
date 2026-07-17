@@ -105,10 +105,6 @@ const Controller = {
 
 				const payload = id ? Service.updatePayload(id, State.form) : Service.payload(State.form);
 
-				console.log('State.form:', State.form);
-
-				console.log('Payload:', payload);
-
 				const response = id ? await Api.updateProduct(payload) : await Api.createProduct(payload);
 
 				alert(response.message);
