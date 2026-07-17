@@ -5,32 +5,32 @@ const Api = {
 	   PRODUCT
 	================================================= */
 
-	async createProduct(data) {
-		return await Http.post('/api/products', data);
+	createProduct(data) {
+		return Http.post('/api/products', data);
 	},
 
-	async updateProduct(data) {
-		return await Http.post(`/api/products/update/${data.id}`, data);
+	updateProduct(data) {
+		return Http.post(`/api/products/update/${data.id}`, data);
 	},
 
-	async getProduct(id) {
-		return await Http.get(`/api/products/show/${id}`);
+	getProduct(id) {
+		return Http.get(`/api/products/show/${id}`);
 	},
 
 	/* =================================================
 	   CATEGORY
 	================================================= */
 
-	async getCategories() {
-		return await Http.get('/api/categories');
+	getCategories() {
+		return Http.get('/api/categories');
 	},
 
 	/* =================================================
 	   BRAND
 	================================================= */
 
-	async getBrands() {
-		return await Http.get('/api/brands');
+	getBrands() {
+		return Http.get('/api/brands');
 	},
 };
 

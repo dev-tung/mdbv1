@@ -4,9 +4,12 @@ class ProductRepository extends Repository
 {
 	protected string $table = 'products';
 
-	// =========================
-	// BASE SELECT
-	// =========================
+	private const UPLOAD_PATH = PATH_PUBLIC . '/uploads/products';
+
+	/* =================================================
+	   BASE SELECT
+	================================================= */
+
 	private function baseSelect(): string
 	{
 		return '
@@ -20,14 +23,53 @@ class ProductRepository extends Repository
 		';
 	}
 
-	// =========================
-	// APPLY FILTERS
-	// =========================
+	/* =================================================
+	   BUILD DATA
+	================================================= */
+
+	private function buildData(array $data): array
+	{
+		return [
+			'category_id' => $data['category_id'],
+
+			'brand_id' => $data['brand_id'],
+
+			'name' => $data['name'],
+
+			'thumbnail' => $data['thumbnail'] ?? null,
+
+			'price' => $data['price'],
+
+			'sale_price' => $data['sale_price'],
+
+			'status' => $data['status'],
+
+			'description' => $data['description'],
+		];
+	}
+
+	/* =================================================
+	   UPLOAD
+	================================================= */
+
+	private function uploadThumbnail(array $thumbnail): ?string
+	{
+		if (empty($thumbnail['name'])) {
+			return null;
+		}
+
+		return upload_file(
+			$thumbnail,
+			self::UPLOAD_PATH,
+		);
+	}
+
+	/* =================================================
+	   APPLY FILTERS
+	================================================= */
+
 	private function applyFilters(string &$sql, array &$params, array $conditions): void
 	{
-		// =========================
-		// KEYWORD
-		// =========================
 		if (!empty($conditions['keyword'])) {
 			$sql .= '
 				AND p.name LIKE :keyword
@@ -36,9 +78,6 @@ class ProductRepository extends Repository
 			$params['keyword'] = '%' . $conditions['keyword'] . '%';
 		}
 
-		// =========================
-		// CATEGORY
-		// =========================
 		if (!empty($conditions['category_id'])) {
 			$sql .= '
 				AND p.category_id = :category_id
@@ -47,9 +86,6 @@ class ProductRepository extends Repository
 			$params['category_id'] = $conditions['category_id'];
 		}
 
-		// =========================
-		// STATUS
-		// =========================
 		if (isset($conditions['status']) && $conditions['status'] !== '') {
 			$sql .= '
 				AND p.status = :status
@@ -58,9 +94,6 @@ class ProductRepository extends Repository
 			$params['status'] = $conditions['status'];
 		}
 
-		// =========================
-		// DATE FROM
-		// =========================
 		if (!empty($conditions['date_from'])) {
 			$sql .= '
 				AND DATE(p.created_at) >= :date_from
@@ -69,9 +102,6 @@ class ProductRepository extends Repository
 			$params['date_from'] = $conditions['date_from'];
 		}
 
-		// =========================
-		// DATE TO
-		// =========================
 		if (!empty($conditions['date_to'])) {
 			$sql .= '
 				AND DATE(p.created_at) <= :date_to
@@ -80,9 +110,6 @@ class ProductRepository extends Repository
 			$params['date_to'] = $conditions['date_to'];
 		}
 
-		// =========================
-		// PRICE
-		// =========================
 		if (!empty($conditions['price_min'])) {
 			$sql .= '
 				AND p.price >= :price_min
@@ -99,9 +126,6 @@ class ProductRepository extends Repository
 			$params['price_max'] = $conditions['price_max'];
 		}
 
-		// =========================
-		// BRAND
-		// =========================
 		if (!empty($conditions['brands']) && is_array($conditions['brands'])) {
 			$placeholders = [];
 
@@ -113,20 +137,18 @@ class ProductRepository extends Repository
 				$params["brand_$index"] = $brandId;
 			}
 
-			$sql .=
-				'
+			$sql .= '
 				AND p.brand_id IN (
-					' .
-				implode(',', $placeholders) .
-				'
+					' . implode(',', $placeholders) . '
 				)
 			';
 		}
 	}
 
-	// =========================
-	// LIST
-	// =========================
+	/* =================================================
+	   LIST
+	================================================= */
+
 	public function getList(array $conditions = []): array
 	{
 		$page = (int) ($conditions['page'] ?? 1);
@@ -136,10 +158,6 @@ class ProductRepository extends Repository
 		unset($conditions['page'], $conditions['limit']);
 
 		$offset = ($page - 1) * $limit;
-
-		// =========================
-		// GET PRODUCTS
-		// =========================
 
 		$sql = $this->baseSelect();
 
@@ -158,52 +176,38 @@ class ProductRepository extends Repository
 
 		$products = Database::get($sql, $params);
 
-		// =========================
-		// GET TOTAL
-		// =========================
-
-		$total = $this->count($conditions);
-
 		return [
 			$products,
-
 			[
-				'total' => $total,
+				'total' => $this->count($conditions),
 			],
 		];
 	}
 
-	// =========================
-	// CREATE
-	// =========================
-	public function create(array $data, array $thumbnail = []): int
-	{
-		if (!empty($thumbnail['name'])) {
-			$data['thumbnail'] = upload_file($thumbnail, PATH_PUBLIC . '/uploads/products');
-		}
+	/* =================================================
+	   CREATE
+	================================================= */
 
-		return parent::create([
-			'category_id' => $data['category_id'],
+	public function create(
+		array $data,
+		array $thumbnail = [],
+	): int {
+		$data['thumbnail'] = $this->uploadThumbnail($thumbnail);
 
-			'brand_id' => $data['brand_id'],
-
-			'name' => $data['name'],
-
-			'thumbnail' => $data['thumbnail'] ?? null,
-
-			'price' => $data['price'],
-
-			'status' => $data['status'],
-
-			'description' => $data['description'],
-		]);
+		return parent::create(
+			$this->buildData($data),
+		);
 	}
 
-	// =========================
-	// UPDATE
-	// =========================
-	public function update(int $id, array $data, array $thumbnail = []): bool
-	{
+	/* =================================================
+	   UPDATE
+	================================================= */
+
+	public function update(
+		int $id,
+		array $data,
+		array $thumbnail = [],
+	): bool {
 		$product = parent::findById($id);
 
 		if (!$product) {
@@ -212,38 +216,31 @@ class ProductRepository extends Repository
 
 		$oldThumbnail = $product['thumbnail'];
 
-		if (!empty($thumbnail['name'])) {
-			$data['thumbnail'] = upload_file($thumbnail, PATH_PUBLIC . '/uploads/products');
-		} else {
-			$data['thumbnail'] = $oldThumbnail;
-		}
+		$data['thumbnail'] = $this->uploadThumbnail($thumbnail) ?? $oldThumbnail;
 
-		$result = parent::updateById($id, [
-			'category_id' => $data['category_id'],
+		$result = parent::updateById(
+			$id,
+			$this->buildData($data),
+		);
 
-			'brand_id' => $data['brand_id'],
-
-			'name' => $data['name'],
-
-			'thumbnail' => $data['thumbnail'],
-
-			'price' => $data['price'],
-
-			'status' => $data['status'],
-
-			'description' => $data['description'],
-		]);
-
-		if ($result > 0 && !empty($thumbnail['name']) && !empty($oldThumbnail)) {
-			delete_file(PATH_PUBLIC . '/uploads/products', $oldThumbnail);
+		if (
+			$result > 0 &&
+			!empty($thumbnail['name']) &&
+			!empty($oldThumbnail)
+		) {
+			delete_file(
+				self::UPLOAD_PATH,
+				$oldThumbnail,
+			);
 		}
 
 		return $result > 0;
 	}
 
-	// =========================
-	// DELETE
-	// =========================
+	/* =================================================
+	   DELETE
+	================================================= */
+
 	public function delete(int $id): bool
 	{
 		$product = parent::findById($id);
@@ -254,16 +251,23 @@ class ProductRepository extends Repository
 
 		$result = parent::deleteById($id);
 
-		if ($result > 0 && !empty($product['thumbnail'])) {
-			delete_file(PATH_PUBLIC . '/uploads/products', $product['thumbnail']);
+		if (
+			$result > 0 &&
+			!empty($product['thumbnail'])
+		) {
+			delete_file(
+				self::UPLOAD_PATH,
+				$product['thumbnail'],
+			);
 		}
 
 		return $result > 0;
 	}
 
-	// =========================
-	// COUNT
-	// =========================
+	/* =================================================
+	   COUNT
+	================================================= */
+
 	public function count(array $conditions = []): int
 	{
 		unset($conditions['page'], $conditions['limit']);

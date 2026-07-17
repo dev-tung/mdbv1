@@ -44,6 +44,22 @@ const Renderer = {
 			row.dataset.id = product.id;
 
 			// =========================
+			// THUMBNAIL
+			// =========================
+
+			const thumbnail = row.querySelector('.thumbnail');
+
+			if (thumbnail) {
+				thumbnail.src = product.thumbnail
+					? (
+						product.thumbnail.startsWith('uploads/')
+							? `/${product.thumbnail}`
+							: `/uploads/products/${product.thumbnail}`
+					)
+					: '/assets/image/no-image.svg';
+			}
+
+			// =========================
 			// TEXT
 			// =========================
 
@@ -71,9 +87,7 @@ const Renderer = {
 
 			Select.render(
 				row.querySelector('.status'),
-
 				Option.product,
-
 				product.status,
 			);
 
@@ -83,9 +97,7 @@ const Renderer = {
 			// EDIT
 			// =========================
 
-			const edit = row.querySelector('.edit-item');
-
-			edit.href = `/admin/products/edit/${product.id}`;
+			row.querySelector('.edit-item').href = `/admin/products/edit/${product.id}`;
 
 			// =========================
 			// DELETE

@@ -2,64 +2,111 @@
 // helpers/http.js
 // =========================================================
 
-const http = {
-	async get(url, params = {}) {
+const Http = {
+	/* =================================================
+	   REQUEST
+	================================================= */
+
+	async request(method, url, data = null) {
+		const options = {
+			method,
+		};
+
+		if (data !== null) {
+			const { body, headers } = this.buildBody(data);
+
+			options.body = body;
+
+			if (Object.keys(headers).length) {
+				options.headers = headers;
+			}
+		}
+
+		const response = await fetch(url, options);
+
+		return await response.json();
+	},
+
+	/* =================================================
+	   BODY
+	================================================= */
+
+	buildBody(data) {
+		if (this.hasFile(data)) {
+			const formData = new FormData();
+
+			Object.entries(data).forEach(([key, value]) => {
+				if (value !== undefined && value !== null) {
+					formData.append(key, value);
+				}
+			});
+
+			return {
+				body: formData,
+				headers: {},
+			};
+		}
+
+		return {
+			body: JSON.stringify(data),
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+	},
+
+	/* =================================================
+	   FILE
+	================================================= */
+
+	hasFile(data) {
+		return Object.values(data).some((value) => value instanceof File);
+	},
+
+	/* =================================================
+	   GET
+	================================================= */
+
+	get(url, params = {}) {
 		const query = new URLSearchParams(params).toString();
 
-		const response = await fetch(query ? `${url}?${query}` : url);
-
-		return await response.json();
+		return this.request(
+			'GET',
+			query ? `${url}?${query}` : url,
+		);
 	},
 
-	async post(url, data = {}) {
-		const response = await fetch(url, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		});
+	/* =================================================
+	   POST
+	================================================= */
 
-		const result = await response.json();
-
-		return result;
+	post(url, data = {}) {
+		return this.request('POST', url, data);
 	},
 
-	async put(url, data = {}) {
-		const response = await fetch(url, {
-			method: 'PUT',
+	/* =================================================
+	   PUT
+	================================================= */
 
-			headers: {
-				'Content-Type': 'application/json',
-			},
-
-			body: JSON.stringify(data),
-		});
-
-		return await response.json();
+	put(url, data = {}) {
+		return this.request('PUT', url, data);
 	},
 
-	async patch(url, data = {}) {
-		const response = await fetch(url, {
-			method: 'PATCH',
+	/* =================================================
+	   PATCH
+	================================================= */
 
-			headers: {
-				'Content-Type': 'application/json',
-			},
-
-			body: JSON.stringify(data),
-		});
-
-		return await response.json();
+	patch(url, data = {}) {
+		return this.request('PATCH', url, data);
 	},
 
-	async delete(url) {
-		const response = await fetch(url, {
-			method: 'DELETE',
-		});
+	/* =================================================
+	   DELETE
+	================================================= */
 
-		return await response.json();
+	delete(url) {
+		return this.request('DELETE', url);
 	},
 };
 
-export default http;
+export default Http;

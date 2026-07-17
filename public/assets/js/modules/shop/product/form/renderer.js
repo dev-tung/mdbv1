@@ -65,23 +65,35 @@ const Renderer = {
 		Dom.value('#brand_id', product.brand_id);
 
 		Dom.value('#status', product.status);
+
+		this.renderThumbnail(product.thumbnail);
 	},
 
 	/* =================================================
-	   PREVIEW
+		THUMBNAIL
 	================================================= */
 
-	renderPreview(file) {
+	renderThumbnail(thumbnail) {
 		const preview = Dom.find('#thumbnail-preview');
 
-		if (!preview || !file) {
+		if (!preview) {
 			return;
 		}
 
-		preview.src = URL.createObjectURL(file);
+		if (!thumbnail) {
+			preview.src = '';
+
+			preview.classList.add('d-none');
+
+			return;
+		}
+
+		preview.src = thumbnail instanceof File
+			? URL.createObjectURL(thumbnail)
+			: `/uploads/products/${thumbnail}`;
 
 		preview.classList.remove('d-none');
-	},
+	}
 };
 
 export default Renderer;

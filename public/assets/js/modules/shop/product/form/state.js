@@ -1,27 +1,35 @@
 const State = {
 	/* =================================================
+	   DEFAULT
+	================================================= */
+
+	defaultForm() {
+		return {
+			id: null,
+
+			name: '',
+
+			price: '',
+
+			sale_price: '',
+
+			category_id: '',
+
+			brand_id: '',
+
+			status: 'active',
+
+			description: '',
+
+			thumbnail: null,
+		};
+	},
+
+	/* =================================================
 	   FORM
 	================================================= */
 
-	form: {
-		id: null,
-
-		name: '',
-
-		price: '',
-
-		sale_price: '',
-
-		category_id: '',
-
-		brand_id: '',
-
-		status: 'active',
-
-		description: '',
-
-		thumbnail: null,
-	},
+	form: {},
 
 	/* =================================================
 	   OPTIONS
@@ -80,26 +88,10 @@ const State = {
 	================================================= */
 
 	reset() {
-		this.form = {
-			id: null,
-
-			name: '',
-
-			price: '',
-
-			sale_price: '',
-
-			category_id: '',
-
-			brand_id: '',
-
-			status: 'active',
-
-			description: '',
-
-			thumbnail: null,
-		};
+		this.form = this.defaultForm();
 	},
 };
+
+State.reset();
 
 export default State;

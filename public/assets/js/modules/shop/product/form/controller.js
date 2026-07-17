@@ -6,16 +6,16 @@ import Renderer from './renderer.js';
 import Service from './service.js';
 
 const Controller = {
+	/* =================================================
+	   PUBLIC
+	================================================= */
+
 	async init() {
 		await this.loadDefault();
 
 		Renderer.render();
 
-		this.bindProduct();
-
-		this.bindThumbnail();
-
-		this.bindSubmit();
+		this.bindEvents();
 	},
 
 	/* =================================================
@@ -25,48 +25,46 @@ const Controller = {
 	async loadDefault() {
 		const id = Dom.find('#product_id')?.value || null;
 
-		const data = await Service.getOptions();
+		const options = await Service.getOptions();
 
-		State.setOptions(data);
+		State.setOptions(options);
 
-		if (id) {
-			const product = await Service.getProduct(id);
-
-			State.setProduct(product);
+		if (!id) {
+			return;
 		}
+
+		const product = await Service.getProduct(id);
+
+		State.setProduct(product);
 	},
 
 	/* =================================================
-	   FORM
+	   EVENTS
 	================================================= */
 
-	bindProduct() {
-		Dom.find('#category_id').addEventListener('change', (e) => {
-			State.form.category_id = e.target.value;
-		});
+	bindEvents() {
+		this.bindField('#category_id', 'category_id', 'change');
 
-		Dom.find('#brand_id').addEventListener('change', (e) => {
-			State.form.brand_id = e.target.value;
-		});
+		this.bindField('#brand_id', 'brand_id', 'change');
 
-		Dom.find('#status').addEventListener('change', (e) => {
-			State.form.status = e.target.value;
-		});
+		this.bindField('#status', 'status', 'change');
 
-		Dom.find('#name').addEventListener('input', (e) => {
-			State.form.name = e.target.value;
-		});
+		this.bindField('#name', 'name');
 
-		Dom.find('#price').addEventListener('input', (e) => {
-			State.form.price = e.target.value;
-		});
+		this.bindField('#price', 'price');
 
-		Dom.find('#sale_price').addEventListener('input', (e) => {
-			State.form.sale_price = e.target.value;
-		});
+		this.bindField('#sale_price', 'sale_price');
 
-		Dom.find('#description').addEventListener('input', (e) => {
-			State.form.description = e.target.value;
+		this.bindField('#description', 'description');
+
+		this.bindThumbnail();
+
+		this.bindSubmit();
+	},
+
+	bindField(selector, field, event = 'input') {
+		Dom.find(selector).addEventListener(event, (e) => {
+			State.setField(field, e.target.value);
 		});
 	},
 
@@ -82,9 +80,9 @@ const Controller = {
 				return;
 			}
 
-			State.form.thumbnail = file;
+			State.setField('thumbnail', file);
 
-			Renderer.renderPreview(file);
+			Renderer.renderThumbnail(file);
 		});
 	},
 
@@ -103,9 +101,13 @@ const Controller = {
 			try {
 				const id = State.form.id;
 
-				const payload = id ? Service.updatePayload(id, State.form) : Service.payload(State.form);
+				const payload = id
+					? Service.updatePayload(id, State.form)
+					: Service.payload(State.form);
 
-				const response = id ? await Api.updateProduct(payload) : await Api.createProduct(payload);
+				const response = id
+					? await Api.updateProduct(payload)
+					: await Api.createProduct(payload);
 
 				alert(response.message);
 

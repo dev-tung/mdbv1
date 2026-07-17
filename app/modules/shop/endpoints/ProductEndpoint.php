@@ -2,7 +2,7 @@
 
 class ProductEndpoint
 {
-	private ProductRepository $productRepository;
+	private readonly ProductRepository $productRepository;
 
 	public function __construct()
 	{
@@ -10,35 +10,12 @@ class ProductEndpoint
 	}
 
 	// =========================
-	// LIST (SERVICE)
+	// LIST
 	// =========================
+
 	public function apiList()
 	{
-		$input = request_all();
-
-		$result = $this->productRepository->getList($input);
-
-		return Response::json([
-			'success' => true,
-			'data' => $result,
-		]);
-	}
-
-	// =========================
-	// SHOW (DIRECT REPOSITORY)
-	// =========================
-	public function apiShow()
-	{
-		$id = request_id();
-
-		$data = $this->productRepository->findById($id);
-
-		if (!$data) {
-			return Response::json([
-				'success' => false,
-				'message' => 'Product not found',
-			]);
-		}
+		$data = $this->productRepository->getList(request_all());
 
 		return Response::json([
 			'success' => true,
@@ -47,8 +24,30 @@ class ProductEndpoint
 	}
 
 	// =========================
-	// CREATE (SERVICE + VALIDATION)
+	// SHOW
 	// =========================
+
+	public function apiShow()
+	{
+		$product = $this->productRepository->findById(request_id());
+
+		if (!$product) {
+			return Response::json([
+				'success' => false,
+				'message' => 'Product not found',
+			]);
+		}
+
+		return Response::json([
+			'success' => true,
+			'data' => $product,
+		]);
+	}
+
+	// =========================
+	// CREATE
+	// =========================
+
 	public function apiCreate()
 	{
 		$input = request_all();
@@ -62,7 +61,10 @@ class ProductEndpoint
 			]);
 		}
 
-		$id = $this->productRepository->create($input, $_FILES['thumbnail'] ?? []);
+		$id = $this->productRepository->create(
+			$input,
+			$_FILES['thumbnail'] ?? [],
+		);
 
 		return Response::json([
 			'success' => true,
@@ -73,12 +75,12 @@ class ProductEndpoint
 	}
 
 	// =========================
-	// UPDATE (SERVICE + VALIDATION)
+	// UPDATE
 	// =========================
+
 	public function apiUpdate()
 	{
 		$input = request_all();
-
 		$error = ProductValidator::update($input);
 
 		if ($error) {
@@ -88,7 +90,11 @@ class ProductEndpoint
 			]);
 		}
 
-		$this->productRepository->update((int) ($input['id'] ?? 0), $input, $_FILES['thumbnail'] ?? []);
+		$this->productRepository->update(
+			(int) ($input['id'] ?? 0),
+			$input,
+			$_FILES['thumbnail'] ?? [],
+		);
 
 		return Response::json([
 			'success' => true,
@@ -98,13 +104,12 @@ class ProductEndpoint
 	}
 
 	// =========================
-	// DELETE (SERVICE)
+	// DELETE
 	// =========================
+
 	public function apiDelete()
 	{
-		$id = request_id();
-
-		$this->productRepository->delete($id);
+		$this->productRepository->delete(request_id());
 
 		return Response::json([
 			'success' => true,

@@ -6,14 +6,15 @@ const Service = {
 	================================================= */
 
 	async getOptions() {
-		const [categories, brands] = await Promise.all([
+		const [categoryResponse, brandResponse] = await Promise.all([
 			Api.getCategories(),
 			Api.getBrands(),
 		]);
 
 		return {
-			categories: categories.data || [],
-			brands: brands.data || [],
+			categories: categoryResponse.data ?? [],
+
+			brands: brandResponse.data ?? [],
 		};
 	},
 
@@ -28,28 +29,37 @@ const Service = {
 	},
 
 	/* =================================================
-	   CREATE
+	   PAYLOAD
 	================================================= */
 
 	payload(product = {}) {
 		return {
 			name: product.name ?? '',
+
 			price: product.price ?? 0,
+
 			sale_price: product.sale_price ?? 0,
+
 			category_id: product.category_id ?? null,
+
 			brand_id: product.brand_id ?? null,
+
 			status: product.status ?? 'active',
+
 			description: product.description ?? '',
+
+			thumbnail: product.thumbnail ?? null,
 		};
 	},
 
 	/* =================================================
-	   UPDATE
+	   UPDATE PAYLOAD
 	================================================= */
 
 	updatePayload(id, product = {}) {
 		return {
 			id,
+
 			...this.payload(product),
 		};
 	},

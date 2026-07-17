@@ -38,6 +38,7 @@
       <thead>
         <tr>
           <th>#</th>
+          <th> Ảnh </th>
           <th> Sản phẩm </th>
           <th> Danh mục </th>
           <th> Giá gốc </th>
@@ -60,11 +61,18 @@
   <tr data-id="">
     <td class="index"></td>
     <td>
+        <img
+            class="thumbnail rounded border"
+            height="30"
+            style="object-fit: cover"
+        >
+    </td>
+    <td>
       <div class="product-name"></div>
       <small class="sku text-muted"></small>
     </td>
     <td class="category-name"></td>
-    <td class="cost-price"></td>
+    <td class="price"></td>
     <td class="sale-price"></td>
     <td>
       <select class="form-select form-select-sm status"></select>
