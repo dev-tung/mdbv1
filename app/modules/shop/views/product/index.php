@@ -74,9 +74,7 @@
     <td class="category-name"></td>
     <td class="price"></td>
     <td class="sale-price"></td>
-    <td>
-      <select class="form-select form-select-sm status"></select>
-    </td>
+    <td class="status"></td>
     <td class="created-at"></td>
     <td>
       <a class="btn btn-sm btn-outline-secondary edit-item"> Sửa </a>

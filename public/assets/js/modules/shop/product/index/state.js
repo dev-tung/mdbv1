@@ -54,24 +54,18 @@ const State = {
 
 		this.categories = this.setCategories(data.categories || []);
 
+		this.summary = {
+			...this.summary,
+
+			...(data.summary || {}),
+		};
+
 		this.pagination = {
 			...this.pagination,
 
 			...(data.pagination || {}),
 		};
-
-		this.setSummary();
-	},
-
-	// =========================
-	// SUMMARY
-	// =========================
-
-	setSummary() {
-		this.summary = {
-			total: this.pagination.total || this.products.length,
-		};
-	},
+	}
 };
 
 export default State;

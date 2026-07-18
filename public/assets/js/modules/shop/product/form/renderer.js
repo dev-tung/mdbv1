@@ -21,23 +21,33 @@ const Renderer = {
 	   OPTIONS
 	================================================= */
 
+
 	renderOptions() {
+		const categories = Object.fromEntries(
+			State.options.categories.map(({ id, name }) => [
+				id,
+				{ label: name },
+			])
+		); 
+
+
 		Select.render(
 			'#category_id',
-			State.options.categories.map((item) => ({
-				value: item.id,
-				label: item.name,
-			})),
+			categories,
 			State.form.category_id,
 			'-- Chọn danh mục --',
 		);
 
+		const brands = Object.fromEntries(
+			State.options.brands.map(({ id, name }) => [
+				id,
+				{ label: name },
+			])
+		);
+
 		Select.render(
 			'#brand_id',
-			State.options.brands.map((item) => ({
-				value: item.id,
-				label: item.name,
-			})),
+			brands,
 			State.form.brand_id,
 			'-- Chọn thương hiệu --',
 		);

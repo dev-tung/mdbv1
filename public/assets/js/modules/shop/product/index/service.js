@@ -1,35 +1,32 @@
 import Api from './api.js';
 
 const Service = {
+	/* =================================================
+	   LIST
+	================================================= */
+
 	async getList(filters = {}) {
-		const [productResponse, categoryResponse] = await Promise.all([
-			Api.getProducts(filters),
-			Api.getCategories(),
-		]);
+		const productsResponse = await Api.getProducts(filters);
 
-		const data = Array.isArray(productResponse?.data)
-			? productResponse.data
-			: [];
+		const categoriesResponse = await Api.getCategories();
 
-		const products = data[0] ?? [];
+		const products = productsResponse.data[0];
 
-		const summary = data[1] ?? {};
+		const summary = productsResponse.data[1][0];
 
-		const page = Number(filters.page ?? 1);
+		const total = Number(summary.total);
 
 		const per_page = Number(filters.per_page ?? 10);
-
-		const total = Number(summary.total ?? 0);
 
 		return {
 			products,
 
-			categories: categoryResponse.data ?? [],
+			categories: categoriesResponse.data,
 
 			summary,
 
 			pagination: {
-				page,
+				page: Number(filters.page ?? 1),
 
 				per_page,
 

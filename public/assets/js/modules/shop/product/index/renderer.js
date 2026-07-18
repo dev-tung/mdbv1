@@ -7,6 +7,7 @@ import Option from '../../../../shared/option.js';
 
 import Select from '../../../../components/select.js';
 import Table from '../../../../components/table.js';
+import Label from '../../../../components/label.js';
 
 const Renderer = {
 	/* =================================================
@@ -85,7 +86,7 @@ const Renderer = {
 			// STATUS
 			// =========================
 
-			Select.render(
+			Label.render(
 				row.querySelector('.status'),
 				Option.product,
 				product.status,
@@ -115,7 +116,7 @@ const Renderer = {
 
 	renderSummary() {
 		Dom.text(
-			'#total-amount',
+			'#sum-total-product',
 
 			State.summary.total,
 		);

@@ -10,7 +10,7 @@ const Table = {
 		filters: {},
 
 		page: 1,
-		per_page: 10,
+		per_page: 20,
 
 		source: null,
 		render: null,

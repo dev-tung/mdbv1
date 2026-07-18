@@ -103,7 +103,7 @@ const Controller = {
 				});
 
 				State.setDefault(data);
-
+				
 				Renderer.render();
 			} catch (error) {
 				alert(error.message);
@@ -139,6 +139,8 @@ const Controller = {
 				});
 
 				State.setDefault(data);
+
+				
 
 				Renderer.render();
 			} catch (error) {
