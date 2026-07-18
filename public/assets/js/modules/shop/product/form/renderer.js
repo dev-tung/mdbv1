@@ -76,7 +76,7 @@ const Renderer = {
 			return;
 		}
 
-		preview.src = thumbnail instanceof File ? URL.createObjectURL(thumbnail) : `/uploads/products/${thumbnail}`;
+		preview.src = thumbnail instanceof File ? URL.createObjectURL(thumbnail) : `/${thumbnail}`;
 
 		preview.classList.remove('d-none');
 	},
