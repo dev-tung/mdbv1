@@ -21,36 +21,14 @@ const Renderer = {
 	   OPTIONS
 	================================================= */
 
-
 	renderOptions() {
-		const categories = Object.fromEntries(
-			State.options.categories.map(({ id, name }) => [
-				id,
-				{ label: name },
-			])
-		); 
+		const categories = Object.fromEntries(State.options.categories.map(({ id, name }) => [id, { label: name }]));
 
+		Select.render('#category_id', categories, State.form.category_id, '-- Chọn danh mục --');
 
-		Select.render(
-			'#category_id',
-			categories,
-			State.form.category_id,
-			'-- Chọn danh mục --',
-		);
+		const brands = Object.fromEntries(State.options.brands.map(({ id, name }) => [id, { label: name }]));
 
-		const brands = Object.fromEntries(
-			State.options.brands.map(({ id, name }) => [
-				id,
-				{ label: name },
-			])
-		);
-
-		Select.render(
-			'#brand_id',
-			brands,
-			State.form.brand_id,
-			'-- Chọn thương hiệu --',
-		);
+		Select.render('#brand_id', brands, State.form.brand_id, '-- Chọn thương hiệu --');
 
 		Select.render('#status', Option.product, State.form.status, '-- Chọn trạng thái --');
 	},
@@ -98,12 +76,10 @@ const Renderer = {
 			return;
 		}
 
-		preview.src = thumbnail instanceof File
-			? URL.createObjectURL(thumbnail)
-			: `/uploads/products/${thumbnail}`;
+		preview.src = thumbnail instanceof File ? URL.createObjectURL(thumbnail) : `/uploads/products/${thumbnail}`;
 
 		preview.classList.remove('d-none');
-	}
+	},
 };
 
 export default Renderer;

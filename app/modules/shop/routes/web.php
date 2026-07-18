@@ -58,13 +58,13 @@ Router::get('/admin/inventory/edit/{id}', 'InventoryController@edit', [
 // SUPPLIERS
 // =========================
 
-Router::get('/admin/suppliers', 'SupplierController@index', [
+Router::get('/admin/suppliers', 'SupplierController@index');
+
+Router::get('/admin/suppliers/create', 'SupplierController@form', [
 	'auth' => 'admin',
 ]);
-Router::get('/admin/suppliers/create', 'SupplierController@create', [
-	'auth' => 'admin',
-]);
-Router::get('/admin/suppliers/edit/{id}', 'SupplierController@edit', [
+
+Router::get('/admin/suppliers/edit/{id}', 'SupplierController@form', [
 	'auth' => 'admin',
 ]);
 

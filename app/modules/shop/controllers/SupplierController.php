@@ -2,20 +2,16 @@
 
 class SupplierController
 {
+	/**
+	 * VIEW (UI shell - không load data suppliers nếu dùng fetch)
+	 */
 	public function index(): void
 	{
 		View::render('supplier/index');
 	}
 
-	public function create(): void
+	public function form($id = null): void
 	{
-		View::render('supplier/create');
-	}
-
-	public function edit($id): void
-	{
-		View::render('supplier/edit', [
-			'id' => $id,
-		]);
+		View::render('supplier/form', compact('id'));
 	}
 }

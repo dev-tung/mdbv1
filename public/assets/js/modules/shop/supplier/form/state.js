@@ -9,19 +9,13 @@ const State = {
 
 			name: '',
 
-			price: '',
+			phone: '',
 
-			sale_price: '',
+			email: '',
 
-			category_id: '',
-
-			brand_id: '',
-
-			status: 'active',
+			address: '',
 
 			description: '',
-
-			thumbnail: null,
 		};
 	},
 
@@ -32,16 +26,6 @@ const State = {
 	form: {},
 
 	/* =================================================
-	   OPTIONS
-	================================================= */
-
-	options: {
-		categories: [],
-
-		brands: [],
-	},
-
-	/* =================================================
 	   STATUS
 	================================================= */
 
@@ -50,26 +34,14 @@ const State = {
 	submitting: false,
 
 	/* =================================================
-	   SET OPTIONS
+	   SET SUPPLIER
 	================================================= */
 
-	setOptions(data = {}) {
-		this.options = {
-			categories: data.categories || [],
-
-			brands: data.brands || [],
-		};
-	},
-
-	/* =================================================
-	   SET PRODUCT
-	================================================= */
-
-	setProduct(product = {}) {
+	setSupplier(supplier = {}) {
 		this.form = {
 			...this.form,
 
-			...product,
+			...supplier,
 		};
 	},
 

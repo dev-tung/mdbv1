@@ -1,50 +1,81 @@
 <?php
 
-class SupplierRepository
+class SupplierRepository extends Repository
 {
 	protected string $table = 'suppliers';
 
-	/**
-	 * Lấy danh sách supplier
-	 */
-	public function getList(array $conditions = []): array
+	/* =================================================
+       LIST
+    ================================================= */
+
+	public function getList(array $filters = []): array
 	{
-		$sql = "SELECT * FROM {$this->table} WHERE 1=1";
-		$params = [];
-
-		// KEYWORD SEARCH
-		if (!empty($conditions['keyword'])) {
-			$sql .= ' AND (
-                name LIKE :keyword
-            )';
-			$params['keyword'] = '%' . $conditions['keyword'] . '%';
-		}
-
-		$sql .= ' ORDER BY id DESC';
-
-		return Database::get($sql, $params);
+		return Database::call(
+			'CALL sp_supplier_list(?, ?, ?, ?, ?)',
+			array_params(
+				[
+					'keyword',
+					'date_from',
+					'date_to',
+					'page',
+					'per_page',
+				],
+				$filters,
+			),
+		);
 	}
 
-	/**
-	 * Đếm supplier (pagination)
-	 */
-	public function count(array $conditions = []): int
+	/* =================================================
+       BUILD DATA
+    ================================================= */
+
+	private function buildData(array $data): array
 	{
-		$sql = "SELECT COUNT(*) as total FROM {$this->table} WHERE 1=1";
-		$params = [];
+		return [
+			'name' => $data['name'],
 
-		if (!empty($conditions['keyword'])) {
-			$sql .= ' AND (
-                name LIKE :keyword
-                OR phone LIKE :keyword
-                OR email LIKE :keyword
-            )';
+			'phone' => $data['phone'],
 
-			$params['keyword'] = '%' . $conditions['keyword'] . '%';
+			'email' => $data['email'],
+
+			'address' => $data['address'],
+
+			'description' => $data['description'],
+		];
+	}
+
+	/* =================================================
+       CREATE
+    ================================================= */
+
+	public function create(array $data): int
+	{
+		return parent::create($this->buildData($data));
+	}
+
+	/* =================================================
+       UPDATE
+    ================================================= */
+
+	public function update(int $id, array $data): bool
+	{
+		if (!parent::findById($id)) {
+			return false;
 		}
 
-		$row = Database::first($sql, $params);
+		return parent::updateById($id, $this->buildData($data)) > 0;
+	}
 
-		return (int) ($row['total'] ?? 0);
+	/* =================================================
+       DELETE
+    ================================================= */
+
+	public function delete(int $id): bool
+	{
+		if (!parent::findById($id)) {
+			return false;
+		}
+
+		return parent::deleteById($id) > 0;
 	}
 }

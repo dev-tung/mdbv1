@@ -66,36 +66,26 @@ class ProductRepository extends Repository
 			return null;
 		}
 
-		return upload_file(
-			$thumbnail,
-			self::UPLOAD_PATH,
-		);
+		return upload_file($thumbnail, self::UPLOAD_PATH);
 	}
 
 	/* =================================================
        CREATE
     ================================================= */
 
-	public function create(
-		array $data,
-		array $thumbnail = [],
-	): int {
+	public function create(array $data, array $thumbnail = []): int
+	{
 		$data['thumbnail'] = $this->uploadThumbnail($thumbnail);
 
-		return parent::create(
-			$this->buildData($data),
-		);
+		return parent::create($this->buildData($data));
 	}
 
 	/* =================================================
        UPDATE
     ================================================= */
 
-	public function update(
-		int $id,
-		array $data,
-		array $thumbnail = [],
-	): bool {
+	public function update(int $id, array $data, array $thumbnail = []): bool
+	{
 		$product = parent::findById($id);
 
 		if (!$product) {
@@ -106,20 +96,10 @@ class ProductRepository extends Repository
 
 		$data['thumbnail'] = $this->uploadThumbnail($thumbnail) ?? $oldThumbnail;
 
-		$result = parent::updateById(
-			$id,
-			$this->buildData($data),
-		);
+		$result = parent::updateById($id, $this->buildData($data));
 
-		if (
-			$result > 0 &&
-			!empty($thumbnail['name']) &&
-			!empty($oldThumbnail)
-		) {
-			delete_file(
-				self::UPLOAD_PATH,
-				$oldThumbnail,
-			);
+		if ($result > 0 && !empty($thumbnail['name']) && !empty($oldThumbnail)) {
+			delete_file(self::UPLOAD_PATH, $oldThumbnail);
 		}
 
 		return $result > 0;
@@ -139,14 +119,8 @@ class ProductRepository extends Repository
 
 		$result = parent::deleteById($id);
 
-		if (
-			$result > 0 &&
-			!empty($product['thumbnail'])
-		) {
-			delete_file(
-				self::UPLOAD_PATH,
-				$product['thumbnail'],
-			);
+		if ($result > 0 && !empty($product['thumbnail'])) {
+			delete_file(self::UPLOAD_PATH, $product['thumbnail']);
 		}
 
 		return $result > 0;

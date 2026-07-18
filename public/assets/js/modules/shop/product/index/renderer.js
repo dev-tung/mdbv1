@@ -52,11 +52,9 @@ const Renderer = {
 
 			if (thumbnail) {
 				thumbnail.src = product.thumbnail
-					? (
-						product.thumbnail.startsWith('uploads/')
-							? `/${product.thumbnail}`
-							: `/uploads/products/${product.thumbnail}`
-					)
+					? product.thumbnail.startsWith('uploads/')
+						? `/${product.thumbnail}`
+						: `/uploads/products/${product.thumbnail}`
 					: '/assets/image/no-image.svg';
 			}
 
@@ -86,11 +84,7 @@ const Renderer = {
 			// STATUS
 			// =========================
 
-			Label.render(
-				row.querySelector('.status'),
-				Option.product,
-				product.status,
-			);
+			Label.render(row.querySelector('.status'), Option.product, product.status);
 
 			row.querySelector('.status').dataset.id = product.id;
 

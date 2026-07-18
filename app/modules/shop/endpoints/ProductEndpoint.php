@@ -61,10 +61,7 @@ class ProductEndpoint
 			]);
 		}
 
-		$id = $this->productRepository->create(
-			$input,
-			$_FILES['thumbnail'] ?? [],
-		);
+		$id = $this->productRepository->create($input, $_FILES['thumbnail'] ?? []);
 
 		return Response::json([
 			'success' => true,
@@ -90,11 +87,7 @@ class ProductEndpoint
 			]);
 		}
 
-		$this->productRepository->update(
-			(int) ($input['id'] ?? 0),
-			$input,
-			$_FILES['thumbnail'] ?? [],
-		);
+		$this->productRepository->update((int) ($input['id'] ?? 0), $input, $_FILES['thumbnail'] ?? []);
 
 		return Response::json([
 			'success' => true,

@@ -65,7 +65,7 @@ const State = {
 
 			...(data.pagination || {}),
 		};
-	}
+	},
 };
 
 export default State;

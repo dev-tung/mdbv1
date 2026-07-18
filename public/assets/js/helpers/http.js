@@ -70,10 +70,7 @@ const Http = {
 	get(url, params = {}) {
 		const query = new URLSearchParams(params).toString();
 
-		return this.request(
-			'GET',
-			query ? `${url}?${query}` : url,
-		);
+		return this.request('GET', query ? `${url}?${query}` : url);
 	},
 
 	/* =================================================

@@ -26,9 +26,7 @@ function create_directory(string $path): void
 
 function file_extension(string $filename): string
 {
-	return strtolower(
-		pathinfo($filename, PATHINFO_EXTENSION)
-	);
+	return strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 }
 
 /* =================================================
@@ -76,7 +74,7 @@ function is_image(array $file): bool
 function validate_image(
 	array $file,
 	int $maxSize = 5 * 1024 * 1024,
-	array $extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp']
+	array $extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'],
 ): ?string {
 	if (empty($file['name'])) {
 		return 'Vui lòng chọn ảnh.';
@@ -105,10 +103,8 @@ function validate_image(
    UPLOAD
 ================================================= */
 
-function upload_file(
-	array $file,
-	string $directory
-): ?string {
+function upload_file(array $file, string $directory): ?string
+{
 	if (empty($file['name'])) {
 		return null;
 	}
@@ -119,10 +115,7 @@ function upload_file(
 
 	$destination = $directory . '/' . $filename;
 
-	if (!move_uploaded_file(
-		$file['tmp_name'],
-		$destination
-	)) {
+	if (!move_uploaded_file($file['tmp_name'], $destination)) {
 		return null;
 	}
 
@@ -133,10 +126,8 @@ function upload_file(
    DELETE
 ================================================= */
 
-function delete_file(
-	string $directory,
-	?string $filename
-): bool {
+function delete_file(string $directory, ?string $filename): bool
+{
 	if (empty($filename)) {
 		return false;
 	}
@@ -154,24 +145,15 @@ function delete_file(
    REPLACE
 ================================================= */
 
-function replace_file(
-	array $file,
-	string $directory,
-	?string $oldFile = null
-): ?string {
-	$newFile = upload_file(
-		$file,
-		$directory
-	);
+function replace_file(array $file, string $directory, ?string $oldFile = null): ?string
+{
+	$newFile = upload_file($file, $directory);
 
 	if (!$newFile) {
 		return $oldFile;
 	}
 
-	delete_file(
-		$directory,
-		$oldFile
-	);
+	delete_file($directory, $oldFile);
 
 	return $newFile;
 }
@@ -180,11 +162,8 @@ function replace_file(
    URL
 ================================================= */
 
-function file_url(
-	string $directory,
-	?string $filename,
-	string $default = ''
-): string {
+function file_url(string $directory, ?string $filename, string $default = ''): string
+{
 	if (empty($filename)) {
 		return $default;
 	}
