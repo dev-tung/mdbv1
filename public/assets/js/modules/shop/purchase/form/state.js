@@ -54,8 +54,15 @@ const State = {
 		this.purchase.supplier_id = supplier.id;
 		this.purchase.supplier_name = supplier.name;
 	},
-	setWarehouses(warehouse) {
-		return Object.fromEntries(warehouse.data.map((item) => [item.id, { label: item.name }]));
+	setWarehouses(warehouses = []) {
+		return Object.fromEntries(
+			warehouses.map((item) => [
+				item.id,
+				{
+					label: item.name,
+				},
+			]),
+		);
 	},
 	setDefault(data) {
 		this.purchase = data.purchase;

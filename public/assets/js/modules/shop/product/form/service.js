@@ -6,12 +6,15 @@ const Service = {
 	================================================= */
 
 	async getOptions() {
-		const [categoryResponse, brandResponse] = await Promise.all([Api.getCategories(), Api.getBrands()]);
+		const [categoryResponse, brandResponse] = await Promise.all([
+			Api.getCategories(),
+			Api.getBrands(),
+		]);
 
 		return {
-			categories: categoryResponse.data ?? [],
+			categories: categoryResponse.data?.[0] ?? [],
 
-			brands: brandResponse.data ?? [],
+			brands: brandResponse.data?.[0] ?? [],
 		};
 	},
 

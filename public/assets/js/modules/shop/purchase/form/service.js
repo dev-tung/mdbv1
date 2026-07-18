@@ -3,7 +3,7 @@ import Api from './api.js';
 
 const Service = {
 	async getDefault(purchase_id = null) {
-		const [response, warehouses] = await Promise.all([
+		const [response, warehouseResponse] = await Promise.all([
 			purchase_id ? Api.showPurchase(purchase_id) : null,
 			Api.getWarehouses(),
 		]);
@@ -13,7 +13,7 @@ const Service = {
 		return {
 			purchase: purchase[0] ?? {},
 			items,
-			warehouses,
+			warehouses: warehouseResponse.data?.[0] ?? [],
 		};
 	},
 

@@ -1,158 +1,71 @@
 <?php
 
-class WarehouseRepository
+class WarehouseRepository extends Repository
 {
-	/**
-	 * BUILD WHERE
-	 */
-	private function buildWhere(array $conditions, array &$params): string
+	protected string $table = 'warehouses';
+
+	/* =================================================
+	   LIST
+	================================================= */
+
+	public function getList(array $filters = []): array
 	{
-		$sql = ' WHERE 1=1';
-
-		// KEYWORD
-		if (!empty($conditions['keyword'])) {
-			$sql .= '
-                AND (
-                    name LIKE :keyword
-                    OR address LIKE :keyword
-                )
-            ';
-
-			$params['keyword'] = '%' . trim($conditions['keyword']) . '%';
-		}
-
-		// STATUS
-		if (isset($conditions['status']) && $conditions['status'] !== '') {
-			$sql .= ' AND status = :status';
-			$params['status'] = $conditions['status'];
-		}
-
-		return $sql;
-	}
-
-	/**
-	 * GET LIST
-	 */
-	public function getList(array $conditions = [], int $limit = 0, int $offset = 0): array
-	{
-		$params = [];
-
-		$sql = '
-            SELECT *
-            FROM warehouses
-        ';
-
-		$sql .= $this->buildWhere($conditions, $params);
-
-		$sql .= ' ORDER BY id DESC';
-
-		if ($limit > 0) {
-			$limit = (int) $limit;
-			$offset = (int) $offset;
-
-			$sql .= " LIMIT {$limit} OFFSET {$offset}";
-		}
-
-		return Database::get($sql, $params);
-	}
-
-	/**
-	 * COUNT
-	 */
-	public function count(array $conditions = []): int
-	{
-		$params = [];
-
-		$sql = '
-            SELECT COUNT(*) AS total
-            FROM warehouses
-        ';
-
-		$sql .= $this->buildWhere($conditions, $params);
-
-		$row = Database::first($sql, $params);
-
-		return (int) ($row['total'] ?? 0);
-	}
-
-	/**
-	 * FIND BY ID
-	 */
-	public function findById(int $id): ?array
-	{
-		return Database::first(
-			'
-                SELECT *
-                FROM warehouses
-                WHERE id = :id
-                LIMIT 1
-            ',
-			[
-				'id' => $id,
-			],
+		return Database::call(
+			'CALL sp_warehouse_list(?, ?, ?, ?, ?)',
+			array_params(
+				['keyword', 'date_from', 'date_to', 'page', 'per_page'],
+				$filters,
+			),
 		);
 	}
 
-	/**
-	 * CREATE
-	 */
+	/* =================================================
+	   BUILD DATA
+	================================================= */
+
+	private function buildData(array $data): array
+	{
+		return [
+			'name' => $data['name'] ?? null,
+
+			'address' => $data['address'] ?? null,
+
+			'description' => $data['description'] ?? null,
+		];
+	}
+
+	/* =================================================
+	   CREATE
+	================================================= */
+
 	public function create(array $data): int
 	{
-		$fields = array_keys($data);
-
-		$columns = implode(', ', $fields);
-		$placeholders = ':' . implode(', :', $fields);
-
-		$sql = "
-            INSERT INTO warehouses ({$columns})
-            VALUES ({$placeholders})
-        ";
-
-		return Database::insert($sql, $data);
+		return parent::create($this->buildData($data));
 	}
 
-	/**
-	 * UPDATE
-	 */
-	public function updateById(int $id, array $data): int
+	/* =================================================
+	   UPDATE
+	================================================= */
+
+	public function update(int $id, array $data): bool
 	{
-		if (empty($data)) {
-			return 0;
+		if (!parent::findById($id)) {
+			return false;
 		}
 
-		$set = [];
-
-		foreach ($data as $key => $value) {
-			$set[] = "{$key} = :{$key}";
-		}
-
-		$data['id'] = $id;
-
-		$sql =
-			'
-            UPDATE warehouses
-            SET ' .
-			implode(', ', $set) .
-			'
-            WHERE id = :id
-        ';
-
-		return Database::update($sql, $data);
+		return parent::updateById($id, $this->buildData($data)) > 0;
 	}
 
-	/**
-	 * DELETE
-	 */
-	public function deleteById(int $id): int
+	/* =================================================
+	   DELETE
+	================================================= */
+
+	public function delete(int $id): bool
 	{
-		return Database::delete(
-			'
-                DELETE FROM warehouses
-                WHERE id = :id
-            ',
-			[
-				'id' => $id,
-			],
-		);
+		if (!parent::findById($id)) {
+			return false;
+		}
+
+		return parent::deleteById($id) > 0;
 	}
 }
