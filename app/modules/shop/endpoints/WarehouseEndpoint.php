@@ -2,7 +2,7 @@
 
 class WarehouseEndpoint
 {
-	protected WarehouseRepository $warehouseRepository;
+	private readonly WarehouseRepository $warehouseRepository;
 
 	public function __construct()
 	{
@@ -10,53 +10,35 @@ class WarehouseEndpoint
 	}
 
 	// =========================
-	// LIST (dropdown / full list)
+	// LIST
 	// =========================
+
 	public function apiList()
 	{
-		header('Content-Type: application/json');
+		$data = $this->warehouseRepository->getList(request_all());
 
-		$keyword = $_GET['keyword'] ?? '';
-
-		$filters = [];
-
-		if (!empty($keyword)) {
-			$filters['keyword'] = $keyword;
-		}
-
-		$warehouses = $this->warehouseRepository->getList($filters);
-
-		echo json_encode([
-			'data' => $warehouses,
+		return Response::json([
+			'success' => true,
+			'data' => $data,
 		]);
 	}
 
 	// =========================
 	// SHOW
 	// =========================
-	public function apiShow($id)
+
+	public function apiShow()
 	{
-		header('Content-Type: application/json');
-
-		if ($id <= 0) {
-			echo json_encode([
-				'success' => false,
-				'message' => 'ID không hợp lệ',
-			]);
-			return;
-		}
-
-		$warehouse = $this->warehouseRepository->findById($id);
+		$warehouse = $this->warehouseRepository->findById(request_id());
 
 		if (!$warehouse) {
-			echo json_encode([
+			return Response::json([
 				'success' => false,
-				'message' => 'Không tìm thấy kho',
+				'message' => 'Warehouse not found',
 			]);
-			return;
 		}
 
-		echo json_encode([
+		return Response::json([
 			'success' => true,
 			'data' => $warehouse,
 		]);
@@ -65,89 +47,67 @@ class WarehouseEndpoint
 	// =========================
 	// CREATE
 	// =========================
+
 	public function apiCreate()
 	{
-		header('Content-Type: application/json');
+		$input = request_all();
 
-		$data = [
-			'name' => trim($_POST['name'] ?? ''),
-			'address' => trim($_POST['address'] ?? ''),
-			'status' => $_POST['status'] ?? 1,
-			'created_at' => date('Y-m-d H:i:s'),
-			'updated_at' => date('Y-m-d H:i:s'),
-		];
+		$error = WarehouseValidator::create($input);
 
-		if ($data['name'] === '') {
-			echo json_encode([
+		if ($error) {
+			return Response::json([
 				'success' => false,
-				'message' => 'Tên kho không được để trống',
+				'message' => $error,
 			]);
-			return;
 		}
 
-		$id = $this->warehouseRepository->create($data);
+		$id = $this->warehouseRepository->create($input);
 
-		echo json_encode([
-			'success' => $id > 0,
-			'message' => $id ? 'Tạo kho thành công' : 'Tạo thất bại',
+		return Response::json([
+			'success' => true,
+			'message' => 'Thêm kho thành công!',
 			'id' => $id,
+			'redirect' => '/admin/warehouses',
 		]);
 	}
 
 	// =========================
 	// UPDATE
 	// =========================
+
 	public function apiUpdate()
 	{
-		header('Content-Type: application/json');
+		$input = request_all();
 
-		$id = (int) ($_POST['id'] ?? 0);
+		$error = WarehouseValidator::update($input);
 
-		if ($id <= 0) {
-			echo json_encode([
+		if ($error) {
+			return Response::json([
 				'success' => false,
-				'message' => 'ID không hợp lệ',
+				'message' => $error,
 			]);
-			return;
 		}
 
-		$data = [
-			'name' => trim($_POST['name'] ?? ''),
-			'address' => trim($_POST['address'] ?? ''),
-			'status' => $_POST['status'] ?? 1,
-			'updated_at' => date('Y-m-d H:i:s'),
-		];
+		$this->warehouseRepository->update((int) ($input['id'] ?? 0), $input);
 
-		$updated = $this->warehouseRepository->updateById($id, $data);
-
-		echo json_encode([
-			'success' => $updated > 0,
-			'message' => $updated > 0 ? 'Cập nhật thành công' : 'Không có thay đổi',
+		return Response::json([
+			'success' => true,
+			'message' => 'Cập nhật kho thành công!',
+			'redirect' => '/admin/warehouses',
 		]);
 	}
 
 	// =========================
 	// DELETE
 	// =========================
+
 	public function apiDelete()
 	{
-		header('Content-Type: application/json');
+		$this->warehouseRepository->delete(request_id());
 
-		$id = (int) ($_POST['id'] ?? 0);
-
-		if ($id <= 0) {
-			echo json_encode([
-				'success' => false,
-				'message' => 'ID không hợp lệ',
-			]);
-			return;
-		}
-
-		$deleted = $this->warehouseRepository->deleteById($id);
-
-		echo json_encode([
-			'success' => $deleted > 0,
-			'message' => $deleted > 0 ? 'Xóa thành công' : 'Không tìm thấy kho',
+		return Response::json([
+			'success' => true,
+			'message' => 'Xóa kho thành công!',
 		]);
 	}
 }
