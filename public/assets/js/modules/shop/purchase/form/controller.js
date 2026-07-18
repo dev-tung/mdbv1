@@ -43,8 +43,8 @@ const Controller = {
 			element: '#supplier_search',
 
 			async source(keyword) {
-				const suppliers = await Api.searchSupplier(keyword);
-				return suppliers.data;
+				const response = await Api.searchSupplier(keyword);
+				return response.data?.[0] ?? [];
 			},
 
 			select(supplier) {
@@ -64,7 +64,7 @@ const Controller = {
 
 			async source(keyword) {
 				const products = await Api.searchProduct(keyword);
-				return products.data;
+				return products.data?.[0] ?? [];
 			},
 
 			select(product) {
