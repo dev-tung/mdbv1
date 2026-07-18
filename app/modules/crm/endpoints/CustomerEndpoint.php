@@ -2,7 +2,7 @@
 
 class CustomerEndpoint
 {
-	private CustomerRepository $customerRepository;
+	private readonly CustomerRepository $customerRepository;
 
 	public function __construct()
 	{
@@ -15,16 +15,11 @@ class CustomerEndpoint
 
 	public function apiList()
 	{
-		$filters = request_all();
-
-		$result = $this->customerRepository->getList($filters);
+		$data = $this->customerRepository->getList(request_all());
 
 		return Response::json([
 			'success' => true,
-
-			'message' => 'Lấy danh sách khách hàng thành công',
-
-			'data' => $result,
+			'data' => $data,
 		]);
 	}
 
@@ -34,26 +29,18 @@ class CustomerEndpoint
 
 	public function apiShow()
 	{
-		$id = request_id();
+		$customer = $this->customerRepository->findById(request_id());
 
-		$data = $this->customerRepository->findById($id);
-
-		if (!$data) {
+		if (!$customer) {
 			return Response::json([
 				'success' => false,
-
-				'message' => 'Không tìm thấy khách hàng',
-
-				'data' => null,
+				'message' => 'Customer not found',
 			]);
 		}
 
 		return Response::json([
 			'success' => true,
-
-			'message' => 'Lấy thông tin khách hàng thành công',
-
-			'data' => $data,
+			'data' => $customer,
 		]);
 	}
 
@@ -64,29 +51,22 @@ class CustomerEndpoint
 	public function apiCreate()
 	{
 		$input = request_all();
-
 		$error = CustomerValidator::create($input);
 
 		if ($error) {
 			return Response::json([
 				'success' => false,
-
 				'message' => $error,
 			]);
 		}
-
-		$input['created_by'] = Auth::id();
 
 		$id = $this->customerRepository->create($input);
 
 		return Response::json([
 			'success' => true,
-
-			'message' => 'Tạo khách hàng thành công',
-
-			'data' => [
-				'id' => $id,
-			],
+			'message' => 'Thêm khách hàng thành công!',
+			'id' => $id,
+			'redirect' => '/admin/customers',
 		]);
 	}
 
@@ -103,19 +83,16 @@ class CustomerEndpoint
 		if ($error) {
 			return Response::json([
 				'success' => false,
-
 				'message' => $error,
 			]);
 		}
 
-		$input['updated_by'] = Auth::id();
-
-		$this->customerRepository->update($input);
+		$this->customerRepository->update((int) ($input['id'] ?? 0), $input);
 
 		return Response::json([
 			'success' => true,
-
-			'message' => 'Cập nhật khách hàng thành công',
+			'message' => 'Cập nhật khách hàng thành công!',
+			'redirect' => '/admin/customers',
 		]);
 	}
 
@@ -125,14 +102,11 @@ class CustomerEndpoint
 
 	public function apiDelete()
 	{
-		$id = request_id();
-
-		$this->customerRepository->delete($id);
+		$this->customerRepository->delete(request_id());
 
 		return Response::json([
 			'success' => true,
-
-			'message' => 'Xóa khách hàng thành công',
+			'message' => 'Xóa khách hàng thành công!',
 		]);
 	}
 }

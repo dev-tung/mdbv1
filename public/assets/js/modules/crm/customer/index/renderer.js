@@ -20,12 +20,12 @@ const Renderer = {
 	================================================= */
 
 	renderTable() {
-		Table.renderBody(State.suppliers, (supplier, index) => {
-			const fragment = Dom.template('#supplier-row-template');
+		Table.renderBody(State.customers, (customer, index) => {
+			const fragment = Dom.template('#customer-row-template');
 
 			const row = fragment.querySelector('tr');
 
-			row.dataset.id = supplier.id;
+			row.dataset.id = customer.id;
 
 			// =========================
 			// TEXT
@@ -34,15 +34,15 @@ const Renderer = {
 			const texts = {
 				'.index': index + 1,
 
-				'.supplier-name': supplier.name,
+				'.customer-name': customer.name,
 
-				'.phone': supplier.phone || '',
+				'.phone': customer.phone || '',
 
-				'.email': supplier.email || '',
+				'.email': customer.email || '',
 
-				'.address': supplier.address || '',
+				'.address': customer.address || '',
 
-				'.created-at': supplier.created_at,
+				'.created-at': customer.created_at,
 			};
 
 			Object.entries(texts).forEach(([selector, value]) => {
@@ -53,13 +53,13 @@ const Renderer = {
 			// EDIT
 			// =========================
 
-			row.querySelector('.edit-item').href = `/admin/suppliers/edit/${supplier.id}`;
+			row.querySelector('.edit-item').href = `/admin/customers/edit/${customer.id}`;
 
 			// =========================
 			// DELETE
 			// =========================
 
-			row.querySelector('.delete-item').dataset.id = supplier.id;
+			row.querySelector('.delete-item').dataset.id = customer.id;
 
 			return fragment;
 		});
@@ -70,7 +70,7 @@ const Renderer = {
 	================================================= */
 
 	renderSummary() {
-		Dom.text('#sum-total-supplier', State.summary.total);
+		Dom.text('#sum-total-customer', State.summary.total);
 	},
 };
 

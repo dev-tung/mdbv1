@@ -58,6 +58,9 @@
     // normalize image url
     // normalize image url
     // normalize image url
+    // normalize image url
+    // normalize image url
+    // normalize image url
     function img_url($img)
     {
     	if (!$img) {

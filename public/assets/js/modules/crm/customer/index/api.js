@@ -2,15 +2,15 @@ import Http from '/assets/js/helpers/http.js';
 
 const Api = {
 	/* =================================================
-	   SUPPLIER
+	   CUSTOMER
 	================================================= */
 
-	async getSuppliers(params = {}) {
-		return await Http.get('/api/suppliers', params);
+	async getCustomers(params = {}) {
+		return await Http.get('/api/customers', params);
 	},
 
-	async deleteSupplier(id) {
-		return await Http.post(`/api/suppliers/delete/${id}`);
+	async deleteCustomer(id) {
+		return await Http.post(`/api/customers/delete/${id}`);
 	},
 };
 

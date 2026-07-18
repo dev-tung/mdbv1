@@ -1,82 +1,74 @@
 <?php
 
-class CustomerRepository
+class CustomerRepository extends Repository
 {
 	protected string $table = 'customers';
 
-	/**
-	 * Lấy danh sách customer
-	 */
-	public function getList(array $conditions = []): array
+	/* =================================================
+       LIST
+    ================================================= */
+
+	public function getList(array $filters = []): array
 	{
-		$sql = '
-            SELECT
-                c.*,
-                g.name AS group_name
-            FROM customers c
-            LEFT JOIN customer_groups g
-                ON g.id = c.group_id
-            WHERE 1=1
-        ';
-
-		$params = [];
-
-		// KEYWORD SEARCH
-		if (!empty($conditions['keyword'])) {
-			$sql .= '
-                AND (
-                    c.name LIKE :name
-                    OR c.phone LIKE :phone
-                    OR c.email LIKE :email
-                )
-            ';
-
-			$keyword = '%' . $conditions['keyword'] . '%';
-
-			$params['name'] = $keyword;
-			$params['phone'] = $keyword;
-			$params['email'] = $keyword;
-		}
-
-		$sql .= ' ORDER BY c.id DESC';
-
-		return Database::get($sql, $params);
+		return Database::call(
+			'CALL sp_customer_list(?, ?, ?, ?, ?)',
+			array_params(['keyword', 'date_from', 'date_to', 'page', 'per_page'], $filters),
+		);
 	}
 
-	/**
-	 * Đếm customer (pagination)
-	 */
-	public function count(array $conditions = []): int
+	/* =================================================
+       BUILD DATA
+    ================================================= */
+
+	private function buildData(array $data): array
 	{
-		$sql = '
-            SELECT COUNT(*) AS total
-            FROM customers c
-            LEFT JOIN customer_groups g
-                ON g.id = c.group_id
-            WHERE 1=1
-        ';
+		return [
+			'name' => $data['name'],
 
-		$params = [];
+			'group_id' => $data['group_id'] ?? null,
 
-		// KEYWORD SEARCH
-		if (!empty($conditions['keyword'])) {
-			$sql .= '
-                AND (
-                    c.name LIKE :name
-                    OR c.phone LIKE :phone
-                    OR c.email LIKE :email
-                )
-            ';
+			'phone' => $data['phone'],
 
-			$keyword = '%' . $conditions['keyword'] . '%';
+			'email' => $data['email'],
 
-			$params['name'] = $keyword;
-			$params['phone'] = $keyword;
-			$params['email'] = $keyword;
+			'address' => $data['address'],
+
+			'description' => $data['description'],
+		];
+	}
+
+	/* =================================================
+       CREATE
+    ================================================= */
+
+	public function create(array $data): int
+	{
+		return parent::create($this->buildData($data));
+	}
+
+	/* =================================================
+       UPDATE
+    ================================================= */
+
+	public function update(int $id, array $data): bool
+	{
+		if (!parent::findById($id)) {
+			return false;
 		}
 
-		$row = Database::first($sql, $params);
+		return parent::updateById($id, $this->buildData($data)) > 0;
+	}
 
-		return (int) ($row['total'] ?? 0);
+	/* =================================================
+       DELETE
+    ================================================= */
+
+	public function delete(int $id): bool
+	{
+		if (!parent::findById($id)) {
+			return false;
+		}
+
+		return parent::deleteById($id) > 0;
 	}
 }

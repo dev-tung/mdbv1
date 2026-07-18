@@ -6,18 +6,18 @@ const Service = {
 	================================================= */
 
 	async getList(filters = {}) {
-		const suppliersResponse = await Api.getSuppliers(filters);
+		const customersResponse = await Api.getCustomers(filters);
 
-		const suppliers = suppliersResponse.data[0];
+		const customers = customersResponse.data[0];
 
-		const summary = suppliersResponse.data[1][0];
+		const summary = customersResponse.data[1][0];
 
 		const total = Number(summary.total);
 
 		const per_page = Number(filters.per_page ?? 10);
 
 		return {
-			suppliers,
+			customers,
 
 			summary,
 

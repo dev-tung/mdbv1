@@ -5,8 +5,8 @@ const Service = {
 	   SHOW
 	================================================= */
 
-	async getSupplier(id) {
-		const response = await Api.getSupplier(id);
+	async getCustomer(id) {
+		const response = await Api.getCustomer(id);
 
 		return response.data;
 	},

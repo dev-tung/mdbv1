@@ -15,7 +15,7 @@ const State = {
 	   DATA
 	================================================= */
 
-	suppliers: [],
+	customers: [],
 
 	summary: {
 		total: 0,
@@ -36,7 +36,7 @@ const State = {
 	================================================= */
 
 	setDefault(data) {
-		this.suppliers = data.suppliers || [];
+		this.customers = data.customers || [];
 
 		this.summary = {
 			...this.summary,

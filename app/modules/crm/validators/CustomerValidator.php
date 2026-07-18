@@ -1,6 +1,6 @@
 <?php
 
-class SupplierValidator
+class CustomerValidator
 {
 	// =========================
 	// CREATE VALIDATION
@@ -10,7 +10,7 @@ class SupplierValidator
 	{
 		// NAME
 		if (empty(trim($input['name'] ?? ''))) {
-			return 'Tên nhà cung cấp không được để trống';
+			return 'Tên khách hàng không được để trống';
 		}
 
 		// PHONE
@@ -33,7 +33,7 @@ class SupplierValidator
 	public static function update(array $input): ?string
 	{
 		if (!isset($input['id']) || (int) $input['id'] <= 0) {
-			return 'ID nhà cung cấp không hợp lệ';
+			return 'ID khách hàng không hợp lệ';
 		}
 
 		return self::create($input);

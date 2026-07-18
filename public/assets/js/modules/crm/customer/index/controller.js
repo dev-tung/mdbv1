@@ -13,7 +13,7 @@ import Service from './service.js';
 const Controller = {
 	init() {
 		Table.init({
-			body: '#supplier-table-body',
+			body: '#customer-table-body',
 
 			pagination: true,
 
@@ -40,6 +40,7 @@ const Controller = {
 					},
 				},
 			},
+
 			async source({ page, per_page }) {
 				const data = await Service.getList({
 					...State.filters,
@@ -67,7 +68,7 @@ const Controller = {
 	================================================= */
 
 	bindEvents() {
-		const table = Dom.find('#supplier-table-body');
+		const table = Dom.find('#customer-table-body');
 
 		// =========================
 		// DELETE
@@ -80,12 +81,12 @@ const Controller = {
 				return;
 			}
 
-			if (!confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này?')) {
+			if (!confirm('Bạn có chắc chắn muốn xóa khách hàng này?')) {
 				return;
 			}
 
 			try {
-				const response = await Api.deleteSupplier(button.dataset.id);
+				const response = await Api.deleteCustomer(button.dataset.id);
 
 				alert(response.message);
 
