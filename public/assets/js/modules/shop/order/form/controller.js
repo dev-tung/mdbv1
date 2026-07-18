@@ -46,7 +46,7 @@ const Controller = {
 			async source(keyword) {
 				const customers = await Api.searchCustomer(keyword);
 
-				return customers.data;
+				return customers.data?.[0] ?? [];
 			},
 
 			select(customer) {
