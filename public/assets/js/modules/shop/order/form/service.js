@@ -157,21 +157,33 @@ const Service = {
 		if (item.is_gift) {
 			return {
 				...item,
+				vat_rate: vatRate,
+
 				subtotal_amount: 0,
 				vat_amount: 0,
 				total_amount: 0,
 			};
 		}
 
-		const subtotal_amount = Calculator.multiply(item.quantity, item.selling_price);
+		const subtotal_amount = Calculator.multiply(
+			item.quantity,
+			item.selling_price,
+		);
 
-		const vat_amount = Calculator.multiply(subtotal_amount, vatRate / 100);
+		const vat_amount = Calculator.multiply(
+			subtotal_amount,
+			vatRate / 100,
+		);
 
-		const total_amount = Calculator.add(subtotal_amount, vat_amount);
+		const total_amount = Calculator.add(
+			subtotal_amount,
+			vat_amount,
+		);
 
 		return {
 			...item,
 			vat_rate: vatRate,
+
 			subtotal_amount,
 			vat_amount,
 			total_amount,

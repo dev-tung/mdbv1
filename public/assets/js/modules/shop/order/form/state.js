@@ -117,15 +117,13 @@ const State = {
 
 		const debt_amount = total_amount - Number(this.order.paid_amount || 0);
 
-		this.summary = {
-			subtotal_amount,
+		this.summary.subtotal_amount = subtotal_amount;
 
-			vat_amount,
+		this.summary.vat_amount = vat_amount;
 
-			total_amount,
+		this.summary.total_amount = total_amount;
 
-			debt_amount,
-		};
+		this.summary.debt_amount = debt_amount;
 	},
 };
 
