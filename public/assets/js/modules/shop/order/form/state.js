@@ -60,13 +60,13 @@ const State = {
 	],
 
 	summary: {
-		subtotal_amount: 9800000,
+		subtotal_amount: 0,
 
-		vat_amount: 784000,
+		vat_amount: 0,
 
-		total_amount: 10584000,
+		total_amount: 0,
 
-		debt_amount: 5584000,
+		debt_amount: 0,
 	},
 
 	/* =================================================

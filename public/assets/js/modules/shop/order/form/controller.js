@@ -110,9 +110,9 @@ const Controller = {
 				),
 			);
 
-			this.renderSummary();
-
 			Renderer.renderCaculation();
+			this.renderSummary();
+			
 		});
 
 		Dom.find('#payment').addEventListener('change', (e) => {
