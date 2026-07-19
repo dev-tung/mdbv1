@@ -1,16 +1,18 @@
 import Calculator from '../../../../helpers/calculator.js';
-
 import Api from './api.js';
 
 const Service = {
-	async getDefault(order_id = null) {
-		const response = order_id ? await Api.showOrder(order_id) : null;
+	/* =================================================
+	   DEFAULT
+	================================================= */
+
+	async getDefault(orderId = null) {
+		const response = orderId ? await Api.showOrder(orderId) : null;
 
 		const [order = [], items = []] = response?.data ?? [];
 
 		return {
 			order: order[0] ?? {},
-
 			items,
 		};
 	},
@@ -30,12 +32,14 @@ const Service = {
 					return item;
 				}
 
+				const quantity = Math.min(item.quantity + 1, item.stock_quantity);
+
 				return this.calculateItem(
 					{
 						...item,
-						quantity: item.quantity + 1,
+						quantity,
 					},
-					item.vat_rate ?? 0,
+					item.vat_rate,
 				);
 			});
 		}
@@ -46,9 +50,17 @@ const Service = {
 			product_id: product.product_id,
 			purchase_id: product.purchase_id,
 			product_name: product.product_name,
+
+			// tồn kho
+			stock_quantity: Number(product.quantity ?? 0),
+
+			// số lượng bán
 			quantity: 1,
-			selling_price: product.selling_price ?? 0,
+
+			selling_price: Number(product.selling_price ?? 0),
+
 			vat_rate: 0,
+
 			is_gift: 0,
 		};
 
@@ -56,7 +68,7 @@ const Service = {
 	},
 
 	/* =================================================
-	   ITEMS
+	   ITEM
 	================================================= */
 
 	changeItem(items, event, vatRate) {
@@ -87,11 +99,16 @@ const Service = {
 				return item;
 			}
 
+			let value = Number(event.target.value);
+
+			if (field === 'quantity') {
+				value = Math.max(1, Math.min(value, item.stock_quantity));
+			}
+
 			return this.calculateItem(
 				{
 					...item,
-
-					[field]: Number(event.target.value),
+					[field]: value,
 				},
 				vatRate,
 			);
@@ -115,42 +132,11 @@ const Service = {
 			return this.calculateItem(
 				{
 					...item,
-
 					is_gift: event.target.checked ? 1 : 0,
 				},
-				item.vat_rate ?? 0,
+				item.vat_rate,
 			);
 		});
-	},
-
-	calculateItem(item, vatRate) {
-		if (item.is_gift) {
-			return {
-				...item,
-
-				subtotal_amount: 0,
-
-				vat_amount: 0,
-
-				total_amount: 0,
-			};
-		}
-
-		const subtotal_amount = Calculator.multiply(item.quantity, item.selling_price);
-
-		const vat_amount = Calculator.multiply(subtotal_amount, vatRate / 100);
-
-		const total_amount = Calculator.add(subtotal_amount, vat_amount);
-
-		return {
-			...item,
-
-			subtotal_amount,
-
-			vat_amount,
-
-			total_amount,
-		};
 	},
 
 	removeItem(items, event) {
@@ -164,31 +150,52 @@ const Service = {
 	},
 
 	/* =================================================
+	   CALCULATE
+	================================================= */
+
+	calculateItem(item, vatRate) {
+		if (item.is_gift) {
+			return {
+				...item,
+				subtotal_amount: 0,
+				vat_amount: 0,
+				total_amount: 0,
+			};
+		}
+
+		const subtotal_amount = Calculator.multiply(item.quantity, item.selling_price);
+
+		const vat_amount = Calculator.multiply(subtotal_amount, vatRate / 100);
+
+		const total_amount = Calculator.add(subtotal_amount, vat_amount);
+
+		return {
+			...item,
+			vat_rate: vatRate,
+			subtotal_amount,
+			vat_amount,
+			total_amount,
+		};
+	},
+
+	/* =================================================
 	   PAYLOAD
 	================================================= */
 
 	payload(order = {}, summary = {}, items = []) {
 		return {
 			customer_id: order.customer_id ?? null,
-
 			description: order.description ?? '',
-
 			note: order.note ?? '',
-
 			status: order.status ?? 'pending',
-
 			payment: order.payment ?? 'unpaid',
 
 			subtotal_amount: summary.subtotal_amount ?? 0,
-
 			vat_rate: order.vat_rate ?? 0,
-
 			vat_amount: summary.vat_amount ?? 0,
-
 			total_amount: summary.total_amount ?? 0,
 
 			paid_amount: order.paid_amount ?? 0,
-
 			debt_amount: summary.debt_amount ?? 0,
 
 			created_by: order.created_by ?? null,

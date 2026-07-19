@@ -151,11 +151,10 @@ const Controller = {
 				const row = e.target.closest('tr');
 				const item = State.items[Number(row.dataset.index)];
 				const quantity = Number(e.target.value);
+				if (quantity > item.stock_quantity) {
+					alert(`Số lượng tồn chỉ còn ${item.stock_quantity}.`);
 
-				if (quantity > item.quantity) {
-					alert(`Số lượng tồn chỉ còn ${item.quantity}.`);
-
-					e.target.value = item.quantity;
+					e.target.value = item.stock_quantity;
 
 					return;
 				}
