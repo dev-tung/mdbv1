@@ -199,14 +199,8 @@ const Controller = {
 				e,
 				State.order.vat_rate,
 			);
-
-			console.log('vat_rate:', State.order.vat_rate);
-			console.log('items:', State.items);
-			console.log('summary:', State.summary);
-
+			
 			Renderer.renderCaculation();
-
-			console.log(State.summary);
 
 			this.renderSummary();
 		};
