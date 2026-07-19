@@ -206,6 +206,8 @@ const Controller = {
 
 			Renderer.renderCaculation();
 
+			console.log(State.summary);
+
 			this.renderSummary();
 		};
 

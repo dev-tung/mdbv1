@@ -127,6 +127,8 @@ const Renderer = {
 	renderSummary() {
 		const summary = State.summary;
 
+		console.log('Render Summary:', summary);
+
 		Dom.text('#subtotal_amount', Formatter.money(summary.subtotal_amount));
 
 		Dom.text('#vat_amount', Formatter.money(summary.vat_amount));
