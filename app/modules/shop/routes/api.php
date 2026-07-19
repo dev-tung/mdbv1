@@ -79,6 +79,10 @@ Router::post('/api/inventories/delete/{id}', 'InventoryEndpoint@apiDelete', [
 	'auth' => 'admin',
 ]);
 
+Router::get('/api/inventories/quantity', 'InventoryEndpoint@apiQuantity', [
+	'auth' => 'admin',
+]);
+
 // =========================
 // SUPPLIER
 // =========================

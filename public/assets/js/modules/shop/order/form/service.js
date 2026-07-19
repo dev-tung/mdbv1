@@ -102,7 +102,7 @@ const Service = {
 			let value = Number(event.target.value);
 
 			if (field === 'quantity') {
-				value = Math.max(1, Math.min(value, item.stock_quantity));
+				value = Math.max(1, value);
 			}
 
 			return this.calculateItem(

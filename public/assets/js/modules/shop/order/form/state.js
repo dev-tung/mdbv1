@@ -86,7 +86,10 @@ const State = {
 	setDefault(data) {
 		this.order = data.order;
 
-		this.items = data.items;
+		this.items = data.items.map((item) => ({
+			...item,
+			original_quantity: Number(item.quantity),
+		}));
 	},
 
 	/* =================================================

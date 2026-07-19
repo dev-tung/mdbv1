@@ -31,6 +31,13 @@ const Api = {
 		});
 	},
 
+	async getQuantity(product_id, purchase_id) {
+		return await Http.get('/api/inventories/quantity', {
+			product_id,
+			purchase_id,
+		});
+	},
+
 	/* =================================================
 	   CUSTOMER
 	================================================= */

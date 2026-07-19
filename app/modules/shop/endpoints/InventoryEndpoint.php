@@ -31,6 +31,22 @@ class InventoryEndpoint
 		]);
 	}
 
+	// QUANTITY
+	public function apiQuantity()
+	{
+		$data = request_all();
+
+		$quantity = $this->inventoryRepository->getQuantity([
+			'product_id' => $data['product_id'],
+			'purchase_id' => $data['purchase_id'],
+		]);
+
+		return Response::json([
+			'success' => true,
+			'data' => $quantity,
+		]);
+	}
+
 	// SHOW
 	public function apiShow($id)
 	{
@@ -55,7 +71,7 @@ class InventoryEndpoint
 	// CREATE
 	public function apiCreate()
 	{
-		$data = request()->all();
+		$data = request_all();
 
 		$id = $this->inventoryRepository->create([
 			'product_id' => $data['product_id'],
@@ -77,7 +93,7 @@ class InventoryEndpoint
 	// UPDATE
 	public function apiUpdate()
 	{
-		$data = request()->all();
+		$data = request_all();
 
 		$this->inventoryRepository->update($data['id'], [
 			'product_id' => $data['product_id'],
@@ -96,7 +112,7 @@ class InventoryEndpoint
 	// DELETE
 	public function apiDelete()
 	{
-		$data = request()->all();
+		$data = request_all();
 
 		$this->inventoryRepository->delete($data['id']);
 

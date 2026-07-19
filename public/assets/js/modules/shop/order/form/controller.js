@@ -136,7 +136,7 @@ const Controller = {
 	},
 
 	/* =================================================
-	   ITEMS
+		ITEMS
 	================================================= */
 
 	bindItems() {
@@ -146,21 +146,59 @@ const Controller = {
 			return;
 		}
 
-		const changeItem = (e) => {
-			if (e.target.matches('.quantity')) {
-				const row = e.target.closest('tr');
-				const item = State.items[Number(row.dataset.index)];
-				const quantity = Number(e.target.value);
-				if (quantity > item.stock_quantity) {
-					alert(`Số lượng tồn chỉ còn ${item.stock_quantity}.`);
+		const changeItem = async (e) => {
+			const row = e.target.closest('tr');
 
-					e.target.value = item.stock_quantity;
+			if (!row) {
+				return;
+			}
+
+			const item = State.items[Number(row.dataset.index)];
+
+			if (e.target.matches('.quantity')) {
+				const inputQuantity = Number(e.target.value);
+
+				const response = await Api.getQuantity(
+					item.product_id,
+					item.purchase_id,
+				);
+
+				if (!response.success || !response.data) {
+					alert('Không lấy được tồn kho.');
 
 					return;
 				}
+
+				const stockQuantity = Number(response.data.quantity);
+
+				// Số lượng ban đầu của đơn
+				const originalQuantity = Number(
+					item.original_quantity ?? item.quantity,
+				);
+
+				// Giới hạn tối đa được phép
+				let maxQuantity;
+
+				if (State.order.id) {
+					// Đang sửa đơn
+					maxQuantity = Number(item.original_quantity) + stockQuantity;
+				} else {
+					// Đang tạo mới
+					maxQuantity = stockQuantity;
+				}
+
+				if (inputQuantity > maxQuantity) {
+					alert(`Số lượng tồn chỉ còn ${maxQuantity}.`);
+
+					e.target.value = maxQuantity;
+				}
 			}
 
-			State.items = Service.changeItem(State.items, e, State.order.vat_rate);
+			State.items = Service.changeItem(
+				State.items,
+				e,
+				State.order.vat_rate,
+			);
 
 			Renderer.renderCaculation();
 
@@ -171,7 +209,9 @@ const Controller = {
 			State.items = Service.changeGift(State.items, e);
 
 			State.order.paid_amount = 0;
+
 			Renderer.renderCaculation();
+
 			this.renderSummary();
 		};
 
@@ -184,24 +224,45 @@ const Controller = {
 		};
 
 		table.addEventListener('input', (e) => {
-			if (!e.target.matches('.quantity, .selling-price')) {
+			if (!e.target.matches('.selling-price')) {
 				return;
 			}
 
-			changeItem(e);
+			State.items = Service.changeItem(
+				State.items,
+				e,
+				State.order.vat_rate,
+			);
+
+			Renderer.renderCaculation();
+
+			this.renderSummary();
 		});
 
-		table.addEventListener('change', (e) => {
-			if (e.target.matches('.quantity, .selling-price')) {
-				changeItem(e);
+		table.addEventListener('change', async (e) => {
+			if (e.target.matches('.quantity')) {
+				await changeItem(e);
+
 				return;
 			}
 
-			if (!e.target.matches('.is-gift')) {
+			if (e.target.matches('.selling-price')) {
+				State.items = Service.changeItem(
+					State.items,
+					e,
+					State.order.vat_rate,
+				);
+
+				Renderer.renderCaculation();
+
+				this.renderSummary();
+
 				return;
 			}
 
-			changeGift(e);
+			if (e.target.matches('.is-gift')) {
+				changeGift(e);
+			}
 		});
 
 		table.addEventListener('click', (e) => {
