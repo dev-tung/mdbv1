@@ -25,13 +25,7 @@ const Controller = {
 		const data = await Service.getDefault(order_id);
 
 		State.setDefault(data);
-
-		this.renderSummary();
-	},
-
-	renderSummary() {
 		State.setSummary();
-
 		Renderer.renderSummary();
 	},
 
@@ -121,13 +115,15 @@ const Controller = {
 
 			Dom.find('#paid_amount_wrapper').classList.toggle('d-none', State.order.payment !== 'partial');
 
-			this.renderSummary();
+			State.setSummary();
+			Renderer.renderSummary();
 		});
 
 		Dom.find('#paid_amount').addEventListener('input', (e) => {
 			State.order.paid_amount = Number(e.target.value);
 
-			this.renderSummary();
+			State.setSummary();
+			Renderer.renderSummary();
 		});
 
 		Dom.find('#description').addEventListener('input', (e) => {
@@ -199,10 +195,11 @@ const Controller = {
 				e,
 				State.order.vat_rate,
 			);
-			
+
 			Renderer.renderCaculation();
 
-			this.renderSummary();
+			State.setSummary();
+			Renderer.renderSummary();
 		};
 
 		const changeGift = (e) => {
@@ -212,7 +209,8 @@ const Controller = {
 
 			Renderer.renderCaculation();
 
-			this.renderSummary();
+			State.setSummary();
+			Renderer.renderSummary();
 		};
 
 		const removeItem = (e) => {
@@ -220,7 +218,8 @@ const Controller = {
 
 			Renderer.renderProducts();
 
-			this.renderSummary();
+			State.setSummary();
+			Renderer.renderSummary();
 		};
 
 		table.addEventListener('input', (e) => {
@@ -236,7 +235,8 @@ const Controller = {
 
 			Renderer.renderCaculation();
 
-			this.renderSummary();
+			State.setSummary();
+			Renderer.renderSummary();
 		});
 
 		table.addEventListener('change', async (e) => {
@@ -255,7 +255,8 @@ const Controller = {
 
 				Renderer.renderCaculation();
 
-				this.renderSummary();
+				State.setSummary();
+			Renderer.renderSummary();
 
 				return;
 			}
