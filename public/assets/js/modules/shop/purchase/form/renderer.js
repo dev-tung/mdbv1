@@ -15,7 +15,15 @@ const Renderer = {
 	render() {
 		this.renderOptions();
 		this.renderPurchase();
+		this.renderPayment();
 		this.renderProducts();
+	},
+
+	renderPayment() {
+		Dom.find('#paid_amount_wrapper').classList.toggle(
+			'd-none',
+			State.purchase.payment !== 'partial',
+		);
 	},
 
 	/* =================================================
@@ -29,6 +37,7 @@ const Renderer = {
 
 		Select.render('#warehouse_id', State.warehouses, State.purchase.warehouse_id, '-- Chọn kho --');
 	},
+	
 
 	/* =================================================
        PURCHASE

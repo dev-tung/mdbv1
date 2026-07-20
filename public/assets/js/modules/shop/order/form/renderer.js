@@ -17,7 +17,16 @@ const Renderer = {
 
 		this.renderOrder();
 
+		this.renderPayment();
+
 		this.renderProducts();
+	},
+
+	renderPayment() {
+		Dom.find('#paid_amount_wrapper').classList.toggle(
+			'd-none',
+			State.order.payment !== 'partial',
+		);
 	},
 
 	/* =================================================

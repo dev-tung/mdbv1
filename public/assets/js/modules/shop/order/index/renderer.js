@@ -24,8 +24,6 @@ const Renderer = {
 	================================================= */
 
 	renderOptions() {
-		console.log(Option.payment);
-		console.log(Array.isArray(Option.payment));
 		Select.render('#filter-payment', Option.payment, State.filters.payment, '-- Thanh toán --');
 	},
 
