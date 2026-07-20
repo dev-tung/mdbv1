@@ -73,7 +73,7 @@
             <div class="row g-3" id="product-list">
 
                 <div class="col-12 text-center">
-                    Đang tải...
+                    Trang này em đang xây các bác đợi mấy hôm nữa mới xong ạ!
                 </div>
 
             </div>
