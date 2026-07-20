@@ -30,11 +30,7 @@ const Controller = {
 	},
 
 	renderSummary() {
-		console.log('ITEM BEFORE SUMMARY:', State.items);
-
 		State.setSummary();
-
-		console.log('SUMMARY:', State.summary);
 
 		Renderer.renderSummary();
 	},
@@ -169,7 +165,7 @@ const Controller = {
 			const item = State.items[Number(row.dataset.index)];
 
 			if (e.target.matches('.quantity')) {
-				const inputQuantity = Number(e.target.value);
+				let inputQuantity = Number(e.target.value);
 
 				const response = await Api.getQuantity(
 					item.product_id,
@@ -184,27 +180,22 @@ const Controller = {
 
 				const stockQuantity = Number(response.data.quantity);
 
-				// Số lượng ban đầu của đơn
-				const originalQuantity = Number(
-					item.original_quantity ?? item.quantity,
-				);
-
-				// Giới hạn tối đa được phép
-				let maxQuantity;
+				let maxQuantity = stockQuantity;
 
 				if (State.order.id) {
-					// Đang sửa đơn
-					maxQuantity = Number(item.original_quantity) + stockQuantity;
-				} else {
-					// Đang tạo mới
-					maxQuantity = stockQuantity;
+					maxQuantity =
+						Number(item.original_quantity ?? 0) + stockQuantity;
 				}
 
 				if (inputQuantity > maxQuantity) {
 					alert(`Số lượng tồn chỉ còn ${maxQuantity}.`);
 
+					inputQuantity = maxQuantity;
 					e.target.value = maxQuantity;
 				}
+
+				// Quan trọng: đồng bộ giá trị với event
+				e.target.value = inputQuantity;
 			}
 
 			State.items = Service.changeItem(
@@ -212,9 +203,6 @@ const Controller = {
 				e,
 				State.order.vat_rate,
 			);
-
-			State.setSummary();
-
 			Renderer.renderCaculation();
 
 			this.renderSummary();

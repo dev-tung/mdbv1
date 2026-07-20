@@ -27,6 +27,20 @@ BEGIN
     START TRANSACTION;
 
     /* =====================================
+       CHECK PURCHASE USED
+    ===================================== */
+
+    IF EXISTS (
+        SELECT 1
+        FROM order_items
+        WHERE purchase_id = p_purchase_id
+        LIMIT 1
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Phiếu nhập đã được xuất hàng, không thể cập nhật.';
+    END IF;
+
+    /* =====================================
        UPDATE PURCHASE
     ===================================== */
 
@@ -51,11 +65,12 @@ BEGIN
        DELETE OLD PURCHASE ITEMS
     ===================================== */
 
-    DELETE FROM purchase_items
+    DELETE
+    FROM purchase_items
     WHERE purchase_id = p_purchase_id;
 
     /* =====================================
-       INSERT NEW PURCHASE ITEMS
+       INSERT PURCHASE ITEMS
     ===================================== */
 
     INSERT INTO purchase_items (
@@ -95,10 +110,11 @@ BEGIN
     ) jt;
 
     /* =====================================
-       DELETE OLD INVENTORY
+       DELETE INVENTORY
     ===================================== */
 
-    DELETE FROM inventories
+    DELETE
+    FROM inventories
     WHERE purchase_id = p_purchase_id;
 
     /* =====================================

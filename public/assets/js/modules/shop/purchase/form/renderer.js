@@ -55,7 +55,6 @@ const Renderer = {
 		Dom.clear('#selected_products');
 
 		State.items.forEach((item, index) => {
-			console.log(item);
 			const fragment = Dom.template('#purchase-item-template');
 			const row = fragment.querySelector('tr');
 
