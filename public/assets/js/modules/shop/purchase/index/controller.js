@@ -60,6 +60,8 @@ const Controller = {
 			render: Renderer.renderTable,
 		});
 
+		Renderer.render();
+
 		this.bindEvents();
 	},
 
