@@ -1,5 +1,6 @@
 import Calculator from '../../../../helpers/calculator.js';
 import Api from './api.js';
+import State from './state.js';
 
 const Service = {
 	/* =================================================
@@ -22,7 +23,9 @@ const Service = {
 	================================================= */
 
 	selectProduct(items, product) {
-		const index = items.findIndex((item) => item.purchase_id === product.purchase_id);
+		const index = items.findIndex(
+			(item) => item.purchase_id === product.purchase_id,
+		);
 
 		// Đã có trong danh sách
 
@@ -32,7 +35,10 @@ const Service = {
 					return item;
 				}
 
-				const quantity = Math.min(item.quantity + 1, item.stock_quantity);
+				const quantity = Math.min(
+					item.quantity + 1,
+					item.stock_quantity,
+				);
 
 				return this.calculateItem(
 					{
@@ -71,82 +77,90 @@ const Service = {
 	   ITEM
 	================================================= */
 
-	changeItem(items, event, vatRate) {
-		const row = event.target.closest('tr');
+	async changeQuantity(event) {
+		const inputQuantity = getInputQuantity();
 
-		if (!row) {
-			return items;
+		const { index, item } = getItem();
+
+		const maxQuantity = await getMaxQuantity(item);
+
+		// Validate Quantity
+
+		if (inputQuantity > maxQuantity) {
+			return {
+				success: false,
+				message: `Số lượng tồn chỉ còn ${maxQuantity}.`,
+			};
 		}
 
-		const index = Number(row.dataset.index);
-
-		let field = null;
-
-		if (event.target.classList.contains('quantity')) {
-			field = 'quantity';
-		}
-
-		if (event.target.classList.contains('selling-price')) {
-			field = 'selling_price';
-		}
-
-		if (!field) {
-			return items;
-		}
-
-		return items.map((item, i) => {
-			if (i !== index) {
-				return item;
-			}
-
-			let value = Number(event.target.value);
-
-			if (field === 'quantity') {
-				value = Math.max(1, value);
-			}
-
-			return this.calculateItem(
+		return {
+			success: true,
+			index,
+			item: this.calculateItem(
 				{
 					...item,
-					[field]: value,
+					quantity: inputQuantity,
 				},
-				vatRate,
-			);
-		});
-	},
+				State.order.vat_rate,
+			),
+		};
 
-	changeGift(items, event) {
-		const row = event.target.closest('tr');
+		// Get Input Quantity
 
-		if (!row) {
-			return items;
+		function getInputQuantity() {
+			return Number(event.target.value);
 		}
 
-		const index = Number(row.dataset.index);
+		// Get Item
 
-		return items.map((item, i) => {
-			if (i !== index) {
-				return item;
+		function getItem() {
+			const row = event.target.closest('tr');
+
+			const index = Number(row.dataset.index);
+
+			return {
+				index,
+				item: State.items[index],
+			};
+		}
+
+		// Get Max Quantity
+
+		async function getMaxQuantity(item) {
+			const response = await Api.getQuantity(
+				item.product_id,
+				item.purchase_id,
+			);
+
+			const stockQuantity = Number(response.data?.quantity ?? 0);
+
+			if (State.order.id) {
+				return stockQuantity + Number(item.original_quantity ?? 0);
 			}
 
-			return this.calculateItem(
-				{
-					...item,
-					is_gift: event.target.checked ? 1 : 0,
-				},
-				item.vat_rate,
-			);
-		});
+			return stockQuantity;
+		}
 	},
 
-	removeItem(items, event) {
-		const row = event.target.closest('tr');
+	changePrice(event) {
+		return {
+			success: false,
+			message: 'changePrice',
+		};
+	},
 
-		if (!row) {
-			return items;
-		}
+	changeGift(event) {
+		return {
+			success: false,
+			message: 'changeGift',
+		};
+	},
 
-		return items.filter((_, index) => index !== Number(row.dataset.index));
+	removeItem(event) {
+		return {
+			success: false,
+			message: 'removeItem',
+		};
 	},
 
 	/* =================================================
