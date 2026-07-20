@@ -189,6 +189,8 @@ const Controller = {
 					return;
 				}
 
+				State.items[response.index] = response.item;
+
 				updateCalculation();
 
 				return;
@@ -204,6 +206,8 @@ const Controller = {
 					return;
 				}
 
+				State.items[response.index] = response.item;
+
 				updateCalculation();
 
 				return;
@@ -213,18 +217,20 @@ const Controller = {
 		table.addEventListener('click', (e) => {
 			// Remove Item
 
-			if (e.target.matches('.remove-item')) {
-				const response = Service.removeItem(e);
-
-				if (!response.success) {
-					alert(response.message);
-					return;
-				}
-
-				updateCalculation();
-
+			if (!e.target.matches('.remove-item')) {
 				return;
 			}
+
+			const response = Service.removeItem(e);
+
+			if (!response.success) {
+				alert(response.message);
+				return;
+			}
+
+			State.items = response.items;
+
+			updateCalculation();
 		});
 	},
 

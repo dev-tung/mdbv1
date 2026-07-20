@@ -74,7 +74,7 @@ const Service = {
 	},
 
 	/* =================================================
-	   ITEM
+		ITEM
 	================================================= */
 
 	async changeQuantity(event) {
@@ -143,24 +143,80 @@ const Service = {
 	},
 
 	changePrice(event) {
+		const { index, item } = getItem();
+
 		return {
-			success: false,
-			message: 'changePrice',
+			success: true,
+			index,
+			item: this.calculateItem(
+				{
+					...item,
+					selling_price: Number(event.target.value),
+				},
+				State.order.vat_rate,
+			),
 		};
+
+		// Get Item
+
+		function getItem() {
+			const row = event.target.closest('tr');
+
+			const index = Number(row.dataset.index);
+
+			return {
+				index,
+				item: State.items[index],
+			};
+		}
 	},
 
 	changeGift(event) {
+		const { index, item } = getItem();
+
 		return {
-			success: false,
-			message: 'changeGift',
+			success: true,
+			index,
+			item: this.calculateItem(
+				{
+					...item,
+					is_gift: event.target.checked ? 1 : 0,
+				},
+				State.order.vat_rate,
+			),
 		};
+
+		// Get Item
+
+		function getItem() {
+			const row = event.target.closest('tr');
+
+			const index = Number(row.dataset.index);
+
+			return {
+				index,
+				item: State.items[index],
+			};
+		}
 	},
 
 	removeItem(event) {
+		const items = getItems();
+
 		return {
-			success: false,
-			message: 'removeItem',
+			success: true,
+			items,
 		};
+
+		// Get Items
+
+		function getItems() {
+			const row = event.target.closest('tr');
+
+			const index = Number(row.dataset.index);
+
+			return State.items.filter((_, i) => i !== index);
+		}
 	},
 
 	/* =================================================
@@ -168,7 +224,7 @@ const Service = {
 	================================================= */
 
 	calculateItem(item, vatRate) {
-		if (item.is_gift) {
+		if (Number(item.is_gift) === 1) {
 			return {
 				...item,
 				vat_rate: vatRate,
