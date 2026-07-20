@@ -59,29 +59,20 @@
 
         <div class="row g-4">
 
-            <?php foreach ($categories as $cat): ?>
+            <?php foreach ($categories[0] as $cat): ?>
+
                 <div class="col-6 col-md-4 col-lg-3">
 
                     <a href="/product?category=<?= $cat['id'] ?>" class="text-decoration-none text-dark">
 
                         <div class="card border-0 shadow-sm h-100">
 
-                            <!-- IMAGE -->
-                            <div class="ratio ratio-4x3 bg-light">
-                                <img
-                                    src="/<?= $cat['thumbnail'] ?>"
-                                    alt="<?= htmlspecialchars($cat['name']) ?>"
-                                    class="w-100 h-100"
-                                    style="object-fit:contain;padding:20px;"
-                                    loading="lazy"
-                                >
-                            </div>
+                            <div class="card-body text-center py-5">
 
-                            <!-- NAME -->
-                            <div class="card-body text-center">
                                 <h6 class="mb-0 fw-semibold">
                                     <?= htmlspecialchars($cat['name']) ?>
                                 </h6>
+
                             </div>
 
                         </div>
@@ -89,6 +80,7 @@
                     </a>
 
                 </div>
+
             <?php endforeach; ?>
 
         </div>
