@@ -557,7 +557,7 @@
         <!-- PAGINATION -->
         <nav aria-label="Phân trang sản phẩm" class="mt-3">
 
-            <ul class="pagination justify-content-center mb-0">
+            <ul class="pagination pagination-sm justify-content-center mb-0">
 
                 <li class="page-item disabled">
                     <a class="page-link" href="#">Đầu</a>
