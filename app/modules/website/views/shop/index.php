@@ -154,8 +154,9 @@
     </div>
 
     <!-- PRODUCT LIST -->
-    <div class="border rounded bg-white shadow-sm p-3">
+    <div class="border rounded bg-white shadow-sm p-3 my-3">
 
+         <!-- FILTER -->
         <div class="row g-3 align-items-end">
 
             <div class="col-12 col-md-6 col-lg">
@@ -216,6 +217,7 @@
 
         </div>
         
+        <!-- GRID -->
         <section class="mt-3">
 
             <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3">
@@ -551,52 +553,52 @@
             </div>
 
         </section>
+
+        <!-- PAGINATION -->
+        <nav aria-label="Phân trang sản phẩm" class="mt-3">
+
+            <ul class="pagination justify-content-center mb-0">
+
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Đầu</a>
+                </li>
+
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">Trước</a>
+                </li>
+
+                <li class="page-item active">
+                    <a class="page-link" href="#">1</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" href="#">2</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" href="#">3</a>
+                </li>
+
+                <li class="page-item">
+                    <span class="page-link">...</span>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" href="#">10</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" href="#">Sau</a>
+                </li>
+
+                <li class="page-item">
+                    <a class="page-link" href="#">Cuối</a>
+                </li>
+
+            </ul>
+
+        </nav>
     </div>
-
-    <!-- PAGINATION -->
-    <nav aria-label="Phân trang sản phẩm" class="py-3">
-
-        <ul class="pagination justify-content-center mb-0">
-
-            <li class="page-item disabled">
-                <a class="page-link" href="#">Đầu</a>
-            </li>
-
-            <li class="page-item disabled">
-                <a class="page-link" href="#">Trước</a>
-            </li>
-
-            <li class="page-item active">
-                <a class="page-link" href="#">1</a>
-            </li>
-
-            <li class="page-item">
-                <a class="page-link" href="#">2</a>
-            </li>
-
-            <li class="page-item">
-                <a class="page-link" href="#">3</a>
-            </li>
-
-            <li class="page-item">
-                <span class="page-link">...</span>
-            </li>
-
-            <li class="page-item">
-                <a class="page-link" href="#">10</a>
-            </li>
-
-            <li class="page-item">
-                <a class="page-link" href="#">Sau</a>
-            </li>
-
-            <li class="page-item">
-                <a class="page-link" href="#">Cuối</a>
-            </li>
-
-        </ul>
-
-    </nav>
 
     <!-- GIỚI THIỆU SHOP -->
     <div class="alert alert-dismissible fade show p-0 border-0 mb-0">
