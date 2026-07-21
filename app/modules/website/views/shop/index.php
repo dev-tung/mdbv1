@@ -153,7 +153,7 @@
 
 </div>
 
-<!-- FILTER -->
+<!-- PRODUCT LIST -->
 <div class="border rounded bg-white shadow-sm p-3">
 
     <div class="row g-3 align-items-end">
@@ -215,7 +215,7 @@
         </div>
 
     </div>
-    <!-- PRODUCT LIST -->
+    
     <section class="mt-3">
 
         <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3">
