@@ -16,13 +16,6 @@
                 Sản phẩm
             </a>
         </li>
-
-        <li class="breadcrumb-item" aria-current="page">
-            <span class="text-default fw-medium">
-                Shop
-            </span>
-        </li>
-
     </ol>
 
 </nav>
@@ -243,7 +236,7 @@
                         </small>
 
                         <h6 class="card-title mt-1 mb-2">
-                            Yonex Astrox 100ZZ Kurenai
+                            Vợt cầu lông Yonex Astrox 100ZZ Kurenai
                         </h6>
 
                         <div class="fw-bold text-danger mb-3">
@@ -408,7 +401,7 @@
 
 </nav>
 
-<!-- GIỚI THIỆU SEO -->
+<!-- GIỚI THIỆU SHOP -->
 <div class="alert alert-dismissible fade show p-0 border-0 mb-0">
 
     <section class="bg-light border rounded-3 p-5 position-relative">
@@ -422,15 +415,15 @@
         </button>
 
         <h2 class="fw-bold mb-4">
-            Cửa Hàng Cầu Lông Chính Hãng Tại Việt Nam
+            Shop Cầu Lông Chính Hãng – Vợt, Giày & Phụ Kiện Chất Lượng
         </h2>
 
         <p>
-            Badminton Shop chuyên cung cấp các dòng vợt cầu lông chính hãng từ Yonex, Victor, Lining cùng nhiều thương hiệu nổi tiếng khác. Chúng tôi mang đến giải pháp mua sắm cầu lông toàn diện với đầy đủ vợt, giày, túi và phụ kiện.
+            Chào mừng bạn đến với <strong>Manh Dung Badminton Shop</strong> – nơi chuyên cung cấp các sản phẩm cầu lông chính hãng từ những thương hiệu hàng đầu như <strong>Yonex, Lining, Victor, Mizuno, Kumpoo, Felet</strong> và nhiều thương hiệu uy tín khác. Tại đây, bạn có thể dễ dàng tìm thấy vợt cầu lông, giày, quần áo, túi đựng, dây cước, quấn cán và đầy đủ phụ kiện đáp ứng mọi nhu cầu tập luyện và thi đấu.
         </p>
 
         <p class="mb-0">
-            Tất cả sản phẩm đều được kiểm tra kỹ trước khi giao hàng, đảm bảo chất lượng và chính sách bảo hành rõ ràng. Với đội ngũ tư vấn giàu kinh nghiệm, khách hàng sẽ dễ dàng lựa chọn sản phẩm phù hợp với trình độ và phong cách thi đấu.
+            Chúng tôi cam kết mang đến sản phẩm chính hãng 100%, giá bán cạnh tranh, tư vấn tận tâm cùng chính sách bảo hành minh bạch. Dù bạn là người mới bắt đầu hay vận động viên chuyên nghiệp, Badminton Shop luôn sẵn sàng đồng hành để giúp bạn lựa chọn thiết bị phù hợp và nâng cao trải nghiệm trên sân cầu.
         </p>
 
     </section>
