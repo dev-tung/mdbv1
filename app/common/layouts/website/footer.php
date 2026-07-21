@@ -225,7 +225,7 @@
                     <div class="d-flex flex-column gap-2">
 
                         <a
-                            href="https://facebook.com"
+                            href="https://www.facebook.com/manh.dung.sports/"
                             target="_blank"
                             rel="noopener"
                             class="text-decoration-none text-muted d-flex align-items-center gap-2"
@@ -234,7 +234,7 @@
                         </a>
 
                         <a
-                            href="https://tiktok.com"
+                            href="https://www.tiktok.com/@tocaulongvietnam"
                             target="_blank"
                             rel="noopener"
                             class="text-decoration-none text-muted d-flex align-items-center gap-2"
@@ -243,12 +243,12 @@
                         </a>
 
                         <a
-                            href="https://instagram.com"
+                            href="https://zalo.me/+84973359165"
                             target="_blank"
                             rel="noopener"
                             class="text-decoration-none text-muted d-flex align-items-center gap-2"
                         >
-                            Instagram
+                            Zalo
                         </a>
 
                     </div>

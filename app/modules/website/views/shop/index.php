@@ -384,7 +384,170 @@
                 </div>
 
             </div>
+            <div class="col">
 
+                <div class="card h-100 border-0 shadow-sm">
+
+                    <img
+                        src="https://placehold.co/600x600?text=Yonex+100ZZ"
+                        class="card-img-top"
+                        alt="Yonex Astrox 100ZZ">
+
+                    <div class="card-body d-flex flex-column">
+
+                        <small class="text-secondary">
+                            Yonex
+                        </small>
+
+                        <h6 class="card-title mt-1 mb-2">
+                            Vợt cầu lông Yonex Astrox 100ZZ Kurenai
+                        </h6>
+
+                        <div class="fw-bold text-danger mb-3">
+                            5.990.000₫
+                        </div>
+
+                        <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
+                            Xem chi tiết
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    <img
+                        src="https://placehold.co/600x600?text=Astrox+77+Pro"
+                        class="card-img-top"
+                        alt="Astrox 77 Pro">
+
+                    <div class="card-body d-flex flex-column">
+
+                        <small class="text-secondary">
+                            Yonex
+                        </small>
+
+                        <h6 class="card-title mt-1 mb-2">
+                            Yonex Astrox 77 Pro
+                        </h6>
+
+                        <div class="fw-bold text-danger mb-3">
+                            4.690.000₫
+                        </div>
+
+                        <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
+                            Xem chi tiết
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    <img
+                        src="https://placehold.co/600x600?text=Aeronaut+9000C"
+                        class="card-img-top"
+                        alt="Aeronaut 9000C">
+
+                    <div class="card-body d-flex flex-column">
+
+                        <small class="text-secondary">
+                            Lining
+                        </small>
+
+                        <h6 class="card-title mt-1 mb-2">
+                            Lining Aeronaut 9000C
+                        </h6>
+
+                        <div class="fw-bold text-danger mb-3">
+                            3.890.000₫
+                        </div>
+
+                        <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
+                            Xem chi tiết
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    <img
+                        src="https://placehold.co/600x600?text=Felet+TJ1000"
+                        class="card-img-top"
+                        alt="Felet TJ1000">
+
+                    <div class="card-body d-flex flex-column">
+
+                        <small class="text-secondary">
+                            Felet
+                        </small>
+
+                        <h6 class="card-title mt-1 mb-2">
+                            Felet TJ1000
+                        </h6>
+
+                        <div class="fw-bold text-danger mb-3">
+                            2.490.000₫
+                        </div>
+
+                        <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
+                            Xem chi tiết
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col">
+
+                <div class="card h-100 border-0 shadow-sm">
+
+                    <img
+                        src="https://placehold.co/600x600?text=Arcsaber+11"
+                        class="card-img-top"
+                        alt="Arcsaber 11 Pro">
+
+                    <div class="card-body d-flex flex-column">
+
+                        <small class="text-secondary">
+                            Yonex
+                        </small>
+
+                        <h6 class="card-title mt-1 mb-2">
+                            Yonex Arcsaber 11 Pro
+                        </h6>
+
+                        <div class="fw-bold text-danger mb-3">
+                            4.850.000₫
+                        </div>
+
+                        <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
+                            Xem chi tiết
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
         </div>
 
     </section>
