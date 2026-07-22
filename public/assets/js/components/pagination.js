@@ -56,7 +56,7 @@ const Pagination = {
 		};
 
 		container.appendChild(
-			createItem('«', page - 1, page === 1),
+			createItem('Trước', page - 1, page === 1),
 		);
 
 		let start = Math.max(2, page - 2);
@@ -94,7 +94,7 @@ const Pagination = {
 		}
 
 		container.appendChild(
-			createItem('»', page + 1, page === last_page),
+			createItem('Sau', page + 1, page === last_page),
 		);
 	},
 };
