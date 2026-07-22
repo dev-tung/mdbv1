@@ -4,6 +4,7 @@ import Dom from '../../../../helpers/dom.js';
 import Formatter from '../../../../helpers/formatter.js';
 
 import Select from '../../../../components/select.js';
+import Pagination from '../../../../components/pagination.js';
 
 const Renderer = {
 	/* =================================================
@@ -14,6 +15,8 @@ const Renderer = {
 		this.renderFilters();
 
 		this.renderProducts();
+
+		this.renderPagination();
 	},
 
 	/* =================================================
@@ -97,39 +100,39 @@ const Renderer = {
 			// TEXT
 			// =========================
 
-      const texts = {
-        '.product-brand': product.brand_name || '',
+			const texts = {
+				'.product-brand': product.brand_name || '',
 
-        '.product-name': product.name,
-      };
+				'.product-name': product.name,
+			};
 
-      Object.entries(texts).forEach(([selector, value]) => {
-        Dom.text(selector, value, card);
-      });
+			Object.entries(texts).forEach(([selector, value]) => {
+				Dom.text(selector, value, card);
+			});
 
-      // =========================
-      // PRICE
-      // =========================
+			// =========================
+			// PRICE
+			// =========================
 
-      const priceElement = card.querySelector('.product-price');
+			const priceElement = card.querySelector('.product-price');
 
-      const price = Number(product.price);
+			const price = Number(product.price);
 
-      const salePrice = Number(product.sale_price);
+			const salePrice = Number(product.sale_price);
 
-      if (salePrice > 0 && salePrice < price) {
-        priceElement.innerHTML = `
-          <span class="text-decoration-line-through text-secondary me-2">
-            ${Formatter.money(price)}
-          </span>
+			if (salePrice > 0 && salePrice < price) {
+				priceElement.innerHTML = `
+					<span class="text-decoration-line-through text-secondary me-2">
+						${Formatter.money(price)}
+					</span>
 
-          <span class="text-danger fw-bold">
-            ${Formatter.money(salePrice)}
-          </span>
-        `;
-      } else {
-        priceElement.textContent = Formatter.money(price);
-      }
+					<span class="text-danger fw-bold">
+						${Formatter.money(salePrice)}
+					</span>
+				`;
+			} else {
+				priceElement.textContent = Formatter.money(price);
+			}
 
 			// =========================
 			// LINK
@@ -145,6 +148,18 @@ const Renderer = {
 		});
 
 		container.appendChild(fragment);
+	},
+
+	/* =================================================
+	   PAGINATION
+	================================================= */
+
+	renderPagination() {
+		Pagination.render(
+			'#pagination',
+			State.pagination,
+			State.onPageChange,
+		);
 	},
 };
 

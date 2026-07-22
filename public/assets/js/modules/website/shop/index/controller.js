@@ -27,6 +27,10 @@ const Controller = {
 
 			State.setDefault(data);
 
+			State.onPageChange = (page) => {
+				this.loadProducts(page);
+			};
+
 			Renderer.render();
 		} catch (error) {
 			alert(error.message);
@@ -38,11 +42,19 @@ const Controller = {
 	================================================= */
 
 	bindEvents() {
+		// =========================
+		// KEYWORD
+		// =========================
+
 		Dom.find('#filter-keyword')?.addEventListener('input', async (e) => {
 			State.filters.keyword = e.target.value.trim();
 
 			await this.loadProducts();
 		});
+
+		// =========================
+		// CATEGORY
+		// =========================
 
 		Dom.find('#filter-category')?.addEventListener('change', async (e) => {
 			State.filters.category_id = e.target.value;
@@ -50,17 +62,29 @@ const Controller = {
 			await this.loadProducts();
 		});
 
+		// =========================
+		// BRAND
+		// =========================
+
 		Dom.find('#filter-brand')?.addEventListener('change', async (e) => {
 			State.filters.brand_id = e.target.value;
 
 			await this.loadProducts();
 		});
 
+		// =========================
+		// PRICE
+		// =========================
+
 		Dom.find('#filter-price')?.addEventListener('change', async (e) => {
 			State.filters.price = e.target.value;
 
 			await this.loadProducts();
 		});
+
+		// =========================
+		// STATUS
+		// =========================
 
 		Dom.find('#filter-status')?.addEventListener('change', async (e) => {
 			State.filters.status = e.target.value;

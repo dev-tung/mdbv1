@@ -2,7 +2,7 @@ const State = {
 	filters: {
 		keyword: '',
 
-		category_id: '',
+		category_id: '1',
 
 		brand_id: '',
 
