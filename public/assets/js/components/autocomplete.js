@@ -29,7 +29,7 @@ const Autocomplete = {
 				const items = await options.source(keyword);
 
 				this.render(dropdown, items, options.select, options.field);
-			}, options.delay ?? 300);
+			}, options.delay ?? 200);
 		});
 
 		document.addEventListener('click', (event) => {

@@ -76,9 +76,8 @@ const Controller = {
 					product,
 				);
 
-				Renderer.renderProducts();
-
-				this.renderSummary();
+				Renderer.render();
+				Renderer.renderSummary();
 			}
 		});
 	},
