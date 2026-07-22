@@ -71,6 +71,7 @@ const Controller = {
 			},
 
 			select(product) {
+				
 				State.items = Service.selectProduct(
 					State.items,
 					product,

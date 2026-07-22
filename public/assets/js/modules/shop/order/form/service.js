@@ -19,12 +19,14 @@ const Service = {
 	},
 
 	/* =================================================
-	   PRODUCT
+		PRODUCT
 	================================================= */
 
 	selectProduct(items, product) {
 		const index = items.findIndex(
-			(item) => item.purchase_id === product.purchase_id,
+			(item) =>
+				item.purchase_id === product.purchase_id &&
+				item.product_id === product.product_id,
 		);
 
 		// Đã có trong danh sách
@@ -57,10 +59,10 @@ const Service = {
 			purchase_id: product.purchase_id,
 			product_name: product.product_name,
 
-			// tồn kho
+			// Tồn kho
 			stock_quantity: Number(product.quantity ?? 0),
 
-			// số lượng bán
+			// Số lượng bán
 			quantity: 1,
 
 			selling_price: Number(product.selling_price ?? 0),
