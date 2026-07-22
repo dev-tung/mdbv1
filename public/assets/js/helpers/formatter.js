@@ -7,8 +7,8 @@ const Formatter = {
 		return Number(value || 0).toLocaleString(locales);
 	},
 
-	money(value, locales = 'vi-VN') {
-		return Number(value || 0).toLocaleString(locales);
+	money(value, locales = 'vi-VN', suffix = ' đ') {
+		return `${Number(value || 0).toLocaleString(locales)}${suffix}`;
 	},
 
 	percent(value, digits = 0) {

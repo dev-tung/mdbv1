@@ -37,6 +37,9 @@ const Renderer = {
 	================================================= */
 
 	renderTable() {
+		const uploadPath = '/uploads/products/';
+		const noImage = '/assets/image/no-image.svg';
+
 		Table.renderBody(State.products, (product, index) => {
 			const fragment = Dom.template('#product-row-template');
 
@@ -54,8 +57,8 @@ const Renderer = {
 				thumbnail.src = product.thumbnail
 					? product.thumbnail.startsWith('uploads/')
 						? `/${product.thumbnail}`
-						: `/uploads/products/${product.thumbnail}`
-					: '/assets/image/no-image.svg';
+						: `${uploadPath}${product.thumbnail}`
+					: noImage;
 			}
 
 			// =========================

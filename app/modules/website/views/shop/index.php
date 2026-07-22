@@ -156,8 +156,22 @@
     <!-- PRODUCT LIST -->
     <div class="border rounded bg-white shadow-sm p-3 my-3">
 
-         <!-- FILTER -->
+        <!-- FILTER -->
         <div class="row g-3 align-items-end">
+
+            <div class="col-12 col-lg-3">
+
+                <label class="form-label form-label-sm fw-semibold">
+                    Từ khóa
+                </label>
+
+                <input
+                    type="text"
+                    id="filter-keyword"
+                    class="form-control form-control-sm"
+                    placeholder="Tên sản phẩm...">
+
+            </div>
 
             <div class="col-12 col-md-6 col-lg">
 
@@ -165,8 +179,9 @@
                     Danh mục
                 </label>
 
-                <select class="form-select form-select-sm">
-                    <option>Tất cả danh mục</option>
+                <select
+                    id="filter-category"
+                    class="form-select form-select-sm">
                 </select>
 
             </div>
@@ -177,8 +192,9 @@
                     Thương hiệu
                 </label>
 
-                <select class="form-select form-select-sm">
-                    <option>Tất cả thương hiệu</option>
+                <select
+                    id="filter-brand"
+                    class="form-select form-select-sm">
                 </select>
 
             </div>
@@ -189,8 +205,16 @@
                     Khoảng giá
                 </label>
 
-                <select class="form-select form-select-sm">
-                    <option>Tất cả mức giá</option>
+                <select
+                    id="filter-price"
+                    class="form-select form-select-sm">
+
+                    <option value="">Tất cả mức giá</option>
+                    <option value="0-500000">Dưới 500.000₫</option>
+                    <option value="500000-1000000">500.000₫ - 1.000.000₫</option>
+                    <option value="1000000-2000000">1.000.000₫ - 2.000.000₫</option>
+                    <option value="2000000">Trên 2.000.000₫</option>
+
                 </select>
 
             </div>
@@ -201,403 +225,75 @@
                     Tình trạng
                 </label>
 
-                <select class="form-select form-select-sm">
-                    <option>Tất cả</option>
+                <select
+                    id="filter-status"
+                    class="form-select form-select-sm">
+
+                    <option value="">Tất cả</option>
+                    <option value="1">Đang bán</option>
+                    <option value="0">Ngừng bán</option>
+
                 </select>
 
             </div>
 
-            <div class="col-auto">
-
-                <button class="btn btn-primary btn-sm">
-                    Lọc
-                </button>
-
-            </div>
-
         </div>
-        
+
         <!-- GRID -->
-        <section class="mt-3">
-
-            <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3">
-
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Yonex+100ZZ"
-                            class="card-img-top"
-                            alt="Yonex Astrox 100ZZ">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Yonex
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Vợt cầu lông Yonex Astrox 100ZZ Kurenai
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                5.990.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Astrox+77+Pro"
-                            class="card-img-top"
-                            alt="Astrox 77 Pro">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Yonex
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Yonex Astrox 77 Pro
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                4.690.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Aeronaut+9000C"
-                            class="card-img-top"
-                            alt="Aeronaut 9000C">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Lining
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Lining Aeronaut 9000C
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                3.890.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Felet+TJ1000"
-                            class="card-img-top"
-                            alt="Felet TJ1000">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Felet
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Felet TJ1000
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                2.490.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Arcsaber+11"
-                            class="card-img-top"
-                            alt="Arcsaber 11 Pro">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Yonex
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Yonex Arcsaber 11 Pro
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                4.850.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Yonex+100ZZ"
-                            class="card-img-top"
-                            alt="Yonex Astrox 100ZZ">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Yonex
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Vợt cầu lông Yonex Astrox 100ZZ Kurenai
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                5.990.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Astrox+77+Pro"
-                            class="card-img-top"
-                            alt="Astrox 77 Pro">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Yonex
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Yonex Astrox 77 Pro
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                4.690.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Aeronaut+9000C"
-                            class="card-img-top"
-                            alt="Aeronaut 9000C">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Lining
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Lining Aeronaut 9000C
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                3.890.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Felet+TJ1000"
-                            class="card-img-top"
-                            alt="Felet TJ1000">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Felet
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Felet TJ1000
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                2.490.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <div class="col">
-
-                    <div class="card h-100 border-0 shadow-sm">
-
-                        <img
-                            src="https://placehold.co/600x600?text=Arcsaber+11"
-                            class="card-img-top"
-                            alt="Arcsaber 11 Pro">
-
-                        <div class="card-body d-flex flex-column">
-
-                            <small class="text-secondary">
-                                Yonex
-                            </small>
-
-                            <h6 class="card-title mt-1 mb-2">
-                                Yonex Arcsaber 11 Pro
-                            </h6>
-
-                            <div class="fw-bold text-danger mb-3">
-                                4.850.000₫
-                            </div>
-
-                            <a href="#" class="btn btn-outline-primary btn-sm mt-auto">
-                                Xem chi tiết
-                            </a>
-
-                        </div>
-
-                    </div>
-
-                </div>
+        <section class="mt-4">
+
+            <div
+                id="product-grid"
+                class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3">
             </div>
 
         </section>
 
+        <template id="product-card-template">
+
+            <div class="col">
+
+                <div class="card product-card h-100 border-0 shadow-sm">
+
+                    <img
+                        src=""
+                        class="card-img-top product-image"
+                        alt="">
+
+                    <div class="card-body d-flex flex-column">
+
+                        <small class="text-secondary product-brand"></small>
+
+                        <h6 class="card-title mt-1 mb-2 product-name"></h6>
+
+                        <div class="fw-bold text-danger mb-3 product-price"></div>
+
+                        <a
+                            href="#"
+                            class="btn btn-outline-primary btn-sm mt-auto product-link">
+                            Xem chi tiết
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </template>
+
         <!-- PAGINATION -->
-        <nav aria-label="Phân trang sản phẩm" class="mt-3">
+        <nav
+            class="mt-4"
+            aria-label="Phân trang sản phẩm">
 
-            <ul class="pagination pagination-sm justify-content-center mb-0">
-
-                <li class="page-item disabled">
-                    <a class="page-link" href="#">Đầu</a>
-                </li>
-
-                <li class="page-item disabled">
-                    <a class="page-link" href="#">Trước</a>
-                </li>
-
-                <li class="page-item active">
-                    <a class="page-link" href="#">1</a>
-                </li>
-
-                <li class="page-item">
-                    <a class="page-link" href="#">2</a>
-                </li>
-
-                <li class="page-item">
-                    <a class="page-link" href="#">3</a>
-                </li>
-
-                <li class="page-item">
-                    <span class="page-link">...</span>
-                </li>
-
-                <li class="page-item">
-                    <a class="page-link" href="#">10</a>
-                </li>
-
-                <li class="page-item">
-                    <a class="page-link" href="#">Sau</a>
-                </li>
-
-                <li class="page-item">
-                    <a class="page-link" href="#">Cuối</a>
-                </li>
-
+            <ul
+                id="pagination"
+                class="pagination pagination-sm justify-content-center mb-0">
             </ul>
 
         </nav>
+
     </div>
 
     <!-- GIỚI THIỆU SHOP -->

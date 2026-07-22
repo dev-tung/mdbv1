@@ -3,9 +3,8 @@
 // =========================
 // PRODUCT
 // =========================
-Router::get('/api/products', 'ProductEndpoint@apiList', [
-	'auth' => 'admin',
-]);
+Router::get('/api/products', 'ProductEndpoint@apiList');
+
 Router::post('/api/products', 'ProductEndpoint@apiCreate', [
 	'auth' => 'admin',
 ]);
@@ -22,9 +21,8 @@ Router::post('/api/products/delete/{id}', 'ProductEndpoint@apiDelete', [
 // =========================
 // CATEGORY
 // =========================
-Router::get('/api/categories', 'CategoryEndpoint@apiList', [
-	'auth' => 'admin',
-]);
+Router::get('/api/categories', 'CategoryEndpoint@apiList');
+
 Router::post('/api/categories', 'CategoryEndpoint@apiCreate', [
 	'auth' => 'admin',
 ]);
@@ -41,9 +39,8 @@ Router::post('/api/categories/delete/{id}', 'CategoryEndpoint@apiDelete', [
 // =========================
 // BRAND
 // =========================
-Router::get('/api/brands', 'BrandEndpoint@apiList', [
-	'auth' => 'admin',
-]);
+Router::get('/api/brands', 'BrandEndpoint@apiList');
+
 Router::post('/api/brands', 'BrandEndpoint@apiCreate', [
 	'auth' => 'admin',
 ]);
