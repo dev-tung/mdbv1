@@ -28,7 +28,13 @@ const Autocomplete = {
 			timer = setTimeout(async () => {
 				const items = await options.source(keyword);
 
-				this.render(dropdown, items, options.select, options.field);
+				this.render(
+					dropdown,
+					items,
+					options.select,
+					options.field,
+					options.display,
+				);
 			}, options.delay ?? 200);
 		});
 
@@ -43,7 +49,7 @@ const Autocomplete = {
 	   RENDER
 	================================================= */
 
-	render(dropdown, items, select, field = 'name') {
+	render(dropdown, items, select, field = 'name', display = null) {
 		dropdown.innerHTML = '';
 
 		if (!items || !items.length) {
@@ -53,7 +59,13 @@ const Autocomplete = {
 		}
 
 		items.forEach((item) => {
-			const option = this.createItem(item, select, dropdown, field);
+			const option = this.createItem(
+				item,
+				select,
+				dropdown,
+				field,
+				display,
+			);
 
 			dropdown.appendChild(option);
 		});
@@ -61,14 +73,18 @@ const Autocomplete = {
 		this.open(dropdown);
 	},
 
-	createItem(item, select, dropdown, field) {
+	createItem(item, select, dropdown, field, display) {
 		const button = document.createElement('button');
 
 		button.type = 'button';
 
 		button.className = 'list-group-item list-group-item-action';
 
-		button.textContent = item[field] ?? '';
+		if (display) {
+			button.innerHTML = display(item);
+		} else {
+			button.textContent = item[field] ?? '';
+		}
 
 		button.addEventListener('click', () => {
 			select(item);
@@ -89,9 +105,7 @@ const Autocomplete = {
 		dropdown.className = 'list-group position-absolute w-100';
 
 		dropdown.style.maxHeight = '220px';
-
 		dropdown.style.overflowY = 'auto';
-
 		dropdown.style.zIndex = '1050';
 
 		element.parentNode.appendChild(dropdown);

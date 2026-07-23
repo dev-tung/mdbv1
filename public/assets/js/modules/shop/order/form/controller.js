@@ -64,7 +64,14 @@ const Controller = {
 	bindProduct() {
 		Autocomplete.init({
 			element: '#product_search',
-			field: 'product_name',
+			display(product) {
+				return `
+					${product.product_name}
+					<small class="text-muted border ms-1 p-1">
+					 VAT ${product.vat_rate}%
+					</small>
+				`;
+			},
 			async source(keyword) {
 				const products = await Api.searchProduct(keyword);
 				return products.data;
