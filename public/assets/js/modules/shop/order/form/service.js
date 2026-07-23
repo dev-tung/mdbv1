@@ -129,7 +129,7 @@ const Service = {
 		// Get Max Quantity
 
 		async function getMaxQuantity(item) {
-			const response = await Api.getQuantity(
+			const response = await Api.checkQuantity(
 				item.product_id,
 				item.purchase_id,
 			);

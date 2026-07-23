@@ -1,4 +1,5 @@
 <?php
+namespace App\Core;
 
 class View
 {
@@ -53,7 +54,7 @@ class View
 
 	protected static function getContent(string $view): string
 	{
-		return PATH_ROOT . '/app/modules/' . self::$module . '/views/' . $view . '.php';
+		return PATH_ROOT . '/app/modules/' . self::$module . '/Views/' . $view . '.php';
 	}
 
 	protected static function getLayout(): string
