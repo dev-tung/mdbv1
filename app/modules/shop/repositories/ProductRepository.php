@@ -51,27 +51,18 @@ class ProductRepository extends Repository
 	}
 
 	/* =================================================
-       UPLOAD
-    ================================================= */
-
-	private function uploadThumbnail(array $thumbnail): ?string
-	{
-		if (empty($thumbnail['name'])) {
-			return null;
-		}
-
-		$fileName = upload_file($thumbnail, self::UPLOAD_PATH);
-
-		return self::UPLOAD_URL . '/' . $fileName;
-	}
-
-	/* =================================================
        CREATE
     ================================================= */
 
 	public function create(array $data, array $thumbnail = []): int
 	{
-		$data['thumbnail'] = $this->uploadThumbnail($thumbnail);
+		if (!empty($thumbnail['name'])) {
+			$fileName = upload_file($thumbnail, self::UPLOAD_PATH);
+
+			$data['thumbnail'] = self::UPLOAD_URL . '/' . $fileName;
+		} else {
+			$data['thumbnail'] = null;
+		}
 
 		return parent::create($this->buildData($data));
 	}
@@ -90,7 +81,13 @@ class ProductRepository extends Repository
 
 		$oldThumbnail = $product['thumbnail'];
 
-		$data['thumbnail'] = $this->uploadThumbnail($thumbnail) ?? $oldThumbnail;
+		if (!empty($thumbnail['name'])) {
+			$fileName = upload_file($thumbnail, self::UPLOAD_PATH);
+
+			$data['thumbnail'] = self::UPLOAD_URL . '/' . $fileName;
+		} else {
+			$data['thumbnail'] = $oldThumbnail;
+		}
 
 		$result = parent::updateById($id, $this->buildData($data));
 

@@ -24,6 +24,7 @@ const Option = {
 			color: 'default',
 		},
 	},
+
 	product: {
 		active: {
 			label: 'Đang bán',
@@ -32,7 +33,7 @@ const Option = {
 		inactive: {
 			label: 'Ngừng bán',
 		},
-	},
+	}
 };
 
 export default Option;

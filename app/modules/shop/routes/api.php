@@ -55,32 +55,6 @@ Router::post('/api/brands/delete/{id}', 'BrandEndpoint@apiDelete', [
 ]);
 
 // =========================
-// INVENTORY
-// =========================
-Router::get('/api/inventories', 'InventoryEndpoint@apiList', [
-	'auth' => 'admin',
-]);
-Router::get('/api/inventories/stock', 'InventoryEndpoint@apiStock', [
-	'auth' => 'admin',
-]);
-Router::post('/api/inventories', 'InventoryEndpoint@apiCreate', [
-	'auth' => 'admin',
-]);
-Router::get('/api/inventories/show/{id}', 'InventoryEndpoint@apiShow', [
-	'auth' => 'admin',
-]);
-Router::post('/api/inventories/update/{id}', 'InventoryEndpoint@apiUpdate', [
-	'auth' => 'admin',
-]);
-Router::post('/api/inventories/delete/{id}', 'InventoryEndpoint@apiDelete', [
-	'auth' => 'admin',
-]);
-
-Router::get('/api/inventories/quantity', 'InventoryEndpoint@apiQuantity', [
-	'auth' => 'admin',
-]);
-
-// =========================
 // SUPPLIER
 // =========================
 Router::get('/api/suppliers', 'SupplierEndpoint@apiList', [
@@ -136,12 +110,6 @@ Router::post('/api/purchases/update/{id}', 'PurchaseEndpoint@apiUpdate', [
 Router::post('/api/purchases/delete/{id}', 'PurchaseEndpoint@apiDelete', [
 	'auth' => 'admin',
 ]);
-Router::post('/api/purchases/status', 'PurchaseEndpoint@apiStatus', [
-	'auth' => 'admin',
-]);
-Router::post('/api/purchases/payment', 'PurchaseEndpoint@apiPayment', [
-	'auth' => 'admin',
-]);
 
 // =========================
 // ORDER
@@ -161,9 +129,16 @@ Router::post('/api/orders/update/{id}', 'OrderEndpoint@apiUpdate', [
 Router::post('/api/orders/delete/{id}', 'OrderEndpoint@apiDelete', [
 	'auth' => 'admin',
 ]);
-Router::post('/api/orders/status', 'OrderEndpoint@apiStatus', [
+
+// =========================
+// REPORT
+// =========================
+Router::get('/api/report/inventory', 'ReportEndpoint@apiInventory', [
 	'auth' => 'admin',
 ]);
-Router::post('/api/orders/payment', 'OrderEndpoint@apiPayment', [
+Router::get('/api/report/revenue', 'ReportEndpoint@apiRevenue', [
+	'auth' => 'admin',
+]);
+Router::get('/api/report/customer', 'ReportEndpoint@apiCustomer', [
 	'auth' => 'admin',
 ]);

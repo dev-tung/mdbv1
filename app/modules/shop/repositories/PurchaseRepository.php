@@ -100,50 +100,6 @@ class PurchaseRepository extends Repository
 	}
 
 	/* =================================================
-       STATUS
-    ================================================= */
-
-	public function status(int $id, string $status): int
-	{
-		try {
-			$result = Database::first(
-				'CALL sp_purchase_status(
-                    :id,
-                    :status
-                )',
-				[
-					'id' => $id,
-					'status' => $status,
-				],
-			);
-		} catch (PDOException $e) {
-			throw new Exception($e->errorInfo[2] ?? $e->getMessage(), (int) ($e->errorInfo[1] ?? 0));
-		}
-
-		return (int) ($result['affected_rows'] ?? 0);
-	}
-
-	/* =================================================
-       PAYMENT
-    ================================================= */
-
-	public function payment(int $id, string $payment): int
-	{
-		$result = Database::first(
-			'CALL sp_purchase_payment(
-                :id,
-                :payment
-            )',
-			[
-				'id' => $id,
-				'payment' => $payment,
-			],
-		);
-
-		return (int) ($result['affected_rows'] ?? 0);
-	}
-
-	/* =================================================
     DELETE
     ================================================= */
 

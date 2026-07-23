@@ -110,6 +110,36 @@
                     </ul>
                 </li>
 
+                <!-- ========================= -->
+                <!-- BÁO CÁO -->
+                <!-- ========================= -->
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle <?= active_menu('/admin/shop') ?>"
+                        href="#"
+                        data-bs-toggle="dropdown"
+                    >
+                        Báo cáo
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="<?= route('/admin/shop/revenue') ?>">
+                                Doanh thu
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="<?= route('/admin/shop/inventory') ?>">
+                                Tồn kho
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="<?= route('/admin/shop/customer') ?>">
+                                Khách hàng
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
 
         <!-- RIGHT SIDE -->

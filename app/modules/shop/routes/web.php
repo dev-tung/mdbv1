@@ -41,20 +41,6 @@ Router::get('/admin/brands/edit/{id}', 'BrandController@edit', [
 ]);
 
 // =========================
-// INVENTORY
-// =========================
-
-Router::get('/admin/inventory', 'InventoryController@index', [
-	'auth' => 'admin',
-]);
-Router::get('/admin/inventory/create', 'InventoryController@create', [
-	'auth' => 'admin',
-]);
-Router::get('/admin/inventory/edit/{id}', 'InventoryController@edit', [
-	'auth' => 'admin',
-]);
-
-// =========================
 // SUPPLIERS
 // =========================
 
@@ -93,5 +79,19 @@ Router::get('/admin/orders/create', 'OrderController@form', [
 	'auth' => 'admin',
 ]);
 Router::get('/admin/orders/edit/{id}', 'OrderController@form', [
+	'auth' => 'admin',
+]);
+
+// =========================
+// REPORT
+// =========================
+
+Router::get('/admin/shop/revenue', 'ReportController@revenue', [
+	'auth' => 'admin',
+]);
+Router::get('/admin/shop/inventory', 'ReportController@inventory', [
+	'auth' => 'admin',
+]);
+Router::get('/admin/shop/customer', 'ReportController@customer', [
 	'auth' => 'admin',
 ]);
