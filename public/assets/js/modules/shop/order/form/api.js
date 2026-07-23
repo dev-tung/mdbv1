@@ -26,13 +26,13 @@ const Api = {
 	================================================= */
 
 	async searchProduct(keyword = '') {
-		return await Http.get('/api/inventories/stock', {
+		return await Http.get('/api/report/inventory', {
 			keyword,
 		});
 	},
 
 	async getQuantity(product_id, purchase_id) {
-		return await Http.get('/api/inventories/quantity', {
+		return await Http.get('/api/report/inventory', {
 			product_id,
 			purchase_id,
 		});

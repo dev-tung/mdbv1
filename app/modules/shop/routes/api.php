@@ -1,5 +1,14 @@
 <?php
 
+use App\Modules\Shop\Endpoints\BrandEndpoint;
+use App\Modules\Shop\Endpoints\CategoryEndpoint;
+use App\Modules\Shop\Endpoints\OrderEndpoint;
+use App\Modules\Shop\Endpoints\ProductEndpoint;
+use App\Modules\Shop\Endpoints\PurchaseEndpoint;
+use App\Modules\Shop\Endpoints\ReportEndpoint;
+use App\Modules\Shop\Endpoints\SupplierEndpoint;
+use App\Modules\Shop\Endpoints\WarehouseEndpoint;
+
 // =========================
 // PRODUCT
 // =========================
@@ -133,12 +142,12 @@ Router::post('/api/orders/delete/{id}', 'OrderEndpoint@apiDelete', [
 // =========================
 // REPORT
 // =========================
-Router::get('/api/report/inventory', 'ReportEndpoint@apiInventory', [
+Router::get('/api/inventory', 'ReportEndpoint@apiInventory', [
 	'auth' => 'admin',
 ]);
-Router::get('/api/report/revenue', 'ReportEndpoint@apiRevenue', [
+Router::get('/api/revenue', 'ReportEndpoint@apiRevenue', [
 	'auth' => 'admin',
 ]);
-Router::get('/api/report/customer', 'ReportEndpoint@apiCustomer', [
+Router::get('/api/customer', 'ReportEndpoint@apiCustomer', [
 	'auth' => 'admin',
 ]);

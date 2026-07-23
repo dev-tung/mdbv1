@@ -1,4 +1,7 @@
 <?php
+namespace App\Modules\Shop\Controllers;
+
+use App\Core\View;
 
 class SupplierController
 {

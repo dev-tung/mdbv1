@@ -1,4 +1,5 @@
 <?php
+namespace App\Modules\Shop\Validators;
 
 class PurchaseValidator
 {

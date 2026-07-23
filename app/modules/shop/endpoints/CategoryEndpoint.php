@@ -1,4 +1,8 @@
 <?php
+namespace App\Modules\Shop\Endpoints;
+
+use App\Modules\Shop\Repositories\CategoryRepository;
+use App\Core\Response;
 
 class CategoryEndpoint
 {

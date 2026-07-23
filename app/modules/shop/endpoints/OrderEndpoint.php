@@ -1,4 +1,9 @@
 <?php
+namespace App\Modules\Shop\Endpoints;
+
+use App\Core\Response;
+use App\Modules\Shop\Repositories\OrderRepository;
+use App\Modules\Shop\Validators\OrderValidator;
 
 class OrderEndpoint
 {

@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Modules\Shop\Endpoints;
+
+use App\Modules\Shop\Repositories\BrandRepository;
+
 class BrandEndpoint
 {
 	private BrandRepository $brandRepository;

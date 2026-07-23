@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Modules\Shop\Controllers;
+
+use App\Core\View;
+
 class ReportController
 {
 	public function inventory(): void

@@ -1,5 +1,13 @@
 <?php
 
+use App\Modules\Shop\Controllers\BrandController;
+use App\Modules\Shop\Controllers\CategoryController;
+use App\Modules\Shop\Controllers\OrderController;
+use App\Modules\Shop\Controllers\ProductController;
+use App\Modules\Shop\Controllers\PurchaseController;
+use App\Modules\Shop\Controllers\ReportController;
+use App\Modules\Shop\Controllers\SupplierController;
+
 // =========================
 // PRODUCTS
 // =========================

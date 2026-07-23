@@ -1,4 +1,11 @@
 <?php
+namespace App\Modules\Shop\Endpoints;
+
+use App\Core\Auth;
+use App\Core\Response;
+use App\Modules\Shop\Repositories\PurchaseRepository;
+use App\Modules\Shop\Validators\PurchaseValidator;
+use Throwable;
 
 class PurchaseEndpoint
 {

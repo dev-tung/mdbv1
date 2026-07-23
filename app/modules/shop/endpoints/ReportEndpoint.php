@@ -1,4 +1,7 @@
 <?php
+namespace App\Modules\Shop\Endpoints;
+use App\Core\Response;
+use App\Modules\Shop\Repositories\ReportRepository;
 
 class ReportEndpoint
 {
