@@ -21,7 +21,7 @@
     </nav>
 
     <!-- RECENTLY VIEWED -->
-    <div id="recentViewed" class="alert alert-dismissible fade show p-0 border-0 my-3">
+    <!-- <div id="recentViewed" class="alert alert-dismissible fade show p-0 border-0 my-3">
 
         <section class="border rounded-3 bg-white shadow-sm position-relative p-3">
 
@@ -151,7 +151,7 @@
 
         </section>
 
-    </div>
+    </div> -->
 
     <!-- PRODUCT LIST -->
     <div class="border rounded bg-white shadow-sm p-3 my-3">
