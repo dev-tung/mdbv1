@@ -252,7 +252,7 @@
                     </p>
 
                     <p class="mb-0">
-                        Hotline:
+                        Hotline
                         <span class="text-danger fw-bold">
                             0973 359 165
                         </span>
