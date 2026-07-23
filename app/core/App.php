@@ -12,10 +12,7 @@ class App
 
 		$this->loadRoutes();
 
-		Router::dispatch(
-			Request::method(),
-			Request::path()
-		);
+		Router::dispatch(Request::method(), Request::path());
 	}
 
 	// =========================
@@ -31,7 +28,6 @@ class App
 		}
 	}
 
-
 	// =========================
 	// ERROR HANDLER
 	// =========================
@@ -39,7 +35,6 @@ class App
 	protected function registerErrorHandler(): void
 	{
 		set_exception_handler(function (\Throwable $e): void {
-
 			http_response_code(500);
 
 			echo Response::json([
@@ -62,12 +57,12 @@ class App
 		}
 
 		$aliases = [
-			'View'     => View::class,
-			'Auth'     => Auth::class,
-			'Request'  => Request::class,
+			'View' => View::class,
+			'Auth' => Auth::class,
+			'Request' => Request::class,
 			'Response' => Response::class,
-			'Router'   => Router::class,
-			'Env'      => Env::class,
+			'Router' => Router::class,
+			'Env' => Env::class,
 		];
 
 		foreach ($aliases as $alias => $class) {

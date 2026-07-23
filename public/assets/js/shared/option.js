@@ -33,7 +33,7 @@ const Option = {
 		inactive: {
 			label: 'Ngừng bán',
 		},
-	}
+	},
 };
 
 export default Option;

@@ -96,9 +96,7 @@ const Controller = {
 		Dom.find('#vat_rate').addEventListener('input', (e) => {
 			State.purchase.vat_rate = Number(e.target.value);
 
-			State.items = State.items.map((item) =>
-				Service.calculateItem(item, State.purchase.vat_rate)
-			);
+			State.items = State.items.map((item) => Service.calculateItem(item, State.purchase.vat_rate));
 
 			Renderer.renderCaculation();
 			this.renderSummary();

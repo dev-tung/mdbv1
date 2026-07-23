@@ -24,9 +24,7 @@ const Service = {
 
 	selectProduct(items, product) {
 		const index = items.findIndex(
-			(item) =>
-				item.purchase_id === product.purchase_id &&
-				item.product_id === product.product_id,
+			(item) => item.purchase_id === product.purchase_id && item.product_id === product.product_id,
 		);
 
 		// Đã có trong danh sách
@@ -37,10 +35,7 @@ const Service = {
 					return item;
 				}
 
-				const quantity = Math.min(
-					item.quantity + 1,
-					item.stock_quantity,
-				);
+				const quantity = Math.min(item.quantity + 1, item.stock_quantity);
 
 				return this.calculateItem(
 					{
@@ -129,10 +124,7 @@ const Service = {
 		// Get Max Quantity
 
 		async function getMaxQuantity(item) {
-			const response = await Api.checkQuantity(
-				item.product_id,
-				item.purchase_id,
-			);
+			const response = await Api.checkQuantity(item.product_id, item.purchase_id);
 
 			const stockQuantity = Number(response.data?.quantity ?? 0);
 
@@ -237,20 +229,11 @@ const Service = {
 			};
 		}
 
-		const subtotal_amount = Calculator.multiply(
-			item.quantity,
-			item.selling_price,
-		);
+		const subtotal_amount = Calculator.multiply(item.quantity, item.selling_price);
 
-		const vat_amount = Calculator.multiply(
-			subtotal_amount,
-			vatRate / 100,
-		);
+		const vat_amount = Calculator.multiply(subtotal_amount, vatRate / 100);
 
-		const total_amount = Calculator.add(
-			subtotal_amount,
-			vat_amount,
-		);
+		const total_amount = Calculator.add(subtotal_amount, vat_amount);
 
 		return {
 			...item,

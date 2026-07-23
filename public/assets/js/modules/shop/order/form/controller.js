@@ -78,15 +78,11 @@ const Controller = {
 			},
 
 			select(product) {
-				
-				State.items = Service.selectProduct(
-					State.items,
-					product,
-				);
+				State.items = Service.selectProduct(State.items, product);
 
 				Renderer.render();
 				Renderer.renderSummary();
-			}
+			},
 		});
 	},
 
@@ -106,16 +102,10 @@ const Controller = {
 		Dom.find('#vat_rate').addEventListener('input', (e) => {
 			State.order.vat_rate = Number(e.target.value);
 
-			State.items = State.items.map((item) =>
-				Service.calculateItem(
-					item,
-					State.order.vat_rate,
-				),
-			);
+			State.items = State.items.map((item) => Service.calculateItem(item, State.order.vat_rate));
 
 			Renderer.renderCaculation();
 			this.renderSummary();
-			
 		});
 
 		Dom.find('#payment').addEventListener('change', (e) => {

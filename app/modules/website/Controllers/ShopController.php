@@ -6,6 +6,4 @@ class ShopController
 	{
 		View::render('shop/index');
 	}
-
-
 }

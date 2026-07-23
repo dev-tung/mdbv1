@@ -15,10 +15,7 @@ class BrandRepository extends Repository
 	{
 		return Database::call(
 			'CALL sp_brand_list(?, ?, ?, ?, ?)',
-			array_params(
-				['keyword', 'date_from', 'date_to', 'page', 'per_page'],
-				$filters,
-			),
+			array_params(['keyword', 'date_from', 'date_to', 'page', 'per_page'], $filters),
 		);
 	}
 

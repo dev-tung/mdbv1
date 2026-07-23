@@ -11,10 +11,7 @@ class ReportRepository extends Repository
 	{
 		return Database::call(
 			'CALL sp_report_inventory(?, ?, ?, ?)',
-			array_params(
-				['keyword', 'product_id', 'purchase_id', 'stock'],
-				$filters,
-			),
+			array_params(['keyword', 'product_id', 'purchase_id', 'stock'], $filters),
 		);
 	}
 }

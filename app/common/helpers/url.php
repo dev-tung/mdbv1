@@ -42,20 +42,13 @@ function get_slug(string $prefix = ''): string
 {
 	$path = trim(parse_url(current_url(), PHP_URL_PATH), '/');
 
-
 	if ($prefix !== '') {
-
 		$prefix = trim($prefix, '/');
 
 		if (str_starts_with($path, $prefix . '/')) {
-
-			$path = substr(
-				$path,
-				strlen($prefix) + 1
-			);
+			$path = substr($path, strlen($prefix) + 1);
 		}
 	}
-
 
 	return trim($path, '/');
 }

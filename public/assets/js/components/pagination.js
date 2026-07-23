@@ -10,10 +10,7 @@ const Pagination = {
 
 		container.replaceChildren();
 
-		const {
-			page,
-			last_page,
-		} = pagination;
+		const { page, last_page } = pagination;
 
 		if (last_page <= 1) {
 			return;
@@ -55,9 +52,7 @@ const Pagination = {
 			return li;
 		};
 
-		container.appendChild(
-			createItem('Trước', page - 1, page === 1),
-		);
+		container.appendChild(createItem('Trước', page - 1, page === 1));
 
 		let start = Math.max(2, page - 2);
 
@@ -78,9 +73,7 @@ const Pagination = {
 		}
 
 		for (let i = start; i <= end; i++) {
-			container.appendChild(
-				createItem(i, i, false, i === page),
-			);
+			container.appendChild(createItem(i, i, false, i === page));
 		}
 
 		if (end < last_page - 1) {
@@ -88,14 +81,10 @@ const Pagination = {
 		}
 
 		if (last_page > 1) {
-			container.appendChild(
-				createItem(last_page, last_page, false, page === last_page),
-			);
+			container.appendChild(createItem(last_page, last_page, false, page === last_page));
 		}
 
-		container.appendChild(
-			createItem('Sau', page + 1, page === last_page),
-		);
+		container.appendChild(createItem('Sau', page + 1, page === last_page));
 	},
 };
 

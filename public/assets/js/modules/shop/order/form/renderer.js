@@ -23,10 +23,7 @@ const Renderer = {
 	},
 
 	renderPayment() {
-		Dom.find('#paid_amount_wrapper').classList.toggle(
-			'd-none',
-			State.order.payment !== 'partial',
-		);
+		Dom.find('#paid_amount_wrapper').classList.toggle('d-none', State.order.payment !== 'partial');
 	},
 
 	/* =================================================

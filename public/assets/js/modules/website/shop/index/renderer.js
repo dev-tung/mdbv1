@@ -24,19 +24,9 @@ const Renderer = {
 	================================================= */
 
 	renderFilters() {
-		Select.render(
-			'#filter-category',
-			State.categories,
-			State.filters.category_id,
-			'Tất cả danh mục',
-		);
+		Select.render('#filter-category', State.categories, State.filters.category_id, 'Tất cả danh mục');
 
-		Select.render(
-			'#filter-brand',
-			State.brands,
-			State.filters.brand_id,
-			'Tất cả thương hiệu',
-		);
+		Select.render('#filter-brand', State.brands, State.filters.brand_id, 'Tất cả thương hiệu');
 	},
 
 	/* =================================================
@@ -155,11 +145,7 @@ const Renderer = {
 	================================================= */
 
 	renderPagination() {
-		Pagination.render(
-			'#pagination',
-			State.pagination,
-			State.onPageChange,
-		);
+		Pagination.render('#pagination', State.pagination, State.onPageChange);
 	},
 };
 

@@ -28,13 +28,7 @@ const Autocomplete = {
 			timer = setTimeout(async () => {
 				const items = await options.source(keyword);
 
-				this.render(
-					dropdown,
-					items,
-					options.select,
-					options.field,
-					options.display,
-				);
+				this.render(dropdown, items, options.select, options.field, options.display);
 			}, options.delay ?? 200);
 		});
 
@@ -59,13 +53,7 @@ const Autocomplete = {
 		}
 
 		items.forEach((item) => {
-			const option = this.createItem(
-				item,
-				select,
-				dropdown,
-				field,
-				display,
-			);
+			const option = this.createItem(item, select, dropdown, field, display);
 
 			dropdown.appendChild(option);
 		});

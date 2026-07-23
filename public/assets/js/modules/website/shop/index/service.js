@@ -6,11 +6,7 @@ const Service = {
 	================================================= */
 
 	async getList(filters = {}) {
-		const [
-			productsResponse,
-			categoriesResponse,
-			brandsResponse,
-		] = await Promise.all([
+		const [productsResponse, categoriesResponse, brandsResponse] = await Promise.all([
 			Api.getProducts(filters),
 			Api.getCategories(),
 			Api.getBrands(),

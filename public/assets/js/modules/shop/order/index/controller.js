@@ -7,11 +7,7 @@ import Renderer from './renderer.js';
 import Service from './service.js';
 
 const Controller = {
-	
-
 	init() {
-		
-
 		Table.init({
 			body: '#order-table-body',
 
