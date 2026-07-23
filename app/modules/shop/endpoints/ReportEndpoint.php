@@ -9,7 +9,7 @@ class ReportEndpoint
 		$this->reportRepository = new ReportRepository();
 	}
 
-	public function apiInventory()
+	public function apiListInventory()
 	{
 		$filters = request_filters(['keyword']);
 
@@ -19,7 +19,7 @@ class ReportEndpoint
 		]);
 	}
 
-	public function apiRevenue()
+	public function apiListRevenue()
 	{
 		$filters = request_filters(['keyword']);
 
@@ -29,7 +29,7 @@ class ReportEndpoint
 		]);
 	}
 	
-	public function apiCustomer()
+	public function apiListCustomer()
 	{
 		$filters = request_filters(['keyword']);
 
