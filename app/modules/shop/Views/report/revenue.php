@@ -38,16 +38,13 @@
     <table class="table table-sm table-striped table-borderless align-middle mb-0">
       <thead class="table-light">
         <tr>
-          <th>#</th>
-          <th>ID Đơn xuất</th>
-          <th>Ngày xuất</th>
-          <th>ID SP</th>
           <th>Tên sản phẩm</th>
           <th>Số lượng</th>
           <th>Đơn giá</th>
           <th>Giá nhập</th>
           <th>Doanh thu</th>
           <th>Lợi nhuận</th>
+          <th>Ngày xuất</th>
         </tr>
       </thead>
       <tbody id="report-table-body">
@@ -199,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!items.length) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="10" class="text-center text-muted">
+          <td colspan="7" class="text-center text-muted">
             Không có dữ liệu
           </td>
         </tr>
@@ -219,16 +216,13 @@ document.addEventListener("DOMContentLoaded", function () {
       const tr = document.createElement("tr");
 
       tr.innerHTML = `
-        <th>${start + index + 1}</th>
-        <td>${item.revenue_id}</td>
-        <td>${item.created_at}</td>
-        <td>${item.product_id}</td>
-        <td>${item.product_name}</td>
-        <td>${item.quantity}</td>
-        <td>${formatVND(item.selling_price)}</td>
-        <td>${formatVND(item.purchase_price)}</td>
-        <td>${formatVND(item.revenue)}</td>
-        <td>${formatVND(item.profit)}</td>
+          <td>${item.product_name}</td>
+          <td>${item.quantity}</td>
+          <td>${formatVND(item.selling_price)}</td>
+          <td>${formatVND(item.purchase_price)}</td>
+          <td>${formatVND(item.revenue)}</td>
+          <td>${formatVND(item.profit)}</td>
+          <td>${item.created_at}</td>
       `;
 
       tbody.appendChild(tr);
