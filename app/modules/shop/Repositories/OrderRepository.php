@@ -9,14 +9,25 @@ class OrderRepository extends Repository
 	protected string $table = 'orders';
 
 	/* =================================================
-	   LIST
+		LIST
 	================================================= */
 
 	public function getList(array $filters = []): array
 	{
 		return Database::call(
-			'CALL sp_order_list(?, ?, ?, ?, ?)',
-			array_params(['date_from', 'date_to', 'customer', 'payment', 'status'], $filters),
+			'CALL sp_order_list(?, ?, ?, ?, ?, ?, ?)',
+			array_params(
+				[
+					'date_from',
+					'date_to',
+					'customer',
+					'payment',
+					'status',
+					'page',
+					'per_page',
+				],
+				$filters,
+			),
 		);
 	}
 
