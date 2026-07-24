@@ -38,7 +38,7 @@ document.getElementById("login-form").addEventListener("submit", async function(
 
         if(result.success){
             // Login thành công → redirect về trang chính
-            window.location.href = "/admin/orders";
+            window.location.href = "/admin/shop/orders";
         } else {
             alert(result.message);
         }
