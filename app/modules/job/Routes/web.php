@@ -2,11 +2,11 @@
 
 use App\Core\Router;
 
-use App\Shop\Jobs\YonexCategoryCrawler;
-use App\Shop\Jobs\YonexProductCrawler;
-use App\Shop\Jobs\YonexProductDetailCrawler;
-use App\Shop\Jobs\YonexProductImporter;
-use App\Shop\Jobs\ShopProcedureCreator;
+use App\Job\Controllers\YonexCategoryCrawler;
+use App\Job\Controllers\YonexProductCrawler;
+use App\Job\Controllers\YonexProductDetailCrawler;
+use App\Job\Controllers\YonexProductImporter;
+use App\Job\Controllers\ShopProcedureCreator;
 
 // =========================
 // SHOP PROCEDURE
