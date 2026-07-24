@@ -10,4 +10,9 @@ class ShopController
     {
         View::render('shop/index');
     }
+
+    public function show(string $slug): void
+    {
+        View::render('shop/show', compact('slug'));
+    }
 }
