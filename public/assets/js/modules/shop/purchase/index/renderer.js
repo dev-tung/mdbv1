@@ -65,7 +65,7 @@ const Renderer = {
 
 			// Edit
 			const edit = row.querySelector('.edit-item');
-			edit.href = `/admin/purchases/edit/${purchase.id}`;
+			edit.href = `/admin/shop/purchases/edit/${purchase.id}`;
 
 			// Delete
 			row.querySelector('.delete-item').dataset.id = purchase.id;

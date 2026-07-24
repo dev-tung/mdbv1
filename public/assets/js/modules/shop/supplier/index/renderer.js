@@ -53,7 +53,7 @@ const Renderer = {
 			// EDIT
 			// =========================
 
-			row.querySelector('.edit-item').href = `/admin/suppliers/edit/${supplier.id}`;
+			row.querySelector('.edit-item').href = `/admin/shop/suppliers/edit/${supplier.id}`;
 
 			// =========================
 			// DELETE

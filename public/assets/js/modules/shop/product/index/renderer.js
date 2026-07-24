@@ -95,7 +95,7 @@ const Renderer = {
 			// EDIT
 			// =========================
 
-			row.querySelector('.edit-item').href = `/admin/products/edit/${product.id}`;
+			row.querySelector('.edit-item').href = `/admin/shop/products/edit/${product.id}`;
 
 			// =========================
 			// DELETE
