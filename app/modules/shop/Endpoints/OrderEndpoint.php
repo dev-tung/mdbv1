@@ -83,7 +83,7 @@ class OrderEndpoint
 			'data' => [
 				'id' => $id,
 			],
-			'redirect' => '/admin/orders',
+			'redirect' => '/admin/shop/orders',
 		]);
 	}
 
@@ -111,7 +111,7 @@ class OrderEndpoint
 		return Response::json([
 			'success' => true,
 			'message' => 'Cập nhật đơn hàng thành công',
-			'redirect' => '/admin/orders',
+			'redirect' => '/admin/shop/orders',
 		]);
 	}
 

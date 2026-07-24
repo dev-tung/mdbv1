@@ -81,7 +81,7 @@ class PurchaseEndpoint
 			'data' => [
 				'id' => $id,
 			],
-			'redirect' => '/admin/purchases',
+			'redirect' => '/admin/shop/purchases',
 		]);
 	}
 
@@ -107,7 +107,7 @@ class PurchaseEndpoint
 		return Response::json([
 			'success' => true,
 			'message' => 'Cập nhật phiếu nhập thành công',
-			'redirect' => '/admin/purchases',
+			'redirect' => '/admin/shop/purchases',
 		]);
 	}
 
