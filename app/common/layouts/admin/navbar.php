@@ -162,7 +162,7 @@
             <!-- LOGOUT -->
             <li class="nav-item">
             <a class="nav-link pe-0"
-                href="<?= route('/admin/shop/logout') ?>"
+                href="<?= route('/admin/logout') ?>"
                 onclick="return confirm('Bạn có chắc muốn đăng xuất không?');">
                 Logout
             </a>
