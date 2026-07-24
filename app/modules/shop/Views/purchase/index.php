@@ -29,7 +29,7 @@
 
     </div>
 
-    <a href="/admin/purchases/create" class="btn btn-sm btn-outline-secondary">
+    <a href="/admin/shop/purchases/create" class="btn btn-sm btn-outline-secondary">
       Thêm phiếu nhập
     </a>
 

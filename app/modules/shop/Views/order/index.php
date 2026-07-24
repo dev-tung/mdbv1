@@ -28,7 +28,7 @@
 
     </div>
 
-    <a href="/admin/orders/create" class="btn btn-sm btn-outline-secondary">
+    <a href="/admin/shop/orders/create" class="btn btn-sm btn-outline-secondary">
       Thêm đơn hàng
     </a>
 
