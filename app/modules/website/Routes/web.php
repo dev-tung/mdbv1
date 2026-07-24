@@ -3,8 +3,8 @@
 use App\Core\Router;
 
 use App\Website\Controllers\HomeController;
-use App\Shop\Controllers\ShopController;
-use App\Shop\Controllers\CartController;
+use App\Website\Controllers\ShopController;
+use App\Website\Controllers\CartController;
 use App\Website\Controllers\PageController;
 
 // =========================

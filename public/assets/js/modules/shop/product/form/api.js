@@ -6,15 +6,15 @@ const Api = {
 	================================================= */
 
 	createProduct(data) {
-		return Http.post('/api/products', data);
+		return Http.post('/api/shop/products', data);
 	},
 
 	updateProduct(data) {
-		return Http.post(`/api/products/update/${data.id}`, data);
+		return Http.post(`/api/shop/products/update/${data.id}`, data);
 	},
 
 	getProduct(id) {
-		return Http.get(`/api/products/show/${id}`);
+		return Http.get(`/api/shop/products/show/${id}`);
 	},
 
 	/* =================================================
@@ -22,7 +22,7 @@ const Api = {
 	================================================= */
 
 	getCategories() {
-		return Http.get('/api/categories');
+		return Http.get('/api/shop/categories');
 	},
 
 	/* =================================================
@@ -30,7 +30,7 @@ const Api = {
 	================================================= */
 
 	getBrands() {
-		return Http.get('/api/brands');
+		return Http.get('/api/shop/brands');
 	},
 };
 

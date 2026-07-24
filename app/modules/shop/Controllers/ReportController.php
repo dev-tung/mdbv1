@@ -15,8 +15,8 @@ class ReportController
 		View::render('report/revenue');
 	}
 
-	public function customer(): void
+	public function buyer(): void
 	{
-		View::render('report/customer');
+		View::render('report/buyer');
 	}
 }

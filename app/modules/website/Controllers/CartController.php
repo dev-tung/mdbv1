@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Website\Controllers;
+
+use App\Core\View;
+
+
 class CartController
 {
 	/**

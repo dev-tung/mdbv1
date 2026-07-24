@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Website\Controllers;
+
+use App\Core\View;
+
 class PageController
 {
 	public function string(): void

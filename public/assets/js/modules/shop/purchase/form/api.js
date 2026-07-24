@@ -6,19 +6,19 @@ const Api = {
     ================================================= */
 
 	async showPurchase(id) {
-		return await Http.get(`/api/purchases/show/${id}`);
+		return await Http.get(`/api/shop/purchases/show/${id}`);
 	},
 
 	async createPurchase(data) {
-		return await Http.post('/api/purchases', data);
+		return await Http.post('/api/shop/purchases', data);
 	},
 
 	async updatePurchase(id, data) {
-		return await Http.post(`/api/purchases/update/${id}`, data);
+		return await Http.post(`/api/shop/purchases/update/${id}`, data);
 	},
 
 	async deletePurchase(id) {
-		return await Http.post(`/api/purchases/delete/${id}`);
+		return await Http.post(`/api/shop/purchases/delete/${id}`);
 	},
 
 	/* =================================================
@@ -26,7 +26,7 @@ const Api = {
     ================================================= */
 
 	async searchProduct(keyword = '') {
-		return await Http.get('/api/products', {
+		return await Http.get('/api/shop/products', {
 			keyword,
 		});
 	},
@@ -36,7 +36,7 @@ const Api = {
     ================================================= */
 
 	async searchSupplier(keyword = '') {
-		return await Http.get('/api/suppliers', {
+		return await Http.get('/api/shop/suppliers', {
 			keyword,
 		});
 	},
@@ -46,7 +46,7 @@ const Api = {
     ================================================= */
 
 	async getWarehouses() {
-		return await Http.get('/api/warehouses');
+		return await Http.get('/api/shop/warehouses');
 	},
 };
 

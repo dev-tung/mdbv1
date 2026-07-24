@@ -115,7 +115,7 @@
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
                     <a
-                        class="nav-link dropdown-toggle <?= active_menu('/admin/shop/shop') ?>"
+                        class="nav-link dropdown-toggle <?= active_menu('/admin/shop') ?>"
                         href="#"
                         data-bs-toggle="dropdown"
                     >
@@ -124,17 +124,17 @@
 
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="<?= route('/admin/shop/shop/revenue') ?>">
+                            <a class="dropdown-item" href="<?= route('/admin/shop/revenue') ?>">
                                 Doanh thu
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="<?= route('/admin/shop/shop/inventory') ?>">
+                            <a class="dropdown-item" href="<?= route('/admin/shop/inventory') ?>">
                                 Tồn kho
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="<?= route('/admin/shop/shop/customer') ?>">
+                            <a class="dropdown-item" href="<?= route('/admin/shop/buyer') ?>">
                                 Khách hàng
                             </a>
                         </li>
