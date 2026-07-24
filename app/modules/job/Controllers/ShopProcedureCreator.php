@@ -6,7 +6,7 @@ class ShopProcedureCreator
 {
 	public function run(): void
 	{
-		$files = glob(PATH_ROOT . '/app/modules/shop/database/procedures/*.sql');
+		$files = glob(PATH_ROOT . '/app/modules/shop/Database/procedures/*.sql');
 
 		sort($files);
 
