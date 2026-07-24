@@ -6,7 +6,7 @@ const Api = {
 	================================================= */
 
 	getProducts(params = {}) {
-		return Http.get('/api/shop/products', params);
+		return Http.get('/api/products', params);
 	},
 
 	/* =================================================
@@ -14,7 +14,7 @@ const Api = {
 	================================================= */
 
 	getCategories(params = {}) {
-		return Http.get('/api/shop/categories', params);
+		return Http.get('/api/categories', params);
 	},
 
 	/* =================================================
@@ -22,7 +22,7 @@ const Api = {
 	================================================= */
 
 	getBrands(params = {}) {
-		return Http.get('/api/shop/brands', params);
+		return Http.get('/api/brands', params);
 	},
 };
 

@@ -6,25 +6,25 @@ const Api = {
 	================================================= */
 
 	async getOrders(params = {}) {
-		return await Http.get('/api/shop/orders', params);
+		return await Http.get('/api/orders', params);
 	},
 
 	async updateOrderStatus(id, status) {
-		return await Http.post('/api/shop/orders/status', {
+		return await Http.post('/api/orders/status', {
 			id,
 			status,
 		});
 	},
 
 	async updateOrderPayment(id, payment) {
-		return await Http.post('/api/shop/orders/payment', {
+		return await Http.post('/api/orders/payment', {
 			id,
 			payment,
 		});
 	},
 
 	async deleteOrder(id) {
-		return await Http.post(`/api/shop/orders/delete/${id}`);
+		return await Http.post(`/api/orders/delete/${id}`);
 	},
 };
 

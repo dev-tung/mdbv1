@@ -6,19 +6,19 @@ const Api = {
 	================================================= */
 
 	async showOrder(id) {
-		return await Http.get(`/api/shop/orders/show/${id}`);
+		return await Http.get(`/api/orders/show/${id}`);
 	},
 
 	async createOrder(data) {
-		return await Http.post('/api/shop/orders', data);
+		return await Http.post('/api/orders', data);
 	},
 
 	async updateOrder(id, data) {
-		return await Http.post(`/api/shop/orders/update/${id}`, data);
+		return await Http.post(`/api/orders/update/${id}`, data);
 	},
 
 	async deleteOrder(id) {
-		return await Http.post(`/api/shop/orders/delete/${id}`);
+		return await Http.post(`/api/orders/delete/${id}`);
 	},
 
 	/* =================================================
@@ -26,13 +26,13 @@ const Api = {
 	================================================= */
 
 	async searchProduct(keyword = '') {
-		return await Http.get('/api/shop/report/inventory', {
+		return await Http.get('/api/report/inventory', {
 			keyword,
 		});
 	},
 
 	async checkQuantity(product_id, purchase_id) {
-		return await Http.get('/api/shop/report/inventory', {
+		return await Http.get('/api/report/inventory', {
 			product_id,
 			purchase_id,
 		});
@@ -43,7 +43,7 @@ const Api = {
 	================================================= */
 
 	async searchCustomer(keyword = '') {
-		return await Http.get('/api/shop/customers', {
+		return await Http.get('/api/customers', {
 			keyword,
 		});
 	},

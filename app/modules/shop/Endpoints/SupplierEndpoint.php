@@ -72,7 +72,7 @@ class SupplierEndpoint
 			'success' => true,
 			'message' => 'Thêm nhà cung cấp thành công!',
 			'id' => $id,
-			'redirect' => '/admin/shop/suppliers',
+			'redirect' => '/admin/suppliers',
 		]);
 	}
 
@@ -98,7 +98,7 @@ class SupplierEndpoint
 		return Response::json([
 			'success' => true,
 			'message' => 'Cập nhật nhà cung cấp thành công!',
-			'redirect' => '/admin/shop/suppliers',
+			'redirect' => '/admin/suppliers',
 		]);
 	}
 

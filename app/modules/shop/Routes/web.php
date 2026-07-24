@@ -12,54 +12,54 @@ use App\Shop\Controllers\SupplierController;
 // PRODUCTS
 // =========================
 
-Router::get('/admin/shop/products', [ProductController::class, 'index']);
-Router::get('/admin/shop/products/create', [ProductController::class, 'form'], ['auth' => 'admin']);
-Router::get('/admin/shop/products/edit/{id}', [ProductController::class, 'form'], ['auth' => 'admin']);
+Router::get('/admin/products', [ProductController::class, 'index']);
+Router::get('/admin/products/create', [ProductController::class, 'form'], ['auth' => 'admin']);
+Router::get('/admin/products/edit/{id}', [ProductController::class, 'form'], ['auth' => 'admin']);
 
 // =========================
 // CATEGORIES
 // =========================
 
-Router::get('/admin/shop/categories', [CategoryController::class, 'index'], ['auth' => 'admin']);
-Router::get('/admin/shop/categories/create', [CategoryController::class, 'create'], ['auth' => 'admin']);
-Router::get('/admin/shop/categories/edit/{id}', [CategoryController::class, 'edit'], ['auth' => 'admin']);
+Router::get('/admin/categories', [CategoryController::class, 'index'], ['auth' => 'admin']);
+Router::get('/admin/categories/create', [CategoryController::class, 'create'], ['auth' => 'admin']);
+Router::get('/admin/categories/edit/{id}', [CategoryController::class, 'edit'], ['auth' => 'admin']);
 
 // =========================
 // BRANDS
 // =========================
 
-Router::get('/admin/shop/brands', [BrandController::class, 'index'], ['auth' => 'admin']);
-Router::get('/admin/shop/brands/create', [BrandController::class, 'create'], ['auth' => 'admin']);
-Router::get('/admin/shop/brands/edit/{id}', [BrandController::class, 'edit'], ['auth' => 'admin']);
+Router::get('/admin/brands', [BrandController::class, 'index'], ['auth' => 'admin']);
+Router::get('/admin/brands/create', [BrandController::class, 'create'], ['auth' => 'admin']);
+Router::get('/admin/brands/edit/{id}', [BrandController::class, 'edit'], ['auth' => 'admin']);
 
 // =========================
 // SUPPLIERS
 // =========================
 
-Router::get('/admin/shop/suppliers', [SupplierController::class, 'index']);
-Router::get('/admin/shop/suppliers/create', [SupplierController::class, 'form'], ['auth' => 'admin']);
-Router::get('/admin/shop/suppliers/edit/{id}', [SupplierController::class, 'form'], ['auth' => 'admin']);
+Router::get('/admin/suppliers', [SupplierController::class, 'index']);
+Router::get('/admin/suppliers/create', [SupplierController::class, 'form'], ['auth' => 'admin']);
+Router::get('/admin/suppliers/edit/{id}', [SupplierController::class, 'form'], ['auth' => 'admin']);
 
 // =========================
 // PURCHASES
 // =========================
 
-Router::get('/admin/shop/purchases', [PurchaseController::class, 'index'], ['auth' => 'admin']);
-Router::get('/admin/shop/purchases/create', [PurchaseController::class, 'form'], ['auth' => 'admin']);
-Router::get('/admin/shop/purchases/edit/{id}', [PurchaseController::class, 'form'], ['auth' => 'admin']);
+Router::get('/admin/purchases', [PurchaseController::class, 'index'], ['auth' => 'admin']);
+Router::get('/admin/purchases/create', [PurchaseController::class, 'form'], ['auth' => 'admin']);
+Router::get('/admin/purchases/edit/{id}', [PurchaseController::class, 'form'], ['auth' => 'admin']);
 
 // =========================
 // ORDERS
 // =========================
 
-Router::get('/admin/shop/orders', [OrderController::class, 'index'], ['auth' => 'admin']);
-Router::get('/admin/shop/orders/create', [OrderController::class, 'form'], ['auth' => 'admin']);
-Router::get('/admin/shop/orders/edit/{id}', [OrderController::class, 'form'], ['auth' => 'admin']);
+Router::get('/admin/orders', [OrderController::class, 'index'], ['auth' => 'admin']);
+Router::get('/admin/orders/create', [OrderController::class, 'form'], ['auth' => 'admin']);
+Router::get('/admin/orders/edit/{id}', [OrderController::class, 'form'], ['auth' => 'admin']);
 
 // =========================
 // REPORT
 // =========================
 
-Router::get('/admin/shop/revenue', [ReportController::class, 'revenue'], ['auth' => 'admin']);
-Router::get('/admin/shop/inventory', [ReportController::class, 'inventory'], ['auth' => 'admin']);
-Router::get('/admin/shop/buyer', [ReportController::class, 'buyer'], ['auth' => 'admin']);
+Router::get('/admin/revenue', [ReportController::class, 'revenue'], ['auth' => 'admin']);
+Router::get('/admin/inventory', [ReportController::class, 'inventory'], ['auth' => 'admin']);
+Router::get('/admin/buyer', [ReportController::class, 'buyer'], ['auth' => 'admin']);

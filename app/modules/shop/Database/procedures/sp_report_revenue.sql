@@ -1,6 +1,6 @@
-DROP PROCEDURE IF EXISTS sp_shop_inventory;
+DROP PROCEDURE IF EXISTS sp_report_inventory;
 
-CREATE PROCEDURE sp_shop_inventory (
+CREATE PROCEDURE sp_report_inventory (
 	IN p_keyword VARCHAR(255),
 	IN p_product_id INT,
 	IN p_purchase_id INT,

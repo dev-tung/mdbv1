@@ -30,7 +30,7 @@
 
 
     <a
-      href="<?= route('/admin/shop/suppliers/create') ?>"
+      href="<?= route('/admin/suppliers/create') ?>"
       class="btn btn-sm btn-outline-secondary">
       Thêm nhà cung cấp
     </a>

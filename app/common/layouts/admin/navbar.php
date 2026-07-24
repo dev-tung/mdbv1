@@ -10,8 +10,8 @@
                 <!-- SẢN PHẨM -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/shop/products') ?:
-                    	active_menu('/admin/shop/products/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/products') ?:
+                    	active_menu('/admin/products/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -19,9 +19,9 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= route('/admin/shop/products') ?>">Danh sách sản phẩm</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/products') ?>">Danh sách sản phẩm</a></li>
                         <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/shop/products/create',
+                        	'/admin/products/create',
                         ) ?>">Thêm sản phẩm</a></li>
                     </ul>
                 </li>
@@ -30,8 +30,8 @@
                 <!-- NHÀ CUNG CẤP -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/shop/suppliers') ?:
-                    	active_menu('/admin/shop/suppliers/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/suppliers') ?:
+                    	active_menu('/admin/suppliers/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -40,10 +40,10 @@
 
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/shop/suppliers',
+                        	'/admin/suppliers',
                         ) ?>">Danh sách nhà cung cấp</a></li>
                         <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/shop/suppliers/create',
+                        	'/admin/suppliers/create',
                         ) ?>">Thêm nhà cung cấp</a></li>
                     </ul>
                 </li>
@@ -52,8 +52,8 @@
                 <!-- MUA HÀNG -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/shop/purchases') ?:
-                    	active_menu('/admin/shop/purchases/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/purchases') ?:
+                    	active_menu('/admin/purchases/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -62,10 +62,10 @@
 
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/shop/purchases',
+                        	'/admin/purchases',
                         ) ?>">Danh sách phiếu mua</a></li>
                         <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/shop/purchases/create',
+                        	'/admin/purchases/create',
                         ) ?>">Thêm phiếu mua</a></li>
                     </ul>
                 </li>
@@ -96,8 +96,8 @@
                 <!-- ĐƠN HÀNG -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/shop/orders') ?:
-                    	active_menu('/admin/shop/orders/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/orders') ?:
+                    	active_menu('/admin/orders/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -105,8 +105,8 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= route('/admin/shop/orders') ?>">Danh sách đơn hàng</a></li>
-                        <li><a class="dropdown-item" href="<?= route('/admin/shop/orders/create') ?>">Thêm đơn hàng</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/orders') ?>">Danh sách đơn hàng</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/orders/create') ?>">Thêm đơn hàng</a></li>
                     </ul>
                 </li>
 
@@ -115,7 +115,7 @@
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
                     <a
-                        class="nav-link dropdown-toggle <?= active_menu('/admin/shop/revenue') ?> <?= active_menu('/admin/shop/inventory') ?> <?= active_menu('/admin/shop/buyer') ?>"
+                        class="nav-link dropdown-toggle <?= active_menu('/admin/revenue') ?> <?= active_menu('/admin/inventory') ?> <?= active_menu('/admin/buyer') ?>"
                         href="#"
                         data-bs-toggle="dropdown"
                     >
@@ -124,17 +124,17 @@
 
                     <ul class="dropdown-menu">
                         <li>
-                            <a class="dropdown-item" href="<?= route('/admin/shop/revenue') ?>">
+                            <a class="dropdown-item" href="<?= route('/admin/revenue') ?>">
                                 Doanh thu
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="<?= route('/admin/shop/inventory') ?>">
+                            <a class="dropdown-item" href="<?= route('/admin/inventory') ?>">
                                 Tồn kho
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="<?= route('/admin/shop/buyer') ?>">
+                            <a class="dropdown-item" href="<?= route('/admin/buyer') ?>">
                                 Khách hàng
                             </a>
                         </li>

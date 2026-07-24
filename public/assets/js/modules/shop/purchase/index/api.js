@@ -6,25 +6,25 @@ const Api = {
     ================================================= */
 
 	async getPurchases(params = {}) {
-		return await Http.get('/api/shop/purchases', params);
+		return await Http.get('/api/purchases', params);
 	},
 
 	async updatePurchaseStatus(id, status) {
-		return await Http.post('/api/shop/purchases/status', {
+		return await Http.post('/api/purchases/status', {
 			id,
 			status,
 		});
 	},
 
 	async updatePurchasePayment(id, payment) {
-		return await Http.post('/api/shop/purchases/payment', {
+		return await Http.post('/api/purchases/payment', {
 			id,
 			payment,
 		});
 	},
 
 	async deletePurchase(id) {
-		return await Http.post(`/api/shop/purchases/delete/${id}`);
+		return await Http.post(`/api/purchases/delete/${id}`);
 	},
 
 	/* =================================================
@@ -32,7 +32,7 @@ const Api = {
     ================================================= */
 
 	async getSuppliers(keyword = '') {
-		return await Http.get('/api/shop/suppliers', {
+		return await Http.get('/api/suppliers', {
 			keyword,
 		});
 	},

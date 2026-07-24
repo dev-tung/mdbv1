@@ -23,7 +23,7 @@
         </select>
       </div>
     </div>
-    <a href="<?= route('/admin/shop/products/create') ?>" class="btn btn-sm btn-outline-secondary"> Thêm sản phẩm </a>
+    <a href="<?= route('/admin/products/create') ?>" class="btn btn-sm btn-outline-secondary"> Thêm sản phẩm </a>
   </div>
   <!-- SUMMARY -->
   <div class="d-flex gap-3 mb-3">

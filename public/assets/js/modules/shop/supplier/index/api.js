@@ -6,11 +6,11 @@ const Api = {
 	================================================= */
 
 	async getSuppliers(params = {}) {
-		return await Http.get('/api/shop/suppliers', params);
+		return await Http.get('/api/suppliers', params);
 	},
 
 	async deleteSupplier(id) {
-		return await Http.post(`/api/shop/suppliers/delete/${id}`);
+		return await Http.post(`/api/suppliers/delete/${id}`);
 	},
 };
 

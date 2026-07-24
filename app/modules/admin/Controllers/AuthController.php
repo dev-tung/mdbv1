@@ -10,7 +10,7 @@ class AuthController
     public function login(): void
     {
         if (Session::get('auth_user')) {
-            header('Location: /admin/shop/orders');
+            header('Location: /admin/orders');
             exit();
         }
 

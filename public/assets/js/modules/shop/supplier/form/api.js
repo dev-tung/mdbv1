@@ -6,15 +6,15 @@ const Api = {
 	================================================= */
 
 	createSupplier(data) {
-		return Http.post('/api/shop/suppliers', data);
+		return Http.post('/api/suppliers', data);
 	},
 
 	updateSupplier(data) {
-		return Http.post(`/api/shop/suppliers/update/${data.id}`, data);
+		return Http.post(`/api/suppliers/update/${data.id}`, data);
 	},
 
 	getSupplier(id) {
-		return Http.get(`/api/shop/suppliers/show/${id}`);
+		return Http.get(`/api/suppliers/show/${id}`);
 	},
 };
 

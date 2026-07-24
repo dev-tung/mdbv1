@@ -6,11 +6,11 @@ const Api = {
 	================================================= */
 
 	async getProducts(params = {}) {
-		return await Http.get('/api/shop/products', params);
+		return await Http.get('/api/products', params);
 	},
 
 	async updateProductStatus(id, status) {
-		return await Http.post('/api/shop/products/status', {
+		return await Http.post('/api/products/status', {
 			id,
 
 			status,
@@ -18,7 +18,7 @@ const Api = {
 	},
 
 	async deleteProduct(id) {
-		return await Http.post(`/api/shop/products/delete/${id}`);
+		return await Http.post(`/api/products/delete/${id}`);
 	},
 
 	/* =================================================
@@ -26,7 +26,7 @@ const Api = {
 	================================================= */
 
 	async getCategories(keyword = '') {
-		return await Http.get('/api/shop/categories', {
+		return await Http.get('/api/categories', {
 			keyword,
 		});
 	},

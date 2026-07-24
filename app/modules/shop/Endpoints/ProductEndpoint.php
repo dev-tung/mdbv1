@@ -72,7 +72,7 @@ class ProductEndpoint
 			'success' => true,
 			'message' => 'Thêm sản phẩm thành công!',
 			'id' => $id,
-			'redirect' => '/admin/shop/products',
+			'redirect' => '/admin/products',
 		]);
 	}
 
@@ -97,7 +97,7 @@ class ProductEndpoint
 		return Response::json([
 			'success' => true,
 			'message' => 'Cập nhật sản phẩm thành công!',
-			'redirect' => '/admin/shop/products',
+			'redirect' => '/admin/products',
 		]);
 	}
 

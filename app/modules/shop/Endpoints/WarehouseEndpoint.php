@@ -72,7 +72,7 @@ class WarehouseEndpoint
 			'success' => true,
 			'message' => 'Thêm kho thành công!',
 			'id' => $id,
-			'redirect' => '/admin/shop/warehouses',
+			'redirect' => '/admin/warehouses',
 		]);
 	}
 
@@ -98,7 +98,7 @@ class WarehouseEndpoint
 		return Response::json([
 			'success' => true,
 			'message' => 'Cập nhật kho thành công!',
-			'redirect' => '/admin/shop/warehouses',
+			'redirect' => '/admin/warehouses',
 		]);
 	}
 
