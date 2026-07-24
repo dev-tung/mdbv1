@@ -1,10 +1,18 @@
 const State = {
+	/* =================================================
+	   FILTERS
+	================================================= */
+
 	filters: {
 		date_from: '',
 		date_to: '',
 		customer: '',
 		payment: '',
 	},
+
+	/* =================================================
+	   DATA
+	================================================= */
 
 	orders: [],
 
@@ -16,33 +24,31 @@ const State = {
 
 	pagination: {
 		page: 1,
-		limit: 20,
+
+		per_page: 20,
+
 		total: 0,
-		total_pages: 1,
+
+		last_page: 1,
 	},
+
+	/* =================================================
+	   DEFAULT
+	================================================= */
 
 	setDefault(data) {
 		this.orders = data.orders || [];
 
-		this.pagination = {
-			...this.pagination,
-			...(data.pagination || {}),
+		this.summary = {
+			...this.summary,
+
+			...(data.summary || {}),
 		};
 
-		this.setSummary();
-	},
+		this.pagination = {
+			...this.pagination,
 
-	setSummary() {
-		const total_amount = this.orders.reduce((sum, order) => sum + Number(order.total_amount || 0), 0);
-
-		const paid_amount = this.orders.reduce((sum, order) => sum + Number(order.paid_amount || 0), 0);
-
-		const debt_amount = this.orders.reduce((sum, order) => sum + Number(order.debt_amount || 0), 0);
-
-		this.summary = {
-			total_amount,
-			paid_amount,
-			debt_amount,
+			...(data.pagination || {}),
 		};
 	},
 };
