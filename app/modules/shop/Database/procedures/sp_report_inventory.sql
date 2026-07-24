@@ -12,15 +12,19 @@ BEGIN
 		AND COALESCE(p_purchase_id, 0) > 0 THEN
 
 		SELECT
-			p.id,
-			p.name,
+			p.id AS product_id,
+			p.name AS product_name,
 			i.purchase_id,
-			i.quantity AS stock,
+			i.quantity,
+			pi.selling_price,
 			pu.vat_rate
 		FROM inventories i
 		JOIN products p
 			ON p.id = i.product_id
-		LEFT JOIN purchases pu
+		JOIN purchase_items pi
+			ON pi.purchase_id = i.purchase_id
+			AND pi.product_id = i.product_id
+		JOIN purchases pu
 			ON pu.id = i.purchase_id
 		WHERE
 			i.product_id = p_product_id
@@ -29,13 +33,18 @@ BEGIN
 	ELSE
 
 		SELECT
-			p.id,
-			p.name,
-			COALESCE(SUM(i.quantity), 0) AS stock,
+			p.id AS product_id,
+			p.name AS product_name,
+			i.purchase_id,
+			COALESCE(SUM(i.quantity), 0) AS quantity,
+			MAX(pi.selling_price) AS selling_price,
 			MAX(pu.vat_rate) AS vat_rate
 		FROM products p
 		LEFT JOIN inventories i
 			ON i.product_id = p.id
+		LEFT JOIN purchase_items pi
+			ON pi.purchase_id = i.purchase_id
+			AND pi.product_id = i.product_id
 		LEFT JOIN purchases pu
 			ON pu.id = i.purchase_id
 		WHERE
@@ -44,13 +53,15 @@ BEGIN
 			OR p.name LIKE CONCAT('%', p_keyword, '%')
 		GROUP BY
 			p.id,
-			p.name
+			p.name,
+			i.purchase_id
 		HAVING
 			p_stock IS NULL
-			OR (p_stock = 1 AND stock > 0)
-			OR (p_stock = 0 AND stock = 0)
+			OR (p_stock = 1 AND quantity > 0)
+			OR (p_stock = 0 AND quantity = 0)
 		ORDER BY
-			p.id DESC;
+			p.id DESC,
+			i.purchase_id DESC;
 
 	END IF;
 

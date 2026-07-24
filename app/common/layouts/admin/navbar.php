@@ -74,8 +74,8 @@
                 <!-- KHÁCH HÀNG -->
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/crm/customers') ?:
-                        active_menu('/admin/crm/customers/create') ?>"
+                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/customers') ?:
+                        active_menu('/admin/customers/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -84,10 +84,10 @@
 
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/crm/customers',
+                        	'/admin/customers',
                         ) ?>">Danh sách khách hàng</a></li>
                         <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/crm/customers/create',
+                        	'/admin/customers/create',
                         ) ?>">Thêm khách hàng</a></li>
                     </ul>
                 </li>

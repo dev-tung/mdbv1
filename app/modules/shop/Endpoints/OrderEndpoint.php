@@ -3,6 +3,7 @@
 namespace App\Shop\Endpoints;
 
 use App\Core\Response;
+use App\Core\Auth;
 use App\Shop\Repositories\OrderRepository;
 use App\Shop\Validators\OrderValidator;
 

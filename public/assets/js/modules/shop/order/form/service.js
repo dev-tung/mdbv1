@@ -87,6 +87,7 @@ const Service = {
 			return {
 				success: false,
 				message: `Số lượng tồn chỉ còn ${maxQuantity}.`,
+				maxQuantity,
 			};
 		}
 
@@ -126,7 +127,7 @@ const Service = {
 		async function getMaxQuantity(item) {
 			const response = await Api.checkQuantity(item.product_id, item.purchase_id);
 
-			const stockQuantity = Number(response.data?.quantity ?? 0);
+			const stockQuantity = Number(response.data[0][0]?.quantity ?? 0);
 
 			if (State.order.id) {
 				return stockQuantity + Number(item.original_quantity ?? 0);

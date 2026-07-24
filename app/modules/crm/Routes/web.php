@@ -7,10 +7,10 @@ use App\Crm\Controllers\CustomerController;
 // CUSTOMERS
 // =========================
 
-Router::get('/admin/crm/customers', [CustomerController::class, 'index']);
+Router::get('/admin/customers', [CustomerController::class, 'index']);
 
 Router::get(
-	'/admin/crm/customers/create',
+	'/admin/customers/create',
 	[CustomerController::class, 'form'],
 	[
 		'auth' => 'admin',
@@ -18,7 +18,7 @@ Router::get(
 );
 
 Router::get(
-	'/admin/crm/customers/edit/{id}',
+	'/admin/customers/edit/{id}',
 	[CustomerController::class, 'form'],
 	[
 		'auth' => 'admin',

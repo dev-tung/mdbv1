@@ -65,9 +65,7 @@ const Controller = {
 		Autocomplete.init({
 			element: '#product_search',
 			display(product) {
-				return `
-					${product.name} - VAT ${product.vat_rate}% - Tồn ${product.stock}
-				`;
+				return `${product.product_name} - VAT ${Number(product.vat_rate)}% - Tồn ${product.quantity}`;
 			},
 			async source(keyword) {
 				const products = await Api.searchProduct(keyword);
@@ -162,6 +160,7 @@ const Controller = {
 				const response = await Service.changeQuantity(e);
 
 				if (!response.success) {
+					e.target.value = response.maxQuantity;
 					alert(response.message);
 					return;
 				}

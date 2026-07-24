@@ -6,11 +6,11 @@ const Api = {
 	================================================= */
 
 	async getCustomers(params = {}) {
-		return await Http.get('/api/crm/customers', params);
+		return await Http.get('/api/customers', params);
 	},
 
 	async deleteCustomer(id) {
-		return await Http.post(`/api/crm/customers/delete/${id}`);
+		return await Http.post(`/api/customers/delete/${id}`);
 	},
 };
 
