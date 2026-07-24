@@ -66,6 +66,7 @@ BEGIN
         )
 
     ORDER BY
+        (oi.selling_price - pi.purchase_price) * oi.quantity DESC,
         o.created_at DESC,
         o.id DESC;
 
