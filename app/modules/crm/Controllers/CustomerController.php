@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Shop\Controllers;
+namespace App\CRM\Controllers;
+use App\Core\View;
 
 class CustomerController
 {

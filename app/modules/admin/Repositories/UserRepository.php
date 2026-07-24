@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Admin\Repositories;
+
+use App\Core\Database;
+use App\Core\Repository;
+
 class UserRepository extends Repository
 {
 	protected string $table = 'users';

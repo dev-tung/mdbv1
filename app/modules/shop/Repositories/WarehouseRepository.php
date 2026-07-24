@@ -1,4 +1,8 @@
 <?php
+namespace App\Shop\Repositories;
+
+use App\Core\Database;
+use App\Core\Repository;
 
 class WarehouseRepository extends Repository
 {

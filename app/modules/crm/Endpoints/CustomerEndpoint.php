@@ -1,5 +1,10 @@
 <?php
 
+namespace App\CRM\Endpoints;
+
+use App\CRM\Repositories\CustomerRepository;
+use App\Core\Response;
+
 class CustomerEndpoint
 {
 	private readonly CustomerRepository $customerRepository;

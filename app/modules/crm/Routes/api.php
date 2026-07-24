@@ -8,7 +8,7 @@ use App\Crm\Endpoints\CustomerEndpoint;
 // =========================
 
 Router::get(
-	'/api/customers',
+	'/api/crm/customers',
 	[CustomerEndpoint::class, 'apiList'],
 	[
 		'auth' => 'admin',
@@ -16,7 +16,7 @@ Router::get(
 );
 
 Router::post(
-	'/api/customers',
+	'/api/crm/customers',
 	[CustomerEndpoint::class, 'apiCreate'],
 	[
 		'auth' => 'admin',
@@ -24,7 +24,7 @@ Router::post(
 );
 
 Router::get(
-	'/api/customers/show/{id}',
+	'/api/crm/customers/show/{id}',
 	[CustomerEndpoint::class, 'apiShow'],
 	[
 		'auth' => 'admin',
@@ -32,7 +32,7 @@ Router::get(
 );
 
 Router::post(
-	'/api/customers/update/{id}',
+	'/api/crm/customers/update/{id}',
 	[CustomerEndpoint::class, 'apiUpdate'],
 	[
 		'auth' => 'admin',
@@ -40,7 +40,7 @@ Router::post(
 );
 
 Router::post(
-	'/api/customers/delete/{id}',
+	'/api/crm/customers/delete/{id}',
 	[CustomerEndpoint::class, 'apiDelete'],
 	[
 		'auth' => 'admin',
