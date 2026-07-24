@@ -115,7 +115,7 @@
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
                     <a
-                        class="nav-link dropdown-toggle <?= active_menu('/admin/shop') ?>"
+                        class="nav-link dropdown-toggle <?= active_menu('/admin/shop/revenue') ?> <?= active_menu('/admin/shop/inventory') ?> <?= active_menu('/admin/shop/buyer') ?>"
                         href="#"
                         data-bs-toggle="dropdown"
                     >
