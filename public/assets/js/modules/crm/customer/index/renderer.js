@@ -53,7 +53,7 @@ const Renderer = {
 			// EDIT
 			// =========================
 
-			row.querySelector('.edit-item').href = `/admin/customers/edit/${customer.id}`;
+			row.querySelector('.edit-item').href = `/admin/shop/customers/edit/${customer.id}`;
 
 			// =========================
 			// DELETE
