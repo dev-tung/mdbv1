@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Core;
 
 class View
@@ -30,16 +31,19 @@ class View
 
 		if (!file_exists($header)) {
 			self::fail("Header not found: {$header}");
+
 			return;
 		}
 
 		if (!file_exists($content)) {
 			self::fail("View not found: {$content}");
+
 			return;
 		}
 
 		if (!file_exists($footer)) {
 			self::fail("Footer not found: {$footer}");
+
 			return;
 		}
 

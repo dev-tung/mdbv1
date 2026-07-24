@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Shop\Repositories;
 
 use App\Core\Database;
@@ -9,11 +10,12 @@ class ProductRepository extends Repository
 	protected string $table = 'products';
 
 	private const UPLOAD_PATH = PATH_PUBLIC . '/uploads/products';
+
 	private const UPLOAD_URL = '/uploads/products';
 
 	/* =================================================
-       LIST
-    ================================================= */
+	   LIST
+	================================================= */
 
 	public function getList(array $filters = []): array
 	{
@@ -37,8 +39,8 @@ class ProductRepository extends Repository
 	}
 
 	/* =================================================
-       BUILD DATA
-    ================================================= */
+	   BUILD DATA
+	================================================= */
 
 	private function buildData(array $data): array
 	{
@@ -55,8 +57,8 @@ class ProductRepository extends Repository
 	}
 
 	/* =================================================
-       CREATE
-    ================================================= */
+	   CREATE
+	================================================= */
 
 	public function create(array $data, array $thumbnail = []): int
 	{
@@ -72,8 +74,8 @@ class ProductRepository extends Repository
 	}
 
 	/* =================================================
-       UPDATE
-    ================================================= */
+	   UPDATE
+	================================================= */
 
 	public function update(int $id, array $data, array $thumbnail = []): bool
 	{
@@ -103,8 +105,8 @@ class ProductRepository extends Repository
 	}
 
 	/* =================================================
-       DELETE
-    ================================================= */
+	   DELETE
+	================================================= */
 
 	public function delete(int $id): bool
 	{

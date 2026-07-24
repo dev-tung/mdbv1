@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Job\Controllers;
+
 use App\Core\Database;
 
 class YonexProductCrawler
@@ -170,6 +172,7 @@ class YonexProductCrawler
 			 */
 			if ($image) {
 				$ext = pathinfo(parse_url($image, PHP_URL_PATH), PATHINFO_EXTENSION);
+
 				if (!$ext) {
 					$ext = 'jpg';
 				}

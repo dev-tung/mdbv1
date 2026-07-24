@@ -1,7 +1,8 @@
 <?php
-namespace App\Job\Controllers;
-use App\Core\Database;
 
+namespace App\Job\Controllers;
+
+use App\Core\Database;
 
 class YonexProductImporter
 {
@@ -117,6 +118,7 @@ class YonexProductImporter
 				if (is_array($i)) {
 					$i = $i[0] ?? null;
 				}
+
 				if (!empty($i)) {
 					$img = $i;
 					break;
@@ -131,6 +133,7 @@ class YonexProductImporter
 		/* STEP 2: insert categories */
 		foreach ($categories as $item) {
 			$slug = $this->cleanSlug($item['slug'] ?? '');
+
 			if ($slug === '') {
 				continue;
 			}
@@ -173,6 +176,7 @@ class YonexProductImporter
 		$rows = Database::get('SELECT id, slug FROM categories');
 
 		$map = [];
+
 		foreach ($rows as $row) {
 			$map[trim($row['slug'])] = (int) $row['id'];
 		}
@@ -203,6 +207,7 @@ class YonexProductImporter
 		$slug = strtolower(trim($slug));
 		$slug = str_replace([' ', '_'], '-', $slug);
 		$slug = preg_replace('/[^a-z0-9\-]/', '', $slug);
+
 		return preg_replace('/-+/', '-', $slug);
 	}
 
@@ -343,6 +348,7 @@ class YonexProductImporter
 			}
 
 			$image = trim((string) $image);
+
 			if ($image === '') {
 				continue;
 			}

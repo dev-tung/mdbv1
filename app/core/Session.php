@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Core;
 
 class Session
@@ -28,6 +29,7 @@ class Session
 	public static function get($key, $default = null)
 	{
 		self::start();
+
 		return $_SESSION[$key] ?? $default;
 	}
 
@@ -37,6 +39,7 @@ class Session
 	public static function has($key)
 	{
 		self::start();
+
 		return isset($_SESSION[$key]);
 	}
 
@@ -69,6 +72,7 @@ class Session
 		if ($value === null) {
 			$value = $_SESSION['_flash'][$key] ?? null;
 			unset($_SESSION['_flash'][$key]);
+
 			return $value;
 		}
 

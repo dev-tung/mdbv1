@@ -2,8 +2,8 @@
 
 namespace App\Shop\Endpoints;
 
-use App\Shop\Repositories\BrandRepository;
 use App\Core\Response;
+use App\Shop\Repositories\BrandRepository;
 
 class BrandEndpoint
 {

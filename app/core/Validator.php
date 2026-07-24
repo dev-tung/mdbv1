@@ -1,4 +1,7 @@
 <?php
+
 namespace App\Core;
 
-class Validator {}
+class Validator
+{
+}

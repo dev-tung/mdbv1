@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Shop\Repositories;
 
 use App\Core\Database;
@@ -16,18 +17,7 @@ class OrderRepository extends Repository
 	{
 		return Database::call(
 			'CALL sp_order_list(?, ?, ?, ?, ?, ?, ?)',
-			array_params(
-				[
-					'date_from',
-					'date_to',
-					'customer',
-					'payment',
-					'status',
-					'page',
-					'per_page',
-				],
-				$filters,
-			),
+			array_params(['date_from', 'date_to', 'customer', 'payment', 'status', 'page', 'per_page'], $filters),
 		);
 	}
 
@@ -113,7 +103,7 @@ class OrderRepository extends Repository
 			],
 		);
 	}
-	
+
 	/* =================================================
 	   STATUS
 	================================================= */
@@ -133,11 +123,7 @@ class OrderRepository extends Repository
 				],
 			);
 		} catch (PDOException $e) {
-			throw new Exception(
-				$e->errorInfo[2] ?? $e->getMessage(),
-
-				(int) ($e->errorInfo[1] ?? 0),
-			);
+			throw new Exception($e->errorInfo[2] ?? $e->getMessage(), (int) ($e->errorInfo[1] ?? 0));
 		}
 
 		return (int) ($result['affected_rows'] ?? 0);
@@ -163,7 +149,6 @@ class OrderRepository extends Repository
 
 		return (int) ($result['affected_rows'] ?? 0);
 	}
-
 
 	/* =================================================
 	   DELETE

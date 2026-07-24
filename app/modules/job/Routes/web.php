@@ -1,12 +1,11 @@
 <?php
 
 use App\Core\Router;
-
+use App\Job\Controllers\ShopProcedureCreator;
 use App\Job\Controllers\YonexCategoryCrawler;
 use App\Job\Controllers\YonexProductCrawler;
 use App\Job\Controllers\YonexProductDetailCrawler;
 use App\Job\Controllers\YonexProductImporter;
-use App\Job\Controllers\ShopProcedureCreator;
 
 // =========================
 // SHOP PROCEDURE

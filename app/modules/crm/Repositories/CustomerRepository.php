@@ -1,4 +1,5 @@
 <?php
+
 namespace App\CRM\Repositories;
 
 use App\Core\Database;
@@ -9,8 +10,8 @@ class CustomerRepository extends Repository
 	protected string $table = 'customers';
 
 	/* =================================================
-       LIST
-    ================================================= */
+	   LIST
+	================================================= */
 
 	public function getList(array $filters = []): array
 	{
@@ -21,8 +22,8 @@ class CustomerRepository extends Repository
 	}
 
 	/* =================================================
-       BUILD DATA
-    ================================================= */
+	   BUILD DATA
+	================================================= */
 
 	private function buildData(array $data): array
 	{
@@ -42,8 +43,8 @@ class CustomerRepository extends Repository
 	}
 
 	/* =================================================
-       CREATE
-    ================================================= */
+	   CREATE
+	================================================= */
 
 	public function create(array $data): int
 	{
@@ -51,8 +52,8 @@ class CustomerRepository extends Repository
 	}
 
 	/* =================================================
-       UPDATE
-    ================================================= */
+	   UPDATE
+	================================================= */
 
 	public function update(int $id, array $data): bool
 	{
@@ -64,8 +65,8 @@ class CustomerRepository extends Repository
 	}
 
 	/* =================================================
-       DELETE
-    ================================================= */
+	   DELETE
+	================================================= */
 
 	public function delete(int $id): bool
 	{

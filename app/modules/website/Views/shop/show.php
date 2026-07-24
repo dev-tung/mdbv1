@@ -3,76 +3,81 @@
     <?php // normalize image url
 // normalize image url
 // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    // normalize image url
-    function img_url($img)
-    {
-    	if (!$img) {
-    		return 'https://placehold.co/600x600';
-    	}
-    	if (str_starts_with($img, 'http')) {
-    		return $img;
-    	}
-    	return '/' . ltrim($img, '/');
-    } ?>
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	// normalize image url
+	function img_url($img)
+	{
+		if (!$img) {
+			return 'https://placehold.co/600x600';
+		}
+
+		if (str_starts_with($img, 'http')) {
+			return $img;
+		}
+
+		return '/' . ltrim($img, '/');
+	} ?>
 
     <div class="row g-5">
 
@@ -137,9 +142,9 @@
                 <div class="fs-3 fw-bold text-success">
 
                     <?php
-                    $price = $product['price'] ?? 0;
-                    $sale = $product['sale_price'] ?? 0;
-                    ?>
+					$price = $product['price'] ?? 0;
+    $sale = $product['sale_price'] ?? 0;
+    ?>
 
                     <?php if ($price > 0): ?>
 

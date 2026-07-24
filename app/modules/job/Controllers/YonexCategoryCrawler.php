@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Job\Controllers;
+
 use App\Core\Database;
 
 class YonexCategoryCrawler

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Shop\Validators;
 
 class ProductValidator

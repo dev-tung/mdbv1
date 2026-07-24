@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Shop\Endpoints;
 
 use App\Core\Response;

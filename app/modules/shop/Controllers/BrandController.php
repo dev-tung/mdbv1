@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Shop\Controllers;
+
 use App\Core\View;
 
 class BrandController

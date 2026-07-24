@@ -1,11 +1,10 @@
 <?php
 
 use App\Core\Router;
-
-use App\Website\Controllers\HomeController;
-use App\Website\Controllers\ShopController;
 use App\Website\Controllers\CartController;
+use App\Website\Controllers\HomeController;
 use App\Website\Controllers\PageController;
+use App\Website\Controllers\ShopController;
 
 // =========================
 // HOME

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Shop\Repositories;
 
 use App\Core\Database;

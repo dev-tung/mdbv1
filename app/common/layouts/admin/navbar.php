@@ -11,7 +11,7 @@
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <?= active_menu('/admin/products') ?:
-                    	active_menu('/admin/products/create') ?>"
+						active_menu('/admin/products/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -31,7 +31,7 @@
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <?= active_menu('/admin/suppliers') ?:
-                    	active_menu('/admin/suppliers/create') ?>"
+                        active_menu('/admin/suppliers/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -53,7 +53,7 @@
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <?= active_menu('/admin/purchases') ?:
-                    	active_menu('/admin/purchases/create') ?>"
+                        active_menu('/admin/purchases/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -75,7 +75,7 @@
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <?= active_menu('/admin/crm/customers') ?:
-                    	active_menu('/admin/crm/customers/create') ?>"
+                        active_menu('/admin/crm/customers/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -97,7 +97,7 @@
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle <?= active_menu('/admin/orders') ?:
-                    	active_menu('/admin/orders/create') ?>"
+                        active_menu('/admin/orders/create') ?>"
                         href="#"
                         data-bs-toggle="dropdown">
 
@@ -115,7 +115,9 @@
                 <!-- ========================= -->
                 <li class="nav-item dropdown">
                     <a
-                        class="nav-link dropdown-toggle <?= active_menu('/admin/revenue') ?> <?= active_menu('/admin/inventory') ?> <?= active_menu('/admin/buyer') ?>"
+                        class="nav-link dropdown-toggle <?= active_menu('/admin/revenue') ?> <?= active_menu(
+                        	'/admin/inventory',
+                        ) ?> <?= active_menu('/admin/buyer') ?>"
                         href="#"
                         data-bs-toggle="dropdown"
                     >

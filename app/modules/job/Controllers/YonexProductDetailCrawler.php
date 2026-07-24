@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Job\Controllers;
+
 use App\Core\Database;
 
 class YonexProductDetailCrawler
@@ -161,11 +163,13 @@ class YonexProductDetailCrawler
 		];
 
 		$h1 = $xpath->query('//h1')->item(0);
+
 		if ($h1) {
 			$data['title'] = trim($h1->textContent);
 		}
 
 		$desc = $xpath->query('//div[contains(@class,"description")]')->item(0);
+
 		if ($desc) {
 			$data['description'] = trim($desc->textContent);
 		}
@@ -198,6 +202,7 @@ class YonexProductDetailCrawler
 					if (!empty($item['img'])) {
 						$images[] = $this->normalizeImage($item['img']);
 					}
+
 					if (!empty($item['full'])) {
 						$images[] = $this->normalizeImage($item['full']);
 					}
@@ -214,13 +219,16 @@ class YonexProductDetailCrawler
 
 			foreach ($frames as $frame) {
 				$href = $frame->getAttribute('href');
+
 				if ($href) {
 					$images[] = $this->normalizeImage($href);
 				}
 
 				$img = $xpath2->query('.//img', $frame)->item(0);
+
 				if ($img) {
 					$src = $img->getAttribute('src');
+
 					if ($src) {
 						$images[] = $this->normalizeImage($src);
 					}
@@ -263,6 +271,7 @@ class YonexProductDetailCrawler
 			}
 
 			$ext = pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION);
+
 			if (!$ext) {
 				$ext = 'jpg';
 			}
@@ -337,6 +346,7 @@ class YonexProductDetailCrawler
 	{
 		$url = trim($url);
 		$url = strtok($url, '?');
+
 		return str_replace('http://', 'https://', $url);
 	}
 }

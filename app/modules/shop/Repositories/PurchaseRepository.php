@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Shop\Repositories;
 
 use App\Core\Database;
@@ -9,8 +10,8 @@ class PurchaseRepository extends Repository
 	protected string $table = 'purchases';
 
 	/* =================================================
-       LIST
-    ================================================= */
+	   LIST
+	================================================= */
 
 	public function getList(array $filters = []): array
 	{
@@ -21,8 +22,8 @@ class PurchaseRepository extends Repository
 	}
 
 	/* =================================================
-       SHOW
-    ================================================= */
+	   SHOW
+	================================================= */
 
 	public function show(int $id): array
 	{
@@ -32,8 +33,8 @@ class PurchaseRepository extends Repository
 	}
 
 	/* =================================================
-       CREATE
-    ================================================= */
+	   CREATE
+	================================================= */
 
 	public function create(array $data): int
 	{
@@ -69,8 +70,8 @@ class PurchaseRepository extends Repository
 	}
 
 	/* =================================================
-       UPDATE
-    ================================================= */
+	   UPDATE
+	================================================= */
 
 	public function update(array $data): void
 	{
@@ -104,8 +105,8 @@ class PurchaseRepository extends Repository
 	}
 
 	/* =================================================
-       STATUS
-    ================================================= */
+	   STATUS
+	================================================= */
 
 	public function status(int $id, string $status): int
 	{
@@ -128,8 +129,8 @@ class PurchaseRepository extends Repository
 	}
 
 	/* =================================================
-       PAYMENT
-    ================================================= */
+	   PAYMENT
+	================================================= */
 
 	public function payment(int $id, string $payment): int
 	{
@@ -147,10 +148,9 @@ class PurchaseRepository extends Repository
 		return (int) ($result['affected_rows'] ?? 0);
 	}
 
-
 	/* =================================================
-    DELETE
-    ================================================= */
+	DELETE
+	================================================= */
 
 	public function delete(int $id): void
 	{

@@ -9,9 +9,6 @@
 
 <body>
 
-<?php 
-    if ($menu) {
-        require PATH_ROOT . '/app/common/layouts/admin/navbar.php';
-    }
-?>
-    
+<?php if ($menu) {
+	require PATH_ROOT . '/app/common/layouts/admin/navbar.php';
+} ?>

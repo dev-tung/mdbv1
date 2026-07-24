@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Shop\Repositories;
 
 use App\Core\Database;
@@ -9,8 +10,8 @@ class SupplierRepository extends Repository
 	protected string $table = 'suppliers';
 
 	/* =================================================
-       LIST
-    ================================================= */
+	   LIST
+	================================================= */
 
 	public function getList(array $filters = []): array
 	{
@@ -21,8 +22,8 @@ class SupplierRepository extends Repository
 	}
 
 	/* =================================================
-       BUILD DATA
-    ================================================= */
+	   BUILD DATA
+	================================================= */
 
 	private function buildData(array $data): array
 	{
@@ -40,8 +41,8 @@ class SupplierRepository extends Repository
 	}
 
 	/* =================================================
-       CREATE
-    ================================================= */
+	   CREATE
+	================================================= */
 
 	public function create(array $data): int
 	{
@@ -49,8 +50,8 @@ class SupplierRepository extends Repository
 	}
 
 	/* =================================================
-       UPDATE
-    ================================================= */
+	   UPDATE
+	================================================= */
 
 	public function update(int $id, array $data): bool
 	{
@@ -62,8 +63,8 @@ class SupplierRepository extends Repository
 	}
 
 	/* =================================================
-       DELETE
-    ================================================= */
+	   DELETE
+	================================================= */
 
 	public function delete(int $id): bool
 	{

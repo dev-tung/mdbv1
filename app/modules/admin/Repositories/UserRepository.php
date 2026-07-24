@@ -10,8 +10,8 @@ class UserRepository extends Repository
 	protected string $table = 'users';
 
 	/* =================================================
-       FIND
-    ================================================= */
+	   FIND
+	================================================= */
 
 	public function findById(int $id): ?array
 	{

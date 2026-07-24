@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Core;
 
+use Exception;
 use PDO;
 use PDOException;
 use PDOStatement;
 use Throwable;
-use Exception;
 
 class Database
 {

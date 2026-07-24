@@ -2,8 +2,8 @@
 
 namespace App\CRM\Endpoints;
 
-use App\CRM\Repositories\CustomerRepository;
 use App\Core\Response;
+use App\CRM\Repositories\CustomerRepository;
 
 class CustomerEndpoint
 {

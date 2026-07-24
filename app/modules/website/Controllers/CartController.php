@@ -4,7 +4,6 @@ namespace App\Website\Controllers;
 
 use App\Core\View;
 
-
 class CartController
 {
 	/**
@@ -31,9 +30,15 @@ class CartController
 		View::render('cart/success');
 	}
 
-	public function add(): void {}
+	public function add(): void
+	{
+	}
 
-	public function update(): void {}
+	public function update(): void
+	{
+	}
 
-	public function remove(): void {}
+	public function remove(): void
+	{
+	}
 }

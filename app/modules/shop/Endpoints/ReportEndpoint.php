@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Shop\Endpoints;
+
 use App\Core\Response;
 use App\Shop\Repositories\ReportRepository;
 

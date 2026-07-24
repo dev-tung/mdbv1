@@ -21,11 +21,19 @@ class PageController
 		View::render('pages/career');
 	}
 
-	public function contact(): void {}
+	public function contact(): void
+	{
+	}
 
-	public function warrantyPolicy(): void {}
+	public function warrantyPolicy(): void
+	{
+	}
 
-	public function shippingPolicy(): void {}
+	public function shippingPolicy(): void
+	{
+	}
 
-	public function returnPolicy(): void {}
+	public function returnPolicy(): void
+	{
+	}
 }

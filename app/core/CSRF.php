@@ -1,4 +1,7 @@
 <?php
+
 namespace App\Core;
 
-class CSRF {}
+class CSRF
+{
+}
