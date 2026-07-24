@@ -67,20 +67,37 @@ Router::post('/api/shop/warehouses/delete/{id}', [WarehouseEndpoint::class, 'api
 // =========================
 
 Router::get('/api/shop/purchases', [PurchaseEndpoint::class, 'apiList'], ['auth' => 'admin']);
+
 Router::post('/api/shop/purchases', [PurchaseEndpoint::class, 'apiCreate'], ['auth' => 'admin']);
+
 Router::get('/api/shop/purchases/show/{id}', [PurchaseEndpoint::class, 'apiShow'], ['auth' => 'admin']);
+
 Router::post('/api/shop/purchases/update/{id}', [PurchaseEndpoint::class, 'apiUpdate'], ['auth' => 'admin']);
+
 Router::post('/api/shop/purchases/delete/{id}', [PurchaseEndpoint::class, 'apiDelete'], ['auth' => 'admin']);
+
+Router::post('/api/shop/purchases/status', [PurchaseEndpoint::class, 'apiStatus'], ['auth' => 'admin']);
+
+Router::post('/api/shop/purchases/payment', [PurchaseEndpoint::class, 'apiPayment'], ['auth' => 'admin']);
+
 
 // =========================
 // ORDER
 // =========================
 
 Router::get('/api/shop/orders', [OrderEndpoint::class, 'apiList'], ['auth' => 'admin']);
+
 Router::post('/api/shop/orders', [OrderEndpoint::class, 'apiCreate'], ['auth' => 'admin']);
+
 Router::get('/api/shop/orders/show/{id}', [OrderEndpoint::class, 'apiShow'], ['auth' => 'admin']);
+
 Router::post('/api/shop/orders/update/{id}', [OrderEndpoint::class, 'apiUpdate'], ['auth' => 'admin']);
+
 Router::post('/api/shop/orders/delete/{id}', [OrderEndpoint::class, 'apiDelete'], ['auth' => 'admin']);
+
+Router::post('/api/shop/orders/status', [OrderEndpoint::class, 'apiStatus'], ['auth' => 'admin']);
+
+Router::post('/api/shop/orders/payment', [OrderEndpoint::class, 'apiPayment'], ['auth' => 'admin']);
 
 // =========================
 // REPORT
