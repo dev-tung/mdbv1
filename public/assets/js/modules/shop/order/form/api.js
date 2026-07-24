@@ -28,6 +28,7 @@ const Api = {
 	async searchProduct(keyword = '') {
 		return await Http.get('/api/report/inventory', {
 			keyword,
+			stock: 1,
 		});
 	},
 

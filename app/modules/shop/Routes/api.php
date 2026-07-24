@@ -90,6 +90,6 @@ Router::post('/api/orders/payment', [OrderEndpoint::class, 'apiPayment'], ['auth
 // REPORT
 // =========================
 
-Router::get('/api/inventory', [ReportEndpoint::class, 'apiInventory'], ['auth' => 'admin']);
-Router::get('/api/revenue', [ReportEndpoint::class, 'apiRevenue'], ['auth' => 'admin']);
-Router::get('/api/buyer', [ReportEndpoint::class, 'apiBuyer'], ['auth' => 'admin']);
+Router::get('/api/report/inventory', [ReportEndpoint::class, 'apiInventory'], ['auth' => 'admin']);
+Router::get('/api/report/revenue', [ReportEndpoint::class, 'apiRevenue'], ['auth' => 'admin']);
+Router::get('/api/report/buyer', [ReportEndpoint::class, 'apiBuyer'], ['auth' => 'admin']);

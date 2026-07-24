@@ -66,15 +66,12 @@ const Controller = {
 			element: '#product_search',
 			display(product) {
 				return `
-					${product.product_name}
-					<small class="text-muted border ms-1 p-1">
-					 VAT ${product.vat_rate}%
-					</small>
+					${product.name} - VAT ${product.vat_rate}% - Tồn ${product.stock}
 				`;
 			},
 			async source(keyword) {
 				const products = await Api.searchProduct(keyword);
-				return products.data;
+				return products.data[0];
 			},
 
 			select(product) {

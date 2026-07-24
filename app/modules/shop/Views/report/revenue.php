@@ -65,9 +65,14 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  let allExports = [];
-  let totalSummary = {total_quantity:0, total_revenue:0, total_profit:0};
+document.addEventListener("DOMContentLoaded", function () {
+  let allRevenues = [];
+  let totalSummary = {
+    total_quantity: 0,
+    total_revenue: 0,
+    total_profit: 0,
+  };
+
   let currentPage = 1;
   const itemsPerPage = 100;
 
@@ -76,79 +81,109 @@ document.addEventListener("DOMContentLoaded", function() {
   const inputYear = document.getElementById("input-year");
   const inputMonth = document.getElementById("input-month");
   const btnFilter = document.getElementById("btn-filter");
+  const filterInput = document.getElementById("filter-name");
 
   /* ===============================
    * FORMAT TIỀN
    * =============================== */
   function formatVND(value) {
-    if (value === null || value === undefined) return "0₫";
-    return Number(value).toLocaleString("vi-VN", {
+    return Number(value || 0).toLocaleString("vi-VN", {
       style: "currency",
-      currency: "VND"
+      currency: "VND",
     });
   }
 
   /* ===============================
    * INPUT MODE
    * =============================== */
-  modeSelect.addEventListener("change", function() {
+  modeSelect.addEventListener("change", function () {
     const mode = this.value;
-    inputDate.style.display  = mode === "day"   ? "inline-block" : "none";
-    inputYear.style.display  = mode === "year"  ? "inline-block" : "none";
+
+    inputDate.style.display = mode === "day" ? "inline-block" : "none";
+    inputYear.style.display =
+      mode === "year" || mode === "month" ? "inline-block" : "none";
     inputMonth.style.display = mode === "month" ? "inline-block" : "none";
-    if (mode === "month") inputYear.style.display = "inline-block";
   });
 
   /* ===============================
    * LOAD API
    * =============================== */
-  async function loadExports(params = {}) {
+  async function loadRevenues(params = {}) {
     try {
       const query = new URLSearchParams(params).toString();
-      const res   = await fetch("/api/report/export?" + query);
-      const json  = await res.json();
 
-      if (json.success && json.data) {
-        allExports = json.data.details || [];
-        totalSummary = json.data.summary || calculateSummary(allExports);
+      const res = await fetch("/api/report/revenue?" + query);
+      const json = await res.json();
+
+      if (json.success) {
+        // Kết quả từ Stored Procedure
+        allRevenues = json.data?.[0] || [];
+
+        totalSummary = json.data?.[1]?.[0] || {
+          total_quantity: 0,
+          total_revenue: 0,
+          total_profit: 0,
+        };
       } else {
-        allExports = [];
-        totalSummary = {total_quantity:0, total_revenue:0, total_profit:0};
+        allRevenues = [];
+        totalSummary = {
+          total_quantity: 0,
+          total_revenue: 0,
+          total_profit: 0,
+        };
       }
 
       currentPage = 1;
-      renderTable(filteredExports());
+      renderTable(filteredRevenues());
     } catch (err) {
       console.error(err);
-      allExports = [];
+
+      allRevenues = [];
+      totalSummary = {
+        total_quantity: 0,
+        total_revenue: 0,
+        total_profit: 0,
+      };
+
       renderTable([]);
     }
   }
 
   /* ===============================
-   * TÍNH TỔNG
+   * TÍNH TỔNG (KHI FILTER TÊN)
    * =============================== */
   function calculateSummary(data) {
-    return data.reduce((acc, item) => {
-      acc.total_quantity += Number(item.quantity) || 0;
-      acc.total_revenue  += Number(item.revenue)  || 0;
-      acc.total_profit   += Number(item.profit)   || 0;
-      return acc;
-    }, {total_quantity:0, total_revenue:0, total_profit:0});
+    return data.reduce(
+      (acc, item) => {
+        acc.total_quantity += Number(item.quantity) || 0;
+        acc.total_revenue += Number(item.revenue) || 0;
+        acc.total_profit += Number(item.profit) || 0;
+        return acc;
+      },
+      {
+        total_quantity: 0,
+        total_revenue: 0,
+        total_profit: 0,
+      }
+    );
   }
 
   /* ===============================
-   * FILTER THEO TÊN SP
+   * FILTER TÊN
    * =============================== */
-  const filterInput = document.getElementById("filter-name");
-  filterInput.addEventListener("input", function() {
+  filterInput.addEventListener("input", function () {
     currentPage = 1;
-    renderTable(filteredExports());
+    renderTable(filteredRevenues());
   });
 
-  function filteredExports() {
-    const keyword = (filterInput.value || "").toLowerCase();
-    return allExports.filter(item =>
+  function filteredRevenues() {
+    const keyword = filterInput.value.trim().toLowerCase();
+
+    if (!keyword) {
+      return allRevenues;
+    }
+
+    return allRevenues.filter((item) =>
       (item.product_name || "").toLowerCase().includes(keyword)
     );
   }
@@ -158,101 +193,140 @@ document.addEventListener("DOMContentLoaded", function() {
    * =============================== */
   function renderTable(items) {
     const tbody = document.getElementById("report-table-body");
+
     tbody.innerHTML = "";
 
     if (!items.length) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="10" class="text-center text-muted">Không có dữ liệu</td>
-        </tr>`;
+          <td colspan="10" class="text-center text-muted">
+            Không có dữ liệu
+          </td>
+        </tr>
+      `;
+
       renderPagination(0);
-      renderSummary([]);
+      renderSummary(null);
+
       return;
     }
 
     const start = (currentPage - 1) * itemsPerPage;
+
     const pageItems = items.slice(start, start + itemsPerPage);
 
     pageItems.forEach((item, index) => {
       const tr = document.createElement("tr");
+
       tr.innerHTML = `
         <th>${start + index + 1}</th>
-        <td>${item.export_id}</td>
+        <td>${item.revenue_id}</td>
         <td>${item.created_at}</td>
         <td>${item.product_id}</td>
         <td>${item.product_name}</td>
         <td>${item.quantity}</td>
-        <td>${formatVND(item.sell_price)}</td>
-        <td>${formatVND(item.import_price)}</td>
+        <td>${formatVND(item.selling_price)}</td>
+        <td>${formatVND(item.purchase_price)}</td>
         <td>${formatVND(item.revenue)}</td>
         <td>${formatVND(item.profit)}</td>
       `;
+
       tbody.appendChild(tr);
     });
 
     renderPagination(items.length);
-    renderSummary(items);
+
+    if (filterInput.value.trim()) {
+      renderSummary(items);
+    } else {
+      renderSummary(null);
+    }
   }
 
   /* ===============================
    * SUMMARY
    * =============================== */
   function renderSummary(items = null) {
-    const summary = items ? calculateSummary(items) : totalSummary;
-    document.getElementById("total-quantity").textContent = summary.total_quantity;
-    document.getElementById("total-revenue").textContent  = formatVND(summary.total_revenue);
-    document.getElementById("total-profit").textContent   = formatVND(summary.total_profit);
+    const summary =
+      items === null
+        ? totalSummary
+        : calculateSummary(items);
+
+    document.getElementById("total-quantity").textContent =
+      summary.total_quantity || 0;
+
+    document.getElementById("total-revenue").textContent =
+      formatVND(summary.total_revenue);
+
+    document.getElementById("total-profit").textContent =
+      formatVND(summary.total_profit);
   }
 
   /* ===============================
-   * PAGINATION (GIỮ NGUYÊN)
+   * PAGINATION
    * =============================== */
   function renderPagination(totalItems) {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
+
     const pagination = document.getElementById("pagination");
+
     pagination.innerHTML = "";
 
     for (let i = 1; i <= totalPages; i++) {
       const li = document.createElement("li");
+
       li.className = `page-item ${i === currentPage ? "active" : ""}`;
+
       li.innerHTML = `
-        <a class="page-link text-secondary ${i === currentPage ? "bg-light border-secondary" : ""}" href="#">
+        <a class="page-link text-secondary ${
+          i === currentPage ? "bg-light border-secondary" : ""
+        }" href="#">
           ${i}
-        </a>`;
-      li.addEventListener("click", function(e) {
+        </a>
+      `;
+
+      li.addEventListener("click", function (e) {
         e.preventDefault();
+
         currentPage = i;
-        renderTable(filteredExports());
+
+        renderTable(filteredRevenues());
       });
+
       pagination.appendChild(li);
     }
   }
 
   /* ===============================
-   * FILTER BUTTON
+   * FILTER
    * =============================== */
-  btnFilter.addEventListener("click", function() {
+  btnFilter.addEventListener("click", function () {
     const mode = modeSelect.value;
-    let params = { mode };
+
+    const params = {
+      mode,
+    };
 
     if (mode === "day") {
       params.date = inputDate.value;
     } else if (mode === "month") {
-      params.year  = inputYear.value  || new Date().getFullYear();
-      params.month = inputMonth.value || 1;
-    } else if (mode === "year") {
+      params.month = inputMonth.value || new Date().getMonth() + 1;
+      params.year = inputYear.value || new Date().getFullYear();
+    } else {
       params.year = inputYear.value || new Date().getFullYear();
     }
 
-    loadExports(params);
+    loadRevenues(params);
   });
 
   /* ===============================
    * INIT
    * =============================== */
-  loadExports({
+  inputDate.value = new Date().toISOString().split("T")[0];
+
+  loadRevenues({
     mode: "day",
-    date: new Date().toISOString().split("T")[0]
+    date: inputDate.value,
   });
 });
 </script>

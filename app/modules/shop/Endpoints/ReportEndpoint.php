@@ -16,7 +16,7 @@ class ReportEndpoint
 
 	public function apiInventory()
 	{
-		$filters = request_filters(['keyword', 'product_id', 'purchase_id']);
+		$filters = request_all();
 
 		return Response::json([
 			'success' => true,
@@ -26,17 +26,17 @@ class ReportEndpoint
 
 	public function apiRevenue()
 	{
-		$filters = request_filters(['keyword']);
+			$filters = request_all();
 
-		return Response::json([
-			'success' => true,
-			'data' => $this->reportRepository->getRevenue($filters),
-		]);
+			return Response::json([
+					'success' => true,
+					'data' => $this->reportRepository->getRevenue($filters),
+			]);
 	}
 
 	public function apiCustomer()
 	{
-		$filters = request_filters(['keyword']);
+		$filters = request_all();
 
 		return Response::json([
 			'success' => true,
