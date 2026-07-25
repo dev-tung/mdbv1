@@ -41,9 +41,7 @@ BEGIN
         AND pi.product_id = oi.product_id
 
     WHERE
-        o.status = 'completed'
-
-        AND (
+        (
             (
                 p_mode = 'day'
                 AND DATE(o.created_at) = p_date
@@ -102,9 +100,7 @@ BEGIN
         AND pi.product_id = oi.product_id
 
     WHERE
-        o.status = 'completed'
-
-        AND (
+        (
             (
                 p_mode = 'day'
                 AND DATE(o.created_at) = p_date
