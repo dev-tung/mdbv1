@@ -26,16 +26,17 @@ BEGIN
         pi.purchase_price,
         oi.selling_price,
 
-        pi.subtotal_amount AS purchase_subtotal,
-        pi.vat_amount AS purchase_vat,
-        pi.total_amount AS purchase_total,
+        (pi.purchase_price * oi.quantity) AS cost,
 
         oi.subtotal_amount AS revenue_subtotal,
         oi.vat_rate,
         oi.vat_amount AS revenue_vat,
         oi.total_amount AS revenue,
 
-        (oi.total_amount - pi.total_amount) AS profit
+        (
+            oi.total_amount
+            - (pi.purchase_price * oi.quantity)
+        ) AS profit
 
     FROM orders o
 
@@ -82,7 +83,10 @@ BEGIN
     SELECT
         COUNT(DISTINCT o.id) AS total_orders,
 
-        COALESCE(SUM(oi.quantity), 0) AS total_quantity,
+        COALESCE(
+            SUM(oi.quantity),
+            0
+        ) AS total_quantity,
 
         COALESCE(
             SUM(oi.subtotal_amount),
@@ -100,22 +104,15 @@ BEGIN
         ) AS total_revenue,
 
         COALESCE(
-            SUM(pi.subtotal_amount),
-            0
-        ) AS total_cost_subtotal,
-
-        COALESCE(
-            SUM(pi.vat_amount),
-            0
-        ) AS total_cost_vat,
-
-        COALESCE(
-            SUM(pi.total_amount),
+            SUM(pi.purchase_price * oi.quantity),
             0
         ) AS total_cost,
 
         COALESCE(
-            SUM(oi.total_amount - pi.total_amount),
+            SUM(
+                oi.total_amount
+                - (pi.purchase_price * oi.quantity)
+            ),
             0
         ) AS total_profit
 
