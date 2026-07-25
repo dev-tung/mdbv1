@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="<?= asset('css/bootstrap.css') ?>">
 </head>
 
-<body>
+<body style="background: #f2f4f7;">
 
 <header class="border-bottom bg-white">
 
