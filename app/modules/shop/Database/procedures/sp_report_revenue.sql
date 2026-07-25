@@ -23,19 +23,25 @@ BEGIN
 
         oi.quantity,
 
-        pi.purchase_price,
+        /* Giá nhập đã gồm VAT */
+        (pi.total_amount / pi.quantity) AS purchase_price,
+
+        /* Giá bán */
         oi.selling_price,
 
-        (pi.purchase_price * oi.quantity) AS cost,
+        /* Giá vốn đã gồm VAT */
+        ((pi.total_amount / pi.quantity) * oi.quantity) AS cost,
 
+        /* Doanh thu */
         oi.subtotal_amount AS revenue_subtotal,
         oi.vat_rate,
         oi.vat_amount AS revenue_vat,
         oi.total_amount AS revenue,
 
+        /* Lợi nhuận */
         (
             oi.total_amount
-            - (pi.purchase_price * oi.quantity)
+            - ((pi.total_amount / pi.quantity) * oi.quantity)
         ) AS profit
 
     FROM orders o
@@ -104,14 +110,14 @@ BEGIN
         ) AS total_revenue,
 
         COALESCE(
-            SUM(pi.purchase_price * oi.quantity),
+            SUM((pi.total_amount / pi.quantity) * oi.quantity),
             0
         ) AS total_cost,
 
         COALESCE(
             SUM(
                 oi.total_amount
-                - (pi.purchase_price * oi.quantity)
+                - ((pi.total_amount / pi.quantity) * oi.quantity)
             ),
             0
         ) AS total_profit
