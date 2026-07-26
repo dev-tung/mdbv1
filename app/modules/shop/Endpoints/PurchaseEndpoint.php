@@ -45,7 +45,6 @@ class PurchaseEndpoint
 		if (!$data) {
 			return Response::json([
 				'success' => false,
-
 				'message' => 'Không tìm thấy phiếu nhập',
 				'data' => null,
 			]);

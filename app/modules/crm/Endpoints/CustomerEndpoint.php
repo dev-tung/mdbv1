@@ -4,6 +4,7 @@ namespace App\CRM\Endpoints;
 
 use App\Core\Response;
 use App\CRM\Repositories\CustomerRepository;
+use App\CRM\Validators\CustomerValidator;
 
 class CustomerEndpoint
 {

@@ -1,4 +1,5 @@
 <?php
+namespace App\CRM\Validators;
 
 class CustomerValidator
 {
