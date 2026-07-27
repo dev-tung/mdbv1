@@ -30,10 +30,10 @@ const Renderer = {
 	},
 
 	/* =================================================
-	   PRODUCTS
+		PRODUCTS
 	================================================= */
 
-	renderProducts() {
+	async renderProducts() {
 		const uploadPath = '/uploads/products/';
 		const noImage = '/assets/image/no-image.svg';
 
@@ -63,9 +63,37 @@ const Renderer = {
 			return;
 		}
 
+		const imageExists = (src) => {
+			return new Promise((resolve) => {
+				const img = new Image();
+
+				img.onload = () => resolve(true);
+
+				img.onerror = () => resolve(false);
+
+				img.src = src;
+			});
+		};
+
 		const fragment = document.createDocumentFragment();
 
-		State.products.forEach((product) => {
+		for (const product of State.products) {
+			let imageSrc = '';
+
+			if (product.thumbnail) {
+				imageSrc = product.thumbnail.startsWith('uploads/')
+					? `/${product.thumbnail}`
+					: `${uploadPath}${product.thumbnail}`;
+
+				const exists = await imageExists(imageSrc);
+
+				if (!exists) {
+					continue; // Bỏ qua sản phẩm nếu file ảnh không tồn tại
+				}
+			} else {
+				continue; // Không có ảnh thì bỏ qua
+			}
+
 			const template = Dom.template('#product-card-template');
 
 			const card = template.querySelector('.product-card');
@@ -77,11 +105,7 @@ const Renderer = {
 			const image = card.querySelector('.product-image');
 
 			if (image) {
-				image.src = product.thumbnail
-					? product.thumbnail.startsWith('uploads/')
-						? `/${product.thumbnail}`
-						: `${uploadPath}${product.thumbnail}`
-					: noImage;
+				image.src = imageSrc;
 
 				image.alt = product.name;
 			}
@@ -92,7 +116,6 @@ const Renderer = {
 
 			const texts = {
 				'.product-brand': product.brand_name || '',
-
 				'.product-name': product.name,
 			};
 
@@ -135,7 +158,25 @@ const Renderer = {
 			}
 
 			fragment.appendChild(template);
-		});
+		}
+
+		if (!fragment.childNodes.length) {
+			const col = document.createElement('div');
+
+			col.className = 'col-12';
+
+			const alert = document.createElement('div');
+
+			alert.className = 'alert alert-light border text-center mb-0';
+
+			alert.textContent = 'Không có sản phẩm.';
+
+			col.appendChild(alert);
+
+			container.appendChild(col);
+
+			return;
+		}
 
 		container.appendChild(fragment);
 	},
