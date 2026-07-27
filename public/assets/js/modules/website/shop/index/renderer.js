@@ -66,14 +66,6 @@ const Renderer = {
 		const fragment = document.createDocumentFragment();
 
 		State.products.forEach((product) => {
-			if (!product.thumbnail) {
-				return;
-			}
-
-			const imageSrc = product.thumbnail.startsWith('uploads/')
-				? `/${product.thumbnail}`
-				: `${uploadPath}${product.thumbnail}`;
-
 			const template = Dom.template('#product-card-template');
 
 			const card = template.querySelector('.product-card');
@@ -85,18 +77,18 @@ const Renderer = {
 			const image = card.querySelector('.product-image');
 
 			if (image) {
-				image.src = imageSrc;
+				image.src = product.thumbnail
+					? (
+						product.thumbnail.startsWith('uploads/')
+							? `/${product.thumbnail}`
+							: `${uploadPath}${product.thumbnail}`
+					)
+					: noImage;
 
 				image.alt = product.name;
 
 				image.onerror = () => {
-					const col = card.closest('.col');
-
-					if (col) {
-						col.remove();
-					} else {
-						card.remove();
-					}
+					image.src = noImage;
 				};
 			}
 
@@ -144,24 +136,6 @@ const Renderer = {
 
 			fragment.appendChild(template);
 		});
-
-		if (!fragment.childNodes.length) {
-			const col = document.createElement('div');
-
-			col.className = 'col-12';
-
-			const alert = document.createElement('div');
-
-			alert.className = 'alert alert-light border text-center mb-0';
-
-			alert.textContent = 'Không có sản phẩm.';
-
-			col.appendChild(alert);
-
-			container.appendChild(col);
-
-			return;
-		}
 
 		container.appendChild(fragment);
 	},
