@@ -74,6 +74,17 @@ class CustomerRepository extends Repository
 			return false;
 		}
 
+		$order = Database::first(
+			'SELECT COUNT(*) AS total
+			FROM orders
+			WHERE customer_id = ?',
+			[$id]
+		);
+
+		if (($order['total'] ?? 0) > 0) {
+			throw new \Exception('Khách hàng đã phát sinh đơn hàng, không thể xóa.');
+		}
+
 		return parent::deleteById($id) > 0;
 	}
 }
