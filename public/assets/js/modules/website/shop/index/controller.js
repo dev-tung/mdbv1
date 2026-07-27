@@ -29,6 +29,8 @@ const Controller = {
 			const data = await Service.getList({
 				...State.filters,
 
+				website: 1,
+
 				page,
 
 				per_page: State.pagination.per_page,

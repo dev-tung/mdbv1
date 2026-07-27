@@ -9,6 +9,7 @@ CREATE PROCEDURE sp_product_list (
 	IN p_date_to DATE,
 	IN p_price_min DECIMAL(15,2),
 	IN p_price_max DECIMAL(15,2),
+	IN p_website TINYINT,
 	IN p_page INT,
 	IN p_per_page INT
 )
@@ -22,6 +23,8 @@ BEGIN
 	SET p_page = COALESCE(p_page, 1);
 
 	SET p_per_page = COALESCE(p_per_page, 999999);
+
+	SET p_website = COALESCE(p_website, 0);
 
 	SET v_offset = (p_page - 1) * p_per_page;
 
@@ -79,8 +82,13 @@ BEGIN
 			p_price_max IS NULL
 			OR p.price <= p_price_max
 		)
-		AND p.thumbnail IS NOT NULL
-		AND TRIM(p.thumbnail) <> ''
+		AND (
+			p_website = 0
+			OR (
+				p.thumbnail IS NOT NULL
+				AND TRIM(p.thumbnail) <> ''
+			)
+		)
 	ORDER BY p.id DESC
 	LIMIT p_per_page
 	OFFSET v_offset;
@@ -129,7 +137,12 @@ BEGIN
 			p_price_max IS NULL
 			OR p.price <= p_price_max
 		)
-		AND p.thumbnail IS NOT NULL
-		AND TRIM(p.thumbnail) <> '';
+		AND (
+			p_website = 0
+			OR (
+				p.thumbnail IS NOT NULL
+				AND TRIM(p.thumbnail) <> ''
+			)
+		);
 
 END;
