@@ -16,7 +16,7 @@ const Controller = {
 			colspan: 8,
 
 			filters: {
-				'#filter-name': {
+				'#filter-keyword': {
 					event: 'input',
 
 					handler(value) {
