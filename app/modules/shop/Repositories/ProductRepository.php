@@ -14,17 +14,18 @@ class ProductRepository extends Repository
 	private const UPLOAD_URL = '/uploads/products';
 
 	/* =================================================
-	   LIST
+		LIST
 	================================================= */
 
 	public function getList(array $filters = []): array
 	{
 		return Database::call(
-			'CALL sp_product_list(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+			'CALL sp_product_list(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			array_params(
 				[
 					'keyword',
 					'category_id',
+					'brand_id',
 					'status',
 					'date_from',
 					'date_to',
