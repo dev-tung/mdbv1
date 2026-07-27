@@ -2,17 +2,18 @@ import Api from './api.js';
 
 const Service = {
 	/* =================================================
-	   LIST
+		LIST
 	================================================= */
 
 	async getList(filters = {}) {
-		const productsResponse = await Api.getProducts(filters);
+		const [productsResponse, categoriesResponse] = await Promise.all([
+			Api.getProducts(filters),
+			Api.getCategories(),
+		]);
 
-		const categoriesResponse = await Api.getCategories();
+		const [products, [summary]] = productsResponse.data;
 
-		const products = productsResponse.data[0];
-
-		const summary = productsResponse.data[1][0];
+		const [categories] = categoriesResponse.data;
 
 		const total = Number(summary.total);
 
@@ -21,7 +22,7 @@ const Service = {
 		return {
 			products,
 
-			categories: categoriesResponse.data,
+			categories,
 
 			summary,
 
