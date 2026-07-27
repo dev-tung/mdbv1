@@ -33,7 +33,7 @@ const Renderer = {
 		PRODUCTS
 	================================================= */
 
-	async renderProducts() {
+	renderProducts() {
 		const uploadPath = '/uploads/products/';
 		const noImage = '/assets/image/no-image.svg';
 
@@ -63,36 +63,16 @@ const Renderer = {
 			return;
 		}
 
-		const imageExists = (src) => {
-			return new Promise((resolve) => {
-				const img = new Image();
-
-				img.onload = () => resolve(true);
-
-				img.onerror = () => resolve(false);
-
-				img.src = src;
-			});
-		};
-
 		const fragment = document.createDocumentFragment();
 
-		for (const product of State.products) {
-			let imageSrc = '';
-
-			if (product.thumbnail) {
-				imageSrc = product.thumbnail.startsWith('uploads/')
-					? `/${product.thumbnail}`
-					: `${uploadPath}${product.thumbnail}`;
-
-				const exists = await imageExists(imageSrc);
-
-				if (!exists) {
-					continue; // Bỏ qua sản phẩm nếu file ảnh không tồn tại
-				}
-			} else {
-				continue; // Không có ảnh thì bỏ qua
+		State.products.forEach((product) => {
+			if (!product.thumbnail) {
+				return;
 			}
+
+			const imageSrc = product.thumbnail.startsWith('uploads/')
+				? `/${product.thumbnail}`
+				: `${uploadPath}${product.thumbnail}`;
 
 			const template = Dom.template('#product-card-template');
 
@@ -108,20 +88,25 @@ const Renderer = {
 				image.src = imageSrc;
 
 				image.alt = product.name;
+
+				image.onerror = () => {
+					const col = card.closest('.col');
+
+					if (col) {
+						col.remove();
+					} else {
+						card.remove();
+					}
+				};
 			}
 
 			// =========================
 			// TEXT
 			// =========================
 
-			const texts = {
-				'.product-brand': product.brand_name || '',
-				'.product-name': product.name,
-			};
+			Dom.text('.product-brand', product.brand_name || '', card);
 
-			Object.entries(texts).forEach(([selector, value]) => {
-				Dom.text(selector, value, card);
-			});
+			Dom.text('.product-name', product.name, card);
 
 			// =========================
 			// PRICE
@@ -158,7 +143,7 @@ const Renderer = {
 			}
 
 			fragment.appendChild(template);
-		}
+		});
 
 		if (!fragment.childNodes.length) {
 			const col = document.createElement('div');
