@@ -12,14 +12,19 @@ const Controller = {
 	},
 
 	/* =================================================
-	   PRODUCTS
+		PRODUCTS
 	================================================= */
 
 	async loadProducts(page = 1) {
 		try {
-			// Đồng bộ keyword từ ô tìm kiếm toàn trang
-			State.filters.keyword =
-				Dom.find('input[name="keyword"]')?.value.trim() || '';
+			const searchInput = Dom.find('input[name="keyword"]');
+
+			if (searchInput) {
+				State.filters.keyword = searchInput.value.trim();
+			} else {
+				State.filters.keyword =
+					new URLSearchParams(window.location.search).get('keyword') || '';
+			}
 
 			const data = await Service.getList({
 				...State.filters,
