@@ -159,20 +159,6 @@
         <!-- FILTER -->
         <div class="row g-3 align-items-end">
 
-            <div class="col-12 col-lg-3">
-
-                <label class="form-label form-label-sm fw-semibold">
-                    Từ khóa
-                </label>
-
-                <input
-                    type="text"
-                    id="filter-keyword"
-                    class="form-control form-control-sm"
-                    placeholder="Tên sản phẩm...">
-
-            </div>
-
             <div class="col-12 col-md-6 col-lg">
 
                 <label class="form-label form-label-sm fw-semibold">

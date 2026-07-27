@@ -17,6 +17,10 @@ const Controller = {
 
 	async loadProducts(page = 1) {
 		try {
+			// Đồng bộ keyword từ ô tìm kiếm toàn trang
+			State.filters.keyword =
+				Dom.find('input[name="keyword"]')?.value.trim() || '';
+
 			const data = await Service.getList({
 				...State.filters,
 
@@ -42,16 +46,6 @@ const Controller = {
 	================================================= */
 
 	bindEvents() {
-		// =========================
-		// KEYWORD
-		// =========================
-
-		Dom.find('#filter-keyword')?.addEventListener('input', async (e) => {
-			State.filters.keyword = e.target.value.trim();
-
-			await this.loadProducts();
-		});
-
 		// =========================
 		// CATEGORY
 		// =========================
