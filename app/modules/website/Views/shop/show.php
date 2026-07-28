@@ -20,7 +20,9 @@
                                     : '/assets/image/no-image.svg')
                         ?>"
                         class="rounded"
-                        style="width:100%;height:100%;object-fit:contain;">
+                        style="width:100%;height:100%;object-fit:contain;cursor:zoom-in;"
+                        data-bs-toggle="modal"
+                        data-bs-target="#imageModal">
 
                 </div>
 
@@ -34,9 +36,12 @@
                             <img
                                 src="/<?= htmlspecialchars($image['image']) ?>"
                                 data-image="/<?= htmlspecialchars($image['image']) ?>"
-                                class="border rounded"
+                                class="border rounded gallery-image"
                                 style="width:60px;height:60px;object-fit:cover;cursor:pointer"
-                                onclick="document.getElementById('mainImg').src=this.dataset.image">
+                                onclick="
+                                    document.getElementById('mainImg').src=this.dataset.image;
+                                    document.getElementById('zoomImg').src=this.dataset.image;
+                                ">
 
                         <?php endforeach; ?>
 
@@ -45,9 +50,12 @@
                         <img
                             src="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
                             data-image="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
-                            class="border rounded"
+                            class="border rounded gallery-image"
                             style="width:60px;height:60px;object-fit:cover;cursor:pointer"
-                            onclick="document.getElementById('mainImg').src=this.dataset.image">
+                            onclick="
+                                document.getElementById('mainImg').src=this.dataset.image;
+                                document.getElementById('zoomImg').src=this.dataset.image;
+                            ">
 
                     <?php endif; ?>
 
@@ -187,14 +195,18 @@
                         </div>
 
                         <?php if (($product['sale_price'] ?? 0) > 0 && $product['sale_price'] < $product['price']): ?>
+
                             <div class="text-muted text-decoration-line-through">
                                 <?= number_format($product['price'], 0, ',', '.') ?> ₫
                             </div>
+
                         <?php endif; ?>
 
                     <?php endif; ?>
 
-                    <a class="btn btn-success mt-3 px-4" href="https://zalo.me/+84973359165" target="_blank">
+                    <a class="btn btn-success mt-3 px-4"
+                        href="https://zalo.me/+84973359165"
+                        target="_blank">
                         Liên hệ tư vấn & đặt hàng
                     </a>
 
@@ -212,6 +224,7 @@
                             <th class="text-muted fw-normal px-2">
                                 Thương hiệu
                             </th>
+
                             <td class="fw-semibold px-2">
                                 <?= htmlspecialchars($product['brand_name'] ?? '') ?>
                             </td>
@@ -220,6 +233,7 @@
                         <?php foreach ($attributes as $attribute): ?>
 
                             <tr>
+
                                 <th class="text-muted fw-normal px-2">
                                     <?= htmlspecialchars($attribute['attribute_name']) ?>
                                 </th>
@@ -227,6 +241,7 @@
                                 <td class="fw-semibold px-2">
                                     <?= htmlspecialchars($attribute['attribute_value']) ?>
                                 </td>
+
                             </tr>
 
                         <?php endforeach; ?>
@@ -242,3 +257,164 @@
     </div>
 
 </main>
+<!-- IMAGE MODAL -->
+<div class="modal fade" id="imageModal" tabindex="-1">
+
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+
+        <div class="modal-content border-0 rounded-3">
+
+            <div class="modal-body bg-white rounded-3 text-center position-relative p-4">
+
+                <button
+                    type="button"
+                    class="btn-close position-absolute top-0 end-0 m-3"
+                    data-bs-dismiss="modal">
+                </button>
+
+                <img
+                    id="zoomImg"
+                    src=""
+                    class="img-fluid rounded shadow"
+                    style="
+                        max-width:100%;
+                        max-height:85vh;
+                        cursor:grab;
+                        user-select:none;
+                        transition:transform .1s ease;
+                        transform-origin:center center;
+                    ">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+const mainImg = document.getElementById('mainImg');
+const zoomImg = document.getElementById('zoomImg');
+const imageModal = document.getElementById('imageModal');
+
+let scale = 1;
+let translateX = 0;
+let translateY = 0;
+
+let isDragging = false;
+let startX = 0;
+let startY = 0;
+
+function updateTransform() {
+    zoomImg.style.transform =
+        `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+}
+
+// =========================
+// OPEN MODAL
+// =========================
+mainImg.addEventListener('click', () => {
+
+    zoomImg.src = mainImg.src;
+
+    scale = 1;
+    translateX = 0;
+    translateY = 0;
+
+    updateTransform();
+});
+
+// =========================
+// ZOOM
+// =========================
+zoomImg.addEventListener('wheel', (e) => {
+
+    e.preventDefault();
+
+    scale += (e.deltaY < 0 ? 0.15 : -0.15);
+
+    scale = Math.max(1, Math.min(scale, 5));
+
+
+    // Khi về ảnh gốc => đưa về giữa
+    if (scale === 1) {
+
+        translateX = 0;
+        translateY = 0;
+
+    }
+
+
+    updateTransform();
+
+}, { passive: false });
+
+// =========================
+// START DRAG
+// =========================
+zoomImg.addEventListener('mousedown', (e) => {
+
+    if (scale <= 1) return;
+
+    e.preventDefault();
+
+    isDragging = true;
+
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+
+    zoomImg.style.cursor = 'grabbing';
+
+});
+
+// =========================
+// DRAGGING
+// =========================
+document.addEventListener('mousemove', (e) => {
+
+    if (!isDragging) return;
+
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+
+    updateTransform();
+
+});
+
+// =========================
+// STOP DRAG
+// =========================
+document.addEventListener('mouseup', () => {
+
+    if (!isDragging) return;
+
+    isDragging = false;
+    zoomImg.style.cursor = scale > 1 ? 'grab' : 'default';
+
+});
+
+// Nếu chuột rời khỏi cửa sổ cũng dừng kéo
+window.addEventListener('blur', () => {
+
+    isDragging = false;
+    zoomImg.style.cursor = scale > 1 ? 'grab' : 'default';
+
+});
+
+// =========================
+// RESET
+// =========================
+imageModal.addEventListener('hidden.bs.modal', () => {
+
+    scale = 1;
+    translateX = 0;
+    translateY = 0;
+
+    isDragging = false;
+
+    zoomImg.style.cursor = 'default';
+
+    updateTransform();
+
+});
+</script>
