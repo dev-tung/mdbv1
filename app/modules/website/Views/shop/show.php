@@ -180,7 +180,7 @@
 
                     <?php endif; ?>
 
-                    <a class="btn btn-success mt-3 px-4" href="https://zalo.me/+84973359165">
+                    <a class="btn btn-success mt-3 px-4" href="https://zalo.me/+84973359165" target="_blank">
                         Liên hệ tư vấn & đặt hàng
                     </a>
 

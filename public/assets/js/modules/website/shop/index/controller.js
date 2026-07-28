@@ -6,6 +6,25 @@ import Service from './service.js';
 
 const Controller = {
 	async init() {
+		// =========================
+		// GET FILTER FROM URL (ONLY ONCE)
+		// =========================
+
+		const params = new URLSearchParams(window.location.search);
+
+		State.filters.keyword = params.get('keyword') || '';
+		State.filters.category_id = params.get('category') || '';
+
+		const searchInput = Dom.find('input[name="keyword"]');
+		if (searchInput) {
+			searchInput.value = State.filters.keyword;
+		}
+
+		const categorySelect = Dom.find('#filter-category');
+		if (categorySelect) {
+			categorySelect.value = State.filters.category_id;
+		}
+
 		this.bindEvents();
 
 		await this.loadProducts();
@@ -17,26 +36,17 @@ const Controller = {
 
 	async loadProducts(page = 1) {
 		try {
-			const params = new URLSearchParams(window.location.search);
-
+			// Nếu có ô tìm kiếm thì luôn lấy giá trị hiện tại
 			const searchInput = Dom.find('input[name="keyword"]');
 
 			if (searchInput) {
 				State.filters.keyword = searchInput.value.trim();
-			} else {
-				State.filters.keyword = params.get('keyword') || '';
 			}
-
-			// Lấy category từ URL (?category=8)
-			State.filters.category_id = params.get('category') || '';
 
 			const data = await Service.getList({
 				...State.filters,
-
 				website: 1,
-
 				page,
-
 				per_page: State.pagination.per_page,
 			});
 
