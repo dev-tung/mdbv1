@@ -17,14 +17,18 @@ const Controller = {
 
 	async loadProducts(page = 1) {
 		try {
+			const params = new URLSearchParams(window.location.search);
+
 			const searchInput = Dom.find('input[name="keyword"]');
 
 			if (searchInput) {
 				State.filters.keyword = searchInput.value.trim();
 			} else {
-				State.filters.keyword =
-					new URLSearchParams(window.location.search).get('keyword') || '';
+				State.filters.keyword = params.get('keyword') || '';
 			}
+
+			// Lấy category từ URL (?category=8)
+			State.filters.category_id = params.get('category') || '';
 
 			const data = await Service.getList({
 				...State.filters,
