@@ -12,7 +12,13 @@
                     style="height:500px;">
 
                     <img id="mainImg"
-                        src="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
+                        src="<?=
+                            !empty($images)
+                                ? '/' . htmlspecialchars($images[0]['image'])
+                                : (!empty($product['thumbnail'])
+                                    ? '/' . htmlspecialchars($product['thumbnail'])
+                                    : '/assets/image/no-image.svg')
+                        ?>"
                         class="rounded"
                         style="width:100%;height:100%;object-fit:contain;">
 
@@ -21,23 +27,29 @@
                 <!-- GALLERY -->
                 <div class="d-flex gap-2 mt-3 justify-content-center">
 
-                    <img
-                        src="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
-                        data-image="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
-                        class="border rounded"
-                        style="width:60px;height:60px;object-fit:cover;cursor:pointer"
-                        onclick="document.getElementById('mainImg').src=this.dataset.image">
+                    <?php if (!empty($images)): ?>
 
-                    <?php foreach ($images as $image): ?>
+                        <?php foreach ($images as $image): ?>
+
+                            <img
+                                src="/<?= htmlspecialchars($image['image']) ?>"
+                                data-image="/<?= htmlspecialchars($image['image']) ?>"
+                                class="border rounded"
+                                style="width:60px;height:60px;object-fit:cover;cursor:pointer"
+                                onclick="document.getElementById('mainImg').src=this.dataset.image">
+
+                        <?php endforeach; ?>
+
+                    <?php else: ?>
 
                         <img
-                            src="/<?= htmlspecialchars($image['image']) ?>"
-                            data-image="/<?= htmlspecialchars($image['image']) ?>"
+                            src="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
+                            data-image="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
                             class="border rounded"
                             style="width:60px;height:60px;object-fit:cover;cursor:pointer"
                             onclick="document.getElementById('mainImg').src=this.dataset.image">
 
-                    <?php endforeach; ?>
+                    <?php endif; ?>
 
                 </div>
 
