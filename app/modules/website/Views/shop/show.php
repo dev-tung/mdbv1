@@ -2,55 +2,44 @@
 
     <div class="row g-4">
 
-
         <!-- LEFT CARD -->
         <div class="col-lg-7">
 
             <div class="card border-0 shadow-sm rounded-3 p-3">
-
 
                 <!-- MAIN IMAGE -->
                 <div class="text-center d-flex align-items-center justify-content-center"
                     style="height:500px;">
 
                     <img id="mainImg"
-                        src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800"
+                        src="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
                         class="rounded"
                         style="width:100%;height:100%;object-fit:contain;">
 
                 </div>
 
-
-
                 <!-- GALLERY -->
                 <div class="d-flex gap-2 mt-3 justify-content-center">
 
-
-                    <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=150"
-                        data-image="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800"
+                    <img
+                        src="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
+                        data-image="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
                         class="border rounded"
                         style="width:60px;height:60px;object-fit:cover;cursor:pointer"
                         onclick="document.getElementById('mainImg').src=this.dataset.image">
 
+                    <?php foreach ($images as $image): ?>
 
+                        <img
+                            src="/<?= htmlspecialchars($image['image']) ?>"
+                            data-image="/<?= htmlspecialchars($image['image']) ?>"
+                            class="border rounded"
+                            style="width:60px;height:60px;object-fit:cover;cursor:pointer"
+                            onclick="document.getElementById('mainImg').src=this.dataset.image">
 
-                    <img src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=150"
-                        data-image="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=800"
-                        class="border rounded"
-                        style="width:60px;height:60px;object-fit:cover;cursor:pointer"
-                        onclick="document.getElementById('mainImg').src=this.dataset.image">
-
-
-
-                    <img src="https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?w=150"
-                        data-image="https://images.unsplash.com/photo-1599474924187-334a4ae5bd3c?w=800"
-                        class="border rounded"
-                        style="width:60px;height:60px;object-fit:cover;cursor:pointer"
-                        onclick="document.getElementById('mainImg').src=this.dataset.image">
-
+                    <?php endforeach; ?>
 
                 </div>
-
 
             </div>
 
@@ -81,8 +70,7 @@
                             </div>
 
                             <small class="text-muted">
-                                1 đổi 1 trong 30 ngày đối với sản phẩm lỗi do nhà sản xuất.
-                                <a href="#" class="text-decoration-none">Xem chi tiết</a>
+                                Sản phẩm chính hãng, đầy đủ tem và nguồn gốc xuất xứ.
                             </small>
                         </div>
 
@@ -101,7 +89,7 @@
                                 height="22"
                                 fill="#0d6efd"
                                 viewBox="0 0 16 16">
-                                <path d="M8.186.113a1 1 0 0 0-.372 0L1.846 2.5a.5.5 0 0 0-.346.474v9.052a.5.5 0 0 0 .314.463l6 2.5a.5.5 0 0 0 .372 0l6-2.5a.5.5 0 0 0 .314-.463V2.974a.5.5 0 0 0-.346-.474L8.186.113zM8 1.184 13.146 3 8 4.816 2.854 3 8 1.184zm-5.5 2.59L7.5 5.56v8.256l-5-2.083V3.774zm6 10.042V5.56l5-1.786v7.959l-5 2.083z"/>
+                                <path d="M8.186.113a1 1 0 0 0-.372 0L1.846 2.5a.5.5 0 0 0-.346.474v9.052a.5.5 0 0 0 .314.463l6 2.5a.5.5 0 0 0 .372 0l6-2.5a.5.5 0 0 0 .314-.463V2.974a.5.5 0 0 0-.346-.474L8.186.113z"/>
                             </svg>
 
                         </div>
@@ -131,8 +119,7 @@
                                 height="22"
                                 fill="#0d6efd"
                                 viewBox="0 0 16 16">
-                                <path d="M5.072.56C5.58.329 6.18.16 8 0c1.82.16 2.42.329 2.928.56L14 2v4.496c0 3.606-2.12 6.62-6 8.504-3.88-1.884-6-4.898-6-8.504V2L5.072.56zm2.928.562-2.5.982L2.5 3.08v3.416c0 2.992 1.72 5.502 5.5 7.325 3.78-1.823 5.5-4.333 5.5-7.325V3.08l-3-1.976-2.5-.982z"/>
-                                <path d="M8 6a1 1 0 0 1 1 1v.5h.5A.5.5 0 0 1 10 8v2a.5.5 0 0 1-.5.5h-3A.5.5 0 0 1 6 10V8a.5.5 0 0 1 .5-.5H7V7a1 1 0 0 1 1-1zm0 1a.5.5 0 0 0-.5.5v.5h1v-.5A.5.5 0 0 0 8 7z"/>
+                                <path d="M5.072.56C5.58.329 6.18.16 8 0c1.82.16 2.42.329 2.928.56L14 2v4.496c0 3.606-2.12 6.62-6 8.504-3.88-1.884-6-4.898-6-8.504V2L5.072.56z"/>
                             </svg>
 
                         </div>
@@ -143,8 +130,7 @@
                             </div>
 
                             <small class="text-muted">
-                                Bảo hành 3 tháng tại Mạnh Dũng Sports.
-                                <a href="#" class="text-decoration-none">Xem chi tiết</a>
+                                Áp dụng theo chính sách bảo hành của Yonex, Lining, Victor và các thương hiệu phân phối chính hãng tại Việt Nam.
                             </small>
                         </div>
 
@@ -161,61 +147,50 @@
 
             <div class="card border-0 shadow-sm rounded-3 p-4">
 
-
-                <!-- CATEGORY -->
                 <div class="text-uppercase text-muted small mb-2">
-                    Vợt cầu lông
+                    <?= htmlspecialchars($product['category_name'] ?? '') ?>
                 </div>
 
-
-
-                <!-- NAME -->
                 <h1 class="fw-bold mb-3">
-                    Yonex Astrox 77 Pro
+                    <?= htmlspecialchars($product['name'] ?? '') ?>
                 </h1>
 
-
-
-                <!-- DESCRIPTION -->
                 <p class="text-secondary">
-                    Vợt cầu lông Yonex chính hãng dành cho người chơi
-                    tấn công, tốc độ cao, phù hợp đánh đơn và đôi.
+                    <?= nl2br(htmlspecialchars($product['description'] ?? '')) ?>
                 </p>
 
-
-
-                <!-- PRICE -->
                 <div class="my-4">
 
                     <div class="fs-3 fw-bold">
-
                         <span class="text-danger">
-                            3.990.000 ₫
+                            <?= number_format(
+                                ($product['sale_price'] > 0 ? $product['sale_price'] : $product['price']),
+                                0,
+                                ',',
+                                '.'
+                            ) ?> ₫
                         </span>
-
                     </div>
 
+                    <?php if (!empty($product['sale_price']) && $product['sale_price'] < $product['price']): ?>
 
-                    <div class="text-muted text-decoration-line-through">
-                        4.500.000 ₫
-                    </div>
+                        <div class="text-muted text-decoration-line-through">
+                            <?= number_format($product['price'], 0, ',', '.') ?> ₫
+                        </div>
 
+                    <?php endif; ?>
 
-                    <button class="btn btn-outline-success mt-3 px-4">
-                        Mua hàng
-                    </button>
+                    <a class="btn btn-success mt-3 px-4" href="https://zalo.me/+84973359165">
+                        Liên hệ tư vấn & đặt hàng
+                    </a>
 
                 </div>
 
-
-
-                <!-- ATTRIBUTES -->
                 <div class="border rounded p-3 bg-light">
 
                     <div class="fw-bold mb-3">
                         Đặc điểm chi tiết
                     </div>
-
 
                     <table class="table table-sm mb-0">
 
@@ -224,57 +199,32 @@
                                 Thương hiệu
                             </th>
                             <td class="fw-semibold px-2">
-                                Yonex
+                                <?= htmlspecialchars($product['brand_name'] ?? '') ?>
                             </td>
                         </tr>
 
-                        <tr>
-                            <th class="text-muted fw-normal px-2">
-                                Trọng lượng
-                            </th>
-                            <td class="fw-semibold px-2">
-                                4U
-                            </td>
-                        </tr>
+                        <?php foreach ($attributes as $attribute): ?>
 
-                        <tr>
-                            <th class="text-muted fw-normal px-2">
-                                Độ cứng
-                            </th>
-                            <td class="fw-semibold px-2">
-                                Trung bình
-                            </td>
-                        </tr>
+                            <tr>
+                                <th class="text-muted fw-normal px-2">
+                                    <?= htmlspecialchars($attribute['attribute_name']) ?>
+                                </th>
 
-                        <tr>
-                            <th class="text-muted fw-normal px-2">
-                                Điểm cân bằng
-                            </th>
-                            <td class="fw-semibold px-2">
-                                Head Heavy
-                            </td>
-                        </tr>
+                                <td class="fw-semibold px-2">
+                                    <?= htmlspecialchars($attribute['attribute_value']) ?>
+                                </td>
+                            </tr>
 
-                        <tr>
-                            <th class="text-muted fw-normal px-2">
-                                Sức căng
-                            </th>
-                            <td class="fw-semibold px-2">
-                                20 - 28 lbs
-                            </td>
-                        </tr>
+                        <?php endforeach; ?>
 
                     </table>
 
                 </div>
 
-
             </div>
 
         </div>
 
-
     </div>
-
 
 </main>

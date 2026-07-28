@@ -40,6 +40,17 @@ class ProductRepository extends Repository
 		);
 	}
 
+	public function getShow(string $slug, bool $website = false): array
+	{
+		return Database::call(
+			'CALL sp_product_show(?, ?)',
+			[
+				$slug,
+				$website ? 1 : 0,
+			],
+		);
+	}
+
 	/* =================================================
 	   BUILD DATA
 	================================================= */
