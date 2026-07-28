@@ -107,10 +107,11 @@ const Renderer = {
 			const priceElement = card.querySelector('.product-price');
 
 			const price = Number(product.price);
-
 			const salePrice = Number(product.sale_price);
 
-			if (salePrice > 0 && salePrice < price) {
+			if (price <= 0 && salePrice <= 0) {
+				priceElement.innerHTML = '';
+			} else if (salePrice > 0 && salePrice < price) {
 				priceElement.innerHTML = `
 					<span class="text-decoration-line-through text-secondary me-2">
 						${Formatter.money(price)}
@@ -121,7 +122,7 @@ const Renderer = {
 					</span>
 				`;
 			} else {
-				priceElement.textContent = Formatter.money(price);
+				priceElement.textContent = Formatter.money(salePrice > 0 ? salePrice : price);
 			}
 
 			// =========================

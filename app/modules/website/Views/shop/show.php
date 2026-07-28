@@ -161,22 +161,24 @@
 
                 <div class="my-4">
 
-                    <div class="fs-3 fw-bold">
-                        <span class="text-danger">
-                            <?= number_format(
-                                ($product['sale_price'] > 0 ? $product['sale_price'] : $product['price']),
-                                0,
-                                ',',
-                                '.'
-                            ) ?> ₫
-                        </span>
-                    </div>
+                    <?php if (($product['sale_price'] ?? 0) > 0 || ($product['price'] ?? 0) > 0): ?>
 
-                    <?php if (!empty($product['sale_price']) && $product['sale_price'] < $product['price']): ?>
-
-                        <div class="text-muted text-decoration-line-through">
-                            <?= number_format($product['price'], 0, ',', '.') ?> ₫
+                        <div class="fs-3 fw-bold">
+                            <span class="text-danger">
+                                <?= number_format(
+                                    ($product['sale_price'] > 0 ? $product['sale_price'] : $product['price']),
+                                    0,
+                                    ',',
+                                    '.'
+                                ) ?> ₫
+                            </span>
                         </div>
+
+                        <?php if (($product['sale_price'] ?? 0) > 0 && $product['sale_price'] < $product['price']): ?>
+                            <div class="text-muted text-decoration-line-through">
+                                <?= number_format($product['price'], 0, ',', '.') ?> ₫
+                            </div>
+                        <?php endif; ?>
 
                     <?php endif; ?>
 
