@@ -1,52 +1,168 @@
-DROP PROCEDURE IF EXISTS sp_shop_inventory;
+DROP PROCEDURE IF EXISTS sp_report_buyer;
 
-CREATE PROCEDURE sp_shop_inventory (
-	IN p_keyword VARCHAR(255),
-	IN p_product_id INT,
-	IN p_purchase_id INT,
-	IN p_stock TINYINT
-) BEGIN IF COALESCE(p_product_id, 0) > 0
-AND COALESCE(p_purchase_id, 0) > 0 THEN
-SELECT
-	p.id,
-	p.name,
-	i.purchase_id,
-	i.quantity AS stock
-FROM
-	inventories i
-	JOIN products p ON p.id = i.product_id
-WHERE
-	i.product_id = p_product_id
-	AND i.purchase_id = p_purchase_id;
+CREATE PROCEDURE sp_report_buyer (
+	IN p_from_date DATE,
+	IN p_to_date DATE
+)
+BEGIN
 
-ELSE
-SELECT
-	p.id,
-	p.name,
-	COALESCE(SUM(i.quantity), 0) AS stock
-FROM
-	products p
-	LEFT JOIN inventories i ON i.product_id = p.id
-WHERE
-	p_keyword IS NULL
-	OR p_keyword = ''
-	OR p.name LIKE CONCAT ('%', p_keyword, '%')
-GROUP BY
-	p.id,
-	p.name
-HAVING
-	p_stock IS NULL
-	OR (
-		p_stock = 1
-		AND stock > 0
-	)
-	OR (
-		p_stock = 0
-		AND stock = 0
-	)
-ORDER BY
-	p.id DESC;
+	/* ===========================================
+	   RESULT 1: CHI TIẾT KHÁCH HÀNG ĐÃ MUA HÀNG
+	=========================================== */
 
-END IF;
+	SELECT
+		c.id AS customer_id,
+
+		c.name AS customer_name,
+
+		c.phone,
+
+		cg.id AS customer_group_id,
+
+		cg.name AS customer_group_name,
+
+		COUNT(
+			DISTINCT o.id
+		) AS total_orders,
+
+		COALESCE(
+			SUM(oi.quantity),
+			0
+		) AS total_quantity,
+
+		COALESCE(
+			SUM(oi.total_amount),
+			0
+		) AS total_revenue,
+
+		COALESCE(
+			SUM(
+				oi.total_amount
+				-
+				(
+					(pi.total_amount / pi.quantity)
+					* oi.quantity
+				)
+			),
+			0
+		) AS total_profit
+
+	FROM customers c
+
+	INNER JOIN customer_groups cg
+		ON cg.id = c.group_id
+
+	INNER JOIN orders o
+		ON o.customer_id = c.id
+		AND (
+			p_from_date IS NULL
+			OR DATE(o.created_at) >= p_from_date
+		)
+		AND (
+			p_to_date IS NULL
+			OR DATE(o.created_at) <= p_to_date
+		)
+
+	INNER JOIN order_items oi
+		ON oi.order_id = o.id
+
+	INNER JOIN purchase_items pi
+		ON pi.purchase_id = oi.purchase_id
+		AND pi.product_id = oi.product_id
+
+	GROUP BY
+		c.id,
+		c.name,
+		c.phone,
+		cg.id,
+		cg.name
+
+	ORDER BY
+		total_revenue DESC,
+		c.name ASC;
+
+
+	/* ===========================================
+	   RESULT 2: TỔNG HỢP
+	=========================================== */
+
+	SELECT
+		COUNT(*) AS total_customers,
+
+		COALESCE(
+			SUM(t.total_orders),
+			0
+		) AS total_orders,
+
+		COALESCE(
+			SUM(t.total_quantity),
+			0
+		) AS total_quantity,
+
+		COALESCE(
+			SUM(t.total_revenue),
+			0
+		) AS total_revenue,
+
+		COALESCE(
+			SUM(t.total_profit),
+			0
+		) AS total_profit
+
+	FROM (
+
+		SELECT
+			c.id,
+
+			COUNT(
+				DISTINCT o.id
+			) AS total_orders,
+
+			COALESCE(
+				SUM(oi.quantity),
+				0
+			) AS total_quantity,
+
+			COALESCE(
+				SUM(oi.total_amount),
+				0
+			) AS total_revenue,
+
+			COALESCE(
+				SUM(
+					oi.total_amount
+					-
+					(
+						(pi.total_amount / pi.quantity)
+						* oi.quantity
+					)
+				),
+				0
+			) AS total_profit
+
+		FROM customers c
+
+		INNER JOIN orders o
+			ON o.customer_id = c.id
+			AND (
+				p_from_date IS NULL
+				OR DATE(o.created_at) >= p_from_date
+			)
+			AND (
+				p_to_date IS NULL
+				OR DATE(o.created_at) <= p_to_date
+			)
+
+		INNER JOIN order_items oi
+			ON oi.order_id = o.id
+
+		INNER JOIN purchase_items pi
+			ON pi.purchase_id = oi.purchase_id
+			AND pi.product_id = oi.product_id
+
+		GROUP BY
+			c.id
+
+	) t;
 
 END;

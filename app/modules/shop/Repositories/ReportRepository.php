@@ -25,4 +25,15 @@ class ReportRepository extends Repository
 			array_params(['keyword', 'product_id', 'purchase_id', 'stock'], $filters),
 		);
 	}
+
+	public function getBuyer(array $filters = []): array
+	{
+		return Database::call(
+			'CALL sp_report_buyer(?, ?)',
+			array_params(
+				['from_date', 'to_date'],
+				$filters,
+			),
+		);
+	}
 }

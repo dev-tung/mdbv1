@@ -73,10 +73,10 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentPage = 1;
   const itemsPerPage = 100;
 
-  const dateFrom    = document.getElementById("date-from");
-  const dateTo      = document.getElementById("date-to");
-  const btnFilter   = document.getElementById("btn-filter");
-  const filterName  = document.getElementById("filter-name");
+  const dateFrom = document.getElementById("date-from");
+  const dateTo = document.getElementById("date-to");
+  const btnFilter = document.getElementById("btn-filter");
+  const filterName = document.getElementById("filter-name");
   const filterGroup = document.getElementById("filter-group");
 
   function formatVND(value) {
@@ -87,124 +87,189 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ===============================
-  // LOAD DATA FROM API
+  // LOAD DATA
   // ===============================
   async function loadCustomers(params = {}) {
-    try {
-      const query = new URLSearchParams(params).toString();
-      const res = await fetch("/api/report/customer?" + query);
-      const json = await res.json();
 
-      allCustomers = json.success ? (json.data.customers || []) : [];
-      renderGroupFilter(allCustomers);
+    try {
+
+      const query = new URLSearchParams(params).toString();
+
+      const response = await fetch(`/api/report/buyer?${query}`);
+
+      if (!response.ok) {
+        throw new Error("Không thể tải dữ liệu");
+      }
+
+      const json = await response.json();
+
+      allCustomers =
+        json.success &&
+        Array.isArray(json.data) &&
+        Array.isArray(json.data[0])
+          ? json.data[0]
+          : [];
 
       currentPage = 1;
+
+      renderGroupFilter(allCustomers);
+
       const items = filteredCustomers();
+
       renderTable(items);
+
       renderSummary(items);
 
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+
+      console.error(error);
+
+      allCustomers = [];
+
       renderTable([]);
+
       renderSummary([]);
+
     }
+
   }
 
   // ===============================
-  // FILTER CLIENT
+  // FILTER
   // ===============================
   filterName.addEventListener("input", applyClientFilter);
+
   filterGroup.addEventListener("change", applyClientFilter);
 
   function applyClientFilter() {
+
     currentPage = 1;
+
     const items = filteredCustomers();
+
     renderTable(items);
+
     renderSummary(items);
+
   }
 
   function filteredCustomers() {
-    const keyword = filterName.value.toLowerCase();
+
+    const keyword = filterName.value.trim().toLowerCase();
+
     const groupId = filterGroup.value;
 
     return allCustomers.filter(item => {
+
       const matchName =
-        (item.customer_name || "").toLowerCase().includes(keyword);
+        String(item.customer_name || "")
+          .toLowerCase()
+          .includes(keyword);
+
       const matchGroup =
-        !groupId || item.customer_group_id == groupId;
+        !groupId ||
+        String(item.customer_group_id) === groupId;
+
       return matchName && matchGroup;
+
     });
+
   }
 
   // ===============================
-  // SUMMARY (CHUẨN LOGIC)
+  // SUMMARY
   // ===============================
   function renderSummary(items) {
-    const summary = {
-      total_customers: items.length,
-      total_revenue: 0,
-      total_profit: 0
-    };
 
-    items.forEach(item => {
-      summary.total_revenue += Number(item.total_revenue || 0);
-      summary.total_profit  += Number(item.total_profit || 0);
-    });
+    const totalCustomers = items.length;
+
+    const totalRevenue = items.reduce(
+      (sum, item) => sum + Number(item.total_revenue || 0),
+      0
+    );
+
+    const totalProfit = items.reduce(
+      (sum, item) => sum + Number(item.total_profit || 0),
+      0
+    );
 
     document.getElementById("total-customers").textContent =
-      summary.total_customers;
+      totalCustomers;
+
     document.getElementById("total-revenue").textContent =
-      formatVND(summary.total_revenue);
+      formatVND(totalRevenue);
+
     document.getElementById("total-profit").textContent =
-      formatVND(summary.total_profit);
+      formatVND(totalProfit);
+
   }
 
   // ===============================
-  // RENDER TABLE
+  // TABLE
   // ===============================
   function renderTable(items) {
+
     const tbody = document.getElementById("report-table-body");
+
     tbody.innerHTML = "";
 
     if (!items.length) {
-      tbody.innerHTML =
-        `<tr><td colspan="9" class="text-center text-muted">Không có dữ liệu</td></tr>`;
+
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="9" class="text-center text-muted">
+            Không có dữ liệu
+          </td>
+        </tr>
+      `;
+
       renderPagination(0);
+
       return;
+
     }
 
     const start = (currentPage - 1) * itemsPerPage;
+
     const pageItems = items.slice(start, start + itemsPerPage);
 
     pageItems.forEach((item, index) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <th>${start + index + 1}</th>
-        <td>${item.customer_id}</td>
-        <td>${item.customer_name}</td>
-        <td>${item.customer_group_name || ""}</td>
-        <td>${item.phone || ""}</td>
-        <td>${item.total_orders}</td>
-        <td>${item.total_quantity}</td>
-        <td>${formatVND(item.total_revenue)}</td>
-        <td>${formatVND(item.total_profit)}</td>
-      `;
-      tbody.appendChild(tr);
+
+      tbody.insertAdjacentHTML("beforeend", `
+        <tr>
+          <td>${start + index + 1}</td>
+          <td>${item.customer_id}</td>
+          <td>${item.customer_name}</td>
+          <td>${item.customer_group_name || "—"}</td>
+          <td>${item.phone || "—"}</td>
+          <td>${item.total_orders}</td>
+          <td>${item.total_quantity}</td>
+          <td>${formatVND(item.total_revenue)}</td>
+          <td>${formatVND(item.total_profit)}</td>
+        </tr>
+      `);
+
     });
 
     renderPagination(items.length);
+
   }
 
   // ===============================
   // PAGINATION
   // ===============================
   function renderPagination(totalItems) {
+
     const totalPages = Math.ceil(totalItems / itemsPerPage);
+
     const pagination = document.getElementById("pagination");
+
     pagination.innerHTML = "";
 
     for (let i = 1; i <= totalPages; i++) {
+
       const li = document.createElement("li");
+
       li.className = `page-item ${i === currentPage ? "active" : ""}`;
 
       li.innerHTML = `
@@ -213,55 +278,83 @@ document.addEventListener("DOMContentLoaded", function () {
         </a>
       `;
 
-      li.addEventListener("click", function(e) {
+      li.addEventListener("click", function (e) {
+
         e.preventDefault();
+
         currentPage = i;
-        renderTable(filteredExports());
+
+        renderTable(filteredCustomers());
+
       });
 
       pagination.appendChild(li);
-    }
-  }
 
+    }
+
+  }
 
   // ===============================
   // GROUP FILTER
   // ===============================
   function renderGroupFilter(customers) {
+
     const groups = {};
-    customers.forEach(c => {
-      if (c.customer_group_id) {
-        groups[c.customer_group_id] = c.customer_group_name;
+
+    customers.forEach(item => {
+
+      if (item.customer_group_id) {
+
+        groups[item.customer_group_id] =
+          item.customer_group_name;
+
       }
+
     });
 
-    filterGroup.innerHTML = `<option value="">Tất cả nhóm</option>`;
-    Object.keys(groups).forEach(id => {
-      const opt = document.createElement("option");
-      opt.value = id;
-      opt.textContent = groups[id];
-      filterGroup.appendChild(opt);
+    filterGroup.innerHTML =
+      `<option value="">Tất cả nhóm</option>`;
+
+    Object.entries(groups).forEach(([id, name]) => {
+
+      const option = document.createElement("option");
+
+      option.value = id;
+
+      option.textContent = name;
+
+      filterGroup.appendChild(option);
+
     });
+
   }
 
   // ===============================
-  // FILTER BUTTON (DATE)
+  // DATE FILTER
   // ===============================
-  btnFilter.addEventListener("click", () => {
+  btnFilter.addEventListener("click", function () {
+
     loadCustomers({
       from_date: dateFrom.value,
       to_date: dateTo.value
     });
+
   });
 
   // ===============================
-  // INIT MONTH
+  // INIT
   // ===============================
   const now = new Date();
-  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const firstDay = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    1
+  );
 
   dateFrom.value = firstDay.toISOString().split("T")[0];
-  dateTo.value   = now.toISOString().split("T")[0];
+
+  dateTo.value = now.toISOString().split("T")[0];
 
   loadCustomers({
     from_date: dateFrom.value,

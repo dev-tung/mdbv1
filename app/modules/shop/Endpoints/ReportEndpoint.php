@@ -34,13 +34,13 @@ class ReportEndpoint
 			]);
 	}
 
-	public function apiCustomer()
+	public function apiBuyer()
 	{
 		$filters = request_all();
 
 		return Response::json([
 			'success' => true,
-			'data' => $this->reportRepository->getCustomer($filters),
+			'data' => $this->reportRepository->getBuyer($filters),
 		]);
 	}
 }
