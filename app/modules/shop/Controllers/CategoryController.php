@@ -18,8 +18,6 @@ class CategoryController
 
 	public function edit($id): void
 	{
-		View::render('category/edit', [
-			'id' => $id,
-		]);
+		View::render('category/edit', compact('id'));
 	}
 }
