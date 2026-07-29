@@ -44,7 +44,6 @@
       <thead class="table-light">
         <tr>
           <th>#</th>
-          <th>ID KH</th>
           <th>Tên khách hàng</th>
           <th>Nhóm KH</th>
           <th>SĐT</th>
@@ -238,7 +237,6 @@ document.addEventListener("DOMContentLoaded", function () {
       tbody.insertAdjacentHTML("beforeend", `
         <tr>
           <td>${start + index + 1}</td>
-          <td>${item.customer_id}</td>
           <td>${item.customer_name}</td>
           <td>${item.customer_group_name || "—"}</td>
           <td>${item.phone || "—"}</td>
