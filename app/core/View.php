@@ -82,7 +82,7 @@ class View
 
 	protected static function getJs(string $view): string
 	{
-		$path = 'js/modules/' . self::$module . '/' . $view . '/controller.js';
+		$path = 'js/modules/' . self::$module . '/' . $view . '/init.js';
 
 		return file_exists(PATH_ROOT . '/public/assets/' . $path) ? asset($path) : '';
 	}

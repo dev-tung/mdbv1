@@ -5,7 +5,7 @@ import State from './state.js';
 import Renderer from './renderer.js';
 import Service from './service.js';
 
-const Controller = {
+const Init = {
 	/* =================================================
 	   PUBLIC
 	================================================= */
@@ -23,15 +23,15 @@ const Controller = {
 	================================================= */
 
 	async loadDefault() {
-		const id = Dom.find('#customer_id')?.value || null;
+		const id = Dom.find('#supplier_id')?.value || null;
 
 		if (!id) {
 			return;
 		}
 
-		const customer = await Service.getCustomer(id);
+		const supplier = await Service.getSupplier(id);
 
-		State.setCustomer(customer);
+		State.setSupplier(supplier);
 	},
 
 	/* =================================================
@@ -63,7 +63,7 @@ const Controller = {
 	================================================= */
 
 	bindSubmit() {
-		Dom.find('#customer-form').addEventListener('submit', async (e) => {
+		Dom.find('#supplier-form').addEventListener('submit', async (e) => {
 			e.preventDefault();
 
 			if (!confirm('Bạn có muốn lưu không?')) {
@@ -75,7 +75,7 @@ const Controller = {
 
 				const payload = id ? Service.updatePayload(id, State.form) : Service.payload(State.form);
 
-				const response = id ? await Api.updateCustomer(payload) : await Api.createCustomer(payload);
+				const response = id ? await Api.updateSupplier(payload) : await Api.createSupplier(payload);
 
 				alert(response.message);
 
@@ -89,8 +89,8 @@ const Controller = {
 	},
 };
 
-export default Controller;
+export default Init;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Controller.init();
+	Init.init();
 });

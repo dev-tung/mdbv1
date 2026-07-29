@@ -6,16 +6,24 @@ import State from './state.js';
 import Renderer from './renderer.js';
 import Service from './service.js';
 
-const Controller = {
+const Init = {
 	init() {
 		Table.init({
-			body: '#purchase-table-body',
+			body: '#product-table-body',
 
 			pagination: true,
 
-			colspan: 10,
+			colspan: 8,
 
 			filters: {
+				'#filter-keyword': {
+					event: 'input',
+
+					handler(value) {
+						State.filters.keyword = value.trim();
+					},
+				},
+
 				'#filter-date-from': {
 					handler(value) {
 						State.filters.date_from = value;
@@ -28,17 +36,15 @@ const Controller = {
 					},
 				},
 
-				'#filter-supplier': {
-					event: 'input',
-
+				'#filter-status': {
 					handler(value) {
-						State.filters.supplier = value.trim();
+						State.filters.status = value;
 					},
 				},
 
-				'#filter-payment': {
+				'#filter-category': {
 					handler(value) {
-						State.filters.payment = value;
+						State.filters.category_id = value;
 					},
 				},
 			},
@@ -53,40 +59,46 @@ const Controller = {
 				});
 
 				State.setDefault(data);
+
+				Renderer.renderOptions();
+
 				Renderer.renderSummary();
+
 				return data;
 			},
 
 			render: Renderer.renderTable,
 		});
 
-		Renderer.render();
-
 		this.bindEvents();
 	},
 
 	bindEvents() {
-		const table = Dom.find('#purchase-table-body');
+		const table = Dom.find('#product-table-body');
+
+		// =========================
+		// CHANGE
+		// =========================
 
 		table.addEventListener('change', async (e) => {
 			const target = e.target;
 
 			try {
 				if (target.classList.contains('status')) {
-					const response = await Api.updatePurchaseStatus(target.dataset.id, target.value);
+					const response = await Api.updateProductStatus(
+						target.dataset.id,
 
-					alert(response.message);
-				}
-
-				if (target.classList.contains('payment')) {
-					const response = await Api.updatePurchasePayment(target.dataset.id, target.value);
+						target.value,
+					);
 
 					alert(response.message);
 				}
 
 				const data = await Service.getList({
 					...State.filters,
+
 					page: Table.config.page,
+
 					per_page: Table.config.per_page,
 				});
 
@@ -98,6 +110,10 @@ const Controller = {
 			}
 		});
 
+		// =========================
+		// DELETE
+		// =========================
+
 		table.addEventListener('click', async (e) => {
 			const button = e.target.closest('.delete-item');
 
@@ -105,18 +121,20 @@ const Controller = {
 				return;
 			}
 
-			if (!confirm('Bạn có chắc chắn muốn xóa phiếu nhập này?')) {
+			if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
 				return;
 			}
 
 			try {
-				const response = await Api.deletePurchase(button.dataset.id);
+				const response = await Api.deleteProduct(button.dataset.id);
 
 				alert(response.message);
 
 				const data = await Service.getList({
 					...State.filters,
+
 					page: Table.config.page,
+
 					per_page: Table.config.per_page,
 				});
 
@@ -130,8 +148,8 @@ const Controller = {
 	},
 };
 
-export default Controller;
+export default Init;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Controller.init();
+	Init.init();
 });

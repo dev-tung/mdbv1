@@ -10,7 +10,7 @@ import Renderer from './renderer.js';
 
 import Service from './service.js';
 
-const Controller = {
+const Init = {
 	init() {
 		Table.init({
 			body: '#customer-table-body',
@@ -108,8 +108,8 @@ const Controller = {
 	},
 };
 
-export default Controller;
+export default Init;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Controller.init();
+	Init.init();
 });
