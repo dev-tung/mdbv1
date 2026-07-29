@@ -23,7 +23,7 @@ class ReportEndpoint
 			'data' => $this->reportRepository->getInventory($filters),
 		]);
 	}
-controller.js
+
 	public function apiRevenue()
 	{
 			$filters = request_all();
