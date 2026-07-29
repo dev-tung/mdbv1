@@ -275,7 +275,7 @@
                 <img
                     id="zoomImg"
                     src=""
-                    class="img-fluid rounded "
+                    class="img-fluid rounded"
                     style="
                         max-width:100%;
                         max-height:85vh;
