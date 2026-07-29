@@ -7,7 +7,7 @@ CREATE PROCEDURE sp_report_buyer (
 BEGIN
 
 	/* ===========================================
-	   RESULT 1: CHI TIẾT KHÁCH HÀNG ĐÃ MUA HÀNG
+	   RESULT 1: DANH SÁCH KHÁCH HÀNG ĐÃ MUA
 	=========================================== */
 
 	SELECT
@@ -21,9 +21,7 @@ BEGIN
 
 		cg.name AS customer_group_name,
 
-		COUNT(
-			DISTINCT o.id
-		) AS total_orders,
+		COUNT(DISTINCT o.id) AS total_orders,
 
 		COALESCE(
 			SUM(oi.quantity),
@@ -37,38 +35,40 @@ BEGIN
 
 		COALESCE(
 			SUM(
-				oi.total_amount
-				-
-				(
-					(pi.total_amount / pi.quantity)
-					* oi.quantity
+				oi.total_amount -
+				COALESCE(
+					(pi.total_amount / NULLIF(pi.quantity, 0)) * oi.quantity,
+					0
 				)
 			),
 			0
 		) AS total_profit
 
-	FROM customers c
+	FROM orders o
 
-	INNER JOIN customer_groups cg
+	INNER JOIN customers c
+		ON c.id = o.customer_id
+
+	LEFT JOIN customer_groups cg
 		ON cg.id = c.group_id
-
-	INNER JOIN orders o
-		ON o.customer_id = c.id
-		AND (
-			p_from_date IS NULL
-			OR DATE(o.created_at) >= p_from_date
-		)
-		AND (
-			p_to_date IS NULL
-			OR DATE(o.created_at) <= p_to_date
-		)
 
 	INNER JOIN order_items oi
 		ON oi.order_id = o.id
 
-	INNER JOIN purchase_items pi
+	LEFT JOIN purchase_items pi
 		ON pi.purchase_id = oi.purchase_id
 		AND pi.product_id = oi.product_id
+
+	WHERE
+		(
+			p_from_date IS NULL
+			OR DATE(o.created_at) >= p_from_date
+		)
+		AND
+		(
+			p_to_date IS NULL
+			OR DATE(o.created_at) <= p_to_date
+		)
 
 	GROUP BY
 		c.id,
@@ -114,9 +114,7 @@ BEGIN
 		SELECT
 			c.id,
 
-			COUNT(
-				DISTINCT o.id
-			) AS total_orders,
+			COUNT(DISTINCT o.id) AS total_orders,
 
 			COALESCE(
 				SUM(oi.quantity),
@@ -130,35 +128,37 @@ BEGIN
 
 			COALESCE(
 				SUM(
-					oi.total_amount
-					-
-					(
-						(pi.total_amount / pi.quantity)
-						* oi.quantity
+					oi.total_amount -
+					COALESCE(
+						(pi.total_amount / NULLIF(pi.quantity, 0)) * oi.quantity,
+						0
 					)
 				),
 				0
 			) AS total_profit
 
-		FROM customers c
+		FROM orders o
 
-		INNER JOIN orders o
-			ON o.customer_id = c.id
-			AND (
-				p_from_date IS NULL
-				OR DATE(o.created_at) >= p_from_date
-			)
-			AND (
-				p_to_date IS NULL
-				OR DATE(o.created_at) <= p_to_date
-			)
+		INNER JOIN customers c
+			ON c.id = o.customer_id
 
 		INNER JOIN order_items oi
 			ON oi.order_id = o.id
 
-		INNER JOIN purchase_items pi
+		LEFT JOIN purchase_items pi
 			ON pi.purchase_id = oi.purchase_id
 			AND pi.product_id = oi.product_id
+
+		WHERE
+			(
+				p_from_date IS NULL
+				OR DATE(o.created_at) >= p_from_date
+			)
+			AND
+			(
+				p_to_date IS NULL
+				OR DATE(o.created_at) <= p_to_date
+			)
 
 		GROUP BY
 			c.id
