@@ -9,6 +9,7 @@
 
             <div class="col-auto">
 
+
                 <input 
                     type="text" 
                     id="filter-keyword" 
@@ -16,11 +17,11 @@
                     placeholder="Tìm sản phẩm"
                 >
 
+
             </div>
 
 
         </div>
-
 
 
 
@@ -35,6 +36,7 @@
 
 
     <!-- SUMMARY -->
+
 
     <div class="d-flex gap-3 mb-3">
 
@@ -67,6 +69,7 @@
 
             <thead>
 
+
                 <tr>
 
                     <th>#</th>
@@ -83,12 +86,14 @@
 
                 </tr>
 
+
             </thead>
 
 
 
 
             <tbody id="map-table-body">
+
 
 
             <?php if(empty($matched)): ?>
@@ -114,7 +119,15 @@
                 <?php foreach($matched as $index => $item): ?>
 
 
-                    <tr>
+                    <tr
+                        data-name="<?= strtolower(
+                            htmlspecialchars(
+                                $item['crawl_name'] . ' ' .
+                                $item['product_name'] . ' ' .
+                                $item['product_id']
+                            )
+                        ) ?>"
+                    >
 
 
                         <td>
@@ -128,6 +141,7 @@
                             <?= htmlspecialchars($item['crawl_name']) ?>
 
                         </td>
+
 
 
 
@@ -153,6 +167,7 @@
 
 
 
+
                         <td>
 
                             <?= number_format($item['ducan_price']) ?>
@@ -161,11 +176,13 @@
 
 
 
+
                         <td>
 
                             <?= number_format($item['ducan_sale_price']) ?>
 
                         </td>
+
 
 
 
@@ -206,3 +223,55 @@
 
 
 </div>
+
+
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+
+    const input = document.getElementById('filter-keyword');
+
+    const rows = document.querySelectorAll(
+        '#map-table-body tr[data-name]'
+    );
+
+
+    if(!input) return;
+
+
+
+    input.addEventListener('input', function(){
+
+
+        const keyword = this.value
+            .toLowerCase()
+            .trim();
+
+
+
+        rows.forEach(row => {
+
+
+            const name = row.dataset.name;
+
+
+
+            row.style.display = name.includes(keyword)
+                ? ''
+                : 'none';
+
+
+
+        });
+
+
+    });
+
+
+});
+
+</script>

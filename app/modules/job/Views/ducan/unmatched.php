@@ -87,7 +87,9 @@
 
 
 
+
             <tbody id="unmatched-table-body">
+
 
 
             <?php if(empty($unmatched)): ?>
@@ -113,7 +115,13 @@
                 <?php foreach($unmatched as $index => $item): ?>
 
 
-                    <tr>
+                    <tr
+                        data-name="<?= strtolower(
+                            htmlspecialchars(
+                                $item['crawl_name']
+                            )
+                        ) ?>"
+                    >
 
 
                         <td>
@@ -121,6 +129,7 @@
                             <?= $index + 1 ?>
 
                         </td>
+
 
 
 
@@ -132,6 +141,7 @@
 
 
 
+
                         <td>
 
                             <?= number_format($item['price']) ?>
@@ -140,11 +150,13 @@
 
 
 
+
                         <td>
 
                             <?= number_format($item['sale_price']) ?>
 
                         </td>
+
 
 
 
@@ -185,3 +197,54 @@
 
 
 </div>
+
+
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+
+    const input = document.getElementById('filter-keyword');
+
+    const rows = document.querySelectorAll(
+        '#unmatched-table-body tr[data-name]'
+    );
+
+
+    if(!input) return;
+
+
+
+    input.addEventListener('input', function(){
+
+
+        const keyword = this.value
+            .toLowerCase()
+            .trim();
+
+
+
+        rows.forEach(row => {
+
+
+            const name = row.dataset.name;
+
+
+
+            row.style.display = name.includes(keyword)
+                ? ''
+                : 'none';
+
+
+        });
+
+
+    });
+
+
+});
+
+</script>
