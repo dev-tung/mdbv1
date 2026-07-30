@@ -42,7 +42,7 @@
 
         <div>
 
-            <strong>Chưa MAP</strong>
+            <strong>Tổng sản phẩm</strong>
 
             <span>
                 <?= $total ?>
