@@ -154,15 +154,6 @@
 
                             </div>
 
-
-
-                            <small class="text-muted">
-
-                                ID: <?= $item['product_id'] ?>
-
-                            </small>
-
-
                         </td>
 
 
