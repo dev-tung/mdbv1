@@ -35,9 +35,9 @@
     <a 
         href="<?= route('/job/ducan/crawl') ?>"
         class="btn btn-sm btn-outline-danger"
-        onclick="return confirm('Crawl lại dữ liệu Đức An?')"
+        onclick="return confirm('Bạn có muốn crawl dữ liệu mới từ Đức An?')"
     >
-        Crawl lại
+        Crawl
     </a>
 
 
