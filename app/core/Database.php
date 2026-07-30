@@ -119,19 +119,28 @@ class Database
 	// =========================
 	public static function transaction(callable $callback)
 	{
-		self::connect()->beginTransaction();
+			$pdo = self::connect();
 
-		try {
-			$result = $callback();
+			$pdo->beginTransaction();
 
-			self::connect()->commit();
+			try {
 
-			return $result;
-		} catch (Throwable $e) {
-			self::connect()->rollBack();
+					$result = $callback();
 
-			throw $e;
-		}
+					if ($pdo->inTransaction()) {
+							$pdo->commit();
+					}
+
+					return $result;
+
+			} catch (Throwable $e) {
+
+					if ($pdo->inTransaction()) {
+							$pdo->rollBack();
+					}
+
+					throw $e;
+			}
 	}
 
 	// =========================

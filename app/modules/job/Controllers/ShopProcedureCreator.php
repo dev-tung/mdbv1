@@ -4,7 +4,7 @@ namespace App\Job\Controllers;
 
 use App\Core\Database;
 
-class ProcedureShop
+class ShopProcedureCreator
 {
 	public function run(): void
 	{

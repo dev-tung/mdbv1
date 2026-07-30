@@ -1,17 +1,41 @@
 <?php
 
 use App\Core\Router;
-use App\Job\Controllers\ProcedureShop;
-use App\Job\Controllers\CrawlYonexCategory;
-use App\Job\Controllers\CrawlYonexProduct;
-use App\Job\Controllers\CrawlYonexProductDetail;
-use App\Job\Controllers\ImportYonexProduct;
-use App\Job\Controllers\CrawlDucan;
-
+use App\Job\Controllers\ShopProcedureCreator;
+use App\Job\Controllers\YonexCategoryCrawler;
+use App\Job\Controllers\YonexProductCrawler;
+use App\Job\Controllers\YonexProductDetailCrawler;
+use App\Job\Controllers\YonexProductImporter;
+use App\Job\Controllers\DucanProductCrawler;
+use App\Job\Controllers\DucanProductMapper;
 
 Router::get(
-	'/job/crawl-ducan',
-	[CrawlDucan::class, 'run'],
+	'/job/ducan/list',
+	[DucanProductMapper::class, 'list'],
+	[
+		'auth' => 'admin',
+	],
+);
+
+Router::get(
+	'/job/ducan/matched',
+	[DucanProductMapper::class, 'matched'],
+	[
+		'auth' => 'admin',
+	],
+);
+
+Router::get(
+	'/job/ducan/unmatched',
+	[DucanProductMapper::class, 'unmatched'],
+	[
+		'auth' => 'admin',
+	],
+);
+
+Router::get(
+	'/job/ducan/crawl',
+	[DucanProductCrawler::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
@@ -19,7 +43,7 @@ Router::get(
 
 Router::get(
 	'/job/crawl-yonex-category',
-	[CrawlYonexCategory::class, 'run'],
+	[YonexCategoryCrawler::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
@@ -27,7 +51,7 @@ Router::get(
 
 Router::get(
 	'/job/crawl-yonex-product',
-	[CrawlYonexProduct::class, 'run'],
+	[YonexProductCrawler::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
@@ -35,7 +59,7 @@ Router::get(
 
 Router::get(
 	'/job/crawl-yonex-product-detail',
-	[CrawlYonexProductDetail::class, 'run'],
+	[YonexProductDetailCrawler::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
@@ -43,7 +67,7 @@ Router::get(
 
 Router::get(
 	'/job/import-yonex-product',
-	[ImportYonexProduct::class, 'run'],
+	[YonexProductImporter::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
@@ -51,7 +75,7 @@ Router::get(
 
 Router::get(
 	'/job/procedure-shop',
-	[ProcedureShop::class, 'run'],
+	[ShopProcedureCreator::class, 'run'],
 	[
 		'auth' => 'admin',
 	],

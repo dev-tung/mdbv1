@@ -6,25 +6,55 @@
 
             <ul class="navbar-nav">
 
-                <!-- ========================= -->
-                <!-- SẢN PHẨM -->
-                <!-- ========================= -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= active_menu('/admin/products') ?:
-						active_menu('/admin/products/create') ?>"
-                        href="#"
-                        data-bs-toggle="dropdown">
+            <!-- ========================= -->
+            <!-- SẢN PHẨM -->
+            <!-- ========================= -->
+            <li class="nav-item dropdown">
 
-                        Sản phẩm
-                    </a>
+                <a 
+                    class="nav-link dropdown-toggle <?= active_menu('/admin/products') ?:
+                        active_menu('/admin/products/create') ?>"
+                    href="#"
+                    data-bs-toggle="dropdown"
+                >
+                    Sản phẩm
+                </a>
 
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= route('/admin/products') ?>">Danh sách sản phẩm</a></li>
-                        <li><a class="dropdown-item" href="<?= route(
-                        	'/admin/products/create',
-                        ) ?>">Thêm sản phẩm</a></li>
-                    </ul>
-                </li>
+
+                <ul class="dropdown-menu">
+
+                    <li>
+                        <a 
+                            class="dropdown-item" 
+                            href="<?= route('/admin/products') ?>"
+                        >
+                            Danh sách sản phẩm
+                        </a>
+                    </li>
+
+
+                    <li>
+                        <a 
+                            class="dropdown-item" 
+                            href="<?= route('/admin/products/create') ?>"
+                        >
+                            Thêm sản phẩm
+                        </a>
+                    </li>
+
+                    <li>
+                        <a 
+                            class="dropdown-item" 
+                            href="<?= route('/job/ducan/list') ?>"
+                        >
+                            Đức An Sports
+                        </a>
+                    </li>
+
+
+                </ul>
+
+            </li>
 
                 <!-- ========================= -->
                 <!-- NHÀ CUNG CẤP -->

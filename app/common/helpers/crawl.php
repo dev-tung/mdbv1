@@ -18,15 +18,17 @@ if (!function_exists('crawl_get_html')) {
 		]);
 
 		$html = curl_exec($ch);
+
 		$error = curl_error($ch);
+
 		$statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
 		curl_close($ch);
 
-		crawl_log('HTTP CODE: ' . $statusCode);
+		crawl_log("HTTP {$statusCode} | {$url}");
 
 		if ($error) {
-			crawl_log('CURL WARNING: ' . $error);
+			crawl_log("CURL ERROR: {$error}");
 		}
 
 		return $html ?: '';
@@ -45,12 +47,14 @@ if (!function_exists('crawl_download_image')) {
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_USERAGENT => 'Mozilla/5.0',
 			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_TIMEOUT => 120,
 		]);
 
 		$result = curl_exec($ch);
 
 		curl_close($ch);
+
 		fclose($fp);
 
 		return (bool) $result;
@@ -65,6 +69,7 @@ if (!function_exists('crawl_delete_directory')) {
 		}
 
 		foreach (scandir($dir) as $item) {
+
 			if ($item === '.' || $item === '..') {
 				continue;
 			}
@@ -85,13 +90,13 @@ if (!function_exists('crawl_delete_directory')) {
 if (!function_exists('crawl_log')) {
 	function crawl_log(string $message): void
 	{
+		$line = '[' . date('Y-m-d H:i:s') . '] ' . $message;
+
 		if (php_sapi_name() === 'cli') {
-			echo $message . PHP_EOL;
-		} else {
-			echo $message . '<br>' . PHP_EOL;
+			echo $line . PHP_EOL;
+			return;
 		}
 
-		@ob_flush();
-		flush();
+		error_log($line);
 	}
 }
