@@ -1,51 +1,57 @@
 <?php
 
 use App\Core\Router;
-use App\Job\Controllers\ShopProcedureCreator;
-use App\Job\Controllers\YonexCategoryCrawler;
-use App\Job\Controllers\YonexProductCrawler;
-use App\Job\Controllers\YonexProductDetailCrawler;
-use App\Job\Controllers\YonexProductImporter;
+use App\Job\Controllers\ProcedureShop;
+use App\Job\Controllers\CrawlYonexCategory;
+use App\Job\Controllers\CrawlYonexProduct;
+use App\Job\Controllers\CrawlYonexProductDetail;
+use App\Job\Controllers\ImportYonexProduct;
+use App\Job\Controllers\CrawlDucan;
 
-// =========================
-// SHOP PROCEDURE
-// =========================
 
 Router::get(
-	'/job/yonex-category-crawl',
-	[YonexCategoryCrawler::class, 'run'],
+	'/job/crawl-ducan',
+	[CrawlDucan::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
 );
 
 Router::get(
-	'/job/yonex-product-crawl',
-	[YonexProductCrawler::class, 'run'],
+	'/job/crawl-yonex-category',
+	[CrawlYonexCategory::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
 );
 
 Router::get(
-	'/job/yonex-product-detail-crawl',
-	[YonexProductDetailCrawler::class, 'run'],
+	'/job/crawl-yonex-product',
+	[CrawlYonexProduct::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
 );
 
 Router::get(
-	'/job/yonex-product-import',
-	[YonexProductImporter::class, 'run'],
+	'/job/crawl-yonex-product-detail',
+	[CrawlYonexProductDetail::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
 );
 
 Router::get(
-	'/job/shop-procedure-create',
-	[ShopProcedureCreator::class, 'run'],
+	'/job/import-yonex-product',
+	[ImportYonexProduct::class, 'run'],
+	[
+		'auth' => 'admin',
+	],
+);
+
+Router::get(
+	'/job/procedure-shop',
+	[ProcedureShop::class, 'run'],
 	[
 		'auth' => 'admin',
 	],

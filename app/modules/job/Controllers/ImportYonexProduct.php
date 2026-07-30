@@ -4,7 +4,7 @@ namespace App\Job\Controllers;
 
 use App\Core\Database;
 
-class YonexProductImporter
+class ImportYonexProduct
 {
 	protected string $categoryFile;
 

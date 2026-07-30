@@ -4,7 +4,7 @@ namespace App\Job\Controllers;
 
 use App\Core\Database;
 
-class YonexCategoryCrawler
+class CrawlYonexCategory
 {
 	protected string $baseUrl = 'https://www.yonex.com/badminton';
 
