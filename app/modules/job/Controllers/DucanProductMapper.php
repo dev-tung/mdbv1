@@ -8,6 +8,67 @@ use App\Core\View;
 class DucanProductMapper
 {
 
+    public function update(): void
+    {
+        set_time_limit(0);
+
+        [$ducanProducts, $productMap] = $this->getData();
+
+        header('Content-Type: text/html; charset=utf-8');
+
+        echo str_repeat(' ', 4096);
+
+        $updated = 0;
+
+        foreach ($ducanProducts as $ducan) {
+
+            $key = $this->buildKey($ducan["name"]);
+
+            // Chỉ cập nhật sản phẩm đã match
+            if (!isset($productMap[$key])) {
+                continue;
+            }
+
+            $price = (int) $ducan["price"];
+
+            // Bỏ qua nếu không có giá
+            if ($price <= 0) {
+                continue;
+            }
+
+            $salePrice = $this->getSalePrice($ducan);
+
+            Database::execute("
+                UPDATE products
+                SET
+                    price = ?,
+                    sale_price = ?,
+                    updated_by = ?
+                WHERE id = ?
+            ", [
+                $price,
+                $salePrice,
+                "ducan",
+                $productMap[$key]["id"],
+            ]);
+
+            $updated++;
+
+            echo sprintf(
+                "%d | %s | Price: %s | Sale: %s<br>",
+                $productMap[$key]["id"],
+                htmlspecialchars($productMap[$key]["name"]),
+                number_format($price),
+                number_format($salePrice)
+            );
+
+            flush();
+        }
+
+        echo "<hr>";
+        echo "Done. Updated {$updated} products.";
+    }
+
     /**
      * Danh sách tất cả Đức An
      */

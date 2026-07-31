@@ -42,6 +42,14 @@ Router::get(
 );
 
 Router::get(
+    '/job/ducan/update',
+    [DucanProductMapper::class, 'update'],
+    [
+        'auth' => 'admin',
+    ],
+);
+
+Router::get(
 	'/job/crawl-yonex-category',
 	[YonexCategoryCrawler::class, 'run'],
 	[

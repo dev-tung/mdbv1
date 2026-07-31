@@ -32,13 +32,25 @@
 
 
 
-    <a 
-        href="<?= route('/job/ducan/crawl') ?>"
-        class="btn btn-sm btn-outline-danger"
-        onclick="return confirm('Bạn có muốn crawl dữ liệu mới từ Đức An?')"
-    >
-        Crawl
-    </a>
+    <div class="d-flex gap-2">
+
+        <a 
+            href="<?= route('/job/ducan/update') ?>"
+            class="btn btn-sm btn-outline-warning"
+            onclick="return confirm('Bạn có muốn cập nhật giá từ Đức An?')"
+        >
+            Update
+        </a>
+
+        <a 
+            href="<?= route('/job/ducan/crawl') ?>"
+            class="btn btn-sm btn-outline-danger"
+            onclick="return confirm('Bạn có muốn crawl dữ liệu mới từ Đức An?')"
+        >
+            Crawl
+        </a>
+
+    </div>
 
 
 </div>
