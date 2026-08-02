@@ -42,7 +42,11 @@ const Init = {
 	bindCustomer() {
 		Autocomplete.init({
 			element: '#customer_search',
-
+			display(customer) {
+					return customer.group_name
+							? `${customer.name} (${customer.group_name})`
+							: customer.name;
+			},
 			async source(keyword) {
 				const customers = await Api.searchCustomer(keyword);
 
