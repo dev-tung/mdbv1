@@ -15,11 +15,11 @@ class CartController
 	}
 
 	/**
-	 * Checkout page
+	 * Out page
 	 */
-	public function checkout(): void
+	public function out(): void
 	{
-		View::render('cart/checkout');
+		View::render('cart/out');
 	}
 
 	/**

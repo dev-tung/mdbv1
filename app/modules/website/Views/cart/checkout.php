@@ -13,13 +13,13 @@
 
                 <div class="card-body">
 
-                    <div id="checkout-items">Đang tải...</div>
+                    <div id="out-items">Đang tải...</div>
 
                     <hr>
 
                     <div class="d-flex justify-content-between fw-bold fs-5">
                         <span>Tổng tiền</span>
-                        <span id="checkout-total">0 ₫</span>
+                        <span id="out-total">0 ₫</span>
                     </div>
 
                 </div>
@@ -80,12 +80,12 @@ function getCart() {
 }
 
 // =========================
-// RENDER CHECKOUT (FIXED MOBILE BUG)
+// RENDER OUT (FIXED MOBILE BUG)
 // =========================
-function renderCheckout() {
+function renderOut() {
 
     const cart = getCart();
-    const container = document.getElementById('checkout-items');
+    const container = document.getElementById('out-items');
 
     if (!container) return;
 
@@ -94,7 +94,7 @@ function renderCheckout() {
             <div class="alert alert-warning mb-0">
                 Giỏ hàng trống
             </div>`;
-        document.getElementById('checkout-total').innerText = '0 ₫';
+        document.getElementById('out-total').innerText = '0 ₫';
         return;
     }
 
@@ -142,7 +142,7 @@ function renderCheckout() {
         `;
     });
 
-    document.getElementById('checkout-total').innerText =
+    document.getElementById('out-total').innerText =
         total.toLocaleString('vi-VN') + ' ₫';
 }
 
@@ -229,6 +229,6 @@ async function submitOrder() {
 }
 
 // INIT
-document.addEventListener('DOMContentLoaded', renderCheckout);
+document.addEventListener('DOMContentLoaded', renderOut);
 
 </script>

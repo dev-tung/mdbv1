@@ -38,7 +38,7 @@
                     </div>
 
                     <button class="btn btn-success w-100 mb-2"
-                            onclick="goCheckout()">
+                            onclick="goOut()">
                         Thanh toán
                     </button>
 
@@ -192,10 +192,10 @@ function removeItem(index) {
 }
 
 // =========================
-// CHECKOUT
+// OUT
 // =========================
-function goCheckout() {
-    window.location.href = '/checkout';
+function goOut() {
+    window.location.href = '/out';
 }
 
 // INIT

@@ -1,7 +1,7 @@
 <?php
 
 use App\Core\Router;
-use App\Job\Controllers\ShopProcedureCreator;
+use App\Job\Controllers\ProcedureCreator;
 use App\Job\Controllers\YonexCategoryCrawler;
 use App\Job\Controllers\YonexProductCrawler;
 use App\Job\Controllers\YonexProductDetailCrawler;
@@ -82,8 +82,8 @@ Router::get(
 );
 
 Router::get(
-	'/job/procedure-shop',
-	[ShopProcedureCreator::class, 'run'],
+	'/job/procedure',
+	[ProcedureCreator::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
