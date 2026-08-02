@@ -1,6 +1,6 @@
 <?php
 
-const ATTENDANCE_IP = '116.99.33.228';
+const ATTENDANCE_IP = '14.229.120.151';
 
 
 function current_ip(): string
