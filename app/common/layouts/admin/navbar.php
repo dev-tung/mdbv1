@@ -172,6 +172,20 @@
                         </li>
                     </ul>
                 </li>
+
+                <!-- ========================= -->
+                <!-- CHẤM CÔNG -->
+                <!-- ========================= -->
+                <li class="nav-item">
+
+                    <a
+                        class="nav-link <?= active_menu('/admin/attendance') ?>"
+                        href="<?= route('/admin/attendance') ?>"
+                    >
+                        Chấm công
+                    </a>
+
+                </li>
             </ul>
 
         <!-- RIGHT SIDE -->
