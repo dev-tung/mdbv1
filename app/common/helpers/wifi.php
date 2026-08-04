@@ -16,7 +16,7 @@ function check_wifi(): void
     if ($ip !== ATTENDANCE_IP) {
 
         throw new Exception(
-            'Bạn không kết nối WiFi của cửa hàng. IP hiện tại: ' . $ip
+            'Bạn không kết nối WiFi của cửa hàng. IP hiện tại ' . $ip
         );
 
     }

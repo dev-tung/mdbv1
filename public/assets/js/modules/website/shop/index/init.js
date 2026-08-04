@@ -4,7 +4,7 @@ import State from './state.js';
 import Renderer from './renderer.js';
 import Service from './service.js';
 
-const Controller = {
+const Init = {
 	async init() {
 		// =========================
 		// GET FILTER FROM URL (ONLY ONCE)
@@ -109,8 +109,8 @@ const Controller = {
 	},
 };
 
-export default Controller;
+export default Init;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Controller.init();
+	Init.init();
 });
