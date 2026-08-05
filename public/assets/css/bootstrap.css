@@ -11398,3 +11398,7 @@ fieldset:disabled .btn {
 		transform: rotate(180deg);
 	}
 }
+
+.product-name a:hover {
+    color: var(--bs-primary) !important;
+}

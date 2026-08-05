@@ -33,113 +33,347 @@ const Renderer = {
 		PRODUCTS
 	================================================= */
 
-	renderProducts() {
-		const uploadPath = '/uploads/products/';
-		const noImage = '/assets/image/no-image.svg';
+renderProducts() {
+    const uploadPath = '/uploads/products/';
+    const noImage = '/assets/image/no-image.svg';
 
-		const container = Dom.find('#product-grid');
+    const container = Dom.find('#product-grid');
 
-		if (!container) {
-			return;
-		}
+    if (!container) {
+        return;
+    }
 
-		container.replaceChildren();
+    container.replaceChildren();
 
-		if (!State.products.length) {
-			const col = document.createElement('div');
+    if (!State.products.length) {
 
-			col.className = 'col-12';
+        const col = document.createElement('div');
 
-			const alert = document.createElement('div');
+        col.className = 'col-12';
 
-			alert.className = 'alert alert-light border text-center mb-0';
+        const alert = document.createElement('div');
 
-			alert.textContent = 'Không có sản phẩm.';
+        alert.className =
+            'alert alert-light border text-center mb-0';
 
-			col.appendChild(alert);
+        alert.textContent =
+            'Không có sản phẩm.';
 
-			container.appendChild(col);
+        col.appendChild(alert);
 
-			return;
-		}
+        container.appendChild(col);
 
-		const fragment = document.createDocumentFragment();
+        return;
+    }
 
-		State.products.forEach((product) => {
-			const template = Dom.template('#product-card-template');
 
-			const card = template.querySelector('.product-card');
+    // =========================
+    // FRAGMENT
+    // =========================
 
-			// =========================
-			// IMAGE
-			// =========================
+    const fragment =
+        document.createDocumentFragment();
 
-			const image = card.querySelector('.product-image');
 
-			if (image) {
-				image.src = product.thumbnail
-					? (
-						product.thumbnail.startsWith('uploads/')
-							? `/${product.thumbnail}`
-							: `${uploadPath}${product.thumbnail}`
-					)
-					: noImage;
+    // =========================
+    // PRODUCTS
+    // =========================
 
-				image.alt = product.name;
+    State.products.forEach((product) => {
 
-				image.onerror = () => {
-					image.src = noImage;
-				};
-			}
+        const template =
+            Dom.template('#product-card-template');
 
-			// =========================
-			// TEXT
-			// =========================
+        const card =
+            template.querySelector('.product-card');
 
-			Dom.text('.product-brand', product.brand_name || '', card);
 
-			Dom.text('.product-name', product.name, card);
+        // =========================
+        // PRODUCT URL
+        // =========================
 
-			// =========================
-			// PRICE
-			// =========================
+        const productUrl =
+            `/product/${product.slug || product.id}`;
 
-			const priceElement = card.querySelector('.product-price');
 
-			const price = Number(product.price);
-			const salePrice = Number(product.sale_price);
+        // =========================
+        // IMAGE
+        // =========================
 
-			if (price <= 0 && salePrice <= 0) {
-				priceElement.innerHTML = '';
-			} else if (salePrice > 0 && salePrice < price) {
-				priceElement.innerHTML = `
-					<span class="text-decoration-line-through text-secondary me-2">
-						${Formatter.money(price)}
-					</span>
+        const image =
+            card.querySelector('.product-image');
 
-					<span class="text-danger fw-bold">
-						${Formatter.money(salePrice)}
-					</span>
-				`;
-			} else {
-				priceElement.textContent = Formatter.money(salePrice > 0 ? salePrice : price);
-			}
+        if (image) {
 
-			// =========================
-			// LINK
-			// =========================
+            image.src =
+                product.thumbnail
+                    ? (
+                        product.thumbnail.startsWith('uploads/')
+                            ? `/${product.thumbnail}`
+                            : `${uploadPath}${product.thumbnail}`
+                    )
+                    : noImage;
 
-			const link = card.querySelector('.product-link');
+            image.alt =
+                product.name || '';
 
-			if (link) {
-				link.href = `/product/${product.slug || product.id}`;
-			}
+            image.onerror = () => {
 
-			fragment.appendChild(template);
-		});
+                image.onerror = null;
 
-		container.appendChild(fragment);
-	},
+                image.src = noImage;
+            };
+        }
+
+
+        // =========================
+        // BRAND
+        // =========================
+
+        Dom.text(
+            '.product-brand',
+            product.brand_name || '',
+            card
+        );
+
+
+        // =========================
+        // PRODUCT NAME
+        // =========================
+
+        const nameElement =
+            card.querySelector('.product-name');
+
+        if (nameElement) {
+
+            nameElement.replaceChildren();
+
+
+            const nameLink =
+                document.createElement('a');
+
+            nameLink.href =
+                productUrl;
+
+            nameLink.className =
+                'text-dark text-decoration-none';
+
+            nameLink.textContent =
+                product.name || '';
+
+
+            nameElement.appendChild(
+                nameLink
+            );
+        }
+
+
+        // =========================
+        // PRICE
+        // =========================
+
+        const priceElement =
+            card.querySelector('.product-price');
+
+        const price =
+            Number(product.price || 0);
+
+        const salePrice =
+            Number(product.sale_price || 0);
+
+
+        // =========================
+        // SELLING PRICE
+        // =========================
+
+        let sellingPrice = 0;
+
+        if (
+            salePrice > 0 &&
+            price > 0 &&
+            salePrice < price
+        ) {
+
+            sellingPrice =
+                salePrice;
+
+        } else {
+
+            sellingPrice =
+                price;
+        }
+
+
+        // =========================
+        // DISPLAY PRICE
+        // =========================
+
+        if (priceElement) {
+
+            if (
+                price > 0 &&
+                salePrice > 0 &&
+                salePrice < price
+            ) {
+
+                priceElement.innerHTML = `
+                    <span class="text-decoration-line-through text-secondary me-2">
+                        ${Formatter.money(price)}
+                    </span>
+
+                    <span class="text-danger fw-bold">
+                        ${Formatter.money(salePrice)}
+                    </span>
+                `;
+
+            } else if (
+                sellingPrice > 0
+            ) {
+
+                priceElement.textContent =
+                    Formatter.money(
+                        sellingPrice
+                    );
+
+            } else {
+
+                priceElement.textContent =
+                    '';
+            }
+        }
+
+
+        // =========================
+        // STOCK
+        // =========================
+
+        const stock =
+            Number(product.stock || 0);
+
+
+        // =========================
+        // PURCHASE ID
+        // =========================
+
+        const purchaseId =
+            Number(product.purchase_id || 0);
+
+
+        // =========================
+        // PRODUCT ID
+        // =========================
+
+        const productId =
+            Number(product.id || 0);
+
+
+        // =========================
+        // ACTION
+        // =========================
+
+        const action =
+            card.querySelector(
+                '.product-action'
+            );
+
+
+        if (action) {
+
+            action.replaceChildren();
+
+
+            // =========================
+            // MUA NGAY
+            // =========================
+
+            if (
+                sellingPrice > 0 &&
+                stock > 0 &&
+                productId > 0 &&
+                purchaseId > 0
+            ) {
+
+                const button =
+                    document.createElement('button');
+
+                button.type =
+                    'button';
+
+                button.className =
+                    'btn btn-success btn-sm w-100 product-buy-now';
+
+                // Product ID
+                button.dataset.productId =
+                    productId;
+
+                // Purchase ID
+                button.dataset.purchaseId =
+                    purchaseId;
+
+                // Stock
+                button.dataset.stock =
+                    stock;
+
+                // Selling price
+                button.dataset.price =
+                    sellingPrice;
+
+                button.textContent =
+                    'Mua ngay';
+
+
+                action.appendChild(
+                    button
+                );
+
+            }
+
+
+            // =========================
+            // XEM CHI TIẾT
+            // =========================
+
+            else {
+
+                const detailLink =
+                    document.createElement('a');
+
+                detailLink.href =
+                    productUrl;
+
+                detailLink.className =
+                    'btn btn-outline-primary btn-sm w-100';
+
+                detailLink.textContent =
+                    'Xem chi tiết';
+
+
+                action.appendChild(
+                    detailLink
+                );
+            }
+        }
+
+
+        // =========================
+        // APPEND
+        // =========================
+
+        fragment.appendChild(
+            template
+        );
+
+    });
+
+
+    // =========================
+    // RENDER
+    // =========================
+
+    container.appendChild(
+        fragment
+    );
+},
 
 	/* =================================================
 	   PAGINATION

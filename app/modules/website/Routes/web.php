@@ -26,8 +26,8 @@ Router::get('/search', [ShopController::class, 'search']);
 // =========================
 
 Router::get('/cart', [CartController::class, 'index']);
-Router::get('/out', [CartController::class, 'out']);
-Router::get('/cart/success', [CartController::class, 'success']);
+Router::get('/checkout', [CartController::class, 'checkout']);
+Router::get('/checkout/success', [CartController::class, 'success']);
 
 // =========================
 // PAGE

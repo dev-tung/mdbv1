@@ -127,7 +127,7 @@
 
 
 
-                    <a href="<?= route('cart') ?>"
+                    <a href="/cart"
                        class="btn btn-success btn-sm">
                         Giỏ hàng
                     </a>

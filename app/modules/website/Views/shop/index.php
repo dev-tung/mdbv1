@@ -159,65 +159,110 @@
         <!-- FILTER -->
         <div class="row g-3 align-items-end">
 
+            <!-- CATEGORY -->
             <div class="col-12 col-md-6 col-lg">
 
-                <label class="form-label form-label-sm fw-semibold">
+                <label
+                    for="filter-category"
+                    class="form-label form-label-sm fw-semibold"
+                >
                     Danh mục
                 </label>
 
                 <select
                     id="filter-category"
-                    class="form-select form-select-sm">
+                    class="form-select form-select-sm"
+                >
                 </select>
 
             </div>
 
+
+            <!-- BRAND -->
             <div class="col-12 col-md-6 col-lg">
 
-                <label class="form-label form-label-sm fw-semibold">
+                <label
+                    for="filter-brand"
+                    class="form-label form-label-sm fw-semibold"
+                >
                     Thương hiệu
                 </label>
 
                 <select
                     id="filter-brand"
-                    class="form-select form-select-sm">
+                    class="form-select form-select-sm"
+                >
                 </select>
 
             </div>
 
+
+            <!-- PRICE -->
             <div class="col-12 col-md-6 col-lg">
 
-                <label class="form-label form-label-sm fw-semibold">
+                <label
+                    for="filter-price"
+                    class="form-label form-label-sm fw-semibold"
+                >
                     Khoảng giá
                 </label>
 
                 <select
                     id="filter-price"
-                    class="form-select form-select-sm">
+                    class="form-select form-select-sm"
+                >
 
-                    <option value="">Tất cả mức giá</option>
-                    <option value="0-500000">Dưới 500.000₫</option>
-                    <option value="500000-1000000">500.000₫ - 1.000.000₫</option>
-                    <option value="1000000-2000000">1.000.000₫ - 2.000.000₫</option>
-                    <option value="2000000">Trên 2.000.000₫</option>
+                    <option value="">
+                        Tất cả mức giá
+                    </option>
+
+                    <option value="0-500000">
+                        Dưới 500.000₫
+                    </option>
+
+                    <option value="500000-1000000">
+                        500.000₫ - 1.000.000₫
+                    </option>
+
+                    <option value="1000000-2000000">
+                        1.000.000₫ - 2.000.000₫
+                    </option>
+
+                    <option value="2000000">
+                        Trên 2.000.000₫
+                    </option>
 
                 </select>
 
             </div>
 
+
+            <!-- STATUS -->
             <div class="col-12 col-md-6 col-lg">
 
-                <label class="form-label form-label-sm fw-semibold">
+                <label
+                    for="filter-status"
+                    class="form-label form-label-sm fw-semibold"
+                >
                     Tình trạng
                 </label>
 
                 <select
                     id="filter-status"
-                    class="form-select form-select-sm">
+                    class="form-select form-select-sm"
+                >
 
-                    <option value="">Tất cả</option>
-                    <option value="1">Đang bán</option>
-                    <option value="0">Ngừng bán</option>
+                    <option value="">
+                        Tất cả
+                    </option>
+
+                    <option value="1">
+                        Đang bán
+                    </option>
+
+                    <option value="0">
+                        Ngừng bán
+                    </option>
 
                 </select>
 
@@ -225,40 +270,62 @@
 
         </div>
 
+
         <!-- GRID -->
         <section class="mt-4">
 
             <div
                 id="product-grid"
-                class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3">
+                class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3"
+            >
             </div>
 
         </section>
 
+
+        <!-- PRODUCT CARD TEMPLATE -->
         <template id="product-card-template">
 
             <div class="col">
 
                 <div class="card product-card h-100 border-0 shadow-sm">
 
+                    <!-- IMAGE -->
                     <img
                         src=""
                         class="card-img-top product-image"
-                        alt="">
+                        alt=""
+                    >
+
 
                     <div class="card-body d-flex flex-column">
 
-                        <small class="text-secondary product-brand"></small>
+                        <!-- BRAND -->
+                        <small
+                            class="text-secondary product-brand"
+                        >
+                        </small>
 
-                        <h6 class="card-title mt-1 mb-2 product-name"></h6>
 
-                        <div class="fw-bold text-danger mb-3 product-price"></div>
+                        <!-- NAME -->
+                        <h6
+                            class="card-title mt-1 mb-2 product-name"
+                        >
+                        </h6>
 
-                        <a
-                            href="#"
-                            class="btn btn-outline-primary btn-sm mt-auto product-link">
-                            Xem chi tiết
-                        </a>
+
+                        <!-- PRICE -->
+                        <div
+                            class="fw-bold text-danger mb-3 product-price"
+                        >
+                        </div>
+
+
+                        <!-- ACTION -->
+                        <div
+                            class="mt-auto product-action"
+                        >
+                        </div>
 
                     </div>
 
@@ -268,14 +335,17 @@
 
         </template>
 
+
         <!-- PAGINATION -->
         <nav
             class="mt-4"
-            aria-label="Phân trang sản phẩm">
+            aria-label="Phân trang sản phẩm"
+        >
 
             <ul
                 id="pagination"
-                class="pagination pagination-sm justify-content-center mb-0">
+                class="pagination pagination-sm justify-content-center mb-0"
+            >
             </ul>
 
         </nav>

@@ -17,9 +17,9 @@ class CartController
 	/**
 	 * Out page
 	 */
-	public function out(): void
+	public function checkout(): void
 	{
-		View::render('cart/out');
+		View::render('cart/checkout');
 	}
 
 	/**

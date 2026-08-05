@@ -36,37 +36,29 @@ class OrderRepository extends Repository
 	   CREATE
 	================================================= */
 
-	public function create(array $data): int
-	{
-		Database::query(
-			'CALL sp_order_create(
-				?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-			)',
-			[
-				$data['customer_id'],
+public function create(array $data): int
+{
+	Database::query(
+		'CALL sp_order_create(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+		[
+			$data['customer_id'],
+			$data['description'] ?? null,
+			$data['note'] ?? null,
+			$data['status'] ?? 'pending',
+			$data['payment'] ?? 'unpaid',
+			$data['subtotal_amount'] ?? 0,
+			$data['vat_rate'] ?? 0,
+			$data['vat_amount'] ?? 0,
+			$data['total_amount'] ?? 0,
+			$data['paid_amount'] ?? 0,
+			$data['debt_amount'] ?? 0,
+			$data['created_by'] ?? null,
+			json_encode($data['items'] ?? [], JSON_UNESCAPED_UNICODE),
+		],
+	);
 
-				$data['description'],
-				$data['note'],
-
-				$data['status'],
-				$data['payment'],
-
-				$data['subtotal_amount'],
-				$data['vat_rate'],
-				$data['vat_amount'],
-				$data['total_amount'],
-
-				$data['paid_amount'],
-				$data['debt_amount'],
-
-				$data['created_by'],
-
-				json_encode($data['items']),
-			],
-		);
-
-		return Database::lastInsertId();
-	}
+	return (int) Database::lastInsertId();
+}
 
 	/* =================================================
 	   UPDATE

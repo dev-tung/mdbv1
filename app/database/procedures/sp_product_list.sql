@@ -14,6 +14,7 @@ CREATE PROCEDURE sp_product_list (
 	IN p_per_page INT
 )
 BEGIN
+
 	DECLARE v_offset INT;
 
 	/* ==========================================
@@ -35,38 +36,94 @@ BEGIN
 
 	SELECT
 		p.id,
+
 		p.category_id,
+
 		c.name AS category_name,
+
 		p.brand_id,
+
 		p.name,
+
 		p.thumbnail,
+
 		p.price,
+
 		p.sale_price,
 
-		/* TỒN KHO */
-		COALESCE(i.stock, 0) AS stock,
+		/* ======================================
+		   PURCHASE
+		====================================== */
+
+		i.purchase_id,
+
+		/* ======================================
+		   STOCK
+		====================================== */
+
+		COALESCE(
+			i.stock,
+			0
+		) AS stock,
 
 		p.status,
+
 		p.description,
+
 		p.created_at
 
 	FROM products p
 
+
+	/* ==========================================
+	   CATEGORY
+	========================================== */
+
 	LEFT JOIN categories c
 		ON c.id = p.category_id
 
+
 	/* ==========================================
 	   INVENTORY
+
+	   Lấy một purchase_id đang còn hàng
+	   cho mỗi product.
+
+	   Ưu tiên inventory có id mới nhất.
 	========================================== */
 
 	LEFT JOIN (
+
 		SELECT
-			product_id,
-			SUM(quantity) AS stock
-		FROM inventories
-		GROUP BY product_id
+			i.product_id,
+
+			i.purchase_id,
+
+			i.quantity AS stock
+
+		FROM inventories i
+
+		INNER JOIN (
+
+			SELECT
+				product_id,
+
+				MAX(id) AS inventory_id
+
+			FROM inventories
+
+			WHERE quantity > 0
+
+			GROUP BY product_id
+
+		) x
+
+			ON x.inventory_id = i.id
+
 	) i
+
 		ON i.product_id = p.id
+
 
 	WHERE
 
@@ -76,9 +133,16 @@ BEGIN
 
 		(
 			p_keyword IS NULL
+
 			OR p_keyword = ''
-			OR p.name LIKE CONCAT('%', p_keyword, '%')
+
+			OR p.name LIKE CONCAT(
+				'%',
+				p_keyword,
+				'%'
+			)
 		)
+
 
 		/* ======================================
 		   CATEGORY
@@ -86,8 +150,10 @@ BEGIN
 
 		AND (
 			p_category_id IS NULL
+
 			OR p.category_id = p_category_id
 		)
+
 
 		/* ======================================
 		   BRAND
@@ -95,8 +161,10 @@ BEGIN
 
 		AND (
 			p_brand_id IS NULL
+
 			OR p.brand_id = p_brand_id
 		)
+
 
 		/* ======================================
 		   STATUS
@@ -104,9 +172,12 @@ BEGIN
 
 		AND (
 			p_status IS NULL
+
 			OR p_status = ''
+
 			OR p.status = p_status
 		)
+
 
 		/* ======================================
 		   DATE FROM
@@ -114,8 +185,12 @@ BEGIN
 
 		AND (
 			p_date_from IS NULL
-			OR DATE(p.created_at) >= p_date_from
+
+			OR DATE(
+				p.created_at
+			) >= p_date_from
 		)
+
 
 		/* ======================================
 		   DATE TO
@@ -123,8 +198,12 @@ BEGIN
 
 		AND (
 			p_date_to IS NULL
-			OR DATE(p.created_at) <= p_date_to
+
+			OR DATE(
+				p.created_at
+			) <= p_date_to
 		)
+
 
 		/* ======================================
 		   PRICE MIN
@@ -132,8 +211,10 @@ BEGIN
 
 		AND (
 			p_price_min IS NULL
+
 			OR p.price >= p_price_min
 		)
+
 
 		/* ======================================
 		   PRICE MAX
@@ -141,8 +222,10 @@ BEGIN
 
 		AND (
 			p_price_max IS NULL
+
 			OR p.price <= p_price_max
 		)
+
 
 		/* ======================================
 		   WEBSITE
@@ -150,9 +233,13 @@ BEGIN
 
 		AND (
 			p_website = 0
+
 			OR (
 				p.thumbnail IS NOT NULL
-				AND TRIM(p.thumbnail) <> ''
+
+				AND TRIM(
+					p.thumbnail
+				) <> ''
 			)
 		)
 
@@ -169,27 +256,42 @@ BEGIN
 	ORDER BY
 
 		/* 1. Vợt cầu lông */
+
 		CASE
-			WHEN p.category_id = 1 THEN 0
+			WHEN p.category_id = 1
+			THEN 0
 			ELSE 1
 		END ASC,
+
 
 		/* 2. Còn hàng */
+
 		CASE
-			WHEN COALESCE(i.stock, 0) > 0 THEN 0
+			WHEN COALESCE(
+				i.stock,
+				0
+			) > 0
+			THEN 0
 			ELSE 1
 		END ASC,
+
 
 		/* 3. Có giá */
+
 		CASE
-			WHEN p.price > 0 THEN 0
+			WHEN p.price > 0
+			THEN 0
 			ELSE 1
 		END ASC,
 
+
 		/* 4. Mới nhất */
+
 		p.id DESC
 
+
 	LIMIT p_per_page
+
 	OFFSET v_offset;
 
 
@@ -198,6 +300,7 @@ BEGIN
 	========================================== */
 
 	SELECT
+
 		COUNT(*) AS total,
 
 		COALESCE(
@@ -220,9 +323,16 @@ BEGIN
 
 		(
 			p_keyword IS NULL
+
 			OR p_keyword = ''
-			OR p.name LIKE CONCAT('%', p_keyword, '%')
+
+			OR p.name LIKE CONCAT(
+				'%',
+				p_keyword,
+				'%'
+			)
 		)
+
 
 		/* ======================================
 		   CATEGORY
@@ -230,8 +340,10 @@ BEGIN
 
 		AND (
 			p_category_id IS NULL
+
 			OR p.category_id = p_category_id
 		)
+
 
 		/* ======================================
 		   BRAND
@@ -239,8 +351,10 @@ BEGIN
 
 		AND (
 			p_brand_id IS NULL
+
 			OR p.brand_id = p_brand_id
 		)
+
 
 		/* ======================================
 		   STATUS
@@ -248,9 +362,12 @@ BEGIN
 
 		AND (
 			p_status IS NULL
+
 			OR p_status = ''
+
 			OR p.status = p_status
 		)
+
 
 		/* ======================================
 		   DATE FROM
@@ -258,8 +375,12 @@ BEGIN
 
 		AND (
 			p_date_from IS NULL
-			OR DATE(p.created_at) >= p_date_from
+
+			OR DATE(
+				p.created_at
+			) >= p_date_from
 		)
+
 
 		/* ======================================
 		   DATE TO
@@ -267,8 +388,12 @@ BEGIN
 
 		AND (
 			p_date_to IS NULL
-			OR DATE(p.created_at) <= p_date_to
+
+			OR DATE(
+				p.created_at
+			) <= p_date_to
 		)
+
 
 		/* ======================================
 		   PRICE MIN
@@ -276,8 +401,10 @@ BEGIN
 
 		AND (
 			p_price_min IS NULL
+
 			OR p.price >= p_price_min
 		)
+
 
 		/* ======================================
 		   PRICE MAX
@@ -285,8 +412,10 @@ BEGIN
 
 		AND (
 			p_price_max IS NULL
+
 			OR p.price <= p_price_max
 		)
+
 
 		/* ======================================
 		   WEBSITE
@@ -294,9 +423,13 @@ BEGIN
 
 		AND (
 			p_website = 0
+
 			OR (
 				p.thumbnail IS NOT NULL
-				AND TRIM(p.thumbnail) <> ''
+
+				AND TRIM(
+					p.thumbnail
+				) <> ''
 			)
 		);
 
