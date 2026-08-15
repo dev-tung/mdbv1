@@ -336,7 +336,7 @@ function renderCart() {
                             purchaseId > 0
                                 ? `
                                     <small class="text-muted">
-                                        Tồn kho: ${stock}
+                                        Tồn kho ${stock}
                                     </small>
                                 `
                                 : `

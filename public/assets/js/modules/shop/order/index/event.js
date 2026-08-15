@@ -6,14 +6,14 @@ import State from './state.js';
 import Renderer from './renderer.js';
 import Service from './service.js';
 
-const Init = {
+const Event = {
 	init() {
 		Table.init({
-			body: '#purchase-table-body',
+			body: '#order-table-body',
 
 			pagination: true,
 
-			colspan: 10,
+			colspan: 9,
 
 			filters: {
 				'#filter-date-from': {
@@ -28,11 +28,11 @@ const Init = {
 					},
 				},
 
-				'#filter-supplier': {
+				'#filter-customer': {
 					event: 'input',
 
 					handler(value) {
-						State.filters.supplier = value.trim();
+						State.filters.customer = value.trim();
 					},
 				},
 
@@ -46,9 +46,7 @@ const Init = {
 			async source({ page, per_page }) {
 				const data = await Service.getList({
 					...State.filters,
-
 					page,
-
 					per_page,
 				});
 
@@ -66,20 +64,20 @@ const Init = {
 	},
 
 	bindEvents() {
-		const table = Dom.find('#purchase-table-body');
+		const table = Dom.find('#order-table-body');
 
 		table.addEventListener('change', async (e) => {
 			const target = e.target;
 
 			try {
 				if (target.classList.contains('status')) {
-					const response = await Api.updatePurchaseStatus(target.dataset.id, target.value);
+					const response = await Api.updateOrderStatus(target.dataset.id, target.value);
 
 					alert(response.message);
 				}
 
 				if (target.classList.contains('payment')) {
-					const response = await Api.updatePurchasePayment(target.dataset.id, target.value);
+					const response = await Api.updateOrderPayment(target.dataset.id, target.value);
 
 					alert(response.message);
 				}
@@ -105,12 +103,12 @@ const Init = {
 				return;
 			}
 
-			if (!confirm('Bạn có chắc chắn muốn xóa phiếu nhập này?')) {
+			if (!confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')) {
 				return;
 			}
 
 			try {
-				const response = await Api.deletePurchase(button.dataset.id);
+				const response = await Api.deleteOrder(button.dataset.id);
 
 				alert(response.message);
 
@@ -130,8 +128,8 @@ const Init = {
 	},
 };
 
-export default Init;
+export default Event;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Init.init();
+	Event.init();
 });

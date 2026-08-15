@@ -10,10 +10,10 @@ import Renderer from './renderer.js';
 
 import Service from './service.js';
 
-const Init = {
+const Event = {
 	init() {
 		Table.init({
-			body: '#employee-table-body',
+			body: '#supplier-table-body',
 
 			pagination: true,
 
@@ -40,7 +40,6 @@ const Init = {
 					},
 				},
 			},
-
 			async source({ page, per_page }) {
 				const data = await Service.getList({
 					...State.filters,
@@ -68,7 +67,7 @@ const Init = {
 	================================================= */
 
 	bindEvents() {
-		const table = Dom.find('#employee-table-body');
+		const table = Dom.find('#supplier-table-body');
 
 		// =========================
 		// DELETE
@@ -81,12 +80,12 @@ const Init = {
 				return;
 			}
 
-			if (!confirm('Bạn có chắc chắn muốn xóa khách hàng này?')) {
+			if (!confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này?')) {
 				return;
 			}
 
 			try {
-				const response = await Api.deleteEmployee(button.dataset.id);
+				const response = await Api.deleteSupplier(button.dataset.id);
 
 				alert(response.message);
 
@@ -108,8 +107,8 @@ const Init = {
 	},
 };
 
-export default Init;
+export default Event;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Init.init();
+	Event.init();
 });

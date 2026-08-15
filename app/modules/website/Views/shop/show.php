@@ -204,7 +204,56 @@
 
                     <?php endif; ?>
 
-                    <a class="btn btn-success mt-3 px-4"
+                    <?php
+
+                    $stock = (int)($product['stock'] ?? 0);
+
+                    $purchaseId = (int)($product['purchase_id'] ?? 0);
+
+                    $price = (float)($product['price'] ?? 0);
+
+                    $salePrice = (float)($product['sale_price'] ?? 0);
+
+
+                    /* ==========================================
+                    GIÁ BÁN THỰC TẾ
+                    ========================================== */
+
+                    $sellingPrice =
+                        (
+                            $salePrice > 0
+                            && $price > 0
+                            && $salePrice < $price
+                        )
+                            ? $salePrice
+                            : $price;
+
+
+                    /* ==========================================
+                    CÓ THỂ MUA
+                    ========================================== */
+
+                    $canBuy =
+                        $stock > 0
+                        && $purchaseId > 0
+                        && $sellingPrice > 0;
+
+                    ?>
+
+                    <?php if ($canBuy): ?>
+
+                        <button
+                            type="button"
+                            id="btn-buy-now"
+                            class="btn btn-success mt-3 px-4">
+
+                            Mua ngay
+
+                        </button>
+
+                    <?php endif; ?>
+
+                    <a class="btn btn-outline-success mt-3 px-4"
                         href="https://zalo.me/+84973359165"
                         target="_blank">
                         Liên hệ tư vấn & đặt hàng
@@ -417,4 +466,224 @@ imageModal.addEventListener('hidden.bs.modal', () => {
     updateTransform();
 
 });
+// =================================================
+// BUY NOW
+// =================================================
+
+const btnBuyNow =
+    document.getElementById('btn-buy-now');
+
+
+if (btnBuyNow) {
+
+    btnBuyNow.addEventListener('click', function () {
+
+        try {
+
+            // =========================
+            // PRODUCT
+            // =========================
+
+            const product = {
+
+                product_id:
+                    <?= (int)($product['id'] ?? 0) ?>,
+
+                purchase_id:
+                    <?= (int)($product['purchase_id'] ?? 0) ?>,
+
+                name:
+                    <?= json_encode(
+                        $product['name'] ?? '',
+                        JSON_UNESCAPED_UNICODE
+                    ) ?>,
+
+                price:
+                    <?= (float)($product['price'] ?? 0) ?>,
+
+                sale_price:
+                    <?= (float)($product['sale_price'] ?? 0) ?>,
+
+                quantity: 1,
+
+                is_gift: 0
+            };
+
+
+            // =========================
+            // VALIDATE PRODUCT
+            // =========================
+
+            if (
+                !product.product_id ||
+                product.product_id <= 0
+            ) {
+
+                throw new Error(
+                    'Sản phẩm không hợp lệ.'
+                );
+            }
+
+
+            if (
+                !product.purchase_id ||
+                product.purchase_id <= 0
+            ) {
+
+                throw new Error(
+                    'Sản phẩm chưa có phiếu nhập hợp lệ.'
+                );
+            }
+
+
+            // =========================
+            // PRICE
+            // =========================
+
+            const price =
+                Number(
+                    product.price || 0
+                );
+
+            const salePrice =
+                Number(
+                    product.sale_price || 0
+                );
+
+
+            const sellingPrice =
+                salePrice > 0 &&
+                price > 0 &&
+                salePrice < price
+                    ? salePrice
+                    : price;
+
+
+            if (sellingPrice <= 0) {
+
+                throw new Error(
+                    'Sản phẩm chưa có giá bán.'
+                );
+            }
+
+
+            // =========================
+            // GET CART
+            // =========================
+
+            let cart = [];
+
+            try {
+
+                const storedCart =
+                    localStorage.getItem('cart');
+
+                if (storedCart) {
+
+                    const parsedCart =
+                        JSON.parse(storedCart);
+
+                    if (Array.isArray(parsedCart)) {
+                        cart = parsedCart;
+                    }
+                }
+
+            } catch (error) {
+
+                console.error(
+                    'Cart parse error:',
+                    error
+                );
+
+                cart = [];
+            }
+
+
+            // =========================
+            // CHECK EXISTING
+            // =========================
+
+            const existingIndex =
+                cart.findIndex(item =>
+
+                    Number(item.product_id) ===
+                        product.product_id
+
+                    &&
+
+                    Number(item.purchase_id) ===
+                        product.purchase_id
+
+                );
+
+
+            if (existingIndex >= 0) {
+
+                cart[existingIndex].quantity =
+                    Number(
+                        cart[existingIndex].quantity || 0
+                    ) + 1;
+
+            } else {
+
+                cart.push({
+
+                    product_id:
+                        product.product_id,
+
+                    purchase_id:
+                        product.purchase_id,
+
+                    name:
+                        product.name,
+
+                    price:
+                        price,
+
+                    sale_price:
+                        salePrice,
+
+                    quantity:
+                        1,
+
+                    is_gift:
+                        0
+                });
+            }
+
+
+            // =========================
+            // SAVE CART
+            // =========================
+
+            localStorage.setItem(
+                'cart',
+                JSON.stringify(cart)
+            );
+
+
+            // =========================
+            // REDIRECT
+            // =========================
+
+            window.location.assign(
+                '/checkout'
+            );
+
+        } catch (error) {
+
+            console.error(
+                'Buy now error:',
+                error
+            );
+
+            alert(
+                error.message ||
+                'Không thể mua sản phẩm.'
+            );
+        }
+
+    });
+
+}
 </script>

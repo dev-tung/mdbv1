@@ -29,4 +29,31 @@ class CategoryEndpoint
 			'data' => $result,
 		]);
 	}
+
+	// =========================
+	// CREATE
+	// =========================
+	public function apiCreate()
+	{
+		$data = request_all();
+
+		$name = trim($data['name'] ?? '');
+
+		if ($name === '') {
+			return Response::json([
+				'success' => false,
+				'message' => 'Tên danh mục không được để trống',
+			], 422);
+		}
+
+		$category = $this->categoryRepository->create([
+			'name' => $name,
+		]);
+
+		return Response::json([
+			'success' => true,
+			'message' => 'Thêm danh mục thành công',
+			'data' => $category,
+		]);
+	}
 }

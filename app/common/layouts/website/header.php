@@ -125,8 +125,6 @@
                 <!-- ACTIONS -->
                 <div class="d-flex gap-2">
 
-
-
                     <a href="/cart"
                        class="btn btn-success btn-sm">
                         Giỏ hàng

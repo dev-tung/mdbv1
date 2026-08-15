@@ -16,6 +16,18 @@ const Api = {
 	getCustomer(id) {
 		return Http.get(`/api/customers/show/${id}`);
 	},
+
+	/* =================================================
+	   CUSTOMER GROUP
+	================================================= */
+
+	getCustomerGroups() {
+		return Http.get('/api/customer-groups');
+	},
+
+	createCustomerGroup(data) {
+		return Http.post('/api/customer-groups', data);
+	},
 };
 
 export default Api;

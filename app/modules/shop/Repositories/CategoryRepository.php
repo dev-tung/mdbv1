@@ -22,15 +22,15 @@ class CategoryRepository extends Repository
 	}
 
 	/* =================================================
-	   BUILD DATA
+		BUILD DATA
 	================================================= */
 
 	private function buildData(array $data): array
 	{
 		return [
 			'name' => $data['name'] ?? null,
-
-			'description' => $data['description'] ?? null,
+			'slug' => slug($data['name'] ?? null),
+			'thumbnail' => $data['thumbnail'] ?? null,
 		];
 	}
 

@@ -5,7 +5,7 @@ import State from './state.js';
 import Renderer from './renderer.js';
 import Service from './service.js';
 
-const Init = {
+const Event = {
 	/* =================================================
 	   PUBLIC
 	================================================= */
@@ -25,6 +25,10 @@ const Init = {
 	async loadDefault() {
 		const id = Dom.find('#customer_id')?.value || null;
 
+		const options = await Service.getOptions();
+
+		State.setOptions(options);
+
 		if (!id) {
 			return;
 		}
@@ -41,6 +45,8 @@ const Init = {
 	bindEvents() {
 		this.bindField('#name', 'name');
 
+		this.bindField('#customer_group_id', 'customer_group_id', 'change');
+
 		this.bindField('#phone', 'phone');
 
 		this.bindField('#email', 'email');
@@ -49,12 +55,71 @@ const Init = {
 
 		this.bindField('#description', 'description');
 
+		this.bindCustomerGroup();
+
 		this.bindSubmit();
 	},
 
 	bindField(selector, field, event = 'input') {
 		Dom.find(selector).addEventListener(event, (e) => {
 			State.setField(field, e.target.value);
+		});
+	},
+
+	/* =================================================
+	   CUSTOMER GROUP
+	================================================= */
+
+	bindCustomerGroup() {
+		Dom.find('#btn-save-customer-group').addEventListener('click', async () => {
+			const input = Dom.find('#customer-group-name');
+
+			const name = input.value.trim();
+
+			if (!name) {
+				alert('Vui lòng nhập tên nhóm khách hàng');
+
+				input.focus();
+
+				return;
+			}
+
+			try {
+				const response = await Api.createCustomerGroup({
+					name: name,
+				});
+
+				alert(response.message);
+
+				const customerGroup = response.data;
+
+				// Chọn nhóm vừa tạo
+				State.setField(
+					'customer_group_id',
+					customerGroup.id
+				);
+
+				// Load lại options
+				const options = await Service.getOptions();
+
+				State.setOptions(options);
+
+				// Render lại
+				Renderer.render();
+
+				// Reset input
+				input.value = '';
+
+				// Đóng modal
+				const modal = Dom.find('#customer-group-modal');
+
+				const modalInstance = bootstrap.Modal.getInstance(modal);
+
+				modalInstance?.hide();
+
+			} catch (error) {
+				alert(error.message);
+			}
 		});
 	},
 
@@ -73,9 +138,13 @@ const Init = {
 			try {
 				const id = State.form.id;
 
-				const payload = id ? Service.updatePayload(id, State.form) : Service.payload(State.form);
+				const payload = id
+					? Service.updatePayload(id, State.form)
+					: Service.payload(State.form);
 
-				const response = id ? await Api.updateCustomer(payload) : await Api.createCustomer(payload);
+				const response = id
+					? await Api.updateCustomer(payload)
+					: await Api.createCustomer(payload);
 
 				alert(response.message);
 
@@ -89,8 +158,8 @@ const Init = {
 	},
 };
 
-export default Init;
+export default Event;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Init.init();
+	Event.init();
 });

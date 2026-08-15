@@ -5,7 +5,7 @@ import State from './state.js';
 import Renderer from './renderer.js';
 import Service from './service.js';
 
-const Init = {
+const Event = {
 	/* =================================================
 	   PUBLIC
 	================================================= */
@@ -23,19 +23,15 @@ const Init = {
 	================================================= */
 
 	async loadDefault() {
-		const id = Dom.find('#product_id')?.value || null;
-
-		const options = await Service.getOptions();
-
-		State.setOptions(options);
+		const id = Dom.find('#employee_id')?.value || null;
 
 		if (!id) {
 			return;
 		}
 
-		const product = await Service.getProduct(id);
+		const employee = await Service.getEmployee(id);
 
-		State.setProduct(product);
+		State.setEmployee(employee);
 	},
 
 	/* =================================================
@@ -43,21 +39,15 @@ const Init = {
 	================================================= */
 
 	bindEvents() {
-		this.bindField('#category_id', 'category_id', 'change');
-
-		this.bindField('#brand_id', 'brand_id', 'change');
-
-		this.bindField('#status', 'status', 'change');
-
 		this.bindField('#name', 'name');
 
-		this.bindField('#price', 'price');
+		this.bindField('#phone', 'phone');
 
-		this.bindField('#sale_price', 'sale_price');
+		this.bindField('#email', 'email');
+
+		this.bindField('#address', 'address');
 
 		this.bindField('#description', 'description');
-
-		this.bindThumbnail();
 
 		this.bindSubmit();
 	},
@@ -69,29 +59,11 @@ const Init = {
 	},
 
 	/* =================================================
-	   THUMBNAIL
-	================================================= */
-
-	bindThumbnail() {
-		Dom.find('#thumbnail').addEventListener('change', (e) => {
-			const file = e.target.files[0];
-
-			if (!file) {
-				return;
-			}
-
-			State.setField('thumbnail', file);
-
-			Renderer.renderThumbnail(file);
-		});
-	},
-
-	/* =================================================
 	   SUBMIT
 	================================================= */
 
 	bindSubmit() {
-		Dom.find('#product-form').addEventListener('submit', async (e) => {
+		Dom.find('#employee-form').addEventListener('submit', async (e) => {
 			e.preventDefault();
 
 			if (!confirm('Bạn có muốn lưu không?')) {
@@ -103,7 +75,7 @@ const Init = {
 
 				const payload = id ? Service.updatePayload(id, State.form) : Service.payload(State.form);
 
-				const response = id ? await Api.updateProduct(payload) : await Api.createProduct(payload);
+				const response = id ? await Api.updateEmployee(payload) : await Api.createEmployee(payload);
 
 				alert(response.message);
 
@@ -117,8 +89,8 @@ const Init = {
 	},
 };
 
-export default Init;
+export default Event;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Init.init();
+	Event.init();
 });

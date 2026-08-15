@@ -10,7 +10,7 @@ import Renderer from './renderer.js';
 
 import Service from './service.js';
 
-const Init = {
+const Event = {
 	init() {
 		Table.init({
 			body: '#customer-table-body',
@@ -108,8 +108,8 @@ const Init = {
 	},
 };
 
-export default Init;
+export default Event;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Init.init();
+	Event.init();
 });

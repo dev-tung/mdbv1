@@ -33,347 +33,347 @@ const Renderer = {
 		PRODUCTS
 	================================================= */
 
-renderProducts() {
-    const uploadPath = '/uploads/products/';
-    const noImage = '/assets/image/no-image.svg';
+    renderProducts() {
+        const uploadPath = '/uploads/products/';
+        const noImage = '/assets/image/no-image.svg';
 
-    const container = Dom.find('#product-grid');
+        const container = Dom.find('#product-grid');
 
-    if (!container) {
-        return;
-    }
+        if (!container) {
+            return;
+        }
 
-    container.replaceChildren();
+        container.replaceChildren();
 
-    if (!State.products.length) {
+        if (!State.products.length) {
 
-        const col = document.createElement('div');
+            const col = document.createElement('div');
 
-        col.className = 'col-12';
+            col.className = 'col-12';
 
-        const alert = document.createElement('div');
+            const alert = document.createElement('div');
 
-        alert.className =
-            'alert alert-light border text-center mb-0';
+            alert.className =
+                'alert alert-light border text-center mb-0';
 
-        alert.textContent =
-            'Không có sản phẩm.';
+            alert.textContent =
+                'Không có sản phẩm.';
 
-        col.appendChild(alert);
+            col.appendChild(alert);
 
-        container.appendChild(col);
+            container.appendChild(col);
 
-        return;
-    }
-
-
-    // =========================
-    // FRAGMENT
-    // =========================
-
-    const fragment =
-        document.createDocumentFragment();
-
-
-    // =========================
-    // PRODUCTS
-    // =========================
-
-    State.products.forEach((product) => {
-
-        const template =
-            Dom.template('#product-card-template');
-
-        const card =
-            template.querySelector('.product-card');
-
-
-        // =========================
-        // PRODUCT URL
-        // =========================
-
-        const productUrl =
-            `/product/${product.slug || product.id}`;
-
-
-        // =========================
-        // IMAGE
-        // =========================
-
-        const image =
-            card.querySelector('.product-image');
-
-        if (image) {
-
-            image.src =
-                product.thumbnail
-                    ? (
-                        product.thumbnail.startsWith('uploads/')
-                            ? `/${product.thumbnail}`
-                            : `${uploadPath}${product.thumbnail}`
-                    )
-                    : noImage;
-
-            image.alt =
-                product.name || '';
-
-            image.onerror = () => {
-
-                image.onerror = null;
-
-                image.src = noImage;
-            };
+            return;
         }
 
 
         // =========================
-        // BRAND
+        // FRAGMENT
         // =========================
 
-        Dom.text(
-            '.product-brand',
-            product.brand_name || '',
-            card
-        );
+        const fragment =
+            document.createDocumentFragment();
 
 
         // =========================
-        // PRODUCT NAME
+        // PRODUCTS
         // =========================
 
-        const nameElement =
-            card.querySelector('.product-name');
+        State.products.forEach((product) => {
 
-        if (nameElement) {
+            const template =
+                Dom.template('#product-card-template');
 
-            nameElement.replaceChildren();
-
-
-            const nameLink =
-                document.createElement('a');
-
-            nameLink.href =
-                productUrl;
-
-            nameLink.className =
-                'text-dark text-decoration-none';
-
-            nameLink.textContent =
-                product.name || '';
+            const card =
+                template.querySelector('.product-card');
 
 
-            nameElement.appendChild(
-                nameLink
+            // =========================
+            // PRODUCT URL
+            // =========================
+
+            const productUrl =
+                `/product/${product.slug || product.id}`;
+
+
+            // =========================
+            // IMAGE
+            // =========================
+
+            const image =
+                card.querySelector('.product-image');
+
+            if (image) {
+
+                image.src =
+                    product.thumbnail
+                        ? (
+                            product.thumbnail.startsWith('uploads/')
+                                ? `/${product.thumbnail}`
+                                : `${uploadPath}${product.thumbnail}`
+                        )
+                        : noImage;
+
+                image.alt =
+                    product.name || '';
+
+                image.onerror = () => {
+
+                    image.onerror = null;
+
+                    image.src = noImage;
+                };
+            }
+
+
+            // =========================
+            // BRAND
+            // =========================
+
+            Dom.text(
+                '.product-brand',
+                product.brand_name || '',
+                card
             );
-        }
 
 
-        // =========================
-        // PRICE
-        // =========================
+            // =========================
+            // PRODUCT NAME
+            // =========================
 
-        const priceElement =
-            card.querySelector('.product-price');
+            const nameElement =
+                card.querySelector('.product-name');
 
-        const price =
-            Number(product.price || 0);
+            if (nameElement) {
 
-        const salePrice =
-            Number(product.sale_price || 0);
+                nameElement.replaceChildren();
 
 
-        // =========================
-        // SELLING PRICE
-        // =========================
+                const nameLink =
+                    document.createElement('a');
 
-        let sellingPrice = 0;
+                nameLink.href =
+                    productUrl;
 
-        if (
-            salePrice > 0 &&
-            price > 0 &&
-            salePrice < price
-        ) {
+                nameLink.className =
+                    'text-dark text-decoration-none';
 
-            sellingPrice =
-                salePrice;
-
-        } else {
-
-            sellingPrice =
-                price;
-        }
+                nameLink.textContent =
+                    product.name || '';
 
 
-        // =========================
-        // DISPLAY PRICE
-        // =========================
+                nameElement.appendChild(
+                    nameLink
+                );
+            }
 
-        if (priceElement) {
+
+            // =========================
+            // PRICE
+            // =========================
+
+            const priceElement =
+                card.querySelector('.product-price');
+
+            const price =
+                Number(product.price || 0);
+
+            const salePrice =
+                Number(product.sale_price || 0);
+
+
+            // =========================
+            // SELLING PRICE
+            // =========================
+
+            let sellingPrice = 0;
 
             if (
-                price > 0 &&
                 salePrice > 0 &&
+                price > 0 &&
                 salePrice < price
             ) {
 
-                priceElement.innerHTML = `
-                    <span class="text-decoration-line-through text-secondary me-2">
-                        ${Formatter.money(price)}
-                    </span>
-
-                    <span class="text-danger fw-bold">
-                        ${Formatter.money(salePrice)}
-                    </span>
-                `;
-
-            } else if (
-                sellingPrice > 0
-            ) {
-
-                priceElement.textContent =
-                    Formatter.money(
-                        sellingPrice
-                    );
+                sellingPrice =
+                    salePrice;
 
             } else {
 
-                priceElement.textContent =
-                    '';
+                sellingPrice =
+                    price;
             }
-        }
 
 
-        // =========================
-        // STOCK
-        // =========================
+            // =========================
+            // DISPLAY PRICE
+            // =========================
 
-        const stock =
-            Number(product.stock || 0);
+            if (priceElement) {
+
+                if (
+                    price > 0 &&
+                    salePrice > 0 &&
+                    salePrice < price
+                ) {
+
+                    priceElement.innerHTML = `
+                        <span class="text-decoration-line-through text-secondary me-2">
+                            ${Formatter.money(price)}
+                        </span>
+
+                        <span class="text-danger fw-bold">
+                            ${Formatter.money(salePrice)}
+                        </span>
+                    `;
+
+                } else if (
+                    sellingPrice > 0
+                ) {
+
+                    priceElement.textContent =
+                        Formatter.money(
+                            sellingPrice
+                        );
+
+                } else {
+
+                    priceElement.textContent =
+                        '';
+                }
+            }
 
 
-        // =========================
-        // PURCHASE ID
-        // =========================
+            // =========================
+            // STOCK
+            // =========================
 
-        const purchaseId =
-            Number(product.purchase_id || 0);
-
-
-        // =========================
-        // PRODUCT ID
-        // =========================
-
-        const productId =
-            Number(product.id || 0);
+            const stock =
+                Number(product.stock || 0);
 
 
-        // =========================
-        // ACTION
-        // =========================
+            // =========================
+            // PURCHASE ID
+            // =========================
 
-        const action =
-            card.querySelector(
-                '.product-action'
+            const purchaseId =
+                Number(product.purchase_id || 0);
+
+
+            // =========================
+            // PRODUCT ID
+            // =========================
+
+            const productId =
+                Number(product.id || 0);
+
+
+            // =========================
+            // ACTION
+            // =========================
+
+            const action =
+                card.querySelector(
+                    '.product-action'
+                );
+
+
+            if (action) {
+
+                action.replaceChildren();
+
+
+                // =========================
+                // MUA NGAY
+                // =========================
+
+                if (
+                    sellingPrice > 0 &&
+                    stock > 0 &&
+                    productId > 0 &&
+                    purchaseId > 0
+                ) {
+
+                    const button =
+                        document.createElement('button');
+
+                    button.type =
+                        'button';
+
+                    button.className =
+                        'btn btn-success btn-sm w-100 product-buy-now';
+
+                    // Product ID
+                    button.dataset.productId =
+                        productId;
+
+                    // Purchase ID
+                    button.dataset.purchaseId =
+                        purchaseId;
+
+                    // Stock
+                    button.dataset.stock =
+                        stock;
+
+                    // Selling price
+                    button.dataset.price =
+                        sellingPrice;
+
+                    button.textContent =
+                        'Mua ngay';
+
+
+                    action.appendChild(
+                        button
+                    );
+
+                }
+
+
+                // =========================
+                // XEM CHI TIẾT
+                // =========================
+
+                else {
+
+                    const detailLink =
+                        document.createElement('a');
+
+                    detailLink.href =
+                        productUrl;
+
+                    detailLink.className =
+                        'btn btn-outline-primary btn-sm w-100';
+
+                    detailLink.textContent =
+                        'Xem chi tiết';
+
+
+                    action.appendChild(
+                        detailLink
+                    );
+                }
+            }
+
+
+            // =========================
+            // APPEND
+            // =========================
+
+            fragment.appendChild(
+                template
             );
 
-
-        if (action) {
-
-            action.replaceChildren();
-
-
-            // =========================
-            // MUA NGAY
-            // =========================
-
-            if (
-                sellingPrice > 0 &&
-                stock > 0 &&
-                productId > 0 &&
-                purchaseId > 0
-            ) {
-
-                const button =
-                    document.createElement('button');
-
-                button.type =
-                    'button';
-
-                button.className =
-                    'btn btn-success btn-sm w-100 product-buy-now';
-
-                // Product ID
-                button.dataset.productId =
-                    productId;
-
-                // Purchase ID
-                button.dataset.purchaseId =
-                    purchaseId;
-
-                // Stock
-                button.dataset.stock =
-                    stock;
-
-                // Selling price
-                button.dataset.price =
-                    sellingPrice;
-
-                button.textContent =
-                    'Mua ngay';
-
-
-                action.appendChild(
-                    button
-                );
-
-            }
-
-
-            // =========================
-            // XEM CHI TIẾT
-            // =========================
-
-            else {
-
-                const detailLink =
-                    document.createElement('a');
-
-                detailLink.href =
-                    productUrl;
-
-                detailLink.className =
-                    'btn btn-outline-primary btn-sm w-100';
-
-                detailLink.textContent =
-                    'Xem chi tiết';
-
-
-                action.appendChild(
-                    detailLink
-                );
-            }
-        }
+        });
 
 
         // =========================
-        // APPEND
+        // RENDER
         // =========================
 
-        fragment.appendChild(
-            template
+        container.appendChild(
+            fragment
         );
-
-    });
-
-
-    // =========================
-    // RENDER
-    // =========================
-
-    container.appendChild(
-        fragment
-    );
-},
+    },
 
 	/* =================================================
 	   PAGINATION

@@ -25,13 +25,21 @@ const Api = {
 		return Http.get('/api/categories');
 	},
 
+	createCategory(data) {
+		return Http.post('/api/categories', data);
+	},
+
 	/* =================================================
-	   BRAND
+		BRAND
 	================================================= */
 
 	getBrands() {
 		return Http.get('/api/brands');
 	},
+
+	createBrand(data) {
+		return Http.post('/api/brands', data);
+	}
 };
 
 export default Api;

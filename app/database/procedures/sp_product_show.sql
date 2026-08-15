@@ -8,11 +8,13 @@ BEGIN
 
 	SET p_website = COALESCE(p_website, 0);
 
-	/* ==========================================
+
+	/* =================================================
 	   PRODUCT
-	========================================== */
+	================================================= */
 
 	SELECT
+
 		p.id,
 		p.slug,
 
@@ -32,37 +34,126 @@ BEGIN
 
 		p.description,
 
-		p.created_at
+		p.created_at,
+
+
+		/* ==========================================
+		   PURCHASE
+		========================================== */
+
+		i.purchase_id,
+
+
+		/* ==========================================
+		   STOCK
+		========================================== */
+
+		COALESCE(
+			i.stock,
+			0
+		) AS stock
 
 	FROM products p
+
+
+	/* =================================================
+	   CATEGORY
+	================================================= */
 
 	LEFT JOIN categories c
 		ON c.id = p.category_id
 
+
+	/* =================================================
+	   BRAND
+	================================================= */
+
 	LEFT JOIN brands b
 		ON b.id = p.brand_id
 
+
+	/* =================================================
+	   INVENTORY
+
+	   Lấy purchase_id đang còn hàng.
+
+	   Ưu tiên inventory mới nhất.
+	================================================= */
+
+	LEFT JOIN (
+
+		SELECT
+
+			i.product_id,
+
+			i.purchase_id,
+
+			i.quantity AS stock
+
+		FROM inventories i
+
+		INNER JOIN (
+
+			SELECT
+
+				product_id,
+
+				MAX(id) AS inventory_id
+
+			FROM inventories
+
+			WHERE
+				quantity > 0
+
+			GROUP BY
+				product_id
+
+		) x
+
+			ON x.inventory_id = i.id
+
+	) i
+
+		ON i.product_id = p.id
+
+
+	/* =================================================
+	   WHERE
+	================================================= */
+
 	WHERE
+
 		(
 			p.slug = p_slug
+
 			OR p.id = p_slug
 		)
 
 		AND (
+
 			p_website = 0
+
 			OR (
+
 				p.thumbnail IS NOT NULL
-				AND TRIM(p.thumbnail) <> ''
+
+				AND TRIM(
+					p.thumbnail
+				) <> ''
+
 			)
+
 		)
 
 	LIMIT 1;
 
-	/* ==========================================
+
+	/* =================================================
 	   IMAGES
-	========================================== */
+	================================================= */
 
 	SELECT
+
 		id,
 		product_id,
 		image,
@@ -71,20 +162,34 @@ BEGIN
 	FROM product_images
 
 	WHERE product_id = (
-		SELECT id
+
+		SELECT
+			id
+
 		FROM products
-		WHERE slug = p_slug
-		   OR id = p_slug
+
+		WHERE
+
+			slug = p_slug
+
+			OR id = p_slug
+
 		LIMIT 1
+
 	)
 
-	ORDER BY sort_order ASC, id ASC;
+	ORDER BY
 
-	/* ==========================================
+		sort_order ASC,
+		id ASC;
+
+
+	/* =================================================
 	   ATTRIBUTES
-	========================================== */
+	================================================= */
 
 	SELECT
+
 		id,
 		product_id,
 		attribute_name,
@@ -93,13 +198,24 @@ BEGIN
 	FROM product_attributes
 
 	WHERE product_id = (
-		SELECT id
+
+		SELECT
+			id
+
 		FROM products
-		WHERE slug = p_slug
-		   OR id = p_slug
+
+		WHERE
+
+			slug = p_slug
+
+			OR id = p_slug
+
 		LIMIT 1
+
 	)
 
-	ORDER BY  id ASC;
+	ORDER BY
+
+		id ASC;
 
 END;

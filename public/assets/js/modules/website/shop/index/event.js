@@ -4,7 +4,7 @@ import State from './state.js';
 import Renderer from './renderer.js';
 import Service from './service.js';
 
-const Init = {
+const Event = {
 
 	async init() {
 
@@ -453,14 +453,14 @@ const Init = {
 };
 
 
-export default Init;
+export default Event;
 
 
 document.addEventListener(
 	'DOMContentLoaded',
 	() => {
 
-		Init.init();
+		Event.init();
 
 	}
 );

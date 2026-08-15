@@ -5,7 +5,7 @@ import State from './state.js';
 import Renderer from './renderer.js';
 import Service from './service.js';
 
-const Init = {
+const Event = {
 	/* =================================================
 	   PUBLIC
 	================================================= */
@@ -23,15 +23,15 @@ const Init = {
 	================================================= */
 
 	async loadDefault() {
-		const id = Dom.find('#employee_id')?.value || null;
+		const id = Dom.find('#supplier_id')?.value || null;
 
 		if (!id) {
 			return;
 		}
 
-		const employee = await Service.getEmployee(id);
+		const supplier = await Service.getSupplier(id);
 
-		State.setEmployee(employee);
+		State.setSupplier(supplier);
 	},
 
 	/* =================================================
@@ -63,7 +63,7 @@ const Init = {
 	================================================= */
 
 	bindSubmit() {
-		Dom.find('#employee-form').addEventListener('submit', async (e) => {
+		Dom.find('#supplier-form').addEventListener('submit', async (e) => {
 			e.preventDefault();
 
 			if (!confirm('Bạn có muốn lưu không?')) {
@@ -75,7 +75,7 @@ const Init = {
 
 				const payload = id ? Service.updatePayload(id, State.form) : Service.payload(State.form);
 
-				const response = id ? await Api.updateEmployee(payload) : await Api.createEmployee(payload);
+				const response = id ? await Api.updateSupplier(payload) : await Api.createSupplier(payload);
 
 				alert(response.message);
 
@@ -89,8 +89,8 @@ const Init = {
 	},
 };
 
-export default Init;
+export default Event;
 
 document.addEventListener('DOMContentLoaded', () => {
-	Init.init();
+	Event.init();
 });

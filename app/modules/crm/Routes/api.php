@@ -2,6 +2,7 @@
 
 use App\Core\Router;
 use App\Crm\Endpoints\CustomerEndpoint;
+use App\Crm\Endpoints\CustomerGroupEndpoint;
 
 // =========================
 // CUSTOMER
@@ -42,6 +43,27 @@ Router::post(
 Router::post(
 	'/api/customers/delete/{id}',
 	[CustomerEndpoint::class, 'apiDelete'],
+	[
+		'auth' => 'admin',
+	],
+);
+
+
+// =========================
+// CUSTOMER GROUP
+// =========================
+
+Router::get(
+	'/api/customer-groups',
+	[CustomerGroupEndpoint::class, 'apiList'],
+	[
+		'auth' => 'admin',
+	],
+);
+
+Router::post(
+	'/api/customer-groups',
+	[CustomerGroupEndpoint::class, 'apiCreate'],
 	[
 		'auth' => 'admin',
 	],
