@@ -25,6 +25,7 @@ class View
 
 	public static function render(string $path, array $data = [], $menu = true): void
 	{
+
 		$header = self::getHeader();
 		$content = self::getContent($path);
 		$footer = self::getFooter();
@@ -50,7 +51,7 @@ class View
 		self::$js = self::getJs($path);
 
 		extract($data);
-
+		
 		require $header;
 		require $content;
 		require $footer;
