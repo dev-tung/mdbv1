@@ -1,4 +1,4 @@
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex justify-content-end align-items-center mb-5">
 
         <div class="d-flex gap-2">
 
