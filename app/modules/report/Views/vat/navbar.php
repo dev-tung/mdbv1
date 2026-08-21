@@ -7,31 +7,31 @@
 
 
                 <a 
-                    href="<?= route('/vat/index') ?>"
-                    class="btn btn-outline-secondary active<?= active_menu('/vat/index') ?>"
+                    href="<?= route('/admin/vat') ?>"
+                    class="btn btn-outline-secondary <?= active_menu('/admin/vat') ?>"
                 >
                     Tờ khai chính
                 </a>
 
 
                 <a 
-                    href="<?= route('/vat/011') ?>"
-                    class="btn btn-outline-secondary <?= active_menu('/vat/011') ?>"
+                    href="<?= route('/admin/vat/pl011') ?>"
+                    class="btn btn-outline-secondary <?= active_menu('/admin/vat/pl011') ?>"
                 >
                     PL01-1/GTGT
                 </a>
 
 
                 <a 
-                    href="<?= route('/vat/012') ?>"
-                    class="btn btn-outline-secondary <?= active_menu('/vat/012') ?>"
+                    href="<?= route('/admin/vat/pl012') ?>"
+                    class="btn btn-outline-secondary <?= active_menu('/admin/vat/pl012') ?>"
                 >
                     PL01-2/GTGT
                 </a>
 
                 <a 
-                    href="<?= route('/vat/204') ?>"
-                    class="btn btn-outline-secondary <?= active_menu('/vat/204') ?>"
+                    href="<?= route('/admin/vat/pl204') ?>"
+                    class="btn btn-outline-secondary <?= active_menu('/admin/vat/pl204') ?>"
                 >
                     PL 204/2025/QH15
                 </a>
@@ -43,7 +43,7 @@
 
                 <a 
                     href="<?= route('/job/ducan/update') ?>"
-                    class="btn btn-sm btn-outline-warning"
+                    class="btn btn-sm btn-outline-danger"
                     onclick="return confirm('Bạn có muốn cập nhật giá từ Đức An?')"
                 >
                     Xuất XML

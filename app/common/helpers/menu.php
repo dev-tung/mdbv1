@@ -5,9 +5,9 @@
  */
 function active_menu(string $keyword): string
 {
-	$current = $_SERVER['REQUEST_URI'] ?? '';
+    $current = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
 
-	return str_contains($current, $keyword) ? 'active' : '';
+    return $current === $keyword ? 'active' : '';
 }
 
 /**
