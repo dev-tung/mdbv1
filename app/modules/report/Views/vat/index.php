@@ -281,7 +281,7 @@
 
     <table class="table table-sm table-bordered align-middle">
 
-      <thead class="table-light">
+      <thead>
 
         <tr>
 

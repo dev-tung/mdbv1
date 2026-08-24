@@ -173,6 +173,24 @@
                     </ul>
                 </li>
 
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle <?= active_menu('/admin/vat') ?>"
+                        href="#"
+                        data-bs-toggle="dropdown"
+                    >
+                        Thuế
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="dropdown-item" href="<?= route('/admin/vat') ?>">
+                                Thuế GTGT
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
                 <!-- ========================= -->
                 <!-- CHẤM CÔNG -->
                 <!-- ========================= -->
