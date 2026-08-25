@@ -10,6 +10,21 @@ class PurchaseRepository extends Repository
 	protected string $table = 'purchases';
 
 	/* =================================================
+		VAT PL204
+	================================================= */
+
+	public function getVatPl204(array $filters = []): array
+	{
+			return Database::call(
+					'CALL sp_purchase_vatpl204(?, ?, ?, ?)',
+					array_params(
+							['date_from', 'date_to', 'page', 'per_page'],
+							$filters
+					),
+			);
+	}
+
+	/* =================================================
 	   LIST
 	================================================= */
 

@@ -9,6 +9,16 @@ use App\Shop\Controllers\ReportController;
 use App\Shop\Controllers\SupplierController;
 
 // =========================
+// VAT
+// =========================
+
+Router::get('/admin/vat', [PurchaseController::class, 'vat'], ['auth' => 'admin']);
+Router::get('/admin/vat/pl011', [PurchaseController::class, 'pl011'], ['auth' => 'admin']);
+Router::get('/admin/vat/pl012', [PurchaseController::class, 'pl012'], ['auth' => 'admin']);
+Router::get('/admin/vat/pl204', [PurchaseController::class, 'pl204'], ['auth' => 'admin']);
+
+
+// =========================
 // PRODUCTS
 // =========================
 
