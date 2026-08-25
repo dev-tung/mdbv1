@@ -7,16 +7,16 @@ use App\Shop\Controllers\ProductController;
 use App\Shop\Controllers\PurchaseController;
 use App\Shop\Controllers\ReportController;
 use App\Shop\Controllers\SupplierController;
+use App\Shop\Controllers\VatController;
 
 // =========================
 // VAT
 // =========================
 
-Router::get('/admin/vat', [PurchaseController::class, 'vat'], ['auth' => 'admin']);
-Router::get('/admin/vat/pl011', [PurchaseController::class, 'pl011'], ['auth' => 'admin']);
-Router::get('/admin/vat/pl012', [PurchaseController::class, 'pl012'], ['auth' => 'admin']);
-Router::get('/admin/vat/pl204', [PurchaseController::class, 'pl204'], ['auth' => 'admin']);
-
+Router::get('/admin/vat', [VatController::class, 'index'], ['auth' => 'admin']);
+Router::get('/admin/vat/pl011', [VatController::class, 'pl011'], ['auth' => 'admin']);
+Router::get('/admin/vat/pl012', [VatController::class, 'pl012'], ['auth' => 'admin']);
+Router::get('/admin/vat/pl204', [VatController::class, 'pl204'], ['auth' => 'admin']);
 
 // =========================
 // PRODUCTS

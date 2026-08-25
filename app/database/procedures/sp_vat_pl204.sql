@@ -1,13 +1,12 @@
-DROP PROCEDURE IF EXISTS sp_purchase_vatpl204;
+DROP PROCEDURE IF EXISTS sp_vat_pl204;
 
-CREATE PROCEDURE `sp_purchase_vatpl204` (
+CREATE PROCEDURE `sp_vat_pl204` (
     IN p_date_from DATE,
     IN p_date_to DATE,
     IN p_page INT,
     IN p_per_page INT
 )
 BEGIN
-
 
     /* =====================================================
        RESULT 1
@@ -46,7 +45,7 @@ BEGIN
 
     /* =====================================================
        RESULT 2
-       TỔNG BẢNG 1
+       TỔNG BẢNG 1 - MUA VÀO
     ===================================================== */
 
     SELECT
@@ -81,28 +80,73 @@ BEGIN
     /* =====================================================
        RESULT 3
        BẢNG 2 - HÀNG HÓA, DỊCH VỤ BÁN RA
-
-       Tạm thời chưa xác định bảng bán hàng
     ===================================================== */
 
     SELECT
-        NULL AS id,
-        NULL AS name,
-        0 AS value,
-        0 AS vat_rate,
-        0 AS vat
+        oi.order_id,
+        oi.product_id,
+        oi.product_name AS name,
+        oi.quantity,
+        oi.selling_price,
 
-    WHERE 1 = 0;
+        oi.subtotal_amount AS value,
+
+        oi.vat_amount AS vat,
+
+        oi.total_amount,
+
+        o.created_at
+
+    FROM order_items oi
+
+    INNER JOIN orders o
+        ON o.id = oi.order_id
+
+    WHERE
+        (
+            p_date_from IS NULL
+            OR DATE(o.created_at) >= p_date_from
+        )
+        AND (
+            p_date_to IS NULL
+            OR DATE(o.created_at) <= p_date_to
+        )
+
+    ORDER BY
+        oi.order_id ASC;
 
 
     /* =====================================================
        RESULT 4
-       TỔNG BẢNG 2
+       TỔNG BẢNG 2 - BÁN RA
     ===================================================== */
 
     SELECT
-        0 AS total,
-        0 AS total_value,
-        0 AS total_vat;
+        COUNT(*) AS total,
+
+        COALESCE(
+            SUM(oi.subtotal_amount),
+            0
+        ) AS total_value,
+
+        COALESCE(
+            SUM(oi.vat_amount),
+            0
+        ) AS total_vat
+
+    FROM order_items oi
+
+    INNER JOIN orders o
+        ON o.id = oi.order_id
+
+    WHERE
+        (
+            p_date_from IS NULL
+            OR DATE(o.created_at) >= p_date_from
+        )
+        AND (
+            p_date_to IS NULL
+            OR DATE(o.created_at) <= p_date_to
+        );
 
 END;

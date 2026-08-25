@@ -36,7 +36,8 @@ class PurchaseController
 
 	public function pl012(): void
 	{
-		View::render('purchase/vat/pl012');
+			$vatPl012 = $this->purchaseRepository->getVatPl012();
+			View::render('purchase/vat/pl012', compact('vatPl012'));
 	}
 
 	public function pl204(): void
