@@ -11,6 +11,8 @@ BEGIN
     /* =====================================================
        RESULT 1
        BẢNG 1 - HÀNG HÓA, DỊCH VỤ MUA VÀO
+
+       CHỈ LẤY PHIẾU MUA CÓ VAT > 0
     ===================================================== */
 
     SELECT
@@ -30,11 +32,18 @@ BEGIN
         ON pu.id = pi.purchase_id
 
     WHERE
+
+        /* CHỈ LẤY PHIẾU MUA CÓ VAT > 0 */
+        COALESCE(pu.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(pu.created_at) >= p_date_from
         )
-        AND (
+
+        AND
+        (
             p_date_to IS NULL
             OR DATE(pu.created_at) <= p_date_to
         )
@@ -46,6 +55,8 @@ BEGIN
     /* =====================================================
        RESULT 2
        TỔNG BẢNG 1 - MUA VÀO
+
+       CHỈ TÍNH PHIẾU MUA CÓ VAT > 0
     ===================================================== */
 
     SELECT
@@ -67,11 +78,18 @@ BEGIN
         ON pu.id = pi.purchase_id
 
     WHERE
+
+        /* CHỈ TÍNH PHIẾU MUA CÓ VAT > 0 */
+        COALESCE(pu.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(pu.created_at) >= p_date_from
         )
-        AND (
+
+        AND
+        (
             p_date_to IS NULL
             OR DATE(pu.created_at) <= p_date_to
         );
@@ -80,6 +98,8 @@ BEGIN
     /* =====================================================
        RESULT 3
        BẢNG 2 - HÀNG HÓA, DỊCH VỤ BÁN RA
+
+       CHỈ LẤY ĐƠN HÀNG CÓ VAT > 0
     ===================================================== */
 
     SELECT
@@ -103,11 +123,18 @@ BEGIN
         ON o.id = oi.order_id
 
     WHERE
+
+        /* CHỈ LẤY ĐƠN HÀNG CÓ VAT > 0 */
+        COALESCE(o.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(o.created_at) >= p_date_from
         )
-        AND (
+
+        AND
+        (
             p_date_to IS NULL
             OR DATE(o.created_at) <= p_date_to
         )
@@ -119,6 +146,8 @@ BEGIN
     /* =====================================================
        RESULT 4
        TỔNG BẢNG 2 - BÁN RA
+
+       CHỈ TÍNH ĐƠN HÀNG CÓ VAT > 0
     ===================================================== */
 
     SELECT
@@ -140,11 +169,18 @@ BEGIN
         ON o.id = oi.order_id
 
     WHERE
+
+        /* CHỈ TÍNH ĐƠN HÀNG CÓ VAT > 0 */
+        COALESCE(o.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(o.created_at) >= p_date_from
         )
-        AND (
+
+        AND
+        (
             p_date_to IS NULL
             OR DATE(o.created_at) <= p_date_to
         );

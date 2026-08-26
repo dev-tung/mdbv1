@@ -11,6 +11,8 @@ BEGIN
     /* =====================================================
        RESULT 1
        DANH SÁCH HÓA ĐƠN, CHỨNG TỪ BÁN RA
+
+       CHỈ LẤY HÓA ĐƠN CÓ VAT > 0
     ===================================================== */
 
     SELECT
@@ -72,10 +74,16 @@ BEGIN
         ON c.id = o.customer_id
 
     WHERE
+
+        /* CHỈ LẤY HÓA ĐƠN CÓ VAT > 0 */
+        COALESCE(o.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(o.created_at) >= p_date_from
         )
+
         AND
         (
             p_date_to IS NULL
@@ -89,6 +97,8 @@ BEGIN
     /* =====================================================
        RESULT 2
        TỔNG TOÀN BỘ HÓA ĐƠN BÁN RA
+
+       CHỈ TÍNH HÓA ĐƠN CÓ VAT > 0
     ===================================================== */
 
     SELECT
@@ -108,10 +118,16 @@ BEGIN
     FROM orders o
 
     WHERE
+
+        /* CHỈ TÍNH HÓA ĐƠN CÓ VAT > 0 */
+        COALESCE(o.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(o.created_at) >= p_date_from
         )
+
         AND
         (
             p_date_to IS NULL

@@ -37,6 +37,8 @@ BEGIN
        1. HÀNG HÓA, DỊCH VỤ MUA VÀO
        [23] - Giá trị HHDV mua vào
        [24] - Thuế GTGT mua vào
+
+       CHỈ LẤY CÁC PHIẾU MUA CÓ VAT > 0
     ========================================================= */
 
     SELECT
@@ -50,10 +52,14 @@ BEGIN
     FROM purchases pu
 
     WHERE
+        COALESCE(pu.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(pu.created_at) >= p_date_from
         )
+
         AND
         (
             p_date_to IS NULL
@@ -77,6 +83,8 @@ BEGIN
        [26] - Không chịu thuế
        [27] - Tổng chịu thuế
        [28] - VAT của hàng chịu thuế
+
+       CHỈ LẤY CÁC ĐƠN HÀNG CÓ VAT > 0
     ========================================================= */
 
     SELECT
@@ -115,7 +123,6 @@ BEGIN
         )
 
     INTO
-
         v_sales_no_vat_value,
         v_sales_vat_value,
         v_sales_vat_value
@@ -123,10 +130,14 @@ BEGIN
     FROM orders o
 
     WHERE
+        COALESCE(o.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(o.created_at) >= p_date_from
         )
+
         AND
         (
             p_date_to IS NULL
@@ -137,15 +148,20 @@ BEGIN
     /* =========================================================
        4. CHI TIẾT THEO THUẾ SUẤT
 
-       [29] / [30]  -> 0%
-       [30] / [31]  -> 5%
-       [32] / [33]  -> 10%
+       [29] - Giá trị 0%
+       [30] - VAT 0%
 
-       LƯU Ý:
-       Trong database hiện tại vat_rate nằm ở orders.
+       [31] - VAT 5%
+
+       [32] - Giá trị 10%
+       [33] - VAT 10%
+
+       CHỈ LẤY vat_rate > 0
     ========================================================= */
 
     SELECT
+
+        /* 0% */
         COALESCE(
             SUM(
                 CASE
@@ -168,6 +184,7 @@ BEGIN
             0
         ),
 
+        /* 5% */
         COALESCE(
             SUM(
                 CASE
@@ -190,6 +207,7 @@ BEGIN
             0
         ),
 
+        /* 10% */
         COALESCE(
             SUM(
                 CASE
@@ -223,10 +241,14 @@ BEGIN
     FROM orders o
 
     WHERE
+        COALESCE(o.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(o.created_at) >= p_date_from
         )
+
         AND
         (
             p_date_to IS NULL

@@ -10,6 +10,7 @@ BEGIN
 
     /* ===================================================== */
     /* BẢNG 1 - DANH SÁCH MUA VÀO */
+    /* CHỈ LẤY HÀNG MUA CÓ VAT > 0 */
     /* ===================================================== */
 
     SELECT
@@ -42,21 +43,29 @@ BEGIN
     FROM purchases pu
 
     WHERE
+
+        /* CHỈ LẤY PHIẾU MUA CÓ VAT > 0 */
+        COALESCE(pu.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(pu.created_at) >= p_date_from
         )
+
         AND
         (
             p_date_to IS NULL
             OR DATE(pu.created_at) <= p_date_to
         )
 
-    ORDER BY pu.id ASC;
+    ORDER BY
+        pu.id ASC;
 
 
     /* ===================================================== */
     /* TỔNG */
+    /* CHỈ TÍNH HÀNG MUA CÓ VAT > 0 */
     /* ===================================================== */
 
     SELECT
@@ -76,10 +85,16 @@ BEGIN
     FROM purchases pu
 
     WHERE
+
+        /* CHỈ TÍNH PHIẾU MUA CÓ VAT > 0 */
+        COALESCE(pu.vat_rate, 0) > 0
+
+        AND
         (
             p_date_from IS NULL
             OR DATE(pu.created_at) >= p_date_from
         )
+
         AND
         (
             p_date_to IS NULL
