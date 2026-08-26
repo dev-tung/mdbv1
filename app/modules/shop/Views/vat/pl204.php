@@ -283,161 +283,144 @@
 
     </div>
 
+<!-- ===================================================== -->
+<!-- BẢNG 2 -->
+<!-- ===================================================== -->
 
-    <!-- ===================================================== -->
-    <!-- BẢNG 2 -->
-    <!-- ===================================================== -->
-
-    <div class="small fw-bold mb-1">
-        II. Hàng hóa, dịch vụ bị bán ra trong kỳ:
-    </div>
+<div class="small fw-bold mb-1">
+    II. Hàng hóa, dịch vụ bị bán ra trong kỳ:
+</div>
 
 
-    <div class="table-responsive">
+<div class="table-responsive">
 
-        <table class="table table-sm table-bordered border-dark align-middle mb-1 small">
+    <table class="table table-sm table-bordered border-dark align-middle mb-1 small">
 
-            <thead class="text-center fw-bold">
+        <thead class="text-center fw-bold">
+
+            <tr>
+
+                <th rowspan="2" class="align-middle">
+                    STT
+                </th>
+
+                <th rowspan="2" class="align-middle">
+                    Tên hàng hóa, dịch vụ
+                </th>
+
+                <th rowspan="2" class="align-middle">
+                    Giá trị hàng hóa, dịch vụ<br>
+                    chưa có thuế GTGT
+                </th>
+
+                <th rowspan="2" class="align-middle">
+                    Thuế suất thuế GTGT<br>
+                    (%)
+                </th>
+
+                <th rowspan="2" class="align-middle">
+                    Thuế suất thuế GTGT<br>
+                    sau giảm
+                </th>
+
+                <th rowspan="2" class="align-middle">
+                    Thuế GTGT của hàng<br>
+                    hóa, dịch vụ bán ra<br>
+                    được giảm
+                </th>
+
+            </tr>
+
+            <tr>
+            </tr>
+
+            <tr>
+
+                <th>(1)</th>
+
+                <th>(2)</th>
+
+                <th>(3)</th>
+
+                <th>(4)</th>
+
+                <th>(5) = (4) × 80%</th>
+
+                <th>(6) = (3) × [(4) - (5)]</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <?php foreach (($vatPl204[2] ?? []) as $index => $item): ?>
+
+                <?php
+                    $value = (float)($item['value'] ?? 0);
+                    $vatRate = (float)($item['vat_rate'] ?? 0);
+
+                    $vatRateAfterReduction = $vatRate > 0
+                        ? $vatRate * 0.8
+                        : 0;
+
+                    $vatReduced = $value * (
+                        ($vatRate - $vatRateAfterReduction) / 100
+                    );
+                ?>
 
                 <tr>
 
-                    <th rowspan="2" class="align-middle">
-                        STT
-                    </th>
-
-                    <th rowspan="2" class="align-middle">
-                        Tên hàng hóa, dịch vụ
-                    </th>
-
-                    <th rowspan="2" class="align-middle">
-                        Giá trị hàng hóa, dịch vụ<br>
-                        chưa có thuế GTGT
-                    </th>
-
-                    <th rowspan="2" class="align-middle">
-                        Thuế suất thuế GTGT<br>
-                        (%) 
-                    </th>
-
-                    <th rowspan="2" class="align-middle">
-                        Thuế suất thuế GTGT<br>
-                        của hàng hóa, dịch vụ bán ra
-                    </th>
-
-                </tr>
-
-                <tr>
-                </tr>
-
-                <tr>
-
-                    <th>(1)</th>
-
-                    <th>(2)</th>
-
-                    <th>(3)</th>
-
-                    <th>(4)</th>
-
-                    <th>(5) = (3) × (4)</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                <?php foreach (($vatPl204[2] ?? []) as $index => $item): ?>
-
-                    <tr>
-
-                        <td class="text-center">
-                            <?= $index + 1 ?>
-                        </td>
-
-                        <td class="p-1">
-
-                            <input
-                                type="text"
-                                class="form-control form-control-sm"
-                                value="<?= htmlspecialchars($item['name'] ?? '') ?>"
-                            >
-
-                        </td>
-
-                        <td class="p-1">
-
-                            <input
-                                type="text"
-                                class="form-control form-control-sm text-end"
-                                value="<?= number_format(
-                                    (float)($item['value'] ?? 0),
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?>"
-                            >
-
-                        </td>
-
-                        <td class="text-end">
-                            <?= htmlspecialchars($item['vat_rate'] ?? 0) ?>
-                        </td>
-
-                        <td class="p-1">
-
-                            <input
-                                type="text"
-                                class="form-control form-control-sm text-end"
-                                value="<?= number_format(
-                                    (float)($item['vat'] ?? 0),
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?>"
-                            >
-
-                        </td>
-
-                    </tr>
-
-                <?php endforeach; ?>
-
-
-                <!-- TỔNG -->
-
-                <tr class="fw-bold">
-
-                    <td colspan="2" class="text-end">
-                        Tổng cộng
+                    <td class="text-center">
+                        <?= $index + 1 ?>
                     </td>
 
                     <td class="p-1">
 
                         <input
                             type="text"
-                            class="form-control form-control-sm text-end fw-bold"
-                            value="<?= number_format(
-                                (float)($vatPl204[3][0]['total_value'] ?? 0),
-                                0,
-                                ',',
-                                '.'
-                            ) ?>"
-                            readonly
+                            class="form-control form-control-sm"
+                            value="<?= htmlspecialchars($item['name'] ?? '') ?>"
                         >
 
                     </td>
 
-                    <td></td>
+                    <td class="p-1">
+
+                        <input
+                            type="text"
+                            class="form-control form-control-sm text-end"
+                            value="<?= number_format(
+                                $value,
+                                0,
+                                ',',
+                                '.'
+                            ) ?>"
+                        >
+
+                    </td>
+
+                    <td class="text-end">
+                        <?= htmlspecialchars($item['vat_rate'] ?? 0) ?>
+                    </td>
+
+                    <td class="text-end">
+                        <?= number_format(
+                            $vatRateAfterReduction,
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
+                    </td>
 
                     <td class="p-1">
 
                         <input
                             type="text"
-                            class="form-control form-control-sm text-end fw-bold"
+                            class="form-control form-control-sm text-end"
                             value="<?= number_format(
-                                (float)($vatPl204[3][0]['total_vat'] ?? 0),
+                                $vatReduced,
                                 0,
                                 ',',
                                 '.'
@@ -449,40 +432,102 @@
 
                 </tr>
 
-            </tbody>
-
-        </table>
-
-    </div>
+            <?php endforeach; ?>
 
 
-    <!-- ===================================================== -->
-    <!-- GHI CHÚ -->
-    <!-- ===================================================== -->
+            <!-- TỔNG -->
 
-    <div class="small fw-bold">
+            <tr class="fw-bold">
 
-        I) Chi tiết thuế GTGT của hàng hóa, dịch vụ mua vào trong kỳ được áp dụng mức thuế suất thuế GTGT thấp hơn theo phương pháp khấu trừ thuế giá trị gia tăng
+                <td colspan="2" class="text-end">
+                    Tổng cộng
+                </td>
 
-    </div>
+                <td class="p-1">
 
-    <div class="small mt-1">
+                    <input
+                        type="text"
+                        class="form-control form-control-sm text-end fw-bold"
+                        value="<?= number_format(
+                            (float)($vatPl204[3][0]['total_value'] ?? 0),
+                            0,
+                            ',',
+                            '.'
+                        ) ?>"
+                        readonly
+                    >
 
-        <span>
-            Tổng tiền thuế GTGT:
-        </span>
+                </td>
 
-        <input
-            type="text"
-            class="form-control form-control-sm d-inline-block text-end"
-            value="5.226.124"
-            readonly
-        >
+                <td></td>
 
-        <span>
-            đồng
-        </span>
+                <td></td>
 
-    </div>
+                <td class="p-1">
 
+                    <input
+                        type="text"
+                        class="form-control form-control-sm text-end fw-bold"
+                        value="<?= number_format(
+                            array_sum(
+                                array_map(
+                                    function ($item) {
+                                        $value = (float)($item['value'] ?? 0);
+                                        $vatRate = (float)($item['vat_rate'] ?? 0);
+
+                                        $vatRateAfterReduction = $vatRate * 0.8;
+
+                                        return $value * (
+                                            ($vatRate - $vatRateAfterReduction) / 100
+                                        );
+                                    },
+                                    $vatPl204[2] ?? []
+                                )
+                            ),
+                            0,
+                            ',',
+                            '.'
+                        ) ?>"
+                        readonly
+                    >
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- ===================================================== -->
+<!-- GHI CHÚ -->
+<!-- ===================================================== -->
+
+<div class="small fw-bold">
+
+    I) Chi tiết thuế GTGT của hàng hóa, dịch vụ mua vào trong kỳ được áp dụng mức thuế suất thuế GTGT thấp hơn theo phương pháp khấu trừ thuế giá trị gia tăng
+
+</div>
+
+<div class="small mt-1 d-flex align-items-center gap-1">
+
+    <span class="text-nowrap">
+        Tổng tiền thuế GTGT:
+    </span>
+
+    <input
+        type="text"
+        class="form-control form-control-sm text-end"
+        value="5.226.124"
+        readonly
+    >
+
+    <span class="text-nowrap">
+        đồng
+    </span>
+
+</div>
 </div>
