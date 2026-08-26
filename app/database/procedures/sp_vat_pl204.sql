@@ -100,6 +100,11 @@ BEGIN
        BẢNG 2 - HÀNG HÓA, DỊCH VỤ BÁN RA
 
        CHỈ LẤY ĐƠN HÀNG CÓ VAT > 0
+
+       TÍNH SẴN:
+       - vat_rate
+       - vat_rate_after_reduction
+       - vat_reduced
     ===================================================== */
 
     SELECT
@@ -110,6 +115,27 @@ BEGIN
         oi.selling_price,
 
         oi.subtotal_amount AS value,
+
+        o.vat_rate,
+
+        CASE
+            WHEN COALESCE(o.vat_rate, 0) > 0
+            THEN o.vat_rate * 0.8
+            ELSE 0
+        END AS vat_rate_after_reduction,
+
+        CASE
+            WHEN COALESCE(o.vat_rate, 0) > 0
+            THEN
+                oi.subtotal_amount
+                * (
+                    (
+                        o.vat_rate
+                        - (o.vat_rate * 0.8)
+                    ) / 100
+                )
+            ELSE 0
+        END AS vat_reduced,
 
         oi.vat_amount AS vat,
 
@@ -161,7 +187,25 @@ BEGIN
         COALESCE(
             SUM(oi.vat_amount),
             0
-        ) AS total_vat
+        ) AS total_vat,
+
+        COALESCE(
+            SUM(
+                CASE
+                    WHEN COALESCE(o.vat_rate, 0) > 0
+                    THEN
+                        oi.subtotal_amount
+                        * (
+                            (
+                                o.vat_rate
+                                - (o.vat_rate * 0.8)
+                            ) / 100
+                        )
+                    ELSE 0
+                END
+            ),
+            0
+        ) AS total_vat_reduced
 
     FROM order_items oi
 

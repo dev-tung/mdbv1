@@ -131,130 +131,77 @@
     </div>
 
 
-    <!-- ===================================================== -->
-    <!-- BẢNG 1 -->
-    <!-- ===================================================== -->
+<!-- ===================================================== -->
+<!-- BẢNG 1 -->
+<!-- ===================================================== -->
 
-    <div class="small fw-bold mb-1">
-        I. Hàng hóa, dịch vụ mua vào trong kỳ được áp dụng mức thuế suất thuế giá trị gia tăng thấp hơn theo phương pháp khấu trừ thuế:
-    </div>
+<div class="small fw-bold mb-1">
+    I. Hàng hóa, dịch vụ mua vào trong kỳ được áp dụng mức thuế suất thuế giá trị gia tăng thấp hơn theo phương pháp khấu trừ thuế:
+</div>
 
 
-    <div class="table-responsive">
+<div class="table-responsive">
 
-        <table class="table table-sm table-bordered border-dark align-middle mb-1 small">
+    <table class="table table-sm table-bordered border-dark align-middle mb-1 small">
 
-            <thead class="text-center fw-bold">
+        <thead class="text-center fw-bold">
+
+            <tr>
+
+                <th rowspan="2" class="align-middle">
+                    STT
+                </th>
+
+                <th rowspan="2" class="align-middle">
+                    Tên hàng hóa, dịch vụ
+                </th>
+
+                <th rowspan="2" class="align-middle">
+                    Giá trị hàng hóa, dịch vụ chưa có thuế GTGT<br>
+                    được khấu trừ
+                </th>
+
+                <th rowspan="2" class="align-middle">
+                    Thuế GTGT của hàng hóa, dịch vụ mua vào được<br>
+                    khấu trừ
+                </th>
+
+            </tr>
+
+            <tr>
+            </tr>
+
+            <tr>
+
+                <th>(1)</th>
+
+                <th>(2)</th>
+
+                <th>(3)</th>
+
+                <th>(4)</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            <?php foreach (($vatPl204[0] ?? []) as $index => $item): ?>
 
                 <tr>
 
-                    <th rowspan="2" class="align-middle">
-                        STT
-                    </th>
-
-                    <th rowspan="2" class="align-middle">
-                        Tên hàng hóa, dịch vụ
-                    </th>
-
-                    <th rowspan="2" class="align-middle">
-                        Giá trị hàng hóa, dịch vụ chưa có thuế GTGT<br>
-                        được khấu trừ
-                    </th>
-
-                    <th rowspan="2" class="align-middle">
-                        Thuế GTGT của hàng hóa, dịch vụ mua vào được<br>
-                        khấu trừ
-                    </th>
-
-                </tr>
-
-                <tr>
-                </tr>
-
-                <tr>
-
-                    <th>(1)</th>
-
-                    <th>(2)</th>
-
-                    <th>(3)</th>
-
-                    <th>(4)</th>
-
-                </tr>
-
-            </thead>
-
-
-            <tbody>
-
-                <?php foreach (($vatPl204[0] ?? []) as $index => $item): ?>
-
-                    <tr>
-
-                        <td class="text-center">
-                            <?= $index + 1 ?>
-                        </td>
-
-                        <td class="p-1">
-                            <input
-                                type="text"
-                                class="form-control form-control-sm"
-                                value="<?= htmlspecialchars($item['name'] ?? '') ?>"
-                            >
-                        </td>
-
-                        <td class="p-1">
-                            <input
-                                type="text"
-                                class="form-control form-control-sm text-end"
-                                value="<?= number_format(
-                                    (float)($item['value'] ?? 0),
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?>"
-                            >
-                        </td>
-
-                        <td class="p-1">
-                            <input
-                                type="text"
-                                class="form-control form-control-sm text-end"
-                                value="<?= number_format(
-                                    (float)($item['vat'] ?? 0),
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?>"
-                            >
-                        </td>
-
-                    </tr>
-
-                <?php endforeach; ?>
-
-
-                <!-- TỔNG -->
-
-                <tr class="fw-bold">
-
-                    <td colspan="2" class="text-end">
-                        Tổng cộng
+                    <td class="text-center">
+                        <?= $index + 1 ?>
                     </td>
 
                     <td class="p-1">
 
                         <input
                             type="text"
-                            class="form-control form-control-sm text-end fw-bold"
-                            value="<?= number_format(
-                                (float)($vatPl204[1][0]['total_value'] ?? 0),
-                                0,
-                                ',',
-                                '.'
-                            ) ?>"
-                            readonly
+                            class="form-control form-control-sm"
+                            value="<?= htmlspecialchars($item['name'] ?? '') ?>"
                         >
 
                     </td>
@@ -263,25 +210,85 @@
 
                         <input
                             type="text"
-                            class="form-control form-control-sm text-end fw-bold"
+                            class="form-control form-control-sm text-end"
                             value="<?= number_format(
-                                (float)($vatPl204[1][0]['total_vat'] ?? 0),
+                                (float)($item['value'] ?? 0),
                                 0,
                                 ',',
                                 '.'
                             ) ?>"
-                            readonly
+                        >
+
+                    </td>
+
+                    <td class="p-1">
+
+                        <input
+                            type="text"
+                            class="form-control form-control-sm text-end"
+                            value="<?= number_format(
+                                (float)($item['vat'] ?? 0),
+                                0,
+                                ',',
+                                '.'
+                            ) ?>"
                         >
 
                     </td>
 
                 </tr>
 
-            </tbody>
+            <?php endforeach; ?>
 
-        </table>
 
-    </div>
+            <!-- TỔNG -->
+
+            <tr class="fw-bold">
+
+                <td colspan="2" class="text-end">
+                    Tổng cộng
+                </td>
+
+                <td class="p-1">
+
+                    <input
+                        type="text"
+                        class="form-control form-control-sm text-end fw-bold"
+                        value="<?= number_format(
+                            (float)($vatPl204[1][0]['total_value'] ?? 0),
+                            0,
+                            ',',
+                            '.'
+                        ) ?>"
+                        readonly
+                    >
+
+                </td>
+
+                <td class="p-1">
+
+                    <input
+                        type="text"
+                        class="form-control form-control-sm text-end fw-bold"
+                        value="<?= number_format(
+                            (float)($vatPl204[1][0]['total_vat'] ?? 0),
+                            0,
+                            ',',
+                            '.'
+                        ) ?>"
+                        readonly
+                    >
+
+                </td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
 
 <!-- ===================================================== -->
 <!-- BẢNG 2 -->
@@ -357,19 +364,6 @@
 
             <?php foreach (($vatPl204[2] ?? []) as $index => $item): ?>
 
-                <?php
-                    $value = (float)($item['value'] ?? 0);
-                    $vatRate = (float)($item['vat_rate'] ?? 0);
-
-                    $vatRateAfterReduction = $vatRate > 0
-                        ? $vatRate * 0.8
-                        : 0;
-
-                    $vatReduced = $value * (
-                        ($vatRate - $vatRateAfterReduction) / 100
-                    );
-                ?>
-
                 <tr>
 
                     <td class="text-center">
@@ -392,7 +386,7 @@
                             type="text"
                             class="form-control form-control-sm text-end"
                             value="<?= number_format(
-                                $value,
+                                (float)($item['value'] ?? 0),
                                 0,
                                 ',',
                                 '.'
@@ -402,16 +396,22 @@
                     </td>
 
                     <td class="text-end">
-                        <?= htmlspecialchars($item['vat_rate'] ?? 0) ?>
+
+                        <?= htmlspecialchars(
+                            $item['vat_rate'] ?? 0
+                        ) ?>
+
                     </td>
 
                     <td class="text-end">
+
                         <?= number_format(
-                            $vatRateAfterReduction,
+                            (float)($item['vat_rate_after_reduction'] ?? 0),
                             0,
                             ',',
                             '.'
                         ) ?>
+
                     </td>
 
                     <td class="p-1">
@@ -420,7 +420,7 @@
                             type="text"
                             class="form-control form-control-sm text-end"
                             value="<?= number_format(
-                                $vatReduced,
+                                (float)($item['vat_reduced'] ?? 0),
                                 0,
                                 ',',
                                 '.'
@@ -469,21 +469,7 @@
                         type="text"
                         class="form-control form-control-sm text-end fw-bold"
                         value="<?= number_format(
-                            array_sum(
-                                array_map(
-                                    function ($item) {
-                                        $value = (float)($item['value'] ?? 0);
-                                        $vatRate = (float)($item['vat_rate'] ?? 0);
-
-                                        $vatRateAfterReduction = $vatRate * 0.8;
-
-                                        return $value * (
-                                            ($vatRate - $vatRateAfterReduction) / 100
-                                        );
-                                    },
-                                    $vatPl204[2] ?? []
-                                )
-                            ),
+                            (float)($vatPl204[3][0]['total_vat_reduced'] ?? 0),
                             0,
                             ',',
                             '.'
