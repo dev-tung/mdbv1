@@ -78,7 +78,7 @@ BEGIN
 		cg.name
 
 	ORDER BY
-		total_revenue DESC,
+		total_profit DESC,
 		c.name ASC;
 
 

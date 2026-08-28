@@ -57,7 +57,7 @@
   <div class="d-flex gap-3 mb-3">
 
     <div>
-      <strong> Tổng nhân viên </strong>
+      <strong> Tổng </strong>
       <span id="sum-total-attendance">0</span>
     </div>
 
