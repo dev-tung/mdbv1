@@ -23,17 +23,21 @@ class PageController
 
 	public function contact(): void
 	{
+		View::render('pages/contact');
 	}
 
 	public function warrantyPolicy(): void
 	{
+		View::render('pages/warranty-policy');
 	}
 
 	public function shippingPolicy(): void
 	{
+		View::render('pages/shipping-policy');
 	}
 
 	public function returnPolicy(): void
 	{
+		View::render('pages/return-policy');
 	}
 }

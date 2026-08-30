@@ -123,7 +123,7 @@
                         <li class="mb-2">
                             <a
                                 class="text-decoration-none text-muted"
-                                href="<?= route('lien-he') ?>"
+                                href="<?= route('contact') ?>"
                             >
                                 Liên hệ
                             </a>
@@ -132,7 +132,7 @@
                         <li class="mb-2">
                             <a
                                 class="text-decoration-none text-muted"
-                                href="<?= route('chinh-sach-bao-hanh') ?>"
+                                href="<?= route('warranty-policy') ?>"
                             >
                                 Bảo hành
                             </a>
@@ -141,7 +141,7 @@
                         <li class="mb-2">
                             <a
                                 class="text-decoration-none text-muted"
-                                href="<?= route('chinh-sach-van-chuyen') ?>"
+                                href="<?= route('shipping-policy') ?>"
                             >
                                 Vận chuyển
                             </a>
@@ -150,7 +150,7 @@
                         <li class="mb-2">
                             <a
                                 class="text-decoration-none text-muted"
-                                href="<?= route('chinh-sach-doi-tra') ?>"
+                                href="<?= route('return-policy') ?>"
                             >
                                 Đổi trả
                             </a>
@@ -234,7 +234,7 @@
                         </a>
 
                         <a
-                            href="https://www.tiktok.com/@tocaulongvietnam"
+                            href="https://www.tiktok.com/@shopcaulongmanhdung"
                             target="_blank"
                             rel="noopener"
                             class="text-decoration-none text-muted d-flex align-items-center gap-2"

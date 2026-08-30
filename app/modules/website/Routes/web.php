@@ -36,6 +36,7 @@ Router::get('/checkout/success', [CartController::class, 'success']);
 Router::get('/string', [PageController::class, 'string']);
 Router::get('/affiliate', [PageController::class, 'affiliate']);
 Router::get('/career', [PageController::class, 'career']);
+
 Router::get('/contact', [PageController::class, 'contact']);
 Router::get('/warranty-policy', [PageController::class, 'warrantyPolicy']);
 Router::get('/shipping-policy', [PageController::class, 'shippingPolicy']);
