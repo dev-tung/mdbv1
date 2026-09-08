@@ -45,7 +45,6 @@ class CustomerGroupRepository extends Repository
 
 	public function create(array $data): int
 	{
-		dd($data);
 		return parent::create(
 			$this->buildData($data)
 		);
