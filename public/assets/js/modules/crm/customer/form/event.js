@@ -143,11 +143,13 @@ const Event = {
 			try {
 				const id = State.form.id;
 
-				console.log('STATE FORM:', State.form);
-
 				const payload = id
 					? Service.updatePayload(id, State.form)
 					: Service.payload(State.form);
+
+				console.log('ID:', id);
+				console.log('STATE:', State.form);
+				console.log('PAYLOAD:', payload);	
 
 				const response = id
 					? await Api.updateCustomer(payload)

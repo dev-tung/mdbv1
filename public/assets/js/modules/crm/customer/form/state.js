@@ -9,7 +9,7 @@ const State = {
 
 			name: '',
 
-			customer_group_id: null,
+			group_id: null,
 
 			phone: '',
 
