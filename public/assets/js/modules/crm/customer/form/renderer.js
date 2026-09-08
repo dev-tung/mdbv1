@@ -8,7 +8,33 @@ const Renderer = {
 	================================================= */
 
 	render() {
+		this.renderCustomerGroup();
+
 		this.renderCustomer();
+	},
+
+	/* =================================================
+	   CUSTOMER GROUP
+	================================================= */
+
+	renderCustomerGroup() {
+		const select = Dom.find('#customer_group_id');
+
+		select.innerHTML = `
+			<option value="">-- Chọn nhóm khách hàng --</option>
+		`;
+
+		State.customerGroup.forEach((item) => {
+			const option = document.createElement('option');
+
+			option.value = item.id;
+
+			option.textContent = item.name;
+
+			select.appendChild(option);
+		});
+
+		select.value = State.form.group_id || '';
 	},
 
 	/* =================================================

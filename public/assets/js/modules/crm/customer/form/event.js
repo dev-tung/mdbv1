@@ -25,9 +25,9 @@ const Event = {
 	async loadDefault() {
 		const id = Dom.find('#customer_id')?.value || null;
 
-		const options = await Service.getOptions();
+		const customerGroup = await Service.getCustomerGroups();
 
-		State.setOptions(options);
+		State.setCustomerGroup(customerGroup);
 
 		if (!id) {
 			return;
@@ -45,7 +45,7 @@ const Event = {
 	bindEvents() {
 		this.bindField('#name', 'name');
 
-		this.bindField('#customer_group_id', 'customer_group_id', 'change');
+		this.bindField('#customer_group_id', 'group_id', 'change');
 
 		this.bindField('#phone', 'phone');
 
@@ -62,7 +62,12 @@ const Event = {
 
 	bindField(selector, field, event = 'input') {
 		Dom.find(selector).addEventListener(event, (e) => {
+			console.log('FIELD:', field);
+			console.log('VALUE:', e.target.value);
+
 			State.setField(field, e.target.value);
+
+			console.log('STATE:', State.form);
 		});
 	},
 
@@ -95,14 +100,14 @@ const Event = {
 
 				// Chọn nhóm vừa tạo
 				State.setField(
-					'customer_group_id',
+					'group_id',
 					customerGroup.id
 				);
 
 				// Load lại options
-				const options = await Service.getOptions();
+				const options = await Service.getCustomerGroups();
 
-				State.setOptions(options);
+				State.setCustomerGroup(options);
 
 				// Render lại
 				Renderer.render();
@@ -137,6 +142,8 @@ const Event = {
 
 			try {
 				const id = State.form.id;
+
+				console.log('STATE FORM:', State.form);
 
 				const payload = id
 					? Service.updatePayload(id, State.form)

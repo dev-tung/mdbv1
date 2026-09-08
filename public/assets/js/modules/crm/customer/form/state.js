@@ -9,6 +9,8 @@ const State = {
 
 			name: '',
 
+			customer_group_id: null,
+
 			phone: '',
 
 			email: '',
@@ -24,6 +26,12 @@ const State = {
 	================================================= */
 
 	form: {},
+
+	/* =================================================
+	   CUSTOMER GROUP
+	================================================= */
+
+	customerGroup: [],
 
 	/* =================================================
 	   STATUS
@@ -46,6 +54,14 @@ const State = {
 	},
 
 	/* =================================================
+	   SET CUSTOMER GROUP
+	================================================= */
+
+	setCustomerGroup(customerGroup = []) {
+		this.customerGroup = customerGroup;
+	},
+
+	/* =================================================
 	   SET FIELD
 	================================================= */
 
@@ -61,6 +77,8 @@ const State = {
 
 	reset() {
 		this.form = this.defaultForm();
+
+		this.customerGroup = [];
 	},
 };
 

@@ -36,31 +36,57 @@ if (!function_exists('crawl_get_html')) {
 }
 
 if (!function_exists('crawl_download_image')) {
-	function crawl_download_image(string $url, string $path): bool
-	{
-		$fp = fopen($path, 'wb');
+        function crawl_download_image(string $url, string $path): bool
+        {
+                $dir = dirname($path);
 
-		$ch = curl_init($url);
+                if ($dir !== '' && $dir !== '.' && !is_dir($dir)) {
+                        if (!@mkdir($dir, 0777, true) && !is_dir($dir)) {
+                                crawl_log('CANNOT CREATE DIRECTORY: ' . $dir);
+                                return false;
+                        }
+                }
 
-		curl_setopt_array($ch, [
-			CURLOPT_FILE => $fp,
-			CURLOPT_FOLLOWLOCATION => true,
-			CURLOPT_USERAGENT => 'Mozilla/5.0',
-			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_SSL_VERIFYHOST => false,
-			CURLOPT_TIMEOUT => 120,
-		]);
+                $fp = @fopen($path, 'wb');
 
-		$result = curl_exec($ch);
+                if ($fp === false) {
+                        crawl_log('CANNOT OPEN FILE FOR WRITING: ' . $path);
+                        return false;
+                }
 
-		curl_close($ch);
+                $ch = curl_init($url);
 
-		fclose($fp);
+                curl_setopt_array($ch, [
+                        CURLOPT_FILE => $fp,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_USERAGENT => 'Mozilla/5.0',
+                        CURLOPT_SSL_VERIFYPEER => false,
+                        CURLOPT_SSL_VERIFYHOST => false,
+                        CURLOPT_TIMEOUT => 120,
+                ]);
 
-		return (bool) $result;
-	}
+                $result = curl_exec($ch);
+                $curlError = curl_error($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+                curl_close($ch);
+                fclose($fp);
+
+                if ($result === false || $curlError !== '') {
+                        @unlink($path);
+                        crawl_log('CURL ERROR: ' . $curlError);
+                        return false;
+                }
+
+                if ($httpCode >= 400) {
+                        @unlink($path);
+                        crawl_log('HTTP ERROR: ' . $httpCode . ' | ' . $url);
+                        return false;
+                }
+
+                return true;
+        }
 }
-
 if (!function_exists('crawl_delete_directory')) {
 	function crawl_delete_directory(string $dir): void
 	{
@@ -87,16 +113,23 @@ if (!function_exists('crawl_delete_directory')) {
 	}
 }
 
+// if (!function_exists('crawl_log')) {
+// 	function crawl_log(string $message): void
+// 	{
+// 		$line = '[' . date('Y-m-d H:i:s') . '] ' . $message;
+
+// 		if (php_sapi_name() === 'cli') {
+// 			echo $line . PHP_EOL;
+// 			return;
+// 		}
+
+// 		error_log($line);
+// 	}
+// }
+
 if (!function_exists('crawl_log')) {
 	function crawl_log(string $message): void
 	{
-		$line = '[' . date('Y-m-d H:i:s') . '] ' . $message;
-
-		if (php_sapi_name() === 'cli') {
-			echo $line . PHP_EOL;
-			return;
-		}
-
-		error_log($line);
+		echo $message;
 	}
 }

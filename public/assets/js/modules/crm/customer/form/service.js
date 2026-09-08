@@ -2,6 +2,16 @@ import Api from './api.js';
 
 const Service = {
 	/* =================================================
+	   CUSTOMER GROUP
+	================================================= */
+
+	async getCustomerGroups() {
+		const response = await Api.getCustomerGroups();
+
+		return response.data;
+	},
+
+	/* =================================================
 	   SHOW
 	================================================= */
 
@@ -14,10 +24,11 @@ const Service = {
 	/* =================================================
 	   PAYLOAD
 	================================================= */
-
 	payload(form) {
 		return {
 			name: form.name,
+
+			group_id: form.group_id,
 
 			phone: form.phone,
 
@@ -36,7 +47,6 @@ const Service = {
 	updatePayload(id, form) {
 		return {
 			id,
-
 			...this.payload(form),
 		};
 	},

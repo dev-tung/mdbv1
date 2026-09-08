@@ -10,7 +10,12 @@ const State = {
 		payment: 'partial',
 		paid_amount: 5000000,
 	},
+	/* =================================================
+	   CUSTOMER GROUP
+	================================================= */
 
+	customerGroup: [],
+	
 	warehouses: {
 		1: {
 			label: 'Kho Hà Nội',
@@ -48,6 +53,14 @@ const State = {
 		vat_amount: 1416000,
 		total_amount: 19116000,
 		debt_amount: 14116000,
+	},
+
+	/* =================================================
+	   SET CUSTOMER GROUP
+	================================================= */
+
+	setCustomerGroup(customerGroup = []) {
+		this.customerGroup = customerGroup;
 	},
 
 	setSupplier(supplier) {

@@ -16,7 +16,7 @@ class CustomerGroupRepository extends Repository
 
   public function getList(array $filters = []): array
   {
-    return Database::select(
+    return Database::get(
       'SELECT
         id,
         name
@@ -45,6 +45,7 @@ class CustomerGroupRepository extends Repository
 
 	public function create(array $data): int
 	{
+		dd($data);
 		return parent::create(
 			$this->buildData($data)
 		);

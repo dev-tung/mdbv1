@@ -8,6 +8,10 @@ use App\Job\Controllers\YonexProductDetailCrawler;
 use App\Job\Controllers\YonexProductImporter;
 use App\Job\Controllers\DucanProductCrawler;
 use App\Job\Controllers\DucanProductMapper;
+use App\Job\Controllers\LiningProductCrawler;
+use App\Job\Controllers\LiningProductDetailCrawler;
+use App\Job\Controllers\LiningProductImporter;
+
 
 Router::get(
 	'/job/ducan/list',
@@ -65,6 +69,7 @@ Router::get(
 	],
 );
 
+
 Router::get(
 	'/job/crawl-yonex-product-detail',
 	[YonexProductDetailCrawler::class, 'run'],
@@ -76,6 +81,30 @@ Router::get(
 Router::get(
 	'/job/import-yonex-product',
 	[YonexProductImporter::class, 'run'],
+	[
+		'auth' => 'admin',
+	],
+);
+
+Router::get(
+	'/job/crawl-lining-product',
+	[LiningProductCrawler::class, 'run'],
+	[
+		'auth' => 'admin',
+	],
+);
+
+Router::get(
+	'/job/crawl-lining-product-detail',
+	[LiningProductDetailCrawler::class, 'run'],
+	[
+		'auth' => 'admin',
+	],
+);
+
+Router::get(
+	'/job/import-lining-product',
+	[LiningProductImporter::class, 'run'],
 	[
 		'auth' => 'admin',
 	],
