@@ -8,7 +8,7 @@ class ProcedureCreator
 {
 	public function run(): void
 	{
-		$files = glob(PATH_ROOT . '/app/database/procedures/*.sql');
+		$files = glob(PATH_ROOT . '/app/database/*.sql');
 
 		sort($files);
 

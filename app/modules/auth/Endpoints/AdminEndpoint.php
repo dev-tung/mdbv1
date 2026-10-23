@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Admin\Endpoints;
+namespace App\Auth\Endpoints;
 
-use App\Admin\Repositories\UserRepository;
-use App\Core\Auth;
+use App\Auth\Repositories\UserRepository;
 use App\Core\Response;
+use App\Core\Auth;
 
-class AuthEndpoint
+class AdminEndpoint
 {
 	public function apiLogin()
 	{

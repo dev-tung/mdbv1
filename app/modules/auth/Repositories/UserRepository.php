@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Repositories;
+namespace App\Auth\Repositories;
 
 use App\Core\Database;
 use App\Core\Repository;

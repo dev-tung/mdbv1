@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Auth\Controllers;
 
 use App\Core\Session;
 use App\Core\View;
 
-class AuthController
+class AdminController
 {
 	public function login(): void
 	{
-		if (Session::get('auth_user')) {
+		if (Session::get('admin_user')) {
 			header('Location: /admin/orders');
 			exit();
 		}
@@ -19,7 +19,7 @@ class AuthController
 
 	public function logout(): void
 	{
-		Session::remove('auth_user');
+		Session::remove('admin_user');
 
 		header('Location: /admin/login');
 		exit();
