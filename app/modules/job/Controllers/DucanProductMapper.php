@@ -84,7 +84,7 @@ class DucanProductMapper
                 price,
                 sale_price,
                 url
-            FROM crawl_ducan_products
+            FROM ducan_products
             ORDER BY id
         ");
 
@@ -244,7 +244,7 @@ class DucanProductMapper
                 price,
                 sale_price,
                 url
-            FROM crawl_ducan_products
+            FROM ducan_products
             ORDER BY id
         ");
 

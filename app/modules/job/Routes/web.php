@@ -11,7 +11,19 @@ use App\Job\Controllers\DucanProductMapper;
 use App\Job\Controllers\LiningProductCrawler;
 use App\Job\Controllers\LiningProductDetailCrawler;
 use App\Job\Controllers\LiningProductImporter;
+use App\Job\Controllers\EinvoiceController;
 
+
+// ============================================================
+// E-INVOICE
+// ============================================================
+
+Router::get(
+    '/job/einvoice/download-file',
+    [EinvoiceController::class, 'downloadFile']
+);
+
+// Duc An
 
 Router::get(
 	'/job/ducan/list',

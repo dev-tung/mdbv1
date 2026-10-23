@@ -1,0 +1,3 @@
+- 1 file code nên dưới 300 dòng code
+- Tách route web và api thì dễ phân quyền, tái sử dụng khi muốn làm thêm cho mobile
+- Để thằng Store Procedure vì nó giúp call multiple query

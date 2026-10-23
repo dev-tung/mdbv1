@@ -111,7 +111,7 @@ class DucanProductCrawler
          * CLEAN OLD DATA
          */
         Database::execute(
-            "TRUNCATE TABLE crawl_ducan_products"
+            "TRUNCATE TABLE ducan_products"
         );
 
 
@@ -301,7 +301,7 @@ class DucanProductCrawler
                  */
                 Database::execute(
                     "
-                    INSERT IGNORE INTO crawl_ducan_products
+                    INSERT IGNORE INTO ducan_products
                     (
                         name,
                         slug,

@@ -85,17 +85,34 @@ class Database
 	// =========================
 	public static function call(string $sql, array $params = []): array
 	{
-		$stmt = self::query($sql, $params);
+			$stmt = self::query($sql, $params);
+			$results = [];
 
-		$results = [];
+			try {
+					do {
+							if ($stmt->columnCount() > 0) {
+									$results[] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+							}
 
-		do {
-			$results[] = $stmt->fetchAll();
-		} while ($stmt->nextRowset());
+							try {
+									$hasNextRowset = $stmt->nextRowset();
+							} catch (PDOException $e) {
+									// MySQL báo không có result set tiếp theo.
+									if (
+											($e->errorInfo[1] ?? null) === 5025
+											&& str_contains($e->getMessage(), 'Statement has no result set')
+									) {
+											break;
+									}
 
-		$stmt->closeCursor();
+									throw $e;
+							}
+					} while ($hasNextRowset);
+			} finally {
+					$stmt->closeCursor();
+			}
 
-		return $results;
+			return $results;
 	}
 
 	// =========================
