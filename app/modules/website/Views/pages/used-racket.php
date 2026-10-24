@@ -21,19 +21,18 @@
                         ?>
                         <div class="col">
                             <article class="card h-100 border-0 shadow-sm rounded-0 short-video-card">
-                                <div
+                                <button
+                                    type="button"
                                     class="short-video-preview"
                                     data-video-id="<?= $videoId ?>"
-                                    data-video-title="<?= $title ?>">
+                                    data-video-title="<?= $title ?>"
+                                    aria-label="Phát video: <?= $title ?>">
                                     <img
                                         src="https://i.ytimg.com/vi/<?= $videoId ?>/hqdefault.jpg"
                                         alt=""
                                         loading="lazy">
-                                    <button
-                                        type="button"
-                                        class="short-video-play"
-                                        aria-label="Phát video: <?= $title ?>"></button>
-                                </div>
+                                    <span class="short-video-play" aria-hidden="true"></span>
+                                </button>
                                 <div class="card-body p-2">
                                     <h3 class="card-title h6 mb-0"><?= $title ?></h3>
                                 </div>
@@ -51,10 +50,14 @@
 <style>
     .short-video-preview {
         position: relative;
+        display: block;
         width: 100%;
         aspect-ratio: 9 / 16;
         overflow: hidden;
+        padding: 0;
+        border: 0;
         background: #111;
+        cursor: pointer;
     }
 
     .short-video-preview img {
@@ -90,7 +93,6 @@
         border: 0;
         border-radius: 50%;
         appearance: none;
-        background-color: #69a84f !important;
         color: #fff !important;
         cursor: pointer;
         transform: translate(-50%, -50%);
@@ -108,7 +110,7 @@
     }
 
     .short-video-preview:hover .short-video-play {
-        background-color: #69a84f !important;
+        background-color: #e6e6e39f !important;
     }
 
     .short-video-play:focus-visible {
@@ -118,20 +120,19 @@
 </style>
 
 <script>
-    document.querySelectorAll('.short-video-play').forEach(function (playButton) {
-        playButton.addEventListener('click', function () {
-            const preview = playButton.closest('.short-video-preview');
+    document.querySelectorAll('.short-video-preview').forEach(function (preview) {
+        preview.addEventListener('click', function () {
             const videoId = preview.dataset.videoId;
-            const title = preview.dataset.videoTitle;
             const iframe = document.createElement('iframe');
 
-            iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(videoId) + '?autoplay=1';
-            iframe.title = title;
-            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+            iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(videoId) + '?autoplay=1&playsinline=1';
+            iframe.title = preview.dataset.videoTitle;
+            iframe.allow = 'autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
             iframe.referrerPolicy = 'strict-origin-when-cross-origin';
             iframe.allowFullscreen = true;
 
             preview.replaceChildren(iframe);
+            preview.disabled = true;
         });
     });
 </script>
