@@ -178,26 +178,31 @@
         font-size: 0.8rem;
     }
 
-    .short-video-preview:fullscreen {
-        width: 100vw;
-        height: 100vh;
-        max-width: none;
-        max-height: none;
-        aspect-ratio: auto;
-        background: #000;
+    body.video-fullscreen-active {
+        overflow: hidden;
     }
 
+    .short-video-preview.is-fullscreen,
+    .short-video-preview:fullscreen,
     .short-video-preview:-webkit-full-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
         width: 100vw;
         height: 100vh;
+        height: 100dvh;
         max-width: none;
         max-height: none;
         aspect-ratio: auto;
         background: #000;
     }
 
+    .short-video-preview.is-fullscreen .short-video-player,
+    .short-video-preview.is-fullscreen .short-video-player iframe,
     .short-video-preview:fullscreen .short-video-player,
-    .short-video-preview:fullscreen .short-video-player iframe {
+    .short-video-preview:fullscreen .short-video-player iframe,
+    .short-video-preview:-webkit-full-screen .short-video-player,
+    .short-video-preview:-webkit-full-screen .short-video-player iframe {
         width: 100%;
         height: 100%;
     }
@@ -307,36 +312,72 @@
             preview.querySelector('.short-video-fullscreen').addEventListener('click', function () {
                 const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
                 const exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen;
+                const fullscreenButton = preview.querySelector('.short-video-fullscreen');
 
-                if (fullscreenElement === preview && exitFullscreen) {
-                    exitFullscreen.call(document);
+                if (preview.classList.contains('is-fullscreen')) {
+                    preview.classList.remove('is-fullscreen');
+                    document.body.classList.remove('video-fullscreen-active');
+                    fullscreenButton.setAttribute('aria-label', 'Toàn màn hình: ' + preview.dataset.videoTitle);
+                    fullscreenButton.title = 'Toàn màn hình';
+
+                    if (fullscreenElement === preview && exitFullscreen) {
+                        exitFullscreen.call(document);
+                    }
                     return;
                 }
+
+                preview.classList.add('is-fullscreen');
+                document.body.classList.add('video-fullscreen-active');
+                fullscreenButton.setAttribute('aria-label', 'Thoát toàn màn hình: ' + preview.dataset.videoTitle);
+                fullscreenButton.title = 'Thoát toàn màn hình';
 
                 const requestFullscreen = preview.requestFullscreen || preview.webkitRequestFullscreen;
 
                 if (requestFullscreen) {
-                    const result = requestFullscreen.call(preview);
-                    if (result && typeof result.catch === 'function') {
-                        result.catch(function (error) {
-                            console.error('Không thể mở toàn màn hình:', error);
-                            preview.querySelector('.short-video-status').textContent =
-                                'Không thể mở toàn màn hình. Hãy dùng nút toàn màn hình trong trình phát YouTube.';
-                        });
-                    }
-                } else {
-                    const player = players.get(preview);
-                    const iframe = player && player.getIframe();
-                    const iframeFullscreen = iframe && (iframe.requestFullscreen || iframe.webkitRequestFullscreen);
-
-                    if (iframeFullscreen) {
-                        iframeFullscreen.call(iframe);
-                    } else {
-                        preview.querySelector('.short-video-status').textContent =
-                            'Trình duyệt này không hỗ trợ toàn màn hình cho video nhúng.';
+                    try {
+                        const result = requestFullscreen.call(preview);
+                        if (result && typeof result.catch === 'function') {
+                            result.catch(function (error) {
+                                console.warn('Using in-page fullscreen because native fullscreen was denied:', error);
+                            });
+                        }
+                    } catch (error) {
+                        console.warn('Using in-page fullscreen because native fullscreen is unavailable:', error);
                     }
                 }
             });
+        });
+
+        function resetFullscreen(preview) {
+            preview.classList.remove('is-fullscreen');
+            document.body.classList.remove('video-fullscreen-active');
+            const button = preview.querySelector('.short-video-fullscreen');
+            button.setAttribute('aria-label', 'Toàn màn hình: ' + preview.dataset.videoTitle);
+            button.title = 'Toàn màn hình';
+        }
+
+        ['fullscreenchange', 'webkitfullscreenchange'].forEach(function (eventName) {
+            document.addEventListener(eventName, function () {
+                const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+                previews.forEach(function (preview) {
+                    if (preview.classList.contains('is-fullscreen') && fullscreenElement !== preview) {
+                        resetFullscreen(preview);
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') {
+                return;
+            }
+
+            const fullscreenPreview = document.querySelector('.short-video-preview.is-fullscreen');
+            if (!fullscreenPreview) {
+                return;
+            }
+
+            resetFullscreen(fullscreenPreview);
         });
 
         if ('IntersectionObserver' in window) {
