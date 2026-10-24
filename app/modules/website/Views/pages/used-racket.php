@@ -125,7 +125,7 @@
             const videoId = preview.dataset.videoId;
             const iframe = document.createElement('iframe');
 
-            iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(videoId) + '?autoplay=1&playsinline=1';
+            iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(videoId) + '?autoplay=1&playsinline=1&mute=1';
             iframe.title = preview.dataset.videoTitle;
             iframe.allow = 'autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
             iframe.referrerPolicy = 'strict-origin-when-cross-origin';
