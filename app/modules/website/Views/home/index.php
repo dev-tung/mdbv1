@@ -61,6 +61,7 @@
 
             <?php foreach ($categories[0] as $cat): ?>
 
+                <?php if ($cat['id'] !== 3): // Exclude "Máy đan vợt" ?>
                 <div class="col-6 col-md-4 col-lg-3">
 
                     <a href="/product?category=<?= $cat['id'] ?>" class="text-decoration-none text-dark">
@@ -80,9 +81,28 @@
                     </a>
 
                 </div>
+                <?php endif; ?>
 
             <?php endforeach; ?>
+            <div class="col-6 col-md-4 col-lg-3">
 
+                <a href="/used-racket" class="text-decoration-none text-dark">
+
+                    <div class="card border-0 shadow-sm h-100">
+
+                        <div class="card-body text-center py-5">
+
+                            <h6 class="mb-0 fw-semibold">
+                                Vợt cầu lông cũ
+                            </h6>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
         </div>
     </section>
 

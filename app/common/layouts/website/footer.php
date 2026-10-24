@@ -58,15 +58,6 @@
                         <li class="mb-2">
                             <a
                                 class="text-decoration-none text-muted"
-                                href="<?= route('product') ?>?category=3"
-                            >
-                                Máy đan vợt
-                            </a>
-                        </li>
-
-                        <li class="mb-2">
-                            <a
-                                class="text-decoration-none text-muted"
                                 href="<?= route('product') ?>?category=8"
                             >
                                 Phụ kiện cầu lông
@@ -106,6 +97,15 @@
                                 href="<?= route('product') ?>?category=1"
                             >
                                 Vợt cầu lông
+                            </a>
+                        </li>
+
+                        <li class="mb-2">
+                            <a
+                                class="text-decoration-none text-muted"
+                                href="<?= route('used-racket') ?>"
+                            >
+                                Vợt cầu lông cũ
                             </a>
                         </li>
 
@@ -225,7 +225,7 @@
                     <div class="d-flex flex-column gap-2">
 
                         <a
-                            href="https://www.facebook.com/profile.php?id=61593911342974"
+                            href="https://www.facebook.com/tungcaulong/"
                             target="_blank"
                             rel="noopener"
                             class="text-decoration-none text-muted d-flex align-items-center gap-2"
@@ -234,7 +234,7 @@
                         </a>
 
                         <a
-                            href="https://www.tiktok.com/@shopcaulongmanhdung"
+                            href="https://www.tiktok.com/@dosontungmd"
                             target="_blank"
                             rel="noopener"
                             class="text-decoration-none text-muted d-flex align-items-center gap-2"
