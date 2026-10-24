@@ -61,7 +61,6 @@
 
             <?php foreach ($categories[0] as $cat): ?>
 
-                <?php if ($cat['id'] !== 3): // Exclude "Máy đan vợt" ?>
                 <div class="col-6 col-md-4 col-lg-3">
 
                     <a href="/product?category=<?= $cat['id'] ?>" class="text-decoration-none text-dark">
@@ -81,7 +80,6 @@
                     </a>
 
                 </div>
-                <?php endif; ?>
 
             <?php endforeach; ?>
 
