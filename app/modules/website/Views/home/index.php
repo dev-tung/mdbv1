@@ -24,7 +24,7 @@
             <div class="container-fluid py-3">
 
                 <h1 class="display-5 fw-bold mb-3">
-                    Badminton Shop - Vợt Cầu Lông Chính Hãng
+                    Manh Dung Badminton Shop <br> Vợt Cầu Lông Chính Hãng
                 </h1>
 
                 <p class="col-lg-8 fs-5 opacity-75">
@@ -84,6 +84,7 @@
                 <?php endif; ?>
 
             <?php endforeach; ?>
+
             <div class="col-6 col-md-4 col-lg-3">
 
                 <a href="/used-racket" class="text-decoration-none text-dark">
@@ -103,6 +104,7 @@
                 </a>
 
             </div>
+
         </div>
     </section>
 
@@ -125,7 +127,7 @@
             </h2>
 
             <p>
-                Badminton Shop chuyên cung cấp các dòng vợt cầu lông chính hãng từ Yonex, Victor, Lining cùng nhiều thương hiệu nổi tiếng khác. Chúng tôi mang đến giải pháp mua sắm cầu lông toàn diện với đầy đủ vợt, giày, túi và phụ kiện.
+                Manh Dung Badminton Shop chuyên cung cấp các dòng vợt cầu lông chính hãng từ Yonex, Victor, Lining cùng nhiều thương hiệu nổi tiếng khác. Chúng tôi mang đến giải pháp mua sắm cầu lông toàn diện với đầy đủ vợt, giày, túi và phụ kiện.
             </p>
 
             <p class="mb-0">
