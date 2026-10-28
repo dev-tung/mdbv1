@@ -83,12 +83,13 @@ class ShopController
 		$products = is_array($products) ? $products : [];
 		$products = array_values(array_filter(
 			$products,
-			static function (array $product) use ($categoryId): bool {
+			static function (array $product) use ($categoryId, $stockDays): bool {
 				return ($categoryId === null || (int) ($product['category_id'] ?? 0) === $categoryId)
 					&& ($product['status'] ?? '') === 'active'
 					&& (float) ($product['price'] ?? 0) > 0
 					&& (float) ($product['import_price'] ?? 0) > 0
-					&& (int) ($product['stock'] ?? 0) > 0;
+					&& (int) ($product['stock'] ?? 0) > 0
+					&& (int) ($product['days_in_stock'] ?? -1) >= $stockDays;
 			},
 		));
 
