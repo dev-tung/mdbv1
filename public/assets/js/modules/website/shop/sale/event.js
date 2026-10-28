@@ -52,7 +52,7 @@ function createSaleListImage(canvas, products, day, month, year) {
 	context.font = '700 46px Arial, sans-serif';
 	context.textAlign = 'center';
 	context.textBaseline = 'middle';
-	context.fillText(`KHUYẾN MÃI NGÀY ${day}/${month}/${year} TẠI MDB SHOP`, width / 2, 180, width - sidePadding * 2);
+	context.fillText(`Khuyến mãi ngày ${day}/${month}/${year} tại MDB Shop`, width / 2, 180, width - sidePadding * 2);
 	context.textAlign = 'left';
 	context.textBaseline = 'alphabetic';
 

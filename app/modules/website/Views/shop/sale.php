@@ -26,6 +26,7 @@ $saleProducts = array_values(array_filter(
     static fn (array $product): bool => $product['sale_price'] < $product['price'],
 ));
 
+shuffle($saleProducts);
 $displaySaleProducts = array_slice($saleProducts, 0, $productLimit);
 $productCount = count($displaySaleProducts);
 $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
@@ -48,7 +49,7 @@ $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
     <?php if ($productCount > 0): ?>
         <div class="sale-poster-wrap">
             <section class="sale-poster" aria-label="Khuyến mãi ngày <?= htmlspecialchars($dateTitle, ENT_QUOTES, 'UTF-8') ?> tại MDB Shop">
-                <h1 class="sale-poster-title">KHUYẾN MÃI NGÀY <?= htmlspecialchars($dateTitle, ENT_QUOTES, 'UTF-8') ?> TẠI MDB SHOP</h1>
+                <h1 class="sale-poster-title">Khuyến mãi ngày <?= htmlspecialchars($dateTitle, ENT_QUOTES, 'UTF-8') ?> tại MDB Shop</h1>
                 <ol class="sale-poster-products" style="--sale-product-count: <?= $productCount ?>">
                     <?php foreach ($displaySaleProducts as $index => $product): ?>
                         <li class="sale-poster-product">
