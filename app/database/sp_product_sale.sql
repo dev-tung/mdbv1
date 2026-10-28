@@ -11,7 +11,8 @@ CREATE PROCEDURE sp_product_sale (
 	IN p_price_max DECIMAL(15,2),
 	IN p_website TINYINT,
 	IN p_page INT,
-	IN p_per_page INT
+	IN p_per_page INT,
+	IN p_stock_days INT
 )
 BEGIN
 	DECLARE v_offset INT;
@@ -65,6 +66,7 @@ BEGIN
 				inventory.quantity > 0
 				AND purchase_item.quantity > 0
 				AND purchase_item.total_amount > 0
+				AND DATEDIFF(CURDATE(), DATE(purchase.created_at)) >= GREATEST(COALESCE(p_stock_days, 0), 0)
 		) eligible_lots
 		WHERE eligible_lots.lot_rank = 1
 	) i
@@ -145,6 +147,7 @@ BEGIN
 				inventory.quantity > 0
 				AND purchase_item.quantity > 0
 				AND purchase_item.total_amount > 0
+				AND DATEDIFF(CURDATE(), DATE(purchase.created_at)) >= GREATEST(COALESCE(p_stock_days, 0), 0)
 		) eligible_lots
 		WHERE eligible_lots.lot_rank = 1
 	) i

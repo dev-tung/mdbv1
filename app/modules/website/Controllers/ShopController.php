@@ -60,6 +60,7 @@ class ShopController
 
 		$result = $this->productRepository->getSale([
 			'website' => 0,
+			'stock_days' => $stockDays,
 		]);
 
 		$products = $result[0] ?? [];
@@ -70,8 +71,7 @@ class ShopController
 				return ($product['status'] ?? '') === 'active'
 					&& (float) ($product['price'] ?? 0) > 0
 					&& (float) ($product['import_price'] ?? 0) > 0
-					&& (int) ($product['stock'] ?? 0) > 0
-					&& (int) ($product['days_in_stock'] ?? -1) >= $stockDays;
+					&& (int) ($product['stock'] ?? 0) > 0;
 			},
 		));
 

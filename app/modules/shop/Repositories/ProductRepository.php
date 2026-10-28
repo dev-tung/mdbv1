@@ -43,7 +43,7 @@ class ProductRepository extends Repository
 	public function getSale(array $filters = []): array
 	{
 		return Database::call(
-			'CALL sp_product_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+			'CALL sp_product_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			array_params(
 				[
 					'keyword',
@@ -57,6 +57,7 @@ class ProductRepository extends Repository
 					'website',
 					'page',
 					'per_page',
+					'stock_days',
 				],
 				$filters,
 			),
