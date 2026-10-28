@@ -24,7 +24,7 @@ function getSaleProducts(products, limit) {
 	).slice(0, limit);
 }
 
-function createSaleListImage(canvas, products, day, month, year) {
+function createSaleListImage(canvas, products, day, month, year, backgroundColor, backgroundDark) {
 	const context = canvas.getContext('2d');
 
 	if (!context) {
@@ -43,8 +43,8 @@ function createSaleListImage(canvas, products, day, month, year) {
 	canvas.width = width;
 	canvas.height = height;
 	const background = context.createLinearGradient(0, 0, width, height);
-	background.addColorStop(0, '#69a84f');
-	background.addColorStop(1, '#3f7f35');
+	background.addColorStop(0, backgroundColor);
+	background.addColorStop(1, backgroundDark);
 	context.fillStyle = background;
 	context.fillRect(0, 0, width, height);
 
@@ -168,7 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
 				visibleProducts,
 				Number(dataElement.dataset.day),
 				Number(dataElement.dataset.month),
-				dataElement.dataset.year
+				dataElement.dataset.year,
+				dataElement.dataset.background,
+				dataElement.dataset.backgroundDark
 			);
 			const imageBlob = await new Promise((resolve, reject) => {
 				canvas.toBlob((blob) => {

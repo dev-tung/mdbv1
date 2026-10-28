@@ -40,6 +40,7 @@ class ShopController
 		$profitInput = $_GET['p'] ?? '30%';
 		$limitInput = $_GET['l'] ?? '15';
 		$categoryInput = $_GET['c'] ?? null;
+		$backgroundInput = $_GET['b'] ?? '69a84f';
 
 		if (!is_string($stockInput) || !ctype_digit($stockInput)) {
 			http_response_code(400);
@@ -69,10 +70,35 @@ class ShopController
 			return;
 		}
 
+		if (!is_string($backgroundInput) || !preg_match('/^#?(?:[a-fA-F0-9]{3}|[a-fA-F0-9]{6})$/', $backgroundInput)) {
+			http_response_code(400);
+			echo 'Tham số b phải là mã màu HEX hợp lệ.';
+			return;
+		}
+
 		$stockDays = (int) $stockInput;
 		$profitPercent = (float) $profitMatch[1];
 		$productLimit = (int) $limitInput;
 		$categoryId = $categoryInput === null ? null : (int) $categoryInput;
+		$backgroundHex = ltrim($backgroundInput, '#');
+		if (strlen($backgroundHex) === 3) {
+			$backgroundHex = implode('', array_map(
+				static fn (string $digit): string => $digit . $digit,
+				str_split($backgroundHex),
+			));
+		}
+		$backgroundColor = '#' . strtolower($backgroundHex);
+		$backgroundChannels = [
+			hexdec(substr($backgroundHex, 0, 2)),
+			hexdec(substr($backgroundHex, 2, 2)),
+			hexdec(substr($backgroundHex, 4, 2)),
+		];
+		$backgroundDark = sprintf(
+			'#%02x%02x%02x',
+			(int) round($backgroundChannels[0] * 0.65),
+			(int) round($backgroundChannels[1] * 0.65),
+			(int) round($backgroundChannels[2] * 0.65),
+		);
 
 		$result = $this->productRepository->getSale([
 			'website' => 0,
@@ -103,6 +129,8 @@ class ShopController
 			'profitPercent',
 			'productLimit',
 			'categoryId',
+			'backgroundColor',
+			'backgroundDark',
 		));
 	}
 }

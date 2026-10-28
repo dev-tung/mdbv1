@@ -48,7 +48,11 @@ $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
 
     <?php if ($productCount > 0): ?>
         <div class="sale-poster-wrap">
-            <section class="sale-poster" aria-label="Khuyến mãi ngày <?= htmlspecialchars($dateTitle, ENT_QUOTES, 'UTF-8') ?> tại MDB Shop">
+            <section
+                class="sale-poster"
+                aria-label="Khuyến mãi ngày <?= htmlspecialchars($dateTitle, ENT_QUOTES, 'UTF-8') ?> tại MDB Shop"
+                style="--sale-background: <?= htmlspecialchars($backgroundColor, ENT_QUOTES, 'UTF-8') ?>; --sale-background-dark: <?= htmlspecialchars($backgroundDark, ENT_QUOTES, 'UTF-8') ?>"
+            >
                 <h1 class="sale-poster-title">Khuyến mãi ngày <?= htmlspecialchars($dateTitle, ENT_QUOTES, 'UTF-8') ?> tại MDB Shop</h1>
                 <ol class="sale-poster-products" style="--sale-product-count: <?= $productCount ?>">
                     <?php foreach ($displaySaleProducts as $index => $product): ?>
@@ -95,7 +99,7 @@ $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
         padding: 5% 5% 4%;
         overflow: hidden;
         color: #fff;
-        background: linear-gradient(135deg, #69a84f 0%, #3f7f35 100%);
+        background: linear-gradient(135deg, var(--sale-background) 0%, var(--sale-background-dark) 100%);
         border-radius: 0.75rem;
         box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.18);
     }
@@ -199,4 +203,4 @@ $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
     }
 </style>
 
-<script id="sale-poster-data" type="application/json" data-day="<?= $day ?>" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>" data-limit="<?= $productLimit ?>"><?= json_encode($displaySaleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+<script id="sale-poster-data" type="application/json" data-day="<?= $day ?>" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>" data-limit="<?= $productLimit ?>" data-background="<?= htmlspecialchars($backgroundColor, ENT_QUOTES, 'UTF-8') ?>" data-background-dark="<?= htmlspecialchars($backgroundDark, ENT_QUOTES, 'UTF-8') ?>"><?= json_encode($displaySaleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
