@@ -18,11 +18,11 @@ function formatPrice(price) {
 	return `${new Intl.NumberFormat('vi-VN').format(price)}₫`;
 }
 
-function getSaleProducts(products, categoryId) {
+function getSaleProducts(products, categoryId, limit) {
 	return products.filter((product) =>
 		(!categoryId || Number(product.category_id) === Number(categoryId))
 		&& Number(product.sale_price) < Number(product.price)
-	);
+	).slice(0, limit);
 }
 
 function createSaleListImage(products, month) {
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function renderList() {
-		visibleProducts = getSaleProducts(products, categoryFilter.value);
+		visibleProducts = getSaleProducts(products, categoryFilter.value, Number(dataElement.dataset.limit));
 		productList.replaceChildren();
 		countElement.textContent = String(visibleProducts.length);
 		button.disabled = visibleProducts.length === 0;

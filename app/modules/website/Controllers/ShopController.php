@@ -38,6 +38,7 @@ class ShopController
 	{
 		$stockInput = $_GET['s'] ?? '90';
 		$profitInput = $_GET['p'] ?? '30%';
+		$limitInput = $_GET['l'] ?? '15';
 
 		if (!is_string($stockInput) || !ctype_digit($stockInput)) {
 			http_response_code(400);
@@ -55,8 +56,15 @@ class ShopController
 			return;
 		}
 
+		if (!is_string($limitInput) || !ctype_digit($limitInput) || (int) $limitInput < 1) {
+			http_response_code(400);
+			echo 'Tham số l phải là số lượng sản phẩm lớn hơn 0.';
+			return;
+		}
+
 		$stockDays = (int) $stockInput;
 		$profitPercent = (float) $profitMatch[1];
+		$productLimit = (int) $limitInput;
 
 		$result = $this->productRepository->getSale([
 			'website' => 0,
@@ -93,6 +101,7 @@ class ShopController
 			'categoriesById',
 			'stockDays',
 			'profitPercent',
+			'productLimit',
 		));
 	}
 }

@@ -25,7 +25,8 @@ $saleProducts = array_values(array_filter(
     static fn (array $product): bool => $product['sale_price'] < $product['price'],
 ));
 
-$productCount = count($saleProducts);
+$displaySaleProducts = array_slice($saleProducts, 0, $productLimit);
+$productCount = count($displaySaleProducts);
 $monthTitle = 'tháng ' . $month . ' năm ' . $year;
 $categoriesById = $categoriesById ?? [];
 
@@ -86,7 +87,7 @@ $categoriesById = $categoriesById ?? [];
                 </tr>
             </thead>
             <tbody id="sale-product-list">
-                <?php foreach ($saleProducts as $index => $product): ?>
+                <?php foreach ($displaySaleProducts as $index => $product): ?>
                     <tr>
                         <td class="text-secondary"><?= $index + 1 ?></td>
                         <td>
@@ -125,4 +126,4 @@ $categoriesById = $categoriesById ?? [];
     }
 </style>
 
-<script id="sale-poster-data" type="application/json" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>"><?= json_encode($saleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+<script id="sale-poster-data" type="application/json" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>" data-limit="<?= $productLimit ?>"><?= json_encode($saleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
