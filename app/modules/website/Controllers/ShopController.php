@@ -39,6 +39,7 @@ class ShopController
 		$stockInput = $_GET['s'] ?? '90';
 		$profitInput = $_GET['p'] ?? '30%';
 		$limitInput = $_GET['l'] ?? '15';
+		$categoryInput = $_GET['c'] ?? null;
 
 		if (!is_string($stockInput) || !ctype_digit($stockInput)) {
 			http_response_code(400);
@@ -62,9 +63,16 @@ class ShopController
 			return;
 		}
 
+		if ($categoryInput !== null && (!is_string($categoryInput) || !ctype_digit($categoryInput) || (int) $categoryInput < 1)) {
+			http_response_code(400);
+			echo 'Tham số c phải là mã danh mục lớn hơn 0.';
+			return;
+		}
+
 		$stockDays = (int) $stockInput;
 		$profitPercent = (float) $profitMatch[1];
 		$productLimit = (int) $limitInput;
+		$categoryId = $categoryInput === null ? null : (int) $categoryInput;
 
 		$result = $this->productRepository->getSale([
 			'website' => 0,
@@ -75,22 +83,14 @@ class ShopController
 		$products = is_array($products) ? $products : [];
 		$products = array_values(array_filter(
 			$products,
-			static function (array $product) use ($stockDays): bool {
-				return ($product['status'] ?? '') === 'active'
+			static function (array $product) use ($categoryId): bool {
+				return ($categoryId === null || (int) ($product['category_id'] ?? 0) === $categoryId)
+					&& ($product['status'] ?? '') === 'active'
 					&& (float) ($product['price'] ?? 0) > 0
 					&& (float) ($product['import_price'] ?? 0) > 0
 					&& (int) ($product['stock'] ?? 0) > 0;
 			},
 		));
-
-		$categoriesById = [];
-		foreach ($products as $product) {
-			$categoryId = (int) ($product['category_id'] ?? 0);
-
-			if ($categoryId > 0) {
-				$categoriesById[$categoryId] = (string) ($product['category_name'] ?? '');
-			}
-		}
 
 		if (isset($result[0]) && is_array($result[0])) {
 			$result[0] = $products;
@@ -98,10 +98,10 @@ class ShopController
 
 		View::render('shop/sale', compact(
 			'result',
-			'categoriesById',
 			'stockDays',
 			'profitPercent',
 			'productLimit',
+			'categoryId',
 		));
 	}
 }

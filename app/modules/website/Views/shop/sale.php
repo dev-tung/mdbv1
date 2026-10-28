@@ -2,6 +2,7 @@
 
 $products = $result[0] ?? [];
 $products = is_array($products) ? $products : [];
+$day = (int) date('j');
 $month = (int) date('n');
 $year = date('Y');
 
@@ -27,8 +28,7 @@ $saleProducts = array_values(array_filter(
 
 $displaySaleProducts = array_slice($saleProducts, 0, $productLimit);
 $productCount = count($displaySaleProducts);
-$monthTitle = 'tháng ' . $month . ' năm ' . $year;
-$categoriesById = $categoriesById ?? [];
+$dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
 
 ?>
 
@@ -37,7 +37,7 @@ $categoriesById = $categoriesById ?? [];
         <div class="row align-items-center g-4">
             <div class="col-lg">
                 <span class="badge rounded-pill bg-warning text-dark mb-3">ƯU ĐÃI CÓ HẠN</span>
-                <h1 class="display-5 fw-bold mb-2">Khuyến mãi <?= htmlspecialchars($monthTitle, ENT_QUOTES, 'UTF-8') ?></h1>
+                <h1 class="display-5 fw-bold mb-2">Khuyến mãi ngày <?= htmlspecialchars($dateTitle, ENT_QUOTES, 'UTF-8') ?></h1>
             </div>
             <div class="col-lg-auto">
                 <button
@@ -59,22 +59,6 @@ $categoriesById = $categoriesById ?? [];
             <p class="text-secondary mb-0"><span id="sale-count"><?= $productCount ?></span> sản phẩm phù hợp.</p>
         </div>
     </div>
-
-    <section class="card border-0 shadow-sm mb-3" aria-label="Bộ lọc khuyến mãi">
-        <div class="card-body">
-            <div class="row g-3 align-items-end">
-                <div class="col-12 col-md-6">
-                    <label class="form-label fw-semibold" for="sale-filter-category">Danh mục</label>
-                    <select class="form-select" id="sale-filter-category">
-                        <option value="">Tất cả danh mục</option>
-                        <?php foreach ($categoriesById as $categoryId => $categoryName): ?>
-                            <option value="<?= (int) $categoryId ?>"><?= htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8') ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <div class="table-responsive bg-white border rounded-3 shadow-sm">
         <table class="table table-hover align-middle mb-0 sale-list">
@@ -126,4 +110,4 @@ $categoriesById = $categoriesById ?? [];
     }
 </style>
 
-<script id="sale-poster-data" type="application/json" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>" data-limit="<?= $productLimit ?>"><?= json_encode($saleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+<script id="sale-poster-data" type="application/json" data-day="<?= $day ?>" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>" data-limit="<?= $productLimit ?>"><?= json_encode($displaySaleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>

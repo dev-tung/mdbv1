@@ -18,14 +18,13 @@ function formatPrice(price) {
 	return `${new Intl.NumberFormat('vi-VN').format(price)}₫`;
 }
 
-function getSaleProducts(products, categoryId, limit) {
+function getSaleProducts(products, limit) {
 	return products.filter((product) =>
-		(!categoryId || Number(product.category_id) === Number(categoryId))
-		&& Number(product.sale_price) < Number(product.price)
+		Number(product.sale_price) < Number(product.price)
 	).slice(0, limit);
 }
 
-function createSaleListImage(products, month) {
+function createSaleListImage(products, day, month, year) {
 	const canvas = document.createElement('canvas');
 	const context = canvas.getContext('2d');
 
@@ -54,7 +53,7 @@ function createSaleListImage(products, month) {
 	context.font = '700 46px Arial, sans-serif';
 	context.textAlign = 'center';
 	context.textBaseline = 'middle';
-	context.fillText(`KHUYẾN MÃI THÁNG ${month} TẠI MDB SHOP`, width / 2, headerHeight / 2, width - sidePadding * 2);
+	context.fillText(`KHUYẾN MÃI NGÀY ${day}/${month}/${year} TẠI MDB SHOP`, width / 2, headerHeight / 2, width - sidePadding * 2);
 	context.textAlign = 'left';
 	context.textBaseline = 'alphabetic';
 
@@ -133,11 +132,10 @@ document.addEventListener('DOMContentLoaded', () => {
 	const button = document.getElementById('download-sale-poster');
 	const dataElement = document.getElementById('sale-poster-data');
 	const status = document.getElementById('sale-poster-status');
-	const categoryFilter = document.getElementById('sale-filter-category');
 	const productList = document.getElementById('sale-product-list');
 	const countElement = document.getElementById('sale-count');
 
-	if (!button || !dataElement || !status || !categoryFilter || !productList || !countElement) {
+	if (!button || !dataElement || !status || !productList || !countElement) {
 		return;
 	}
 
@@ -158,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function renderList() {
-		visibleProducts = getSaleProducts(products, categoryFilter.value, Number(dataElement.dataset.limit));
+		visibleProducts = getSaleProducts(products, Number(dataElement.dataset.limit));
 		productList.replaceChildren();
 		countElement.textContent = String(visibleProducts.length);
 		button.disabled = visibleProducts.length === 0;
@@ -207,8 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		productList.appendChild(fragment);
 	}
 
-	categoryFilter.addEventListener('change', renderList);
-
 	button.addEventListener('click', async () => {
 		button.disabled = true;
 		button.setAttribute('aria-busy', 'true');
@@ -217,7 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		try {
 			const canvas = createSaleListImage(
 				visibleProducts,
-				Number(dataElement.dataset.month)
+				Number(dataElement.dataset.day),
+				Number(dataElement.dataset.month),
+				dataElement.dataset.year
 			);
 			const imageBlob = await new Promise((resolve, reject) => {
 				canvas.toBlob((blob) => {
