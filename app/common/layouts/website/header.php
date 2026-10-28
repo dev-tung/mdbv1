@@ -46,14 +46,6 @@
                     </li>
                     <li class="nav-item">
                         <a
-                            class="nav-link <?= active_menu('sale') ?>"
-                            href="<?= route('/sale?s=90&p=30%25&l=15') ?>"
-                        >
-                            Khuyến mãi
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
                             class="nav-link <?= active_menu('product') ?>"
                             href="<?= route('product') ?>"
                         >

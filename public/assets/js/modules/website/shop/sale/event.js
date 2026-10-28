@@ -24,8 +24,7 @@ function getSaleProducts(products, limit) {
 	).slice(0, limit);
 }
 
-function createSaleListImage(products, day, month, year) {
-	const canvas = document.createElement('canvas');
+function createSaleListImage(canvas, products, day, month, year) {
 	const context = canvas.getContext('2d');
 
 	if (!context) {
@@ -120,9 +119,9 @@ function createSaleListImage(products, day, month, year) {
 	});
 
 	context.fillStyle = '#ffffff';
-	context.font = '700 22px Arial, sans-serif';
+	context.font = '700 26px Arial, sans-serif';
 	context.textAlign = 'center';
-	context.fillText('Liên hệ MDB SHOP để được tư vấn và đặt hàng', width / 2, height - 90);
+	context.fillText('Liên hệ SĐT 0973359165 để đặt hàng', width / 2, height - 90);
 	context.textAlign = 'left';
 
 	return canvas;
@@ -132,10 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	const button = document.getElementById('download-sale-poster');
 	const dataElement = document.getElementById('sale-poster-data');
 	const status = document.getElementById('sale-poster-status');
-	const productList = document.getElementById('sale-product-list');
-	const countElement = document.getElementById('sale-count');
+	const preview = document.getElementById('sale-poster-preview');
 
-	if (!button || !dataElement || !status || !productList || !countElement) {
+	if (!button || !dataElement || !status) {
 		return;
 	}
 
@@ -155,54 +153,17 @@ document.addEventListener('DOMContentLoaded', () => {
 		return;
 	}
 
-	function renderList() {
-		visibleProducts = getSaleProducts(products, Number(dataElement.dataset.limit));
-		productList.replaceChildren();
-		countElement.textContent = String(visibleProducts.length);
-		button.disabled = visibleProducts.length === 0;
-		status.textContent = visibleProducts.length
-			? ''
-			: 'Không có mặt hàng khuyến mãi phù hợp với bộ lọc.';
+	visibleProducts = getSaleProducts(products, Number(dataElement.dataset.limit));
+	button.disabled = visibleProducts.length === 0 || !preview;
 
-		if (!visibleProducts.length) {
-			const row = document.createElement('tr');
-			const cell = document.createElement('td');
-
-			cell.className = 'text-center text-secondary py-4';
-			cell.colSpan = 4;
-			cell.textContent = 'Không có mặt hàng khuyến mãi phù hợp với bộ lọc.';
-			row.appendChild(cell);
-			productList.appendChild(row);
-			return;
-		}
-
-		const fragment = document.createDocumentFragment();
-
-		visibleProducts.forEach((product, index) => {
-			const row = document.createElement('tr');
-			const numberCell = document.createElement('td');
-			const nameCell = document.createElement('td');
-			const name = document.createElement('div');
-			const category = document.createElement('small');
-			const originalPrice = document.createElement('td');
-			const salePrice = document.createElement('td');
-
-			numberCell.className = 'text-secondary';
-			numberCell.textContent = String(index + 1);
-			name.className = 'fw-semibold';
-			name.textContent = product.name;
-			category.className = 'text-secondary';
-			category.textContent = product.category_name;
-			nameCell.append(name, category);
-			originalPrice.className = 'text-end text-nowrap';
-			originalPrice.textContent = formatPrice(product.price);
-			salePrice.className = 'text-end fw-bold text-danger text-nowrap';
-			salePrice.textContent = formatPrice(product.sale_price);
-			row.append(numberCell, nameCell, originalPrice, salePrice);
-			fragment.appendChild(row);
-		});
-
-		productList.appendChild(fragment);
+	if (preview && visibleProducts.length > 0) {
+		createSaleListImage(
+			preview,
+			visibleProducts,
+			Number(dataElement.dataset.day),
+			Number(dataElement.dataset.month),
+			dataElement.dataset.year
+		);
 	}
 
 	button.addEventListener('click', async () => {
@@ -211,14 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		status.textContent = 'Đang tạo ảnh khuyến mãi…';
 
 		try {
-			const canvas = createSaleListImage(
-				visibleProducts,
-				Number(dataElement.dataset.day),
-				Number(dataElement.dataset.month),
-				dataElement.dataset.year
-			);
 			const imageBlob = await new Promise((resolve, reject) => {
-				canvas.toBlob((blob) => {
+				preview.toBlob((blob) => {
 					if (blob) {
 						resolve(blob);
 					} else {
@@ -238,10 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.error('Không thể tạo ảnh khuyến mãi:', error);
 			status.textContent = error.message || 'Không thể tạo ảnh. Vui lòng thử lại.';
 		} finally {
-			button.disabled = visibleProducts.length === 0;
+			button.disabled = visibleProducts.length === 0 || !preview;
 			button.removeAttribute('aria-busy');
 		}
 	});
-
-	renderList();
 });
