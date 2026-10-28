@@ -91,7 +91,7 @@ $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
         width: 100%;
         max-width: 640px;
         aspect-ratio: 9 / 16;
-        padding: 19.2% 16.66% 15.6%;
+        padding: 5% 5% 4%;
         overflow: hidden;
         color: #fff;
         background: linear-gradient(135deg, #69a84f 0%, #3f7f35 100%);
@@ -103,10 +103,11 @@ $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
         flex: 0 0 auto;
         margin: 0;
         color: inherit;
-        font-size: clamp(14px, 4.26cqw, 28px);
+        font-size: clamp(11px, 3.8cqw, 24px);
         font-weight: 700;
         line-height: 1.2;
         text-align: center;
+        white-space: nowrap;
     }
 
     .sale-poster-products {
