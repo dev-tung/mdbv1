@@ -109,11 +109,19 @@ $categoriesById = $categoriesById ?? [];
 
 <style>
     .sale-banner {
-        background: linear-gradient(120deg, #123f2b, #27834b);
+        background: linear-gradient(135deg, #2f3e2c 0%, #69a84f 55%, #3f6f32 100%);
     }
 
     .sale-list th {
         white-space: nowrap;
+    }
+
+    @media (min-width: 768px) {
+        .sale-list th,
+        .sale-list td {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
     }
 </style>
 

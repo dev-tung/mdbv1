@@ -25,7 +25,7 @@ function getSaleProducts(products, categoryId) {
 	);
 }
 
-function createSaleListImage(products, month, year, categoryName) {
+function createSaleListImage(products, month) {
 	const canvas = document.createElement('canvas');
 	const context = canvas.getContext('2d');
 
@@ -35,7 +35,7 @@ function createSaleListImage(products, month, year, categoryName) {
 
 	const width = 1080;
 	const height = 1920;
-	const headerHeight = 330;
+	const headerHeight = 240;
 	const footerHeight = 110;
 	const contentTop = headerHeight + 30;
 	const contentBottom = height - footerHeight - 30;
@@ -44,34 +44,20 @@ function createSaleListImage(products, month, year, categoryName) {
 
 	canvas.width = width;
 	canvas.height = height;
-	context.fillStyle = '#f3f7f3';
+	const background = context.createLinearGradient(0, height, width, 0);
+	background.addColorStop(0, '#2f3e2c');
+	background.addColorStop(0.55, '#69a84f');
+	background.addColorStop(1, '#3f6f32');
+	context.fillStyle = background;
 	context.fillRect(0, 0, width, height);
 
-	const banner = context.createLinearGradient(0, 0, width, headerHeight);
-	banner.addColorStop(0, '#123f2b');
-	banner.addColorStop(1, '#27834b');
-	context.fillStyle = banner;
-	context.fillRect(0, 0, width, headerHeight);
-
-	context.fillStyle = '#f8d86a';
-	context.font = '700 23px Arial, sans-serif';
-	context.fillText('MDB SPORTS  •  ƯU ĐÃI CÓ HẠN', sidePadding, 62);
-
 	context.fillStyle = '#ffffff';
-	context.font = '700 49px Arial, sans-serif';
-	context.fillText(`KHUYẾN MÃI THÁNG ${month}`, sidePadding, 137);
-	context.font = '400 27px Arial, sans-serif';
-	context.fillText(`Năm ${year}  •  ${categoryName}`, sidePadding, 188, width - sidePadding * 2);
-
-	roundRect(context, sidePadding, 220, width - sidePadding * 2, 72, 18);
-	context.fillStyle = 'rgba(255, 255, 255, 0.14)';
-	context.fill();
-	context.fillStyle = '#ffffff';
-	context.font = '600 23px Arial, sans-serif';
-	context.fillText(`KHUYẾN MÃI THÁNG ${month}`, sidePadding + 24, 264);
-	context.textAlign = 'right';
-	context.fillText(`${products.length} MẶT HÀNG`, width - sidePadding - 22, 264);
+	context.font = '700 46px Arial, sans-serif';
+	context.textAlign = 'center';
+	context.textBaseline = 'middle';
+	context.fillText(`KHUYẾN MÃI THÁNG ${month} TẠI MDB SHOP`, width / 2, headerHeight / 2, width - sidePadding * 2);
 	context.textAlign = 'left';
+	context.textBaseline = 'alphabetic';
 
 	products.forEach((product, index) => {
 		const x = sidePadding;
@@ -85,7 +71,7 @@ function createSaleListImage(products, month, year, categoryName) {
 		context.fillStyle = index % 2 === 0 ? '#ffffff' : '#fafffa';
 		context.fill();
 
-		context.fillStyle = '#27834b';
+		context.fillStyle = '#69a84f';
 		context.font = `700 ${compact ? 14 : 18}px Arial, sans-serif`;
 		context.textBaseline = 'middle';
 		context.fillText(String(index + 1).padStart(2, '0'), x + 20, top + cardHeight / 2);
@@ -105,16 +91,37 @@ function createSaleListImage(products, month, year, categoryName) {
 			context.fillText(product.category_name || 'Sản phẩm', nameX, top + cardHeight * 0.73, nameWidth);
 		}
 
-		const priceText = `Giá bán gốc: ${formatPrice(product.price)} → Giá khuyến mãi: ${formatPrice(product.sale_price)}`;
+		const priceFontSize = Math.max(12, Math.min(26, rowHeight * 0.22));
+		const priceRight = width - sidePadding - 24;
+		const priceY = top + cardHeight / 2;
+		const originalPriceText = formatPrice(product.price);
+		const salePriceText = formatPrice(product.sale_price);
+		context.textBaseline = 'middle';
+		context.font = `400 ${Math.max(11, priceFontSize * 0.78)}px Arial, sans-serif`;
+		const originalPriceWidth = context.measureText(originalPriceText).width;
+		context.font = `700 ${priceFontSize}px Arial, sans-serif`;
+		const salePriceWidth = context.measureText(salePriceText).width;
+		const gap = Math.max(8, priceFontSize * 0.45);
+		const originalPriceX = priceRight - salePriceWidth - gap - originalPriceWidth;
+		const originalPriceY = priceY;
+		context.fillStyle = '#68736c';
+		context.textAlign = 'left';
+		context.font = `400 ${Math.max(11, priceFontSize * 0.78)}px Arial, sans-serif`;
+		context.fillText(originalPriceText, originalPriceX, originalPriceY);
+		context.beginPath();
+		context.moveTo(originalPriceX, originalPriceY);
+		context.lineTo(originalPriceX + originalPriceWidth, originalPriceY);
+		context.strokeStyle = '#68736c';
+		context.lineWidth = Math.max(1, priceFontSize * 0.055);
+		context.stroke();
 		context.fillStyle = '#c62828';
-		context.font = `700 ${Math.max(12, Math.min(20, rowHeight * 0.18))}px Arial, sans-serif`;
-		context.textAlign = 'right';
-		context.fillText(priceText, width - sidePadding - 24, top + cardHeight / 2, compact ? 390 : 410);
+		context.font = `700 ${priceFontSize}px Arial, sans-serif`;
+		context.fillText(salePriceText, originalPriceX + originalPriceWidth + gap, priceY);
 		context.textAlign = 'left';
 		context.textBaseline = 'alphabetic';
 	});
 
-	context.fillStyle = '#244d34';
+	context.fillStyle = '#ffffff';
 	context.font = '700 22px Arial, sans-serif';
 	context.textAlign = 'center';
 	context.fillText('Liên hệ MDB SHOP để được tư vấn và đặt hàng', width / 2, height - 58);
@@ -209,12 +216,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		status.textContent = 'Đang tạo ảnh khuyến mãi…';
 
 		try {
-			const selectedCategory = categoryFilter.selectedOptions[0]?.textContent || 'Tất cả danh mục';
 			const canvas = createSaleListImage(
 				visibleProducts,
-				Number(dataElement.dataset.month),
-				dataElement.dataset.year,
-				selectedCategory
+				Number(dataElement.dataset.month)
 			);
 			const imageBlob = await new Promise((resolve, reject) => {
 				canvas.toBlob((blob) => {
