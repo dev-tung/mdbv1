@@ -119,7 +119,7 @@ function createSaleListImage(canvas, products, day, month, year) {
 	});
 
 	context.fillStyle = '#ffffff';
-	context.font = '700 26px Arial, sans-serif';
+	context.font = '700 36px Arial, sans-serif';
 	context.textAlign = 'center';
 	context.fillText('Liên hệ SĐT 0973359165 để đặt hàng', width / 2, height - 90);
 	context.textAlign = 'left';
@@ -154,17 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	visibleProducts = getSaleProducts(products, Number(dataElement.dataset.limit));
-	button.disabled = visibleProducts.length === 0 || !preview;
-
-	if (preview && visibleProducts.length > 0) {
-		createSaleListImage(
-			preview,
-			visibleProducts,
-			Number(dataElement.dataset.day),
-			Number(dataElement.dataset.month),
-			dataElement.dataset.year
-		);
-	}
+	button.disabled = visibleProducts.length === 0;
 
 	button.addEventListener('click', async () => {
 		button.disabled = true;
@@ -172,8 +162,16 @@ document.addEventListener('DOMContentLoaded', () => {
 		status.textContent = 'Đang tạo ảnh khuyến mãi…';
 
 		try {
+			const canvas = document.createElement('canvas');
+			createSaleListImage(
+				canvas,
+				visibleProducts,
+				Number(dataElement.dataset.day),
+				Number(dataElement.dataset.month),
+				dataElement.dataset.year
+			);
 			const imageBlob = await new Promise((resolve, reject) => {
-				preview.toBlob((blob) => {
+				canvas.toBlob((blob) => {
 					if (blob) {
 						resolve(blob);
 					} else {
@@ -193,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			console.error('Không thể tạo ảnh khuyến mãi:', error);
 			status.textContent = error.message || 'Không thể tạo ảnh. Vui lòng thử lại.';
 		} finally {
-			button.disabled = visibleProducts.length === 0 || !preview;
+			button.disabled = visibleProducts.length === 0;
 			button.removeAttribute('aria-busy');
 		}
 	});
