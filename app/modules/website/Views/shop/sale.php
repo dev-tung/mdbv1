@@ -91,7 +91,7 @@ $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
         width: 100%;
         max-width: 640px;
         aspect-ratio: 9 / 16;
-        padding: 9.6% 8.33% 7.8%;
+        padding: 19.2% 16.66% 15.6%;
         overflow: hidden;
         color: #fff;
         background: linear-gradient(135deg, #69a84f 0%, #3f7f35 100%);

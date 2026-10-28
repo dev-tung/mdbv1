@@ -33,12 +33,12 @@ function createSaleListImage(canvas, products, day, month, year) {
 
 	const width = 1080;
 	const height = 1920;
-	const headerHeight = 190;
+	const headerHeight = 240;
 	const footerHeight = 90;
 	const contentTop = headerHeight - 5;
-	const contentBottom = height - footerHeight - 90;
+	const contentBottom = height - footerHeight - 180;
 	const rowHeight = Math.min(116, (contentBottom - contentTop) / products.length);
-	const sidePadding = 90;
+	const sidePadding = 180;
 
 	canvas.width = width;
 	canvas.height = height;
@@ -52,7 +52,7 @@ function createSaleListImage(canvas, products, day, month, year) {
 	context.font = '700 46px Arial, sans-serif';
 	context.textAlign = 'center';
 	context.textBaseline = 'middle';
-	context.fillText(`KHUYẾN MÃI NGÀY ${day}/${month}/${year} TẠI MDB SHOP`, width / 2, headerHeight / 2, width - sidePadding * 2);
+	context.fillText(`KHUYẾN MÃI NGÀY ${day}/${month}/${year} TẠI MDB SHOP`, width / 2, 180, width - sidePadding * 2);
 	context.textAlign = 'left';
 	context.textBaseline = 'alphabetic';
 
@@ -121,7 +121,7 @@ function createSaleListImage(canvas, products, day, month, year) {
 	context.fillStyle = '#ffffff';
 	context.font = '700 36px Arial, sans-serif';
 	context.textAlign = 'center';
-	context.fillText('Liên hệ SĐT 0973359165 để đặt hàng', width / 2, height - 90);
+	context.fillText('Liên hệ SĐT 0973359165 để đặt hàng', width / 2, height - 180);
 	context.textAlign = 'left';
 
 	return canvas;
