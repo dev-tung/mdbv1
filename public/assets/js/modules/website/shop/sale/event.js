@@ -84,7 +84,7 @@ function createSaleListImage(products, month, year, categoryName) {
 	context.fill();
 	context.fillStyle = '#ffffff';
 	context.font = '600 23px Arial, sans-serif';
-	context.fillText(`ƯU ĐÃI THÁNG ${month}`, sidePadding + 24, 264);
+	context.fillText(`KHUYẾN MÃI THÁNG ${month}`, sidePadding + 24, 264);
 	context.textAlign = 'right';
 	context.fillText(`${products.length} MẶT HÀNG`, width - sidePadding - 22, 264);
 	context.textAlign = 'left';
@@ -121,7 +121,7 @@ function createSaleListImage(products, month, year, categoryName) {
 			context.fillText(product.category_name || 'Sản phẩm', nameX, top + cardHeight * 0.73, nameWidth);
 		}
 
-		const priceText = `${formatPrice(product.import_price)} → ${formatPrice(product.sale_price)}  (-${product.discount_percent}%)`;
+		const priceText = `${formatPrice(product.price)} → ${formatPrice(product.sale_price)}  (-${product.discount_percent}%)`;
 		context.fillStyle = '#c62828';
 		context.font = `700 ${Math.max(12, Math.min(20, rowHeight * 0.18))}px Arial, sans-serif`;
 		context.textAlign = 'right';
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			const nameCell = document.createElement('td');
 			const name = document.createElement('div');
 			const category = document.createElement('small');
-			const importPrice = document.createElement('td');
+			const originalPrice = document.createElement('td');
 			const salePrice = document.createElement('td');
 			const discount = document.createElement('td');
 			const badge = document.createElement('span');
@@ -209,15 +209,15 @@ document.addEventListener('DOMContentLoaded', () => {
 			category.className = 'text-secondary';
 			category.textContent = product.category_name;
 			nameCell.append(name, category);
-			importPrice.className = 'text-end text-nowrap';
-			importPrice.textContent = formatPrice(product.import_price);
+			originalPrice.className = 'text-end text-nowrap';
+			originalPrice.textContent = formatPrice(product.price);
 			salePrice.className = 'text-end fw-bold text-danger text-nowrap';
 			salePrice.textContent = formatPrice(product.sale_price);
 			discount.className = 'text-center';
 			badge.className = 'badge text-bg-danger';
 			badge.textContent = `-${product.discount_percent}%`;
 			discount.appendChild(badge);
-			row.append(numberCell, nameCell, importPrice, salePrice, discount);
+			row.append(numberCell, nameCell, originalPrice, salePrice, discount);
 			fragment.appendChild(row);
 		});
 

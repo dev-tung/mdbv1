@@ -84,7 +84,7 @@ $categoriesById = $categoriesById ?? [];
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Mặt hàng</th>
-                    <th class="text-end" scope="col">Giá nhập</th>
+                    <th class="text-end" scope="col">Giá bán gốc</th>
                     <th class="text-end" scope="col">Giá khuyến mãi</th>
                     <th class="text-center" scope="col">Giảm</th>
                 </tr>
@@ -97,7 +97,7 @@ $categoriesById = $categoriesById ?? [];
                             <div class="fw-semibold"><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></div>
                             <small class="text-secondary"><?= htmlspecialchars($product['category_name'], ENT_QUOTES, 'UTF-8') ?></small>
                         </td>
-                        <td class="text-end text-nowrap"><?= number_format($product['import_price'], 0, ',', '.') ?>₫</td>
+                        <td class="text-end text-nowrap"><?= number_format($product['price'], 0, ',', '.') ?>₫</td>
                         <td class="text-end fw-bold text-danger text-nowrap"><?= number_format($product['sale_price'], 0, ',', '.') ?>₫</td>
                         <td class="text-center"><span class="badge text-bg-danger">-<?= $product['discount_percent'] ?>%</span></td>
                     </tr>
@@ -122,4 +122,4 @@ $categoriesById = $categoriesById ?? [];
     }
 </style>
 
-<script id="sale-poster-data" type="application/json" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>" data-stock="<?= $stockDays ?>" data-profit="<?= htmlspecialchars((string) $profitPercent, ENT_QUOTES, 'UTF-8') ?>"><?= json_encode($saleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+<script id="sale-poster-data" type="application/json" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>" data-profit="<?= htmlspecialchars((string) $profitPercent, ENT_QUOTES, 'UTF-8') ?>"><?= json_encode($saleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
