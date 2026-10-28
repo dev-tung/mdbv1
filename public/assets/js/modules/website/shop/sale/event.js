@@ -35,19 +35,18 @@ function createSaleListImage(products, month) {
 
 	const width = 1080;
 	const height = 1920;
-	const headerHeight = 240;
-	const footerHeight = 110;
-	const contentTop = headerHeight + 30;
-	const contentBottom = height - footerHeight - 30;
+	const headerHeight = 190;
+	const footerHeight = 90;
+	const contentTop = headerHeight - 5;
+	const contentBottom = height - footerHeight - 90;
 	const rowHeight = Math.min(116, (contentBottom - contentTop) / products.length);
-	const sidePadding = 54;
+	const sidePadding = 90;
 
 	canvas.width = width;
 	canvas.height = height;
-	const background = context.createLinearGradient(0, height, width, 0);
-	background.addColorStop(0, '#2f3e2c');
-	background.addColorStop(0.55, '#69a84f');
-	background.addColorStop(1, '#3f6f32');
+	const background = context.createLinearGradient(0, 0, width, height);
+	background.addColorStop(0, '#69a84f');
+	background.addColorStop(1, '#3f7f35');
 	context.fillStyle = background;
 	context.fillRect(0, 0, width, height);
 
@@ -124,7 +123,7 @@ function createSaleListImage(products, month) {
 	context.fillStyle = '#ffffff';
 	context.font = '700 22px Arial, sans-serif';
 	context.textAlign = 'center';
-	context.fillText('Liên hệ MDB SHOP để được tư vấn và đặt hàng', width / 2, height - 58);
+	context.fillText('Liên hệ MDB SHOP để được tư vấn và đặt hàng', width / 2, height - 90);
 	context.textAlign = 'left';
 
 	return canvas;
