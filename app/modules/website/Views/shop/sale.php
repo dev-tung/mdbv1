@@ -103,9 +103,12 @@ $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
         flex: 0 0 auto;
         margin: 0;
         color: inherit;
-        font-size: clamp(11px, 3.8cqw, 24px);
+        font-family: Arial, sans-serif;
+        font-size: clamp(11px, 3.8cqw, 20px);
+        font-stretch: normal;
         font-weight: 700;
-        line-height: 1.2;
+        letter-spacing: normal;
+        line-height: 1.35;
         text-align: center;
         white-space: nowrap;
     }
@@ -185,9 +188,12 @@ $dateTitle = sprintf('%02d/%02d/%s', $day, $month, $year);
         flex: 0 0 auto;
         margin: 5cqw 0 0;
         color: inherit;
-        font-size: clamp(16px, 5.6cqw, 36px);
+        font-family: Arial, sans-serif;
+        font-size: clamp(11px, 3.8cqw, 20px);
+        font-stretch: normal;
         font-weight: 700;
-        line-height: 1.2;
+        letter-spacing: normal;
+        line-height: 1.35;
         text-align: center;
     }
 </style>
