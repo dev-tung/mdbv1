@@ -29,41 +29,51 @@ BEGIN
 		p.name,
 		p.price,
 		p.sale_price,
-		COALESCE(i.quantity, 0) AS stock,
-		DATE(pu.created_at) AS import_date,
-		DATEDIFF(CURDATE(), DATE(pu.created_at)) AS days_in_stock,
-		CASE
-			WHEN pi.quantity > 0 THEN pi.total_amount / pi.quantity
-			ELSE 0
-		END AS import_price,
+		i.quantity AS stock,
+		DATE(i.created_at) AS import_date,
+		DATEDIFF(CURDATE(), DATE(i.created_at)) AS days_in_stock,
+		i.import_price,
 		p.status,
 		p.description,
 		p.created_at
 	FROM products p
 	JOIN (
-		SELECT inventory.product_id, inventory.purchase_id, inventory.quantity
-		FROM inventories inventory
-		JOIN (
-			SELECT product_id, MAX(id) AS inventory_id
-			FROM inventories
-			WHERE quantity > 0
-			GROUP BY product_id
-		) latest_inventory
-			ON latest_inventory.inventory_id = inventory.id
+		SELECT
+			eligible_lots.product_id,
+			eligible_lots.purchase_id,
+			eligible_lots.quantity,
+			eligible_lots.created_at,
+			eligible_lots.import_price
+		FROM (
+			SELECT
+				inventory.product_id,
+				inventory.purchase_id,
+				inventory.quantity,
+				purchase.created_at,
+				purchase_item.total_amount / purchase_item.quantity AS import_price,
+				ROW_NUMBER() OVER (
+					PARTITION BY inventory.product_id
+					ORDER BY purchase.created_at ASC, inventory.id ASC
+				) AS lot_rank
+			FROM inventories inventory
+			JOIN purchases purchase
+				ON purchase.id = inventory.purchase_id
+			JOIN purchase_items purchase_item
+				ON purchase_item.purchase_id = inventory.purchase_id
+				AND purchase_item.product_id = inventory.product_id
+			WHERE
+				inventory.quantity > 0
+				AND purchase_item.quantity > 0
+				AND purchase_item.total_amount > 0
+		) eligible_lots
+		WHERE eligible_lots.lot_rank = 1
 	) i
 		ON i.product_id = p.id
-	JOIN purchase_items pi
-		ON pi.purchase_id = i.purchase_id
-		AND pi.product_id = p.id
-	JOIN purchases pu
-		ON pu.id = i.purchase_id
 	LEFT JOIN categories c
 		ON c.id = p.category_id
 	WHERE
 		p.status = 'active'
 		AND p.price > 0
-		AND pi.quantity > 0
-		AND pi.total_amount > 0
 		AND (
 			p_keyword IS NULL
 			OR p_keyword = ''
@@ -108,27 +118,40 @@ BEGIN
 		COALESCE(SUM(p.sale_price), 0) AS total_sale_price
 	FROM products p
 	JOIN (
-		SELECT inventory.product_id, inventory.purchase_id, inventory.quantity
-		FROM inventories inventory
-		JOIN (
-			SELECT product_id, MAX(id) AS inventory_id
-			FROM inventories
-			WHERE quantity > 0
-			GROUP BY product_id
-		) latest_inventory
-			ON latest_inventory.inventory_id = inventory.id
+		SELECT
+			eligible_lots.product_id,
+			eligible_lots.purchase_id,
+			eligible_lots.quantity,
+			eligible_lots.created_at,
+			eligible_lots.import_price
+		FROM (
+			SELECT
+				inventory.product_id,
+				inventory.purchase_id,
+				inventory.quantity,
+				purchase.created_at,
+				purchase_item.total_amount / purchase_item.quantity AS import_price,
+				ROW_NUMBER() OVER (
+					PARTITION BY inventory.product_id
+					ORDER BY purchase.created_at ASC, inventory.id ASC
+				) AS lot_rank
+			FROM inventories inventory
+			JOIN purchases purchase
+				ON purchase.id = inventory.purchase_id
+			JOIN purchase_items purchase_item
+				ON purchase_item.purchase_id = inventory.purchase_id
+				AND purchase_item.product_id = inventory.product_id
+			WHERE
+				inventory.quantity > 0
+				AND purchase_item.quantity > 0
+				AND purchase_item.total_amount > 0
+		) eligible_lots
+		WHERE eligible_lots.lot_rank = 1
 	) i
 		ON i.product_id = p.id
-	JOIN purchase_items pi
-		ON pi.purchase_id = i.purchase_id
-		AND pi.product_id = p.id
-	JOIN purchases pu
-		ON pu.id = i.purchase_id
 	WHERE
 		p.status = 'active'
 		AND p.price > 0
-		AND pi.quantity > 0
-		AND pi.total_amount > 0
 		AND (
 			p_keyword IS NULL
 			OR p_keyword = ''
