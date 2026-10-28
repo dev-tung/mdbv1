@@ -40,6 +40,29 @@ class ProductRepository extends Repository
 		);
 	}
 
+	public function getSale(array $filters = []): array
+	{
+		return Database::call(
+			'CALL sp_product_sale(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+			array_params(
+				[
+					'keyword',
+					'category_id',
+					'brand_id',
+					'status',
+					'date_from',
+					'date_to',
+					'price_min',
+					'price_max',
+					'website',
+					'page',
+					'per_page',
+				],
+				$filters,
+			),
+		);
+	}
+
 	public function getShow(string $slug, bool $website = false): array
 	{
 		return Database::call(

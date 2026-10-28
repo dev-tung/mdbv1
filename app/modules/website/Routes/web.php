@@ -20,6 +20,7 @@ Router::get('/product', [ShopController::class, 'index']);
 Router::get('/product/{slug}', [ShopController::class, 'show']);
 Router::get('/category/{slug}', [ShopController::class, 'category']);
 Router::get('/search', [ShopController::class, 'search']);
+Router::get('/sale', [ShopController::class, 'sale']);
 
 // =========================
 // CART
