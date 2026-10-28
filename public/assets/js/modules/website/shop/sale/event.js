@@ -18,27 +18,11 @@ function formatPrice(price) {
 	return `${new Intl.NumberFormat('vi-VN').format(price)}₫`;
 }
 
-function getSaleProducts(products, profitPercent, categoryId) {
-	return products
-		.filter((product) => !categoryId || Number(product.category_id) === Number(categoryId))
-		.map((product) => {
-			const originalProfit = Math.max(
-				0,
-				Number(product.price) - Number(product.import_price)
-			);
-			const salePrice = Math.round(
-				Number(product.import_price) + originalProfit * profitPercent / 100
-			);
-
-			return {
-				...product,
-				sale_price: salePrice,
-				discount_percent: Math.round(
-					(Number(product.price) - salePrice) / Number(product.price) * 100
-				),
-			};
-		})
-		.filter((product) => product.sale_price < Number(product.price));
+function getSaleProducts(products, categoryId) {
+	return products.filter((product) =>
+		(!categoryId || Number(product.category_id) === Number(categoryId))
+		&& Number(product.sale_price) < Number(product.price)
+	);
 }
 
 function createSaleListImage(products, month, year, categoryName) {
@@ -121,7 +105,7 @@ function createSaleListImage(products, month, year, categoryName) {
 			context.fillText(product.category_name || 'Sản phẩm', nameX, top + cardHeight * 0.73, nameWidth);
 		}
 
-		const priceText = `${formatPrice(product.price)} → ${formatPrice(product.sale_price)}  (-${product.discount_percent}%)`;
+		const priceText = `Giá bán gốc: ${formatPrice(product.price)} → Giá khuyến mãi: ${formatPrice(product.sale_price)}`;
 		context.fillStyle = '#c62828';
 		context.font = `700 ${Math.max(12, Math.min(20, rowHeight * 0.18))}px Arial, sans-serif`;
 		context.textAlign = 'right';
@@ -153,7 +137,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	let products;
 	let visibleProducts = [];
-	const profitPercent = Number(dataElement.dataset.profit);
 
 	try {
 		products = JSON.parse(dataElement.textContent);
@@ -169,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 
 	function renderList() {
-		visibleProducts = getSaleProducts(products, profitPercent, categoryFilter.value);
+		visibleProducts = getSaleProducts(products, categoryFilter.value);
 		productList.replaceChildren();
 		countElement.textContent = String(visibleProducts.length);
 		button.disabled = visibleProducts.length === 0;
@@ -182,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			const cell = document.createElement('td');
 
 			cell.className = 'text-center text-secondary py-4';
-			cell.colSpan = 5;
+			cell.colSpan = 4;
 			cell.textContent = 'Không có mặt hàng khuyến mãi phù hợp với bộ lọc.';
 			row.appendChild(cell);
 			productList.appendChild(row);
@@ -199,8 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
 			const category = document.createElement('small');
 			const originalPrice = document.createElement('td');
 			const salePrice = document.createElement('td');
-			const discount = document.createElement('td');
-			const badge = document.createElement('span');
 
 			numberCell.className = 'text-secondary';
 			numberCell.textContent = String(index + 1);
@@ -213,11 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			originalPrice.textContent = formatPrice(product.price);
 			salePrice.className = 'text-end fw-bold text-danger text-nowrap';
 			salePrice.textContent = formatPrice(product.sale_price);
-			discount.className = 'text-center';
-			badge.className = 'badge text-bg-danger';
-			badge.textContent = `-${product.discount_percent}%`;
-			discount.appendChild(badge);
-			row.append(numberCell, nameCell, originalPrice, salePrice, discount);
+			row.append(numberCell, nameCell, originalPrice, salePrice);
 			fragment.appendChild(row);
 		});
 

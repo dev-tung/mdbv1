@@ -5,30 +5,27 @@ $products = is_array($products) ? $products : [];
 $month = (int) date('n');
 $year = date('Y');
 
-$saleProducts = array_map(static function (array $product): array {
+$saleProducts = array_map(static function (array $product) use ($profitPercent): array {
+    $price = (float) ($product['price'] ?? 0);
+    $importPrice = (float) ($product['import_price'] ?? 0);
+    $originalProfit = max(0, $price - $importPrice);
+    $salePrice = round($importPrice + $originalProfit * $profitPercent / 100);
+
     return [
         'name' => (string) ($product['name'] ?? ''),
         'category_id' => (int) ($product['category_id'] ?? 0),
         'category_name' => (string) ($product['category_name'] ?? ''),
-        'price' => (float) ($product['price'] ?? 0),
-        'import_price' => (float) ($product['import_price'] ?? 0),
+        'price' => $price,
+        'sale_price' => $salePrice,
     ];
 }, $products);
 
-$initialProducts = array_values(array_filter(
-    array_map(static function (array $product) use ($profitPercent): array {
-        $originalProfit = max(0, $product['price'] - $product['import_price']);
-        $product['sale_price'] = round($product['import_price'] + $originalProfit * $profitPercent / 100);
-        $product['discount_percent'] = $product['price'] > 0
-            ? (int) round(($product['price'] - $product['sale_price']) / $product['price'] * 100)
-            : 0;
-
-        return $product;
-    }, $saleProducts),
+$saleProducts = array_values(array_filter(
+    $saleProducts,
     static fn (array $product): bool => $product['sale_price'] < $product['price'],
 ));
 
-$productCount = count($initialProducts);
+$productCount = count($saleProducts);
 $monthTitle = 'tháng ' . $month . ' năm ' . $year;
 $categoriesById = $categoriesById ?? [];
 
@@ -86,11 +83,10 @@ $categoriesById = $categoriesById ?? [];
                     <th scope="col">Mặt hàng</th>
                     <th class="text-end" scope="col">Giá bán gốc</th>
                     <th class="text-end" scope="col">Giá khuyến mãi</th>
-                    <th class="text-center" scope="col">Giảm</th>
                 </tr>
             </thead>
             <tbody id="sale-product-list">
-                <?php foreach ($initialProducts as $index => $product): ?>
+                <?php foreach ($saleProducts as $index => $product): ?>
                     <tr>
                         <td class="text-secondary"><?= $index + 1 ?></td>
                         <td>
@@ -99,12 +95,11 @@ $categoriesById = $categoriesById ?? [];
                         </td>
                         <td class="text-end text-nowrap"><?= number_format($product['price'], 0, ',', '.') ?>₫</td>
                         <td class="text-end fw-bold text-danger text-nowrap"><?= number_format($product['sale_price'], 0, ',', '.') ?>₫</td>
-                        <td class="text-center"><span class="badge text-bg-danger">-<?= $product['discount_percent'] ?>%</span></td>
                     </tr>
                 <?php endforeach; ?>
                 <?php if ($productCount === 0): ?>
                     <tr>
-                        <td class="text-center text-secondary py-4" colspan="5">Không có mặt hàng khuyến mãi phù hợp với bộ lọc.</td>
+                        <td class="text-center text-secondary py-4" colspan="4">Không có mặt hàng khuyến mãi phù hợp với bộ lọc.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -122,4 +117,4 @@ $categoriesById = $categoriesById ?? [];
     }
 </style>
 
-<script id="sale-poster-data" type="application/json" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>" data-profit="<?= htmlspecialchars((string) $profitPercent, ENT_QUOTES, 'UTF-8') ?>"><?= json_encode($saleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
+<script id="sale-poster-data" type="application/json" data-month="<?= $month ?>" data-year="<?= htmlspecialchars($year, ENT_QUOTES, 'UTF-8') ?>"><?= json_encode($saleProducts, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?></script>
