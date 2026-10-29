@@ -85,7 +85,7 @@
 
             <div class="col-6 col-md-4 col-lg-3">
 
-                <a href="/used-racket" class="text-decoration-none text-dark">
+                <a href="/votcu" class="text-decoration-none text-dark">
 
                     <div class="card border-0 shadow-sm h-100">
 

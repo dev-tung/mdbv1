@@ -103,7 +103,7 @@
                         <li class="mb-2">
                             <a
                                 class="text-decoration-none text-muted"
-                                href="<?= route('used-racket') ?>"
+                                href="<?= route('votcu') ?>"
                             >
                                 Vợt cầu lông cũ
                             </a>

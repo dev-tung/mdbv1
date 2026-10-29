@@ -54,8 +54,8 @@
                     </li>
                     <li class="nav-item">
                         <a
-                            class="nav-link <?= active_menu('used-racket') ?>"
-                            href="<?= route('used-racket') ?>"
+                            class="nav-link <?= active_menu('votcu') ?>"
+                            href="<?= route('votcu') ?>"
                         >
                             Vợt cũ
                         </a>
