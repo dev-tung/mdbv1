@@ -57,7 +57,7 @@ class PageController
 			$videoError = $result['error'];
 		}
 
-		View::render('pages/votcu', compact('videos', 'videoError'));
+		View::render('pages/used-racket', compact('videos', 'videoError'));
 	}
 
 	private function loadPlaylistVideos(string $playlistId, string $apiKey): array
