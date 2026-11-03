@@ -83,26 +83,6 @@
 
             <?php endforeach; ?>
 
-            <div class="col-6 col-md-4 col-lg-3">
-
-                <a href="/votcu" class="text-decoration-none text-dark">
-
-                    <div class="card border-0 shadow-sm h-100">
-
-                        <div class="card-body text-center py-5">
-
-                            <h6 class="mb-0 fw-semibold">
-                                Vợt cầu lông cũ
-                            </h6>
-
-                        </div>
-
-                    </div>
-
-                </a>
-
-            </div>
-
         </div>
     </section>
 
