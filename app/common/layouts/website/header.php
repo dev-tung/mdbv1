@@ -54,14 +54,6 @@
                     </li>
                     <li class="nav-item">
                         <a
-                            class="nav-link <?= active_menu('votcu') ?>"
-                            href="<?= route('votcu') ?>"
-                        >
-                            Vợt cũ
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
                             class="nav-link <?= active_menu('string') ?>"
                             href="<?= route('string') ?>"
                         >
