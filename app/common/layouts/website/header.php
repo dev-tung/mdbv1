@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="<?= asset('css/bootstrap.css') ?>">
 </head>
 
-<body style="background: #f2f4f7;">
+<body class="bg-body-tertiary">
 
 <header class="border-bottom bg-white">
 
@@ -16,8 +16,7 @@
         <nav class="navbar navbar-expand-lg navbar-light py-3">
 
             <!-- Logo -->
-            <a class="navbar-brand fw-bold me-4"
-               style="color: #26750e"
+            <a class="navbar-brand fw-bold me-4 text-success"
                href="<?= route() ?>">
                 MDB SHOP
             </a>
@@ -126,6 +125,7 @@
                     <a href="/cart"
                        class="btn btn-success btn-sm">
                         Giỏ hàng
+                        <span id="cart-count" class="badge text-bg-light ms-1">0</span>
                     </a>
 
                 </div>
@@ -137,3 +137,18 @@
     </div>
 
 </header>
+
+<script>
+(() => {
+    try {
+        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const count = Array.isArray(cart)
+            ? cart.reduce((total, item) => total + Math.max(0, Number(item.quantity || 0)), 0)
+            : 0;
+        const indicator = document.getElementById('cart-count');
+        if (indicator) indicator.textContent = String(count);
+    } catch (error) {
+        console.error('Không thể đọc số lượng sản phẩm trong giỏ.', error);
+    }
+})();
+</script>

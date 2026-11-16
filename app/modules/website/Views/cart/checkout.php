@@ -1,4 +1,12 @@
 <main class="container py-3">
+    <div class="mb-4">
+        <h1 class="h3 fw-bold">Thông tin đặt hàng</h1>
+        <div class="d-flex flex-wrap gap-2 small" aria-label="Các bước đặt hàng">
+            <span class="badge text-bg-success">1. Giỏ hàng</span>
+            <span class="badge text-bg-success">2. Thông tin nhận hàng</span>
+            <span class="badge text-bg-secondary">3. Thanh toán</span>
+        </div>
+    </div>
 
     <div class="row g-3">
 
@@ -21,10 +29,25 @@
 
                     <hr>
 
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Số lượng sản phẩm</span>
+                        <span id="checkout-quantity">0</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tạm tính</span>
+                        <span id="checkout-subtotal">0 ₫</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Phí giao hàng</span>
+                        <span class="text-secondary">Chưa áp dụng trong bản mẫu</span>
+                    </div>
+
                     <div class="d-flex justify-content-between fw-bold fs-5">
 
                         <span>
-                            Tổng tiền
+                            Tạm tính đơn hàng
                         </span>
 
                         <span
@@ -35,6 +58,7 @@
                         </span>
 
                     </div>
+                    <p class="form-text mt-2 mb-0">Tạm tính chưa gồm phí vận chuyển. Phương thức nhận hàng và phí giao sẽ được lưu khi tích hợp backend.</p>
 
                 </div>
 
@@ -123,6 +147,17 @@
                             autocomplete="email"
                         >
 
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="delivery-method" class="form-label">
+                            Phương thức nhận hàng
+                        </label>
+                        <select id="delivery-method" class="form-select">
+                            <option value="delivery">Giao hàng tận nơi</option>
+                            <option value="pickup">Nhận tại cửa hàng</option>
+                        </select>
+                        <div class="form-text">Phương thức nhận hàng và địa chỉ sẽ được lưu cùng đơn hàng.</div>
                     </div>
 
 
@@ -290,6 +325,7 @@ function renderCheckout() {
     // =========================
 
     let total = 0;
+    let totalQuantity = 0;
 
     container.replaceChildren();
 
@@ -306,6 +342,7 @@ function renderCheckout() {
             price * quantity;
 
         total += subtotal;
+        totalQuantity += quantity;
 
 
         // =========================
@@ -345,9 +382,6 @@ function renderCheckout() {
 
         image.className =
             'rounded';
-
-        image.style.objectFit =
-            'contain';
 
         image.alt =
             item.name || '';
@@ -389,6 +423,15 @@ function renderCheckout() {
         name.textContent =
             item.name || 'Sản phẩm';
 
+        const variantElement =
+            document.createElement('small');
+
+        variantElement.className =
+            'text-secondary';
+
+        variantElement.textContent =
+            item.variant ? `Phiên bản: ${item.variant}` : '';
+
 
         // QUANTITY
 
@@ -417,6 +460,10 @@ function renderCheckout() {
         content.appendChild(
             name
         );
+
+        if (item.variant) {
+            content.appendChild(variantElement);
+        }
 
         content.appendChild(
             quantityElement
@@ -452,6 +499,12 @@ function renderCheckout() {
         totalElement.textContent =
             formatMoney(total);
     }
+
+    document.getElementById('checkout-quantity').textContent =
+        String(totalQuantity);
+
+    document.getElementById('checkout-subtotal').textContent =
+        formatMoney(total);
 }
 
 
@@ -465,6 +518,8 @@ async function submitOrder() {
         document.getElementById(
             'btn-submit-order'
         );
+
+    let orderMayHaveBeenCreated = false;
 
     try {
 
@@ -512,6 +567,11 @@ async function submitOrder() {
                 .value
                 .trim();
 
+        const deliveryMethod =
+            document
+                .getElementById('delivery-method')
+                .value;
+
 
         // =========================
         // VALIDATE CUSTOMER
@@ -541,7 +601,7 @@ async function submitOrder() {
         }
 
 
-        if (!address) {
+        if (deliveryMethod === 'delivery' && !address) {
 
             document
                 .getElementById('address')
@@ -567,331 +627,24 @@ async function submitOrder() {
         }
 
 
-        // =========================
-        // CREATE CUSTOMER
-        // =========================
-
-        const customerResponse =
-            await fetch(
-                '/api/customers',
-                {
-                    method: 'POST',
-
-                    headers: {
-                        'Content-Type':
-                            'application/json'
-                    },
-
-                    body:
-                        JSON.stringify({
-
-                            name:
-                                customerName,
-
-                            phone:
-                                phone,
-
-                            email:
-                                email || null,
-
-                            group_id:
-                                null,
-
-                            address:
-                                address,
-
-                            description:
-                                note || null
-
-                        })
-                }
-            );
-
-
-        const customerJson =
-            await customerResponse.json();
-
-
-        if (
-            !customerResponse.ok ||
-            !customerJson.success ||
-            !customerJson.id
-        ) {
-
-            throw new Error(
-                customerJson.message ||
-                'Không thể tạo khách hàng.'
-            );
-        }
-
-
-        const customerId =
-            Number(
-                customerJson.id
-            );
-
-
-        // =========================
-        // CALCULATE ITEMS
-        // =========================
-
-        let subtotalAmount = 0;
-
-        let discountAmount = 0;
-
-        let vatAmount = 0;
-
-
-        const items =
-            cart.map((item) => {
-
-                const price =
-                    Number(
-                        item.price || 0
-                    );
-
-                const salePrice =
-                    Number(
-                        item.sale_price || 0
-                    );
-
-
-                const sellingPrice =
-                    salePrice > 0 &&
-                    price > 0 &&
-                    salePrice < price
-                        ? salePrice
-                        : price;
-
-
-                const quantity =
-                    Number(
-                        item.quantity || 0
-                    );
-
-
-                const isGift =
-                    Number(
-                        item.is_gift || 0
-                    );
-
-
-                // =========================
-                // SUBTOTAL
-                // =========================
-
-                const itemSubtotal =
-                    sellingPrice *
-                    quantity;
-
-
-                // =========================
-                // DISCOUNT
-                // =========================
-
-                const itemDiscount =
-                    Number(
-                        item.discount_amount || 0
-                    );
-
-
-                // =========================
-                // VAT
-                // =========================
-
-                const vatRate =
-                    Number(
-                        item.vat_rate || 0
-                    );
-
-
-                const taxableAmount =
-                    Math.max(
-                        0,
-                        itemSubtotal -
-                        itemDiscount
-                    );
-
-
-                const itemVat =
-                    taxableAmount *
-                    vatRate /
-                    100;
-
-
-                // =========================
-                // TOTAL
-                // =========================
-
-                const itemTotal =
-                    taxableAmount +
-                    itemVat;
-
-
-                // =========================
-                // ORDER TOTAL
-                // =========================
-
-                subtotalAmount +=
-                    itemSubtotal;
-
-                discountAmount +=
-                    itemDiscount;
-
-                vatAmount +=
-                    itemVat;
-
-
-                return {
-
-                    purchase_id:
-                        Number(
-                            item.purchase_id
-                        ),
-
-                    product_id:
-                        Number(
-                            item.product_id
-                        ),
-
-                    product_name:
-                        item.name || '',
-
-                    quantity:
-                        quantity,
-
-                    selling_price:
-                        Number(
-                            sellingPrice.toFixed(2)
-                        ),
-
-                    subtotal_amount:
-                        Number(
-                            itemSubtotal.toFixed(2)
-                        ),
-
-                    discount_amount:
-                        Number(
-                            itemDiscount.toFixed(2)
-                        ),
-
-                    vat_rate:
-                        vatRate,
-
-                    vat_amount:
-                        Number(
-                            itemVat.toFixed(2)
-                        ),
-
-                    total_amount:
-                        Number(
-                            itemTotal.toFixed(2)
-                        ),
-
-                    is_gift:
-                        isGift
-                };
-            });
-
-
-        // =========================
-        // ORDER TOTAL
-        // =========================
-
-        subtotalAmount =
-            Number(
-                subtotalAmount.toFixed(2)
-            );
-
-        discountAmount =
-            Number(
-                discountAmount.toFixed(2)
-            );
-
-        vatAmount =
-            Number(
-                vatAmount.toFixed(2)
-            );
-
-
-        const totalAmount =
-            Number(
-                (
-                    subtotalAmount -
-                    discountAmount +
-                    vatAmount
-                ).toFixed(2)
-            );
-
-
-        // =========================
-        // VALIDATE ITEMS
-        // =========================
-
-        for (const item of items) {
-
-            if (
-                !item.purchase_id ||
-                item.purchase_id <= 0
-            ) {
-
-                throw new Error(
-                    'Sản phẩm không có phiếu nhập hợp lệ.'
-                );
+        const items = cart.map((item) => {
+            const productId = Number(item.product_id);
+            const quantity = Number(item.quantity);
+
+            if (!Number.isInteger(productId) || productId < 1) {
+                throw new Error('Sản phẩm trong giỏ hàng không hợp lệ.');
             }
 
-
-            if (
-                !item.product_id ||
-                item.product_id <= 0
-            ) {
-
-                throw new Error(
-                    'Sản phẩm trong giỏ hàng không hợp lệ.'
-                );
+            if (!Number.isInteger(quantity) || quantity < 1) {
+                throw new Error('Số lượng sản phẩm không hợp lệ.');
             }
 
-
-            if (!item.product_name) {
-
-                throw new Error(
-                    'Sản phẩm không có tên hợp lệ.'
-                );
-            }
-
-
-            if (
-                !item.quantity ||
-                item.quantity <= 0
-            ) {
-
-                throw new Error(
-                    'Số lượng sản phẩm không hợp lệ.'
-                );
-            }
-
-
-            if (
-                item.selling_price < 0
-            ) {
-
-                throw new Error(
-                    'Giá bán sản phẩm không hợp lệ.'
-                );
-            }
-
-
-            if (
-                ![0, 1].includes(
-                    item.is_gift
-                )
-            ) {
-
-                throw new Error(
-                    'Trạng thái quà tặng không hợp lệ.'
-                );
-            }
-        }
+            return {
+                product_id: productId,
+                quantity,
+                variant: item.variant || ''
+            };
+        });
 
 
         // =========================
@@ -900,7 +653,7 @@ async function submitOrder() {
 
         const orderResponse =
             await fetch(
-                '/api/orders',
+                '/api/online-orders',
                 {
                     method: 'POST',
 
@@ -911,35 +664,32 @@ async function submitOrder() {
 
                     body:
                         JSON.stringify({
-
-                            customer_id:
-                                customerId,
-
-                            subtotal_amount:
-                                subtotalAmount,
-
-                            discount_amount:
-                                discountAmount,
-
-                            vat_amount:
-                                vatAmount,
-
-                            total_amount:
-                                totalAmount,
-
+                            customer: {
+                                name: customerName,
+                                phone,
+                                email: email || null,
+                                address: address || null
+                            },
                             items:
                                 items,
-
-                            description:
-                                note || null
-
+                            note,
+                            delivery_method: deliveryMethod
                         })
                 }
             );
 
 
-        const orderJson =
-            await orderResponse.json();
+        const responseBody =
+            await orderResponse.text();
+        let orderJson;
+
+        try {
+            orderJson = JSON.parse(responseBody);
+        } catch {
+            throw new Error(
+                `Máy chủ không trả dữ liệu JSON khi tạo đơn (HTTP ${orderResponse.status}). Vui lòng thử lại hoặc liên hệ cửa hàng.`
+            );
+        }
 
 
         if (
@@ -953,6 +703,40 @@ async function submitOrder() {
             );
         }
 
+        orderMayHaveBeenCreated = true;
+        const orderId = orderJson.data && orderJson.data.id;
+        if (!orderId) {
+            throw new Error('Đơn hàng đã được gửi nhưng chưa nhận được mã đơn. Vui lòng liên hệ cửa hàng để kiểm tra.');
+        }
+
+        const totalAmount = Number(orderJson.data.total_amount);
+        if (!Number.isFinite(totalAmount) || !Array.isArray(orderJson.data.items)) {
+            throw new Error('Đơn hàng đã được gửi nhưng máy chủ chưa trả đủ thông tin xác nhận. Vui lòng giữ liên hệ với cửa hàng.');
+        }
+
+        try {
+            sessionStorage.setItem('mdb:lastOrder', JSON.stringify({
+                id: orderId,
+                customer: {
+                    name: customerName,
+                    phone,
+                    email,
+                    address
+                },
+                deliveryMethod,
+                note,
+                items: orderJson.data.items.map((item) => ({
+                    name: item.product_name,
+                    quantity: item.quantity,
+                    price: item.selling_price,
+                    variant: item.variant || ''
+                })),
+                total: totalAmount
+            }));
+        } catch (error) {
+            console.error('Không thể lưu thông tin đơn hàng trong phiên hiện tại.', error);
+            window.alert('Đơn hàng đã được tạo. Một số chi tiết có thể không hiển thị sau khi chuyển trang.');
+        }
 
         // =========================
         // SUCCESS
@@ -969,7 +753,7 @@ async function submitOrder() {
 
 
         window.location.href =
-            '/checkout/success';
+            `/checkout/success?id=${encodeURIComponent(orderId)}`;
 
 
     } catch (error) {
@@ -986,7 +770,10 @@ async function submitOrder() {
         );
 
 
-        if (button) {
+        if (button && orderMayHaveBeenCreated) {
+            button.disabled = true;
+            button.textContent = 'Vui lòng liên hệ cửa hàng';
+        } else if (button) {
 
             button.disabled =
                 false;

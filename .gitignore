@@ -20,8 +20,6 @@ public/craw/
 .prettierrc
 
 # Composer
-composer.json
-composer.lock
 vendor/
 
 # Node.js

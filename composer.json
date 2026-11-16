@@ -1,0 +1,6 @@
+{
+    "require": {
+        "php": "^8.3",
+        "bacon/bacon-qr-code": "^3.1"
+    }
+}

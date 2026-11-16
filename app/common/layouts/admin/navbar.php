@@ -136,6 +136,7 @@
 
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= route('/admin/orders') ?>">Danh sách đơn hàng</a></li>
+                        <li><a class="dropdown-item" href="<?= route('/admin/online-orders') ?>">Đơn hàng online</a></li>
                         <li><a class="dropdown-item" href="<?= route('/admin/orders/create') ?>">Thêm đơn hàng</a></li>
                     </ul>
                 </li>
@@ -213,13 +214,12 @@
             <li class="nav-item me-4 position-relative">
             <a href="#" id="notificationBell"
                 class="nav-link d-flex align-items-center position-relative">
-                <span class="position-absolute badge rounded-pill bg-danger"
-                    style="display:none;">0</span>
+                <span class="position-absolute badge rounded-pill bg-danger d-none"
+                    aria-label="Thông báo mới">0</span>
             </a>
 
             <div id="notificationDropdown"
-                class="dropdown-menu p-0"
-                style="top:100%; right:0; display:none; min-width:320px; height:500px; overflow-y:auto;">
+                class="dropdown-menu dropdown-menu-end p-0">
             </div>
             </li>
 

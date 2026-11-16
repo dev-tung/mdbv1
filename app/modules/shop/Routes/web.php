@@ -65,6 +65,8 @@ Router::get('/admin/purchases/edit/{id}', [PurchaseController::class, 'form'], [
 Router::get('/admin/orders', [OrderController::class, 'index'], ['auth' => 'admin']);
 Router::get('/admin/orders/create', [OrderController::class, 'form'], ['auth' => 'admin']);
 Router::get('/admin/orders/edit/{id}', [OrderController::class, 'form'], ['auth' => 'admin']);
+Router::get('/admin/online-orders', [OrderController::class, 'onlineIndex'], ['auth' => 'admin']);
+Router::get('/admin/online-orders/{id}', [OrderController::class, 'onlineShow'], ['auth' => 'admin']);
 
 // =========================
 // REPORT

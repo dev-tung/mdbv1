@@ -38,7 +38,7 @@ class OrderRepository extends Repository
 
 public function create(array $data): int
 {
-	Database::query(
+	$resultSets = Database::call(
 		'CALL sp_order_create(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 		[
 			$data['customer_id'],
@@ -57,7 +57,15 @@ public function create(array $data): int
 		],
 	);
 
-	return (int) Database::lastInsertId();
+	foreach ($resultSets as $resultSet) {
+		$orderId = (int) ($resultSet[0]['id'] ?? 0);
+
+		if ($orderId > 0) {
+			return $orderId;
+		}
+	}
+
+	throw new \RuntimeException('Không nhận được mã đơn hàng từ thủ tục tạo đơn.');
 }
 
 	/* =================================================

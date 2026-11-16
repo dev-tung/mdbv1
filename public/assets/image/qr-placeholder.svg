@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" role="img" aria-labelledby="title description">
+  <title id="title">QR thanh toán minh họa</title>
+  <desc id="description">Vị trí mã QR động, chưa kết nối thanh toán</desc>
+  <rect width="320" height="320" fill="#f8f9fa"/>
+  <rect x="1" y="1" width="318" height="318" fill="none" stroke="#dee2e6" stroke-width="2"/>
+  <rect x="32" y="32" width="72" height="72" fill="none" stroke="#6c757d" stroke-width="8"/>
+  <rect x="52" y="52" width="32" height="32" fill="#6c757d"/>
+  <rect x="216" y="32" width="72" height="72" fill="none" stroke="#6c757d" stroke-width="8"/>
+  <rect x="236" y="52" width="32" height="32" fill="#6c757d"/>
+  <rect x="32" y="216" width="72" height="72" fill="none" stroke="#6c757d" stroke-width="8"/>
+  <rect x="52" y="236" width="32" height="32" fill="#6c757d"/>
+  <text x="160" y="153" text-anchor="middle" fill="#212529" font-family="sans-serif" font-size="24" font-weight="700">QR DEMO</text>
+  <text x="160" y="181" text-anchor="middle" fill="#6c757d" font-family="sans-serif" font-size="14">Chua ket noi thanh toan</text>
+</svg>

@@ -1,4 +1,11 @@
 <main class="container py-3">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Giỏ hàng</h1>
+            <p class="text-secondary mb-0">Kiểm tra sản phẩm trước khi tiếp tục đặt hàng.</p>
+        </div>
+        <a href="/order/status" class="btn btn-outline-secondary btn-sm">Tra cứu đơn hàng</a>
+    </div>
 
     <div class="row g-3">
 
@@ -170,6 +177,15 @@ function renderCart() {
     const cart =
         getCart();
 
+    const cartIndicator =
+        document.getElementById('cart-count');
+
+    if (cartIndicator) {
+        cartIndicator.textContent = String(
+            cart.reduce((total, item) => total + Math.max(0, Number(item.quantity || 0)), 0)
+        );
+    }
+
     const container =
         document.getElementById(
             'cart-items'
@@ -271,7 +287,7 @@ function renderCart() {
 
         const image =
             item.image ||
-            '/assets/images/no-image.png';
+            '/assets/image/no-image.svg';
 
 
         html += `
@@ -305,12 +321,11 @@ function renderCart() {
                         src="${escapeHtml(image)}"
                         width="60"
                         height="60"
-                        class="rounded border"
-                        style="object-fit:contain"
+                        class="rounded border object-fit-contain"
                         alt="${name}"
                         onerror="
                             this.onerror=null;
-                            this.src='/assets/images/no-image.png';
+                            this.src='/assets/image/no-image.svg';
                         "
                     >
 
@@ -326,6 +341,11 @@ function renderCart() {
                             ${name}
                         </div>
 
+                        ${
+                            item.variant
+                                ? `<small class="text-secondary">Phiên bản: ${escapeHtml(item.variant)}</small>`
+                                : ''
+                        }
 
                         <div class="text-danger fw-bold mt-1">
                             ${formatMoney(price)}
@@ -371,8 +391,7 @@ function renderCart() {
                                 : ''
                         }
                         value="${quantity}"
-                        class="form-control form-control-sm"
-                        style="width:80px"
+                        class="form-control form-control-sm w-auto"
                         onchange="
                             updateQty(
                                 ${index},

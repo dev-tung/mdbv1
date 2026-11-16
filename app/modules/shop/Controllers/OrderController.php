@@ -15,4 +15,14 @@ class OrderController
 	{
 		View::render('order/form', compact('id'));
 	}
+
+	public function onlineIndex(): void
+	{
+		View::render('order/online-index');
+	}
+
+	public function onlineShow($id): void
+	{
+		View::render('order/online-detail', compact('id'));
+	}
 }

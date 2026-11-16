@@ -5,6 +5,8 @@ use App\Website\Controllers\CartController;
 use App\Website\Controllers\HomeController;
 use App\Website\Controllers\PageController;
 use App\Website\Controllers\ShopController;
+use App\Website\Endpoints\OnlineOrderEndpoint;
+use App\Website\Endpoints\OnlinePaymentEndpoint;
 
 // =========================
 // HOME
@@ -29,12 +31,15 @@ Router::get('/sale', [ShopController::class, 'sale']);
 Router::get('/cart', [CartController::class, 'index']);
 Router::get('/checkout', [CartController::class, 'checkout']);
 Router::get('/checkout/success', [CartController::class, 'success']);
+Router::get('/payment', [CartController::class, 'payment']);
+Router::get('/order/status', [CartController::class, 'status']);
+Router::post('/api/online-orders', [OnlineOrderEndpoint::class, 'create']);
+Router::post('/api/online-orders/payment-qr', [OnlinePaymentEndpoint::class, 'qr']);
 
 // =========================
 // PAGE
 // =========================
 
-Router::get('/votcu', [PageController::class, 'usedRacket']);
 Router::get('/string', [PageController::class, 'string']);
 Router::get('/affiliate', [PageController::class, 'affiliate']);
 Router::get('/career', [PageController::class, 'career']);

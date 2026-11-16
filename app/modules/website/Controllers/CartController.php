@@ -30,6 +30,16 @@ class CartController
 		View::render('cart/success');
 	}
 
+	public function payment(): void
+	{
+		View::render('cart/payment');
+	}
+
+	public function status(): void
+	{
+		View::render('cart/status');
+	}
+
 	public function add(): void
 	{
 	}

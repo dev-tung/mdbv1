@@ -1,689 +1,224 @@
+<?php
+$hasDiscount = (float) ($product['sale_price'] ?? 0) > 0
+    && (float) $product['sale_price'] < (float) $product['price'];
+$displayPrice = $hasDiscount ? (float) $product['sale_price'] : (float) $product['price'];
+?>
+
 <main class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small">
+            <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="/product" class="text-decoration-none">Sản phẩm</a></li>
+            <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($product['name']) ?></li>
+        </ol>
+    </nav>
 
     <div class="row g-4">
-
-        <!-- LEFT CARD -->
-        <div class="col-lg-7">
-
-            <div class="card border-0 shadow-sm rounded-3 p-3">
-
-                <!-- MAIN IMAGE -->
-                <div class="text-center d-flex align-items-center justify-content-center"
-                    style="height:500px;">
-
-                    <img id="mainImg"
-                        src="<?=
-                            !empty($images)
-                                ? '/' . htmlspecialchars($images[0]['image'])
-                                : (!empty($product['thumbnail'])
-                                    ? '/' . htmlspecialchars($product['thumbnail'])
-                                    : '/assets/image/no-image.svg')
-                        ?>"
-                        class="rounded"
-                        style="width:100%;height:100%;object-fit:contain;cursor:zoom-in;"
-                        data-bs-toggle="modal"
-                        data-bs-target="#imageModal">
-
-                </div>
-
-                <!-- GALLERY -->
-                <div class="d-flex gap-2 mt-3 justify-content-center">
-
-                    <?php if (!empty($images)): ?>
-
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm">
+                <img
+                    id="product-image"
+                    src="<?= htmlspecialchars($product['thumbnail'] ?: '/assets/image/no-image.svg') ?>"
+                    class="card-img-top p-3"
+                    alt="<?= htmlspecialchars($product['name']) ?>"
+                >
+                <?php if ($images): ?>
+                    <div class="card-body d-flex flex-wrap gap-2">
                         <?php foreach ($images as $image): ?>
-
-                            <img
-                                src="/<?= htmlspecialchars($image['image']) ?>"
-                                data-image="/<?= htmlspecialchars($image['image']) ?>"
-                                class="border rounded gallery-image"
-                                style="width:60px;height:60px;object-fit:cover;cursor:pointer"
-                                onclick="
-                                    document.getElementById('mainImg').src=this.dataset.image;
-                                    document.getElementById('zoomImg').src=this.dataset.image;
-                                ">
-
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary p-1"
+                                data-product-image="<?= htmlspecialchars($image['image']) ?>"
+                                aria-label="Xem ảnh sản phẩm"
+                            >
+                                <img src="<?= htmlspecialchars($image['image']) ?>" width="64" height="64" alt="">
+                            </button>
                         <?php endforeach; ?>
-
-                    <?php else: ?>
-
-                        <img
-                            src="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
-                            data-image="<?= !empty($product['thumbnail']) ? '/' . htmlspecialchars($product['thumbnail']) : '/assets/image/no-image.svg' ?>"
-                            class="border rounded gallery-image"
-                            style="width:60px;height:60px;object-fit:cover;cursor:pointer"
-                            onclick="
-                                document.getElementById('mainImg').src=this.dataset.image;
-                                document.getElementById('zoomImg').src=this.dataset.image;
-                            ">
-
-                    <?php endif; ?>
-
-                </div>
-
+                    </div>
+                <?php endif; ?>
             </div>
-
-            <div class="card border-0 shadow-sm rounded-3 mt-4">
-
-                <div class="card-body p-0">
-
-                    <!-- CAM KẾT -->
-                    <div class="d-flex align-items-center p-3">
-
-                        <div class="me-3 d-flex align-items-center justify-content-center flex-shrink-0"
-                            style="width:40px;height:40px;">
-
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="22"
-                                height="22"
-                                fill="#0d6efd"
-                                viewBox="0 0 16 16">
-                                <path d="M5.072.56C5.58.329 6.18.16 8 0c1.82.16 2.42.329 2.928.56L14 2v4.496c0 3.606-2.12 6.62-6 8.504-3.88-1.884-6-4.898-6-8.504V2L5.072.56zm2.928.562-2.5.982L2.5 3.08v3.416c0 2.992 1.72 5.502 5.5 7.325 3.78-1.823 5.5-4.333 5.5-7.325V3.08l-3-1.976-2.5-.982z"/>
-                                <path d="M10.354 5.646a.5.5 0 0 1 0 .708L7.5 9.207 6.146 7.854a.5.5 0 1 1 .708-.708L7.5 7.793l2.146-2.147a.5.5 0 0 1 .708 0z"/>
-                            </svg>
-
-                        </div>
-
-                        <div>
-                            <div class="fw-semibold">
-                                Mạnh Dũng Sports cam kết
-                            </div>
-
-                            <small class="text-muted">
-                                Sản phẩm chính hãng, đầy đủ tem và nguồn gốc xuất xứ.
-                            </small>
-                        </div>
-
-                    </div>
-
-                    <hr class="m-0">
-
-                    <!-- BỘ SẢN PHẨM -->
-                    <div class="d-flex align-items-center p-3">
-
-                        <div class="me-3 d-flex align-items-center justify-content-center flex-shrink-0"
-                            style="width:40px;height:40px;">
-
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="22"
-                                height="22"
-                                fill="#0d6efd"
-                                viewBox="0 0 16 16">
-                                <path d="M8.186.113a1 1 0 0 0-.372 0L1.846 2.5a.5.5 0 0 0-.346.474v9.052a.5.5 0 0 0 .314.463l6 2.5a.5.5 0 0 0 .372 0l6-2.5a.5.5 0 0 0 .314-.463V2.974a.5.5 0 0 0-.346-.474L8.186.113z"/>
-                            </svg>
-
-                        </div>
-
-                        <div>
-                            <div class="fw-semibold">
-                                Bộ sản phẩm gồm
-                            </div>
-
-                            <small class="text-muted">
-                                Vợt, túi đựng vợt, tem chính hãng và phiếu bảo hành.
-                            </small>
-                        </div>
-
-                    </div>
-
-                    <hr class="m-0">
-
-                    <!-- BẢO HÀNH -->
-                    <div class="d-flex align-items-center p-3">
-
-                        <div class="me-3 d-flex align-items-center justify-content-center flex-shrink-0"
-                            style="width:40px;height:40px;">
-
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                width="22"
-                                height="22"
-                                fill="#0d6efd"
-                                viewBox="0 0 16 16">
-                                <path d="M5.072.56C5.58.329 6.18.16 8 0c1.82.16 2.42.329 2.928.56L14 2v4.496c0 3.606-2.12 6.62-6 8.504-3.88-1.884-6-4.898-6-8.504V2L5.072.56z"/>
-                            </svg>
-
-                        </div>
-
-                        <div>
-                            <div class="fw-semibold">
-                                Bảo hành chính hãng
-                            </div>
-
-                            <small class="text-muted">
-                                Áp dụng theo chính sách bảo hành của Yonex, Lining, Victor và các thương hiệu phân phối chính hãng tại Việt Nam.
-                            </small>
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
         </div>
 
-        <!-- RIGHT CARD -->
-        <div class="col-lg-5">
-
-            <div class="card border-0 shadow-sm rounded-3 p-4">
-
-                <div class="text-uppercase text-muted small mb-2">
-                    <?= htmlspecialchars($product['category_name'] ?? '') ?>
-                </div>
-
-                <h1 class="fw-bold mb-3">
-                    <?= htmlspecialchars($product['name'] ?? '') ?>
-                </h1>
-
-                <p class="text-secondary">
-                    <?= nl2br(htmlspecialchars($product['description'] ?? '')) ?>
-                </p>
-
-                <div class="my-4">
-
-                    <?php if (($product['sale_price'] ?? 0) > 0 || ($product['price'] ?? 0) > 0): ?>
-
-                        <div class="fs-3 fw-bold">
-                            <span class="text-danger">
-                                <?= number_format(
-                                    ($product['sale_price'] > 0 ? $product['sale_price'] : $product['price']),
-                                    0,
-                                    ',',
-                                    '.'
-                                ) ?> ₫
-                            </span>
-                        </div>
-
-                        <?php if (($product['sale_price'] ?? 0) > 0 && $product['sale_price'] < $product['price']): ?>
-
-                            <div class="text-muted text-decoration-line-through">
-                                <?= number_format($product['price'], 0, ',', '.') ?> ₫
-                            </div>
-
+        <div class="col-12 col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <p class="text-secondary mb-2">
+                        <?= htmlspecialchars($product['brand_name'] ?? 'Manh Dung Sports') ?>
+                        <?php if (!empty($product['category_name'])): ?>
+                            <span class="mx-1">·</span><?= htmlspecialchars($product['category_name']) ?>
                         <?php endif; ?>
+                    </p>
+                    <h1 class="h3 fw-bold"><?= htmlspecialchars($product['name']) ?></h1>
 
+                    <div class="mb-3">
+                        <?php if ($hasDiscount): ?>
+                            <span class="fs-4 fw-bold text-danger">
+                                <?= number_format((float) $product['sale_price'], 0, ',', '.') ?>₫
+                            </span>
+                            <span class="text-secondary text-decoration-line-through ms-2">
+                                <?= number_format((float) $product['price'], 0, ',', '.') ?>₫
+                            </span>
+                        <?php else: ?>
+                            <span class="fs-4 fw-bold text-danger">
+                                <?= number_format((float) $product['price'], 0, ',', '.') ?>₫
+                            </span>
+                        <?php endif; ?>
+                    </div>
+
+                    <p class="mb-3">
+                        <?php if ((int) ($product['stock'] ?? 0) > 0): ?>
+                            <span class="badge text-bg-success">Còn hàng</span>
+                            <span class="text-secondary ms-2">Còn <?= (int) $product['stock'] ?> sản phẩm</span>
+                        <?php else: ?>
+                            <span class="badge text-bg-secondary">Tạm hết hàng</span>
+                        <?php endif; ?>
+                    </p>
+
+                    <?php if ($attributes): ?>
+                        <div class="mb-3">
+                            <label for="product-variant" class="form-label fw-semibold">Phiên bản / thuộc tính</label>
+                            <select id="product-variant" class="form-select">
+                                <?php foreach ($attributes as $attribute): ?>
+                                    <option value="<?= htmlspecialchars($attribute['attribute_name'] . ': ' . $attribute['attribute_value']) ?>">
+                                        <?= htmlspecialchars($attribute['attribute_name']) ?>:
+                                        <?= htmlspecialchars($attribute['attribute_value']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                     <?php endif; ?>
 
-                    <?php
+                    <div class="mb-4">
+                        <label for="product-quantity" class="form-label fw-semibold">Số lượng</label>
+                        <div class="input-group">
+                            <button class="btn btn-outline-secondary" type="button" id="quantity-decrease" aria-label="Giảm số lượng">−</button>
+                            <input
+                                id="product-quantity"
+                                class="form-control text-center"
+                                type="number"
+                                min="1"
+                                max="<?= max(1, (int) ($product['stock'] ?? 0)) ?>"
+                                value="1"
+                            >
+                            <button class="btn btn-outline-secondary" type="button" id="quantity-increase" aria-label="Tăng số lượng">+</button>
+                        </div>
+                    </div>
 
-                    $stock = (int)($product['stock'] ?? 0);
-
-                    $purchaseId = (int)($product['purchase_id'] ?? 0);
-
-                    $price = (float)($product['price'] ?? 0);
-
-                    $salePrice = (float)($product['sale_price'] ?? 0);
-
-
-                    /* ==========================================
-                    GIÁ BÁN THỰC TẾ
-                    ========================================== */
-
-                    $sellingPrice =
-                        (
-                            $salePrice > 0
-                            && $price > 0
-                            && $salePrice < $price
-                        )
-                            ? $salePrice
-                            : $price;
-
-
-                    /* ==========================================
-                    CÓ THỂ MUA
-                    ========================================== */
-
-                    $canBuy =
-                        $stock > 0
-                        && $purchaseId > 0
-                        && $sellingPrice > 0;
-
-                    ?>
-
-                    <?php if ($canBuy): ?>
-
+                    <div class="d-grid gap-2 d-sm-flex">
                         <button
                             type="button"
-                            id="btn-buy-now"
-                            class="btn btn-success mt-3 px-4">
-
-                            Mua ngay
-
+                            id="add-product-to-cart"
+                            class="btn btn-success btn-lg flex-grow-1"
+                            <?= (int) ($product['stock'] ?? 0) < 1 ? 'disabled' : '' ?>
+                        >
+                            Thêm vào giỏ hàng
                         </button>
-
-                    <?php endif; ?>
-
-                    <a class="btn btn-outline-success mt-3 px-4"
-                        href="https://zalo.me/+84973359165"
-                        target="_blank">
-                        Liên hệ tư vấn & đặt hàng
-                    </a>
-
-                </div>
-
-                <div class="border rounded p-3 bg-light">
-
-                    <div class="fw-bold mb-3">
-                        Đặc điểm chi tiết
+                        <a href="/cart" class="btn btn-outline-success btn-lg">Xem giỏ hàng</a>
                     </div>
 
-                    <table class="table table-sm mb-0">
-
-                        <tr>
-                            <th class="text-muted fw-normal px-2">
-                                Thương hiệu
-                            </th>
-
-                            <td class="fw-semibold px-2">
-                                <?= htmlspecialchars($product['brand_name'] ?? '') ?>
-                            </td>
-                        </tr>
-
-                        <?php foreach ($attributes as $attribute): ?>
-
-                            <tr>
-
-                                <th class="text-muted fw-normal px-2">
-                                    <?= htmlspecialchars($attribute['attribute_name']) ?>
-                                </th>
-
-                                <td class="fw-semibold px-2">
-                                    <?= htmlspecialchars($attribute['attribute_value']) ?>
-                                </td>
-
-                            </tr>
-
-                        <?php endforeach; ?>
-
-                    </table>
-
+                    <div class="alert alert-light border mt-4 mb-0">
+                        <h2 class="h6 fw-bold">Mô tả sản phẩm</h2>
+                        <div class="text-break"><?= nl2br(htmlspecialchars($product['description'] ?? 'Thông tin chi tiết đang được cập nhật.')) ?></div>
+                    </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
+    <section class="mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h4 fw-bold mb-0">Khám phá thêm sản phẩm</h2>
+            <a href="/product" class="btn btn-outline-success btn-sm">Xem tất cả</a>
+        </div>
+        <div class="row g-3">
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/product" class="card h-100 text-decoration-none text-dark">
+                    <img src="/uploads/image/yonex_product/racquets/astrox-88-s-pro.png" class="card-img-top p-3" alt="Vợt cầu lông Yonex">
+                    <div class="card-body"><h3 class="h6 mb-0">Vợt cầu lông chính hãng</h3></div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/product?category=6" class="card h-100 text-decoration-none text-dark">
+                    <img src="/uploads/image/yonex_product/footwear/power-cushion-65-junior.png" class="card-img-top p-3" alt="Giày cầu lông">
+                    <div class="card-body"><h3 class="h6 mb-0">Giày cầu lông</h3></div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/product?category=4" class="card h-100 text-decoration-none text-dark">
+                    <img src="/uploads/image/yonex_product/shuttlecocks/mavis-200b.png" class="card-img-top p-3" alt="Quả cầu lông">
+                    <div class="card-body"><h3 class="h6 mb-0">Quả cầu lông</h3></div>
+                </a>
+            </div>
+            <div class="col-6 col-md-4 col-lg-3">
+                <a href="/product?category=8" class="card h-100 text-decoration-none text-dark">
+                    <img src="/uploads/image/yonex_product/accessories/dry-super-grap-3-wraps.png" class="card-img-top p-3" alt="Phụ kiện cầu lông">
+                    <div class="card-body"><h3 class="h6 mb-0">Phụ kiện cầu lông</h3></div>
+                </a>
+            </div>
+        </div>
+    </section>
 </main>
-<!-- IMAGE MODAL -->
-<div class="modal fade" id="imageModal" tabindex="-1">
 
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-
-        <div class="modal-content border-0 rounded-3">
-
-            <div class="modal-body bg-white rounded-3 text-center position-relative p-4">
-
-                <button
-                    type="button"
-                    class="btn-close position-absolute top-0 end-0 m-3"
-                    data-bs-dismiss="modal">
-                </button>
-
-                <img
-                    id="zoomImg"
-                    src=""
-                    class="img-fluid rounded"
-                    style="
-                        max-width:100%;
-                        max-height:85vh;
-                        cursor:grab;
-                        user-select:none;
-                        transition:transform .1s ease;
-                        transform-origin:center center;
-                    ">
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
 <script>
-const mainImg = document.getElementById('mainImg');
-const zoomImg = document.getElementById('zoomImg');
-const imageModal = document.getElementById('imageModal');
-
-let scale = 1;
-let translateX = 0;
-let translateY = 0;
-
-let isDragging = false;
-let startX = 0;
-let startY = 0;
-
-function updateTransform() {
-    zoomImg.style.transform =
-        `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-}
-
-// =========================
-// OPEN MODAL
-// =========================
-mainImg.addEventListener('click', () => {
-
-    zoomImg.src = mainImg.src;
-
-    scale = 1;
-    translateX = 0;
-    translateY = 0;
-
-    updateTransform();
-});
-
-// =========================
-// ZOOM
-// =========================
-zoomImg.addEventListener('wheel', (e) => {
-
-    e.preventDefault();
-
-    scale += (e.deltaY < 0 ? 0.15 : -0.15);
-
-    scale = Math.max(1, Math.min(scale, 5));
-
-
-    // Khi về ảnh gốc => đưa về giữa
-    if (scale === 1) {
-
-        translateX = 0;
-        translateY = 0;
-
-    }
-
-
-    updateTransform();
-
-}, { passive: false });
-
-// =========================
-// START DRAG
-// =========================
-zoomImg.addEventListener('mousedown', (e) => {
-
-    if (scale <= 1) return;
-
-    e.preventDefault();
-
-    isDragging = true;
-
-    startX = e.clientX - translateX;
-    startY = e.clientY - translateY;
-
-    zoomImg.style.cursor = 'grabbing';
-
-});
-
-// =========================
-// DRAGGING
-// =========================
-document.addEventListener('mousemove', (e) => {
-
-    if (!isDragging) return;
-
-    translateX = e.clientX - startX;
-    translateY = e.clientY - startY;
-
-    updateTransform();
-
-});
-
-// =========================
-// STOP DRAG
-// =========================
-document.addEventListener('mouseup', () => {
-
-    if (!isDragging) return;
-
-    isDragging = false;
-    zoomImg.style.cursor = scale > 1 ? 'grab' : 'default';
-
-});
-
-// Nếu chuột rời khỏi cửa sổ cũng dừng kéo
-window.addEventListener('blur', () => {
-
-    isDragging = false;
-    zoomImg.style.cursor = scale > 1 ? 'grab' : 'default';
-
-});
-
-// =========================
-// RESET
-// =========================
-imageModal.addEventListener('hidden.bs.modal', () => {
-
-    scale = 1;
-    translateX = 0;
-    translateY = 0;
-
-    isDragging = false;
-
-    zoomImg.style.cursor = 'default';
-
-    updateTransform();
-
-});
-// =================================================
-// BUY NOW
-// =================================================
-
-const btnBuyNow =
-    document.getElementById('btn-buy-now');
-
-
-if (btnBuyNow) {
-
-    btnBuyNow.addEventListener('click', function () {
-
-        try {
-
-            // =========================
-            // PRODUCT
-            // =========================
-
-            const product = {
-
-                product_id:
-                    <?= (int)($product['id'] ?? 0) ?>,
-
-                purchase_id:
-                    <?= (int)($product['purchase_id'] ?? 0) ?>,
-
-                name:
-                    <?= json_encode(
-                        $product['name'] ?? '',
-                        JSON_UNESCAPED_UNICODE
-                    ) ?>,
-
-                price:
-                    <?= (float)($product['price'] ?? 0) ?>,
-
-                sale_price:
-                    <?= (float)($product['sale_price'] ?? 0) ?>,
-
-                quantity: 1,
-
-                is_gift: 0
-            };
-
-
-            // =========================
-            // VALIDATE PRODUCT
-            // =========================
-
-            if (
-                !product.product_id ||
-                product.product_id <= 0
-            ) {
-
-                throw new Error(
-                    'Sản phẩm không hợp lệ.'
-                );
-            }
-
-
-            if (
-                !product.purchase_id ||
-                product.purchase_id <= 0
-            ) {
-
-                throw new Error(
-                    'Sản phẩm chưa có phiếu nhập hợp lệ.'
-                );
-            }
-
-
-            // =========================
-            // PRICE
-            // =========================
-
-            const price =
-                Number(
-                    product.price || 0
-                );
-
-            const salePrice =
-                Number(
-                    product.sale_price || 0
-                );
-
-
-            const sellingPrice =
-                salePrice > 0 &&
-                price > 0 &&
-                salePrice < price
-                    ? salePrice
-                    : price;
-
-
-            if (sellingPrice <= 0) {
-
-                throw new Error(
-                    'Sản phẩm chưa có giá bán.'
-                );
-            }
-
-
-            // =========================
-            // GET CART
-            // =========================
-
-            let cart = [];
-
-            try {
-
-                const storedCart =
-                    localStorage.getItem('cart');
-
-                if (storedCart) {
-
-                    const parsedCart =
-                        JSON.parse(storedCart);
-
-                    if (Array.isArray(parsedCart)) {
-                        cart = parsedCart;
-                    }
-                }
-
-            } catch (error) {
-
-                console.error(
-                    'Cart parse error:',
-                    error
-                );
-
-                cart = [];
-            }
-
-
-            // =========================
-            // CHECK EXISTING
-            // =========================
-
-            const existingIndex =
-                cart.findIndex(item =>
-
-                    Number(item.product_id) ===
-                        product.product_id
-
-                    &&
-
-                    Number(item.purchase_id) ===
-                        product.purchase_id
-
-                );
-
-
-            if (existingIndex >= 0) {
-
-                cart[existingIndex].quantity =
-                    Number(
-                        cart[existingIndex].quantity || 0
-                    ) + 1;
-
-            } else {
-
-                cart.push({
-
-                    product_id:
-                        product.product_id,
-
-                    purchase_id:
-                        product.purchase_id,
-
-                    name:
-                        product.name,
-
-                    price:
-                        price,
-
-                    sale_price:
-                        salePrice,
-
-                    quantity:
-                        1,
-
-                    is_gift:
-                        0
-                });
-            }
-
-
-            // =========================
-            // SAVE CART
-            // =========================
-
-            localStorage.setItem(
-                'cart',
-                JSON.stringify(cart)
-            );
-
-
-            // =========================
-            // REDIRECT
-            // =========================
-
-            window.location.assign(
-                '/checkout'
-            );
-
-        } catch (error) {
-
-            console.error(
-                'Buy now error:',
-                error
-            );
-
-            alert(
-                error.message ||
-                'Không thể mua sản phẩm.'
-            );
-        }
-
+(() => {
+    const quantityInput = document.getElementById('product-quantity');
+    const stock = <?= (int) ($product['stock'] ?? 0) ?>;
+    const variantInput = document.getElementById('product-variant');
+    const product = <?= json_encode([
+        'product_id' => (int) $product['id'],
+        'purchase_id' => (int) ($product['purchase_id'] ?? 0),
+        'name' => $product['name'],
+        'image' => $product['thumbnail'] ?: '/assets/image/no-image.svg',
+        'price' => $displayPrice,
+        'stock' => (int) ($product['stock'] ?? 0),
+    ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+
+    document.querySelectorAll('[data-product-image]').forEach((button) => {
+        button.addEventListener('click', () => {
+            document.getElementById('product-image').src = button.dataset.productImage;
+        });
     });
 
-}
+    document.getElementById('quantity-decrease').addEventListener('click', () => {
+        quantityInput.value = Math.max(1, Number(quantityInput.value || 1) - 1);
+    });
+
+    document.getElementById('quantity-increase').addEventListener('click', () => {
+        quantityInput.value = Math.min(stock, Number(quantityInput.value || 1) + 1);
+    });
+
+    quantityInput.addEventListener('change', () => {
+        quantityInput.value = Math.min(stock, Math.max(1, Number(quantityInput.value || 1)));
+    });
+
+    document.getElementById('add-product-to-cart').addEventListener('click', () => {
+        let cart = [];
+        try {
+            const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+            cart = Array.isArray(storedCart) ? storedCart : [];
+        } catch (error) {
+            console.error('Không thể đọc giỏ hàng đã lưu.', error);
+        }
+
+        const quantity = Math.min(stock, Math.max(1, Number(quantityInput.value || 1)));
+        if (variantInput) product.variant = variantInput.value;
+        const existing = cart.find((item) =>
+            Number(item.product_id) === product.product_id &&
+            (item.variant || '') === (product.variant || '')
+        );
+        if (existing) {
+            existing.quantity = Math.min(stock, Number(existing.quantity || 0) + quantity);
+        } else {
+            cart.push({ ...product, quantity });
+        }
+
+        try {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            window.location.href = '/cart';
+        } catch (error) {
+            console.error('Không thể lưu sản phẩm vào giỏ hàng.', error);
+            window.alert('Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại.');
+        }
+    });
+})();
 </script>
