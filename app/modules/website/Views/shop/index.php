@@ -20,16 +20,6 @@
 
     </nav>
 
-    <nav class="mt-3" aria-label="Danh mục sản phẩm">
-        <div class="d-flex flex-wrap gap-2">
-            <a href="/product?category=1" class="btn btn-outline-success btn-sm">Vợt cầu lông</a>
-            <a href="/product?category=6" class="btn btn-outline-success btn-sm">Giày cầu lông</a>
-            <a href="/product?category=5" class="btn btn-outline-success btn-sm">Quần áo</a>
-            <a href="/product?category=4" class="btn btn-outline-success btn-sm">Quả cầu lông</a>
-            <a href="/product?category=8" class="btn btn-outline-success btn-sm">Phụ kiện</a>
-        </div>
-    </nav>
-
     <!-- RECENTLY VIEWED -->
     <!-- <div id="recentViewed" class="alert alert-dismissible fade show p-0 border-0 my-3">
 
@@ -170,7 +160,8 @@
         </div>
 
         <!-- FILTER -->
-        <div class="row g-3 align-items-end">
+        <form method="get" action="/product" class="row g-3 align-items-end">
+            <input type="hidden" name="keyword" value="<?= htmlspecialchars($filters['keyword'] ?? '') ?>">
 
             <!-- CATEGORY -->
             <div class="col-12 col-md-6 col-lg">
@@ -179,7 +170,17 @@
                     Danh mục
                 </label>
 
-                <select id="filter-category" class="form-select form-select-sm"><option value="">Tất cả danh mục</option><option value="1">Vợt cầu lông</option><option value="2">Cước cầu lông</option><option value="3">Máy đan vợt</option><option value="4">Quả cầu lông</option><option value="5">Quần áo cầu lông</option><option value="6">Giày cầu lông</option><option value="7">Túi cầu lông</option><option value="8">Phụ kiện cầu lông</option></select>
+                <select id="filter-category" name="category_id" class="form-select form-select-sm">
+                    <option value="">Tất cả danh mục</option>
+                    <option value="1" <?= ($filters['category_id'] ?? null) === 1 ? 'selected' : '' ?>>Vợt cầu lông</option>
+                    <option value="2" <?= ($filters['category_id'] ?? null) === 2 ? 'selected' : '' ?>>Cước cầu lông</option>
+                    <option value="3" <?= ($filters['category_id'] ?? null) === 3 ? 'selected' : '' ?>>Máy đan vợt</option>
+                    <option value="4" <?= ($filters['category_id'] ?? null) === 4 ? 'selected' : '' ?>>Quả cầu lông</option>
+                    <option value="5" <?= ($filters['category_id'] ?? null) === 5 ? 'selected' : '' ?>>Quần áo cầu lông</option>
+                    <option value="6" <?= ($filters['category_id'] ?? null) === 6 ? 'selected' : '' ?>>Giày cầu lông</option>
+                    <option value="7" <?= ($filters['category_id'] ?? null) === 7 ? 'selected' : '' ?>>Túi cầu lông</option>
+                    <option value="8" <?= ($filters['category_id'] ?? null) === 8 ? 'selected' : '' ?>>Phụ kiện cầu lông</option>
+                </select>
 
             </div>
 
@@ -191,7 +192,15 @@
                     Thương hiệu
                 </label>
 
-                <select id="filter-brand" class="form-select form-select-sm"><option value="">Tất cả thương hiệu</option><option value="1">Yonex</option><option value="2">Lining</option><option value="3">Victor</option><option value="4">Mizuno</option><option value="5">Apavi</option><option value="6">Khác</option></select>
+                <select id="filter-brand" name="brand_id" class="form-select form-select-sm">
+                    <option value="">Tất cả thương hiệu</option>
+                    <option value="1" <?= ($filters['brand_id'] ?? null) === 1 ? 'selected' : '' ?>>Yonex</option>
+                    <option value="2" <?= ($filters['brand_id'] ?? null) === 2 ? 'selected' : '' ?>>Lining</option>
+                    <option value="3" <?= ($filters['brand_id'] ?? null) === 3 ? 'selected' : '' ?>>Victor</option>
+                    <option value="4" <?= ($filters['brand_id'] ?? null) === 4 ? 'selected' : '' ?>>Mizuno</option>
+                    <option value="5" <?= ($filters['brand_id'] ?? null) === 5 ? 'selected' : '' ?>>Apavi</option>
+                    <option value="6" <?= ($filters['brand_id'] ?? null) === 6 ? 'selected' : '' ?>>Khác</option>
+                </select>
 
             </div>
 
@@ -203,25 +212,25 @@
                     Khoảng giá
                 </label>
 
-                <select id="filter-price" class="form-select form-select-sm">
+                <select id="filter-price" name="price" class="form-select form-select-sm">
 
                     <option value="">
                         Tất cả mức giá
                     </option>
 
-                    <option value="0-500000">
+                    <option value="0-500000" <?= ($filters['price'] ?? '') === '0-500000' ? 'selected' : '' ?>>
                         Dưới 500.000₫
                     </option>
 
-                    <option value="500000-1000000">
+                    <option value="500000-1000000" <?= ($filters['price'] ?? '') === '500000-1000000' ? 'selected' : '' ?>>
                         500.000₫ - 1.000.000₫
                     </option>
 
-                    <option value="1000000-2000000">
+                    <option value="1000000-2000000" <?= ($filters['price'] ?? '') === '1000000-2000000' ? 'selected' : '' ?>>
                         1.000.000₫ - 2.000.000₫
                     </option>
 
-                    <option value="2000000">
+                    <option value="2000000" <?= ($filters['price'] ?? '') === '2000000' ? 'selected' : '' ?>>
                         Trên 2.000.000₫
                     </option>
 
@@ -237,17 +246,17 @@
                     Tình trạng
                 </label>
 
-                <select id="filter-status" class="form-select form-select-sm">
+                <select id="filter-status" name="status" class="form-select form-select-sm">
 
                     <option value="">
                         Tất cả
                     </option>
 
-                    <option value="1">
+                    <option value="active" <?= ($filters['status'] ?? '') === 'active' ? 'selected' : '' ?>>
                         Đang bán
                     </option>
 
-                    <option value="0">
+                    <option value="inactive" <?= ($filters['status'] ?? '') === 'inactive' ? 'selected' : '' ?>>
                         Ngừng bán
                     </option>
 
@@ -255,13 +264,69 @@
 
             </div>
 
-        </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-success btn-sm">Áp dụng bộ lọc</button>
+                <a href="/product" class="btn btn-outline-secondary btn-sm">Xóa bộ lọc</a>
+            </div>
+        </form>
 
 
         <!-- GRID -->
         <section class="mt-4">
 
+            <p class="small text-secondary"><?= $totalProducts ?> sản phẩm phù hợp</p>
             <div id="product-grid" class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3">
+
+            <?php if (isset($products)): ?>
+                <?php if (!$products): ?>
+                    <div class="col-12">
+                        <p class="alert alert-light border mb-0">Không tìm thấy sản phẩm phù hợp với tiêu chí đã chọn.</p>
+                    </div>
+                <?php endif; ?>
+                <?php foreach ($products as $product): ?>
+                    <?php
+                    $productId = (int) ($product['id'] ?? 0);
+                    $productName = (string) ($product['name'] ?? '');
+                    $regularPrice = (float) ($product['price'] ?? 0);
+                    $salePrice = (float) ($product['sale_price'] ?? 0);
+                    $hasDiscount = $salePrice > 0 && $salePrice < $regularPrice;
+                    $displayPrice = $hasDiscount ? $salePrice : $regularPrice;
+                    $stock = max(0, (int) ($product['stock'] ?? 0));
+                    $canBuy = ($product['status'] ?? '') === 'active' && $stock > 0;
+                    ?>
+                    <div class="col">
+                        <div class="card product-card h-100 border-0 shadow-sm">
+                            <img
+                                src="<?= htmlspecialchars($product['thumbnail'] ?? '/assets/image/no-image.svg') ?>"
+                                class="card-img-top product-image"
+                                alt="<?= htmlspecialchars($productName) ?>"
+                            >
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title mt-1 mb-2 product-name">
+                                    <a href="/product/<?= $productId ?>" class="text-dark text-decoration-none"><?= htmlspecialchars($productName) ?></a>
+                                </h6>
+                                <div class="fw-bold text-danger mb-3 product-price">
+                                    <?php if ($hasDiscount): ?>
+                                        <span class="text-decoration-line-through text-secondary me-2"><?= number_format($regularPrice, 0, ',', '.') ?> đ</span>
+                                    <?php endif; ?>
+                                    <span><?= number_format($displayPrice, 0, ',', '.') ?> đ</span>
+                                </div>
+                                <div class="mt-auto product-action">
+                                    <button
+                                        type="button"
+                                        class="btn btn-success btn-sm w-100 product-buy-now"
+                                        data-product-id="<?= $productId ?>"
+                                        data-purchase-id="<?= (int) ($product['purchase_id'] ?? 0) ?>"
+                                        data-stock="<?= $canBuy ? $stock : 0 ?>"
+                                        data-price="<?= $displayPrice ?>"
+                                        <?= $canBuy ? '' : 'disabled' ?>
+                                    ><?= $canBuy ? 'Mua ngay' : 'Tạm hết hàng' ?></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
 
             <div class="col">
 
@@ -1065,6 +1130,8 @@
 
             </div>
 
+            <?php endif; ?>
+
         </div>
 
         </section>
@@ -1111,12 +1178,51 @@
         </template>
 
 
-        <!-- PAGINATION -->
-        <nav class="mt-4" aria-label="Phân trang sản phẩm">
+        <?php
+        $paginationParams = array_filter([
+            'keyword' => $filters['keyword'],
+            'category_id' => $filters['category_id'],
+            'brand_id' => $filters['brand_id'],
+            'price' => $filters['price'],
+            'status' => $filters['status'],
+        ], static fn ($value): bool => $value !== null && $value !== '');
+        $paginationUrl = static fn (int $page): string => '/product?' . http_build_query($paginationParams + ['page' => $page]);
 
-            <ul id="pagination" class="pagination pagination-sm justify-content-center mb-0"><li class="page-item disabled"><a href="#" class="page-link">Trước</a></li><li class="page-item active"><a href="#" class="page-link">1</a></li><li class="page-item"><a href="#" class="page-link">2</a></li><li class="page-item"><a href="#" class="page-link">3</a></li><li class="page-item"><a href="#" class="page-link">4</a></li><li class="page-item"><a href="#" class="page-link">5</a></li><li class="page-item disabled"><span class="page-link">...</span></li><li class="page-item"><a href="#" class="page-link">12</a></li><li class="page-item"><a href="#" class="page-link">Sau</a></li></ul>
-
-        </nav>
+        if ($totalPages <= 7) {
+            $pageItems = range(1, $totalPages);
+        } else {
+            $pageItems = [1];
+            if ($currentPage > 4) {
+                $pageItems[] = '...';
+            }
+            $pageItems = array_merge($pageItems, range(max(2, $currentPage - 2), min($totalPages - 1, $currentPage + 2)));
+            if ($currentPage < $totalPages - 3) {
+                $pageItems[] = '...';
+            }
+            $pageItems[] = $totalPages;
+        }
+        ?>
+        <?php if ($totalPages > 1): ?>
+            <nav class="mt-4" aria-label="Phân trang sản phẩm">
+                <ul class="pagination pagination-sm justify-content-center mb-0">
+                    <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
+                        <a class="page-link" href="<?= htmlspecialchars($paginationUrl(max(1, $currentPage - 1))) ?>">Trước</a>
+                    </li>
+                    <?php foreach ($pageItems as $pageItem): ?>
+                        <?php if ($pageItem === '...'): ?>
+                            <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <?php else: ?>
+                            <li class="page-item <?= $pageItem === $currentPage ? 'active' : '' ?>">
+                                <a class="page-link" href="<?= htmlspecialchars($paginationUrl((int) $pageItem)) ?>"><?= (int) $pageItem ?></a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                    <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
+                        <a class="page-link" href="<?= htmlspecialchars($paginationUrl(min($totalPages, $currentPage + 1))) ?>">Sau</a>
+                    </li>
+                </ul>
+            </nav>
+        <?php endif; ?>
 
     </div>
 

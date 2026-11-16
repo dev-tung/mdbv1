@@ -3,6 +3,7 @@
 namespace App\Website\Services;
 
 use App\Core\Env;
+use App\Website\Validators\VietQrPaymentValidator;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
@@ -19,40 +20,27 @@ class VietQrPaymentService
 		$accountNumber = trim((string) Env::get('PAYMENT_ACCOUNT_NUMBER', ''));
 		$accountName = trim((string) Env::get('PAYMENT_ACCOUNT_NAME', ''));
 
-		if ($bankName === '' || $accountName === '') {
-			throw new DomainException('Chưa cấu hình đầy đủ thông tin ngân hàng thanh toán.');
+		$error = VietQrPaymentValidator::create([
+			'bank_name' => $bankName,
+			'bank_bin' => $bankBin,
+			'account_number' => $accountNumber,
+			'account_name' => $accountName,
+			'order_id' => $orderId,
+			'amount' => $amount,
+		]);
+
+		if ($error !== null) {
+			throw new DomainException($error);
 		}
 
-		if (!preg_match('/^[0-9]{6}$/', $bankBin)) {
-			throw new DomainException('Mã ngân hàng phải là BIN NAPAS gồm 6 chữ số.');
-		}
-
-		if (!preg_match('/^[A-Za-z0-9]{1,19}$/', $accountNumber)) {
-			throw new DomainException('Số tài khoản ngân hàng không hợp lệ.');
-		}
-
-		if ($orderId < 1 || !is_finite($amount) || $amount <= 0) {
-			throw new DomainException('Mã đơn hoặc số tiền thanh toán không hợp lệ.');
-		}
-
-		$qrAccountName = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $accountName);
+		$qrAccountName = VietQrPaymentValidator::formatAccountName($accountName);
 
 		if ($qrAccountName === false) {
 			throw new DomainException('Tên chủ tài khoản không thể chuyển thành định dạng QR.');
 		}
 
-		$qrAccountName = strtoupper(trim(preg_replace('/[^\x20-\x7E]/', '', $qrAccountName)));
-
-		if ($qrAccountName === '' || strlen($qrAccountName) > 25) {
-			throw new DomainException('Tên chủ tài khoản dùng cho QR phải dài tối đa 25 ký tự.');
-		}
-
 		$transferContent = 'MDB-' . $orderId;
 		$amountText = rtrim(rtrim(number_format($amount, 2, '.', ''), '0'), '.');
-
-		if (strlen($amountText) > 13) {
-			throw new DomainException('Số tiền vượt quá giới hạn của mã QR VietQR.');
-		}
 
 		$accountInfo = $this->field('00', 'A000000727')
 			. $this->field(
@@ -101,13 +89,13 @@ class VietQrPaymentService
 
 	private function field(string $id, string $value): string
 	{
-		$length = strlen($value);
+		$error = VietQrPaymentValidator::validateField($id, $value);
 
-		if (!preg_match('/^[0-9]{2}$/', $id) || $length > 99) {
-			throw new DomainException('Dữ liệu QR vượt quá định dạng VietQR cho phép.');
+		if ($error !== null) {
+			throw new DomainException($error);
 		}
 
-		return $id . str_pad((string) $length, 2, '0', STR_PAD_LEFT) . $value;
+		return $id . str_pad((string) strlen($value), 2, '0', STR_PAD_LEFT) . $value;
 	}
 
 	private function crc16(string $payload): string
