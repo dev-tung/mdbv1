@@ -5,6 +5,7 @@ namespace App\Auth\Endpoints;
 use App\Auth\Repositories\UserRepository;
 use App\Core\Response;
 use App\Core\Auth;
+use App\Core\Session;
 
 class AdminEndpoint
 {
@@ -47,6 +48,8 @@ class AdminEndpoint
 			);
 		}
 
+		$token = Session::regenerateId();
+
 		Auth::login([
 			'id' => $user['id'],
 			'name' => $user['name'],
@@ -58,12 +61,13 @@ class AdminEndpoint
 			'success' => true,
 			'message' => 'Đăng nhập thành công',
 			'data' => Auth::user(),
+			'token' => $token,
 		]);
 	}
 
 	public function apiLogout()
 	{
-		Auth::logout();
+		Session::destroy();
 
 		return Response::json([
 			'success' => true,

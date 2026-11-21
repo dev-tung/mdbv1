@@ -10,8 +10,34 @@ class Session
 	public static function start()
 	{
 		if (session_status() === PHP_SESSION_NONE) {
+			$authorization = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
+
+			if ($authorization === '' && function_exists('getallheaders')) {
+				foreach (getallheaders() as $name => $value) {
+					if (strcasecmp($name, 'Authorization') === 0) {
+						$authorization = $value;
+						break;
+					}
+				}
+			}
+
+			if (preg_match('/^Bearer ([a-zA-Z0-9,-]{16,128})$/D', $authorization, $matches)) {
+				session_id($matches[1]);
+			}
+
 			session_start();
 		}
+	}
+
+	public static function regenerateId(): string
+	{
+		self::start();
+
+		if (!session_regenerate_id(true)) {
+			throw new \RuntimeException('Could not regenerate the session ID');
+		}
+
+		return session_id();
 	}
 
 	// =========================

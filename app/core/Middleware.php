@@ -13,6 +13,10 @@ class Middleware
 				self::admin();
 				break;
 
+			case 'admin_api':
+				self::adminApi();
+				break;
+
 			case 'customer':
 				self::customer();
 				break;
@@ -30,6 +34,15 @@ class Middleware
 		}
 
 		Response::redirect('/admin/login');
+	}
+
+	protected static function adminApi(): void
+	{
+		if (Auth::check() && Auth::hasRole('admin')) {
+			return;
+		}
+
+		Response::error('Unauthorized', 401);
 	}
 
 	/* =================================================

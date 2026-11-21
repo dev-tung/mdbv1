@@ -12,7 +12,7 @@ Router::get(
 	'/api/customers',
 	[CustomerEndpoint::class, 'apiList'],
 	[
-		'auth' => 'admin',
+		'auth' => 'admin_api',
 	],
 );
 
@@ -20,7 +20,7 @@ Router::post(
 	'/api/customers',
 	[CustomerEndpoint::class, 'apiCreate'],
 	[
-		'auth' => 'admin',
+		'auth' => 'admin_api',
 	],
 );
 
@@ -28,7 +28,7 @@ Router::get(
 	'/api/customers/show/{id}',
 	[CustomerEndpoint::class, 'apiShow'],
 	[
-		'auth' => 'admin',
+		'auth' => 'admin_api',
 	],
 );
 
@@ -36,7 +36,7 @@ Router::post(
 	'/api/customers/update/{id}',
 	[CustomerEndpoint::class, 'apiUpdate'],
 	[
-		'auth' => 'admin',
+		'auth' => 'admin_api',
 	],
 );
 
@@ -44,7 +44,7 @@ Router::post(
 	'/api/customers/delete/{id}',
 	[CustomerEndpoint::class, 'apiDelete'],
 	[
-		'auth' => 'admin',
+		'auth' => 'admin_api',
 	],
 );
 
@@ -57,7 +57,7 @@ Router::get(
 	'/api/customer-groups',
 	[CustomerGroupEndpoint::class, 'apiList'],
 	[
-		'auth' => 'admin',
+		'auth' => 'admin_api',
 	],
 );
 
@@ -65,6 +65,6 @@ Router::post(
 	'/api/customer-groups',
 	[CustomerGroupEndpoint::class, 'apiCreate'],
 	[
-		'auth' => 'admin',
+		'auth' => 'admin_api',
 	],
 );
