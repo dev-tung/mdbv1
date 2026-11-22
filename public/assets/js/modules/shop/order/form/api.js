@@ -46,6 +46,7 @@ const Api = {
 	async searchCustomer(keyword = '') {
 		return await Http.get('/api/customers', {
 			keyword,
+			per_page: 50,
 		});
 	},
 };

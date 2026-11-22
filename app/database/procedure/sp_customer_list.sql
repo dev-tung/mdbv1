@@ -151,6 +151,13 @@ WHERE
 		OR DATE(c.created_at) <= p_date_to
 	)
 ORDER BY
+	CASE
+		WHEN v_keyword IS NOT NULL
+			AND CONVERT(c.name USING utf8mb4) COLLATE utf8mb4_unicode_ci
+				LIKE CONCAT ('%', v_keyword, '%')
+		THEN 0
+		ELSE 1
+	END,
 	c.id DESC
 LIMIT
 	p_per_page
