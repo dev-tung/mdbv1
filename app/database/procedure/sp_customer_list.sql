@@ -8,9 +8,9 @@ CREATE PROCEDURE sp_customer_list (
 	IN p_per_page INT
 ) BEGIN
 DECLARE v_offset INT;
+DECLARE v_keyword VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-SET
-	p_keyword = NULLIF(TRIM(p_keyword), '');
+SET v_keyword = NULLIF(TRIM(p_keyword), '');
 
 SET
 	p_page = IFNULL (p_page, 1);
@@ -39,26 +39,26 @@ SELECT
 			CONCAT_WS(
 				' ',
 				CASE e.equipment_type
-					WHEN 'shoe' THEN 'Giày'
-					ELSE 'Vợt'
+					WHEN 'shoe' THEN 'Giày' COLLATE utf8mb4_unicode_ci
+					ELSE 'Vợt' COLLATE utf8mb4_unicode_ci
 				END,
 				NULLIF(
 					CONCAT_WS(
 						' ',
-						NULLIF(NULLIF(TRIM(e.brand), ''), '0'),
-						NULLIF(NULLIF(TRIM(e.model), ''), '0')
+						NULLIF(NULLIF(TRIM(e.brand), ''), '0') COLLATE utf8mb4_unicode_ci,
+						NULLIF(NULLIF(TRIM(e.model), ''), '0') COLLATE utf8mb4_unicode_ci
 					),
 					''
 				),
 				IF(
 					e.equipment_type = 'shoe'
 						AND NULLIF(NULLIF(TRIM(e.size), ''), '0') IS NOT NULL,
-					CONCAT('(cỡ ', TRIM(e.size), ')'),
+					CONCAT('(cỡ ', TRIM(e.size) COLLATE utf8mb4_unicode_ci, ')'),
 					NULL
 				),
 				IF(
 					NULLIF(NULLIF(TRIM(e.note), ''), '0') IS NOT NULL,
-					CONCAT('-', TRIM(e.note)),
+					CONCAT('-', TRIM(e.note) COLLATE utf8mb4_unicode_ci),
 					NULL
 				),
 				IF(
@@ -73,13 +73,13 @@ SELECT
 										NULLIF(
 											CONCAT_WS(
 												' ',
-												NULLIF(NULLIF(TRIM(s.string_type), ''), '0'),
-												NULLIF(NULLIF(TRIM(s.tension), ''), '0')
+												NULLIF(NULLIF(TRIM(s.string_type), ''), '0') COLLATE utf8mb4_unicode_ci,
+												NULLIF(NULLIF(TRIM(s.tension), ''), '0') COLLATE utf8mb4_unicode_ci
 											),
 											''
 										),
-										s.strung_at,
-										NULLIF(NULLIF(TRIM(s.note), ''), '0')
+										CAST(s.strung_at AS CHAR CHARACTER SET utf8mb4) COLLATE utf8mb4_unicode_ci,
+										NULLIF(NULLIF(TRIM(s.note), ''), '0') COLLATE utf8mb4_unicode_ci
 									)
 									ORDER BY s.strung_at DESC, s.id DESC
 									SEPARATOR '; '
@@ -111,15 +111,15 @@ FROM
 	LEFT JOIN customer_groups cg ON cg.id = c.group_id
 WHERE
 	(
-		p_keyword IS NULL
-		OR c.name LIKE CONCAT ('%', p_keyword, '%')
-		OR c.phone LIKE CONCAT ('%', p_keyword, '%')
-		OR c.email LIKE CONCAT ('%', p_keyword, '%')
-		OR c.address LIKE CONCAT ('%', p_keyword, '%')
-		OR c.description LIKE CONCAT ('%', p_keyword, '%')
-		OR cg.name LIKE CONCAT ('%', p_keyword, '%')
-		OR CAST(c.id AS CHAR) LIKE CONCAT ('%', p_keyword, '%')
-		OR DATE_FORMAT(c.created_at, '%Y-%m-%d') LIKE CONCAT ('%', p_keyword, '%')
+		v_keyword IS NULL
+		OR CONVERT(c.name USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(c.phone USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(c.email USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(c.address USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(c.description USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(cg.name USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CAST(c.id AS CHAR CHARACTER SET utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(DATE_FORMAT(c.created_at, '%Y-%m-%d') USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
 		OR EXISTS (
 			SELECT 1
 			FROM customer_equipment e
@@ -127,20 +127,19 @@ WHERE
 				AND CONCAT_WS(
 					' ',
 					CASE e.equipment_type
-						WHEN 'shoe' THEN 'Giày'
-						WHEN 'racket' THEN 'Vợt'
-						ELSE 'Căng cước'
+						WHEN 'shoe' THEN 'Giày' COLLATE utf8mb4_unicode_ci
+						WHEN 'racket' THEN 'Vợt' COLLATE utf8mb4_unicode_ci
+						ELSE 'Căng cước' COLLATE utf8mb4_unicode_ci
 					END,
-					e.brand,
-					e.model,
-					e.size,
-					e.string_type,
-					e.tension,
-					DATE_FORMAT(e.strung_at, '%Y-%m-%d'),
-					e.note,
-					e.id
-				) COLLATE utf8mb4_unicode_ci
-					LIKE CONCAT ('%', p_keyword, '%') COLLATE utf8mb4_unicode_ci
+					CONVERT(e.brand USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.model USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.size USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.string_type USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.tension USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(DATE_FORMAT(e.strung_at, '%Y-%m-%d') USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.note USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CAST(e.id AS CHAR CHARACTER SET utf8mb4) COLLATE utf8mb4_unicode_ci
+				) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
 		)
 	)
 	AND (
@@ -168,15 +167,15 @@ FROM
 	LEFT JOIN customer_groups cg ON cg.id = c.group_id
 WHERE
 	(
-		p_keyword IS NULL
-		OR c.name LIKE CONCAT ('%', p_keyword, '%')
-		OR c.phone LIKE CONCAT ('%', p_keyword, '%')
-		OR c.email LIKE CONCAT ('%', p_keyword, '%')
-		OR c.address LIKE CONCAT ('%', p_keyword, '%')
-		OR c.description LIKE CONCAT ('%', p_keyword, '%')
-		OR cg.name LIKE CONCAT ('%', p_keyword, '%')
-		OR CAST(c.id AS CHAR) LIKE CONCAT ('%', p_keyword, '%')
-		OR DATE_FORMAT(c.created_at, '%Y-%m-%d') LIKE CONCAT ('%', p_keyword, '%')
+		v_keyword IS NULL
+		OR CONVERT(c.name USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(c.phone USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(c.email USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(c.address USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(c.description USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(cg.name USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CAST(c.id AS CHAR CHARACTER SET utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
+		OR CONVERT(DATE_FORMAT(c.created_at, '%Y-%m-%d') USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
 		OR EXISTS (
 			SELECT 1
 			FROM customer_equipment e
@@ -184,20 +183,19 @@ WHERE
 				AND CONCAT_WS(
 					' ',
 					CASE e.equipment_type
-						WHEN 'shoe' THEN 'Giày'
-						WHEN 'racket' THEN 'Vợt'
-						ELSE 'Căng cước'
+						WHEN 'shoe' THEN 'Giày' COLLATE utf8mb4_unicode_ci
+						WHEN 'racket' THEN 'Vợt' COLLATE utf8mb4_unicode_ci
+						ELSE 'Căng cước' COLLATE utf8mb4_unicode_ci
 					END,
-					e.brand,
-					e.model,
-					e.size,
-					e.string_type,
-					e.tension,
-					DATE_FORMAT(e.strung_at, '%Y-%m-%d'),
-					e.note,
-					e.id
-				) COLLATE utf8mb4_unicode_ci
-					LIKE CONCAT ('%', p_keyword, '%') COLLATE utf8mb4_unicode_ci
+					CONVERT(e.brand USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.model USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.size USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.string_type USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.tension USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(DATE_FORMAT(e.strung_at, '%Y-%m-%d') USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CONVERT(e.note USING utf8mb4) COLLATE utf8mb4_unicode_ci,
+					CAST(e.id AS CHAR CHARACTER SET utf8mb4) COLLATE utf8mb4_unicode_ci
+				) COLLATE utf8mb4_unicode_ci LIKE CONCAT ('%', v_keyword, '%')
 		)
 	)
 	AND (
