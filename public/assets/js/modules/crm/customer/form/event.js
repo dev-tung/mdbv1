@@ -70,36 +70,119 @@ const Event = {
 
 	bindEquipment() {
 		Dom.find('#add-customer-racket').addEventListener('click', () => {
-			Renderer.addRacket();
+			Renderer.addRacket({}, true);
 		});
 
 		Dom.find('#add-customer-shoe').addEventListener('click', () => {
-			Renderer.addShoe();
+			Renderer.addShoe({}, true);
 		});
 
-		Dom.find('#customer-rackets').addEventListener('click', (event) => {
+		const rackets = Dom.find('#customer-rackets');
+		const stringingPicker = Dom.find('#customer-stringing-picker');
+		const stringingOptions = Dom.find('#customer-stringing-racket-options');
+
+		Dom.find('#add-customer-stringing').addEventListener('click', () => {
+			if (rackets.children.length === 0) {
+				alert('Hãy thêm vợt trước khi thêm thông tin căng cước');
+				return;
+			}
+
+			if (rackets.children.length === 1) {
+				Renderer.addStringing(
+					rackets.children[0].querySelector('[data-stringing-list]'),
+					{},
+					true,
+				);
+				return;
+			}
+
+			this.renderStringingRacketPicker([...rackets.children]);
+		});
+
+		stringingOptions.addEventListener('click', (event) => {
+			const button = event.target.closest('.select-stringing-racket');
+
+			if (!button) {
+				return;
+			}
+
+			const racket = rackets.children[Number(button.dataset.racketIndex)];
+
+			if (!racket) {
+				return;
+			}
+
+			Renderer.addStringing(
+				racket.querySelector('[data-stringing-list]'),
+				{},
+				true,
+			);
+			stringingPicker.classList.add('d-none');
+		});
+
+		Dom.find('#cancel-stringing-picker').addEventListener('click', () => {
+			stringingPicker.classList.add('d-none');
+		});
+
+		rackets.addEventListener('click', (event) => {
 			const target = event.target;
-			const addStringing = target.closest('.add-stringing-record');
 			const removeStringing = target.closest('.remove-stringing-record');
 			const removeRacket = target.closest('.remove-customer-racket');
 
-			if (addStringing) {
-				const card = addStringing.closest('.card');
-				Renderer.addStringing(card.querySelector('[data-stringing-list]'));
-			} else if (removeStringing) {
-				removeStringing.closest('[data-stringing-record]').remove();
+			if (removeStringing) {
+				const record = removeStringing.closest('[data-stringing-record]');
+				const list = record.parentElement;
+				const section = list.closest('[data-stringing-section]');
+
+				record.remove();
+
+				if (list.children.length === 0) {
+					section.classList.add('d-none');
+				}
 			} else if (removeRacket) {
 				removeRacket.closest('.card').remove();
+				this.renumberEquipment(rackets, 'Vợt');
+				stringingPicker.classList.add('d-none');
 			}
 		});
 
-		Dom.find('#customer-shoes').addEventListener('click', (event) => {
+		const shoes = Dom.find('#customer-shoes');
+
+		shoes.addEventListener('click', (event) => {
 			const removeShoe = event.target.closest('.remove-customer-shoe');
 
 			if (removeShoe) {
 				removeShoe.closest('.card').remove();
+				this.renumberEquipment(shoes, 'Giày');
 			}
 		});
+	},
+
+	renumberEquipment(container, label) {
+		[...container.children].forEach((card, index) => {
+			card.querySelector('.equipment-card-title').textContent = `${label} ${index + 1}`;
+		});
+	},
+
+	renderStringingRacketPicker(rackets) {
+		const picker = Dom.find('#customer-stringing-picker');
+		const options = Dom.find('#customer-stringing-racket-options');
+
+		options.replaceChildren();
+
+		rackets.forEach((racket, index) => {
+			const brand = racket.querySelector('[data-racket-field="brand"]').value.trim();
+			const model = racket.querySelector('[data-racket-field="model"]').value.trim();
+			const button = document.createElement('button');
+
+			button.type = 'button';
+			button.className = 'btn btn-sm btn-outline-secondary text-start select-stringing-racket';
+			button.dataset.racketIndex = index;
+			button.textContent = [brand, model].filter(Boolean).join(' ') || `Vợt ${index + 1}`;
+			options.appendChild(button);
+		});
+
+		picker.classList.remove('d-none');
 	},
 
 	collectEquipment() {

@@ -65,25 +65,32 @@ const Renderer = {
 		(State.form.shoes || []).forEach((shoe) => this.addShoe(shoe));
 	},
 
-	addRacket(racket = {}) {
+	addRacket(racket = {}, focus = false) {
 		const template = Dom.find('#customer-racket-template');
 		const card = template.content.firstElementChild.cloneNode(true);
+		const container = Dom.find('#customer-rackets');
 
+		card.querySelector('.equipment-card-title').textContent = `Vợt ${container.children.length + 1}`;
 		this.setFields(card, 'data-racket-field', racket);
 		card.querySelector('.remove-customer-racket').hidden = Boolean(racket.id);
 
 		const stringingList = card.querySelector('[data-stringing-list]');
 		(racket.stringings || []).forEach((record) => this.addStringing(stringingList, record));
 
-		Dom.find('#customer-rackets').appendChild(card);
+		container.appendChild(card);
+
+		if (focus) {
+			this.focusFirstField(card);
+		}
 
 		return card;
 	},
 
-	addStringing(list, record = {}) {
+	addStringing(list, record = {}, focus = false) {
 		const template = Dom.find('#customer-stringing-template');
 		const row = template.content.firstElementChild.cloneNode(true);
 
+		list.closest('[data-stringing-section]').classList.remove('d-none');
 		this.setFields(row, 'data-stringing-field', record);
 		if (record.id) {
 			row.querySelectorAll('[data-stringing-field]').forEach((field) => {
@@ -94,18 +101,41 @@ const Renderer = {
 
 		list.appendChild(row);
 
+		if (focus) {
+			this.focusFirstField(row);
+		}
+
 		return row;
 	},
 
-	addShoe(shoe = {}) {
+	addShoe(shoe = {}, focus = false) {
 		const template = Dom.find('#customer-shoe-template');
 		const card = template.content.firstElementChild.cloneNode(true);
+		const container = Dom.find('#customer-shoes');
 
+		card.querySelector('.equipment-card-title').textContent = `Giày ${container.children.length + 1}`;
 		this.setFields(card, 'data-shoe-field', shoe);
 		card.querySelector('.remove-customer-shoe').hidden = Boolean(shoe.id);
-		Dom.find('#customer-shoes').appendChild(card);
+		container.appendChild(card);
+
+		if (focus) {
+			this.focusFirstField(card);
+		}
 
 		return card;
+	},
+
+	focusFirstField(container) {
+		const input = container.querySelector('input:not([type="hidden"]):not(:disabled)');
+
+		if (!input) {
+			return;
+		}
+
+		requestAnimationFrame(() => {
+			input.focus();
+			input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+		});
 	},
 
 	setFields(container, attribute, values) {

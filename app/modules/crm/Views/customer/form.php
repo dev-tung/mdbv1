@@ -1,4 +1,74 @@
-<div class="container-fluid py-4 mt-5">
+<style>
+  .customer-form-page .customer-equipment-type-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .customer-form-page .customer-equipment-type-button {
+    min-height: 38px;
+    padding: 6px 12px;
+    border: 1px solid #dce2eb;
+    border-radius: 18px;
+    background: #f5f6f8;
+    color: #58657a;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .customer-form-page .customer-equipment-card {
+    border-color: #e8ecf2;
+    border-radius: 12px;
+  }
+
+  .customer-form-page .customer-equipment-card .card-body {
+    padding: 14px;
+  }
+
+  .customer-form-page .customer-stringing-picker {
+    padding: 12px;
+    border: 1px solid #e8ecf2;
+    border-radius: 12px;
+    background: #f8f9fb;
+  }
+
+  @media (max-width: 767.98px) {
+    .customer-form-page {
+      padding: 16px 12px 24px !important;
+    }
+
+    .customer-form-page h3 {
+      margin-bottom: 16px !important;
+      font-size: 1.35rem;
+    }
+
+    #customer-form .form-control,
+    #customer-form .form-select {
+      min-height: 44px;
+    }
+
+    .customer-form-page .customer-equipment-card .card-body {
+      padding: 12px;
+    }
+
+    .customer-form-page [data-stringing-record] {
+      padding: 12px !important;
+    }
+
+    .customer-form-page .remove-customer-racket,
+    .customer-form-page .remove-customer-shoe,
+    .customer-form-page .remove-stringing-record {
+      min-height: 36px;
+    }
+
+    #customer-form > .btn[type="submit"] {
+      width: 100%;
+      min-height: 44px;
+    }
+  }
+</style>
+
+<div class="container-fluid py-4 mt-5 customer-form-page">
   <h3 class="mb-4">Khách hàng</h3>
 
   <form id="customer-form" novalidate>
@@ -96,24 +166,34 @@
 
     </div>
 
-    <section class="mt-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Vợt và lịch sử căng cước</h4>
-        <button type="button" class="btn btn-sm btn-outline-secondary" id="add-customer-racket">
-          Thêm vợt
-        </button>
-      </div>
-      <div id="customer-rackets" class="vstack gap-3"></div>
-    </section>
+    <section class="customer-equipment-section mt-4">
+      <h4 class="mb-1">Thiết bị</h4>
+      <p class="text-secondary small mb-3">
+        Chọn loại thiết bị để thêm thông tin cho khách hàng
+      </p>
 
-    <section class="mt-4">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Giày</h4>
-        <button type="button" class="btn btn-sm btn-outline-secondary" id="add-customer-shoe">
-          Thêm giày
+      <div class="customer-equipment-type-buttons mb-3">
+        <button type="button" class="customer-equipment-type-button" id="add-customer-racket">
+          + Vợt
+        </button>
+        <button type="button" class="customer-equipment-type-button" id="add-customer-shoe">
+          + Giày
+        </button>
+        <button type="button" class="customer-equipment-type-button" id="add-customer-stringing">
+          + Căng cước
         </button>
       </div>
-      <div id="customer-shoes" class="vstack gap-3"></div>
+
+      <div id="customer-stringing-picker" class="customer-stringing-picker d-none mb-3">
+        <h6 class="mb-2">Chọn vợt để thêm lần căng cước</h6>
+        <div id="customer-stringing-racket-options" class="d-grid gap-2"></div>
+        <button type="button" class="btn btn-sm btn-light mt-2" id="cancel-stringing-picker">
+          Hủy chọn
+        </button>
+      </div>
+
+      <div id="customer-rackets" class="vstack gap-3"></div>
+      <div id="customer-shoes" class="vstack gap-3 mt-3"></div>
     </section>
 
 
@@ -128,11 +208,11 @@
 </div>
 
 <template id="customer-racket-template">
-  <div class="card">
+  <div class="card customer-equipment-card">
     <div class="card-body">
       <input type="hidden" data-racket-field="id">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">Thông tin vợt</h5>
+        <h5 class="mb-0 equipment-card-title"></h5>
         <button type="button" class="btn btn-sm btn-outline-danger remove-customer-racket">Bỏ vợt</button>
       </div>
       <div class="row g-3">
@@ -149,10 +229,9 @@
           <input type="text" class="form-control" data-racket-field="note" maxlength="1000">
         </div>
       </div>
-      <div class="mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-2">
+      <div class="mt-4 d-none" data-stringing-section>
+        <div class="mb-2">
           <h6 class="mb-0">Lịch sử căng cước</h6>
-          <button type="button" class="btn btn-sm btn-outline-secondary add-stringing-record">Thêm lần căng</button>
         </div>
         <p class="form-text">Các lần căng đã lưu được giữ nguyên; thêm lần mới để ghi tiếp lịch sử.</p>
         <div class="vstack gap-2" data-stringing-list></div>
@@ -189,11 +268,11 @@
 </template>
 
 <template id="customer-shoe-template">
-  <div class="card">
+  <div class="card customer-equipment-card">
     <div class="card-body">
       <input type="hidden" data-shoe-field="id">
       <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0">Thông tin giày</h5>
+        <h5 class="mb-0 equipment-card-title"></h5>
         <button type="button" class="btn btn-sm btn-outline-danger remove-customer-shoe">Bỏ giày</button>
       </div>
       <div class="row g-3">
