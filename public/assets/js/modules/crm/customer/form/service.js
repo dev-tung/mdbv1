@@ -37,6 +37,10 @@ const Service = {
 			address: form.address,
 
 			description: form.description,
+
+			rackets: form.rackets || [],
+
+			shoes: form.shoes || [],
 		};
 	},
 

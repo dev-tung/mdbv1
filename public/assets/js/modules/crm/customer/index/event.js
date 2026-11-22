@@ -17,7 +17,7 @@ const Event = {
 
 			pagination: true,
 
-			colspan: 6,
+			colspan: 8,
 
 			filters: {
 				'#filter-keyword': {
@@ -68,13 +68,13 @@ const Event = {
 	================================================= */
 
 	bindEvents() {
-		const table = Dom.find('#customer-table-body');
+		const customerList = Dom.find('#customer-list-container');
 
 		// =========================
 		// DELETE
 		// =========================
 
-		table.addEventListener('click', async (e) => {
+		customerList.addEventListener('click', async (e) => {
 			const button = e.target.closest('.delete-item');
 
 			if (!button) {

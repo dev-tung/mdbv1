@@ -70,6 +70,55 @@ const Renderer = {
 
 			return fragment;
 		});
+
+		Renderer.renderMobileCards();
+	},
+
+	renderMobileCards() {
+		const container = Dom.find('#order-card-list');
+
+		if (!container) {
+			return;
+		}
+
+		container.replaceChildren();
+
+		if (!State.orders.length) {
+			const empty = document.createElement('p');
+			empty.className = 'order-card-empty';
+			empty.textContent = 'Không tìm thấy đơn hàng';
+			container.appendChild(empty);
+			return;
+		}
+
+		State.orders.forEach((order) => {
+			const fragment = Dom.template('#order-card-template');
+			const card = fragment.querySelector('.order-card');
+
+			card.dataset.id = order.id;
+			Dom.text('.order-card-customer', order.customer_name || '', card);
+			Dom.text('.order-card-id', `#${order.id}`, card);
+			Dom.text('.order-total-badge', `Tổng ${Formatter.money(order.total_amount)}`, card);
+			Dom.text('.order-paid-badge', `Đã thu ${Formatter.money(order.paid_amount)}`, card);
+			Dom.text('.order-debt-badge', `Còn nợ ${Formatter.money(order.debt_amount)}`, card);
+
+			const createdAt = card.querySelector('.order-date-badge');
+			createdAt.textContent = Formatter.datetime(order.created_at);
+			createdAt.hidden = !order.created_at;
+
+			const status = card.querySelector('.status');
+			Select.render(status, Option.process, order.status);
+			status.dataset.id = order.id;
+
+			const payment = card.querySelector('.payment');
+			Select.render(payment, Option.payment, order.payment);
+			payment.dataset.id = order.id;
+
+			card.querySelector('.edit-item').href = `/admin/orders/edit/${order.id}`;
+			card.querySelector('.delete-item').dataset.id = order.id;
+
+			container.appendChild(fragment);
+		});
 	},
 
 	/* =================================================

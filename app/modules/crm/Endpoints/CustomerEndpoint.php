@@ -66,6 +66,14 @@ class CustomerEndpoint
 			]);
 		}
 
+		$error = CustomerValidator::equipment($input);
+		if ($error) {
+			return Response::json([
+				'success' => false,
+				'message' => $error,
+			]);
+		}
+
 		$id = $this->customerRepository->create($input);
 
 		return Response::json([
@@ -86,6 +94,14 @@ class CustomerEndpoint
 
 		$error = CustomerValidator::update($input);
 
+		if ($error) {
+			return Response::json([
+				'success' => false,
+				'message' => $error,
+			]);
+		}
+
+		$error = CustomerValidator::equipment($input);
 		if ($error) {
 			return Response::json([
 				'success' => false,

@@ -214,7 +214,7 @@ const Event = {
 		table.addEventListener('click', (e) => {
 			// Remove Item
 
-			if (!e.target.matches('.remove-item')) {
+			if (!e.target.closest('.remove-item')) {
 				return;
 			}
 
@@ -227,7 +227,8 @@ const Event = {
 
 			State.items = response.items;
 
-			updateCalculation();
+			Renderer.renderProducts();
+			this.renderSummary();
 		});
 	},
 

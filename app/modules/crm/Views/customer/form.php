@@ -96,6 +96,26 @@
 
     </div>
 
+    <section class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Vợt và lịch sử căng cước</h4>
+        <button type="button" class="btn btn-sm btn-outline-secondary" id="add-customer-racket">
+          Thêm vợt
+        </button>
+      </div>
+      <div id="customer-rackets" class="vstack gap-3"></div>
+    </section>
+
+    <section class="mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="mb-0">Giày</h4>
+        <button type="button" class="btn btn-sm btn-outline-secondary" id="add-customer-shoe">
+          Thêm giày
+        </button>
+      </div>
+      <div id="customer-shoes" class="vstack gap-3"></div>
+    </section>
+
 
     <!-- BUTTON -->
     <button
@@ -106,6 +126,97 @@
 
   </form>
 </div>
+
+<template id="customer-racket-template">
+  <div class="card">
+    <div class="card-body">
+      <input type="hidden" data-racket-field="id">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Thông tin vợt</h5>
+        <button type="button" class="btn btn-sm btn-outline-danger remove-customer-racket">Bỏ vợt</button>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Thương hiệu</label>
+          <input type="text" class="form-control" data-racket-field="brand" maxlength="100">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Tên / model vợt</label>
+          <input type="text" class="form-control" data-racket-field="model" maxlength="150">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Ghi chú</label>
+          <input type="text" class="form-control" data-racket-field="note" maxlength="1000">
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="mb-0">Lịch sử căng cước</h6>
+          <button type="button" class="btn btn-sm btn-outline-secondary add-stringing-record">Thêm lần căng</button>
+        </div>
+        <p class="form-text">Các lần căng đã lưu được giữ nguyên; thêm lần mới để ghi tiếp lịch sử.</p>
+        <div class="vstack gap-2" data-stringing-list></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="customer-stringing-template">
+  <div class="border rounded p-3" data-stringing-record>
+    <input type="hidden" data-stringing-field="id">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-3">
+        <label class="form-label">Loại cước</label>
+        <input type="text" class="form-control" data-stringing-field="string_type" maxlength="100">
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Mức căng</label>
+        <input type="text" class="form-control" data-stringing-field="tension" maxlength="40" placeholder="Ví dụ: 24 lbs">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Ngày căng</label>
+        <input type="date" class="form-control" data-stringing-field="strung_at">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Ghi chú</label>
+        <input type="text" class="form-control" data-stringing-field="note" maxlength="1000">
+      </div>
+      <div class="col-md-1">
+        <button type="button" class="btn btn-sm btn-outline-danger remove-stringing-record">Bỏ</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="customer-shoe-template">
+  <div class="card">
+    <div class="card-body">
+      <input type="hidden" data-shoe-field="id">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Thông tin giày</h5>
+        <button type="button" class="btn btn-sm btn-outline-danger remove-customer-shoe">Bỏ giày</button>
+      </div>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Thương hiệu</label>
+          <input type="text" class="form-control" data-shoe-field="brand" maxlength="100">
+        </div>
+        <div class="col-md-5">
+          <label class="form-label">Tên / model giày</label>
+          <input type="text" class="form-control" data-shoe-field="model" maxlength="150">
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Cỡ giày</label>
+          <input type="text" class="form-control" data-shoe-field="size" maxlength="20" placeholder="Ví dụ: 39.5">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Ghi chú</label>
+          <input type="text" class="form-control" data-shoe-field="note" maxlength="1000">
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 
 <!-- =================================================

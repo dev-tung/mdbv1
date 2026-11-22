@@ -57,18 +57,86 @@ const Event = {
 
 		this.bindCustomerGroup();
 
+		this.bindEquipment();
+
 		this.bindSubmit();
 	},
 
 	bindField(selector, field, event = 'input') {
 		Dom.find(selector).addEventListener(event, (e) => {
-			console.log('FIELD:', field);
-			console.log('VALUE:', e.target.value);
-
 			State.setField(field, e.target.value);
-
-			console.log('STATE:', State.form);
 		});
+	},
+
+	bindEquipment() {
+		Dom.find('#add-customer-racket').addEventListener('click', () => {
+			Renderer.addRacket();
+		});
+
+		Dom.find('#add-customer-shoe').addEventListener('click', () => {
+			Renderer.addShoe();
+		});
+
+		Dom.find('#customer-rackets').addEventListener('click', (event) => {
+			const target = event.target;
+			const addStringing = target.closest('.add-stringing-record');
+			const removeStringing = target.closest('.remove-stringing-record');
+			const removeRacket = target.closest('.remove-customer-racket');
+
+			if (addStringing) {
+				const card = addStringing.closest('.card');
+				Renderer.addStringing(card.querySelector('[data-stringing-list]'));
+			} else if (removeStringing) {
+				removeStringing.closest('[data-stringing-record]').remove();
+			} else if (removeRacket) {
+				removeRacket.closest('.card').remove();
+			}
+		});
+
+		Dom.find('#customer-shoes').addEventListener('click', (event) => {
+			const removeShoe = event.target.closest('.remove-customer-shoe');
+
+			if (removeShoe) {
+				removeShoe.closest('.card').remove();
+			}
+		});
+	},
+
+	collectEquipment() {
+		const rackets = [...Dom.find('#customer-rackets').querySelectorAll('.card')]
+			.map((card) => {
+				const racket = {};
+				card.querySelectorAll('[data-racket-field]').forEach((field) => {
+					racket[field.dataset.racketField] = field.value.trim();
+				});
+				racket.stringings = [...card.querySelectorAll('[data-stringing-record]')].map((row) => {
+					const record = {};
+					row.querySelectorAll('[data-stringing-field]').forEach((field) => {
+						record[field.dataset.stringingField] = field.value.trim();
+					});
+					return record;
+				});
+				return racket;
+			})
+			.filter((racket) =>
+				racket.id ||
+				racket.brand ||
+				racket.model ||
+				racket.note ||
+				racket.stringings.some((record) => record.id || record.string_type || record.tension || record.strung_at || record.note),
+			);
+
+		const shoes = [...Dom.find('#customer-shoes').querySelectorAll('.card')]
+			.map((card) => {
+				const shoe = {};
+				card.querySelectorAll('[data-shoe-field]').forEach((field) => {
+					shoe[field.dataset.shoeField] = field.value.trim();
+				});
+				return shoe;
+			})
+			.filter((shoe) => shoe.id || shoe.brand || shoe.model || shoe.size || shoe.note);
+
+		return { rackets, shoes };
 	},
 
 	/* =================================================
@@ -110,7 +178,7 @@ const Event = {
 				State.setCustomerGroup(options);
 
 				// Render lại
-				Renderer.render();
+				Renderer.renderCustomerGroup();
 
 				// Reset input
 				input.value = '';
@@ -143,13 +211,10 @@ const Event = {
 			try {
 				const id = State.form.id;
 
+				const form = { ...State.form, ...this.collectEquipment() };
 				const payload = id
-					? Service.updatePayload(id, State.form)
-					: Service.payload(State.form);
-
-				console.log('ID:', id);
-				console.log('STATE:', State.form);
-				console.log('PAYLOAD:', payload);	
+					? Service.updatePayload(id, form)
+					: Service.payload(form);
 
 				const response = id
 					? await Api.updateCustomer(payload)

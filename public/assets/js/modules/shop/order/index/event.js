@@ -64,9 +64,9 @@ const Event = {
 	},
 
 	bindEvents() {
-		const table = Dom.find('#order-table-body');
+		const orderList = Dom.find('#order-list-container');
 
-		table.addEventListener('change', async (e) => {
+		orderList.addEventListener('change', async (e) => {
 			const target = e.target;
 
 			try {
@@ -96,7 +96,7 @@ const Event = {
 			}
 		});
 
-		table.addEventListener('click', async (e) => {
+		orderList.addEventListener('click', async (e) => {
 			const button = e.target.closest('.delete-item');
 
 			if (!button) {

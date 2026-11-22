@@ -18,6 +18,10 @@ const State = {
 			address: '',
 
 			description: '',
+
+			rackets: [],
+
+			shoes: [],
 		};
 	},
 
