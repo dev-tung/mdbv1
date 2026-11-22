@@ -7,7 +7,13 @@ use App\Crm\Controllers\CustomerController;
 // CUSTOMERS
 // =========================
 
-Router::get('/admin/customers', [CustomerController::class, 'index']);
+Router::get(
+	'/admin/customers',
+	[CustomerController::class, 'index'],
+	[
+		'auth' => 'admin',
+	],
+);
 
 Router::get(
 	'/admin/customers/create',

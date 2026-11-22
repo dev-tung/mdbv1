@@ -14,17 +14,17 @@ function current_url(): string
 
 function asset(string $path): string
 {
-	return base_url('assets/' . ltrim($path, '/'));
+	return '/assets/' . ltrim($path, '/');
 }
 
 function upload(string $path): string
 {
-	return base_url('uploads/' . ltrim($path, '/'));
+	return '/uploads/' . ltrim($path, '/');
 }
 
 function route(string $path = ''): string
 {
-	return base_url($path);
+	return '/' . ltrim($path, '/');
 }
 
 function redirect_url(string $url): void
