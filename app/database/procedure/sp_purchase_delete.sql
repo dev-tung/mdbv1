@@ -25,27 +25,6 @@ SET
 END IF;
 
 /* ================================
-DELETE ORDERS
-================================ */
-DELETE o
-FROM
-	orders o
-	INNER JOIN order_items oi ON oi.order_id = o.id
-	INNER JOIN inventories i ON i.product_id = oi.product_id
-WHERE
-	i.purchase_id = p_id;
-
-/* ================================
-DELETE ORDER ITEMS
-================================ */
-DELETE oi
-FROM
-	order_items oi
-	INNER JOIN inventories i ON i.product_id = oi.product_id
-WHERE
-	i.purchase_id = p_id;
-
-/* ================================
 DELETE INVENTORIES
 ================================ */
 DELETE FROM inventories
